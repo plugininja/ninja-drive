@@ -1,0 +1,126 @@
+@use "../utilities/variable" as *;
+@use "../utilities/mixin" as *;
+
+.pn-search-box-wrapper {
+    position: relative;
+    max-width: 700px;
+    width: 100%;
+}
+
+.pn-search-box {
+    width: 100%;
+    position: absolute;
+    top: -20px;
+    left: 0;
+    z-index: 100;
+    background: $white;
+    border: 1px solid $primary-light;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+
+    &__input {
+        padding: 0 0.5rem 0 0.75rem;
+        height: 38px;
+        gap: 0.5rem;
+    }
+
+    &__dropdown {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &__filter {
+        background: $white;
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+    }
+
+    &__results {
+        width: 100%;
+    }
+
+    &__item {
+        cursor: pointer;
+
+        &:hover {
+            background: $primary-extralight !important;
+        }
+
+        &-icon {
+            flex-shrink: 0;
+            width: 40px !important;
+            height: 40px !important;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        &-meta {
+            span {
+                &::after {
+                    content: "·";
+                    margin-left: var(--pnpnd-space-2);
+                    font-weight: bold;
+                }
+
+                &:last-child::after {
+                    content: "";
+                }
+            }
+        }
+    }
+
+    &--open &__dropdown {
+        height: 400px;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #c7c7c7;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: #747775;
+        }
+    }
+}
+
+.pn-compact-search-box {
+    position: relative;
+    max-width: 700px;
+    width: 100%;
+    border: 1px solid $primary-light;
+    border-radius: 4px;
+    padding: 0 10px;
+
+    &--full-width {
+        max-width: 100%;
+    }
+
+    &__input {
+        padding: 0 28px 0 0 !important;
+    }
+
+    &__clear {
+        position: absolute !important;
+        right: 35px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}

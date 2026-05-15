@@ -1,0 +1,783 @@
+@use "sass:math";
+// ── Variables ──────────────────────────────────────────────
+$color-bg: #0a0a0a;
+$color-surface: #141414;
+$color-surface-hover: #1e1e1e;
+$color-accent: var(--pnpnd-primary);
+$color-text: #f0ece4;
+$color-text-muted: #8a8680;
+$color-overlay: rgba(0, 0, 0, 0.6);
+$color-overlay-deep: rgba(0, 0, 0, 0.85);
+
+$font-heading: "Poppins", sans-serif;
+$font-body: "Poppins", sans-serif;
+
+$transition-fast: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-smooth: 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-spring: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// Breakpoints
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+
+// Mixins
+@mixin respond-to($breakpoint) {
+    @if $breakpoint == sm {
+        @media (max-width: $breakpoint-sm) {
+            @content;
+        }
+    }
+    @if $breakpoint == md {
+        @media (max-width: $breakpoint-md) {
+            @content;
+        }
+    }
+    @if $breakpoint == lg {
+        @media (max-width: $breakpoint-lg) {
+            @content;
+        }
+    }
+}
+
+// ── Keyframes ──────────────────────────────────────────────
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-8deg) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0) rotate(var(--rotate, 0deg));
+    }
+    50% {
+        transform: translateY(-10px) rotate(var(--rotate, 0deg));
+    }
+}
+.pnpnd-gallery {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+// ── Gallery Item (shared) ──────────────────────────────────
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+// ============================================================
+// TEMPLATE 1: Classic Grid
+// ============================================================
+.gallery--grid {
+    display: grid;
+    grid-template-columns: repeat(var(--desktopColumns, 4), 1fr);
+    gap: var(--itemGap, 16px);
+
+    @include respond-to(lg) {
+        grid-template-columns: repeat(var(--laptopColumns, 3), 1fr);
+    }
+    @include respond-to(md) {
+        grid-template-columns: repeat(var(--tabletColumns, 2), 1fr);
+    }
+    @include respond-to(sm) {
+        grid-template-columns: repeat(var(--mobileColumns, 1), 1fr);
+    }
+
+    .gallery-item {
+        border-radius: var(--itemRadius, 12px);
+        aspect-ratio: 1;
+        animation: fadeInUp 0.5s ease-out both;
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
+        height: 100%;
+        animation-delay: calc(var(--i) * 0.06s);
+
+        img {
+            transition:
+                transform $transition-smooth,
+                filter $transition-smooth;
+        }
+
+        &__overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 40%,
+                $color-overlay-deep 100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity $transition-fast;
+        }
+        &__number {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: $color-accent;
+            margin-bottom: 6px;
+        }
+
+        &__title {
+            font-family: $font-heading;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 4px;
+            transform: translateY(10px);
+            transition: transform $transition-fast;
+            color: $color-text;
+        }
+
+        &__desc {
+            font-size: 0.8rem;
+            color: $color-text-muted;
+            margin: 0;
+            transform: translateY(10px);
+            transition: transform $transition-fast 0.05s;
+        }
+
+        &:hover {
+            img {
+                transform: scale(1.08);
+                filter: brightness(0.7);
+            }
+            .gallery-item__overlay {
+                opacity: 1;
+            }
+            .gallery-item__title,
+            .gallery-item__desc {
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+// ============================================================
+// TEMPLATE 2: Masonry
+// ============================================================
+.gallery--masonry {
+    columns: var(--desktopColumns, 4);
+    column-gap: var(--itemGap, 16px);
+
+    @include respond-to(lg) {
+        columns: var(--laptopColumns, 3);
+    }
+    @include respond-to(md) {
+        columns: var(--tabletColumns, 2);
+    }
+    @include respond-to(sm) {
+        columns: var(--mobileColumns, 1);
+    }
+
+    .gallery-item {
+        break-inside: avoid;
+        margin-bottom: 16px;
+        animation: scaleIn 0.5s ease-out both;
+        border-radius: var(--itemRadius, 12px);
+        animation-delay: calc(var(--i) * 0.06s);
+
+        @include respond-to(sm) {
+            height: 100%;
+        }
+
+        img {
+            height: auto;
+            aspect-ratio: auto;
+            transition:
+                transform $transition-smooth,
+                filter $transition-smooth;
+        }
+
+        &:nth-child(6n + 1) img {
+            aspect-ratio: 3/4;
+        }
+        &:nth-child(6n + 2) img {
+            aspect-ratio: 4/3;
+        }
+        &:nth-child(6n + 3) img {
+            aspect-ratio: 1;
+        }
+
+        &__overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 50%,
+                $color-overlay-deep 100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity $transition-fast;
+        }
+        &__number {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: $color-accent;
+            margin-bottom: 6px;
+        }
+
+        &__title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0 0 4px;
+            transform: translateY(8px);
+            transition: transform $transition-fast;
+            color: $color-text;
+        }
+
+        &__desc {
+            font-size: 0.78rem;
+            color: $color-text-muted;
+            margin: 0;
+            transform: translateY(8px);
+            transition: transform $transition-fast 0.05s;
+        }
+
+        &:hover {
+            img {
+                transform: scale(1.05);
+                filter: brightness(0.65);
+            }
+            .gallery-item__overlay {
+                opacity: 1;
+            }
+            .gallery-item__title,
+            .gallery-item__desc {
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+// ============================================================
+// TEMPLATE 3: Mosaic (Bento Grid)
+// ============================================================
+.gallery--mosaic {
+    display: grid;
+    grid-template-columns: repeat(var(--desktopColumns, 4), 1fr);
+    grid-auto-rows: 200px;
+    gap: var(--itemGap, 16px);
+    grid-auto-flow: dense;
+
+    @include respond-to(lg) {
+        grid-template-columns: repeat(var(--laptopColumns, 3), 1fr);
+        grid-auto-rows: 180px;
+    }
+    @include respond-to(md) {
+        grid-template-columns: repeat(var(--tabletColumns, 2), 1fr);
+        grid-auto-rows: 160px;
+    }
+    @include respond-to(sm) {
+        grid-template-columns: repeat(var(--mobileColumns, 1), 1fr);
+        grid-auto-rows: 220px;
+    }
+
+    .gallery-item {
+        border-radius: var(--itemRadius, 20px);
+        animation: fadeInUp 0.5s ease-out both;
+        @include respond-to(sm) {
+            height: 100%;
+        }
+        animation-delay: calc(var(--i) * 0.06s);
+
+        &:nth-child(6n + 1) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        &:nth-child(6n + 3) {
+            grid-row: span 2;
+        }
+
+        &:nth-child(6n + 5) {
+            grid-column: span 2;
+        }
+
+        @include respond-to(sm) {
+            &:nth-child(n) {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+        }
+
+        img {
+            transition: transform $transition-smooth;
+        }
+
+        &__overlay {
+            position: absolute;
+            inset: 0;
+            background: $color-overlay;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 24px;
+            opacity: 0;
+            transition: opacity $transition-fast;
+        }
+
+        &__number {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: $color-accent;
+            margin-bottom: 6px;
+        }
+
+        &__title {
+            font-family: $font-heading;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 4px;
+            transform: translateY(12px);
+            transition: transform $transition-fast;
+            color: $color-text;
+        }
+
+        &__desc {
+            font-size: 0.8rem;
+            color: $color-text-muted;
+            margin: 0;
+            transform: translateY(12px);
+            transition: transform $transition-fast 0.05s;
+        }
+
+        &:hover {
+            img {
+                transform: scale(1.06);
+            }
+            .gallery-item__overlay {
+                opacity: 1;
+            }
+            .gallery-item__title,
+            .gallery-item__desc {
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+// ============================================================
+// TEMPLATE 4: Hover Reveal
+// ============================================================
+.gallery--hover-reveal {
+    display: grid;
+    grid-template-columns: repeat(var(--desktopColumns, 4), 1fr);
+    gap: var(--itemGap, 16px);
+
+    @include respond-to(lg) {
+        grid-template-columns: repeat(var(--laptopColumns, 3), 1fr);
+    }
+
+    @include respond-to(md) {
+        grid-template-columns: repeat(var(--tabletColumns, 2), 1fr);
+    }
+    @include respond-to(sm) {
+        grid-template-columns: repeat(var(--mobileColumns, 1), 1fr);
+        gap: 0.5rem;
+    }
+
+    .gallery-item {
+        aspect-ratio: 16/10;
+        animation: fadeInUp 0.7s ease-out backwards;
+        border-radius: var(--itemRadius, 12px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        @include respond-to(sm) {
+            height: 100%;
+        }
+        animation-delay: calc(var(--i) * 0.06s);
+
+        img {
+            filter: grayscale(100%) brightness(0.7);
+            transition:
+                filter 0.6s,
+                transform 0.6s;
+        }
+
+        &:hover img {
+            filter: grayscale(0%) brightness(1);
+            transform: scale(1.08);
+        }
+
+        &__overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.9) 0%,
+                transparent 60%
+            );
+            z-index: 2;
+        }
+        &__number {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-size: 3rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.1);
+            line-height: 1;
+        }
+
+        &__title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: all 0.4s ease-out;
+        }
+
+        &__desc {
+            font-size: clamp(0.5rem, 3.5vw, 0.75rem);
+            color: $color-text-muted;
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: all 0.4s ease-out 0.1s;
+        }
+
+        &:hover .gallery-item__overlay {
+            .gallery-item__title,
+            .gallery-item__desc {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    }
+}
+
+// ============================================================
+// TEMPLATE 5: Polaroid / Scattered
+// ============================================================
+.gallery--polaroid {
+    display: grid;
+    grid-template-columns: repeat(var(--desktopColumns, 4), 1fr);
+    gap: var(--itemGap, 3rem);
+
+    @include respond-to(lg) {
+        grid-template-columns: repeat(var(--laptopColumns, 3), 1fr);
+    }
+
+    @include respond-to(md) {
+        grid-template-columns: repeat(var(--tabletColumns, 2), 1fr);
+    }
+    @include respond-to(sm) {
+        grid-template-columns: repeat(var(--mobileColumns, 1), 1fr);
+        gap: 2rem;
+    }
+
+    .gallery-item {
+        background: #fafafa;
+        padding: 1rem 1rem 3rem;
+        border-radius: var(--itemRadius, 5px);
+        box-shadow:
+            0 4px 20px rgba(0, 0, 0, 0.2),
+            0 10px 40px rgba(0, 0, 0, 0.15);
+        animation:
+            float 6s ease-in-out infinite,
+            fadeInUp 0.8s ease-out backwards;
+        cursor: pointer;
+        transition:
+            transform 0.4s,
+            box-shadow 0.4s;
+
+        @include respond-to(sm) {
+            width: 100%;
+            height: 100%;
+            padding: 0.75rem 0.75rem 2.5rem;
+        }
+
+        @for $i from 1 through 1000 {
+            &:nth-child(#{$i}) {
+                --rotate: #{math.random(20) - 10}deg;
+                animation-delay:
+                    #{math.random(2000)}ms,
+                    #{$i * 0.15}s;
+            }
+        }
+
+        &:hover {
+            transform: scale(1.08) rotate(0deg) !important;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 30px 80px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .item-caption {
+            position: absolute;
+            bottom: 0.8rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: "Caveat", cursive, sans-serif;
+            font-size: clamp(0.8rem, 3.5vw, 1rem);
+            color: #333;
+            padding: 0 0.5rem;
+        }
+    }
+}
+
+// ============================================================
+// TEMPLATE 6: Fullscreen Showcase (Split)
+// ============================================================
+.gallery--showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .gallery-item {
+        position: relative;
+        height: 70vh;
+        min-height: 400px;
+        animation: fadeIn 0.6s ease-out both;
+        overflow: hidden;
+
+        @for $i from 1 through 12 {
+            &:nth-child(#{$i}) {
+                animation-delay: #{$i * 0.1}s;
+            }
+        }
+
+        @include respond-to(md) {
+            height: 50vh;
+            min-height: 300px;
+        }
+
+        img {
+            transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        &__overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                $color-overlay-deep 0%,
+                transparent 70%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 80px;
+            transition: background $transition-smooth;
+
+            @include respond-to(lg) {
+                padding: 40px;
+            }
+            @include respond-to(md) {
+                padding: 24px;
+                background: linear-gradient(
+                    0deg,
+                    $color-overlay-deep 0%,
+                    transparent 70%
+                );
+                justify-content: flex-end;
+            }
+        }
+
+        &__number {
+            font-family: $font-heading;
+            font-size: clamp(2rem, 6vw, 5rem);
+            font-weight: 800;
+            color: rgba($color-accent, 0.15);
+            line-height: 1;
+            margin-bottom: -8px;
+            transition: color $transition-fast;
+        }
+
+        &__category {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: $color-accent;
+            margin-bottom: 12px;
+        }
+
+        &__title {
+            font-family: $font-heading;
+            font-size: clamp(1rem, 3.5vw, 3rem);
+            font-weight: 700;
+            margin: 0 0 12px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: all $transition-smooth;
+            color: $color-text;
+        }
+
+        &__desc {
+            font-size: 1rem;
+            font-size: clamp(0.5rem, 3.5vw, 1rem);
+            color: rgba($color-text, 0.6);
+            margin: 0;
+            max-width: 440px;
+            line-height: 1.5;
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: all $transition-smooth 0.1s;
+        }
+
+        &__view-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 24px;
+            background: transparent;
+            border: 1.5px solid rgba($color-text, 0.3);
+            color: $color-text;
+            font-family: $font-body;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 100px;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all $transition-smooth 0.2s;
+
+            svg {
+                width: 14px;
+                height: 14px;
+                transition: transform $transition-fast;
+            }
+
+            &:hover {
+                background: $color-accent;
+                border-color: $color-accent;
+                color: $color-bg;
+
+                svg {
+                    transform: translateX(4px);
+                }
+            }
+        }
+
+        &:hover {
+            img {
+                transform: scale(1.04);
+            }
+            .gallery-item__number {
+                color: rgba($color-accent, 0.3);
+            }
+            .gallery-item__title {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            .gallery-item__desc {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            .gallery-item__view-btn {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+// ============================================================
+// Transition wrapper for template switching
+// ============================================================
+.gallery-transition-enter {
+    animation: fadeInUp 0.5s ease-out both;
+}

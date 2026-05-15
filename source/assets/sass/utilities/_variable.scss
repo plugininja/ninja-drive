@@ -1,0 +1,124 @@
+@use "./tokens";
+
+$primary: var(--pnpnd-primary);
+$primary-hover: var(--pnpnd-primary-hover);
+$secondary: var(--pnpnd-secondary);
+$primary-light: var(--pnpnd-primary-light);
+$primary-extralight: var(--pnpnd-primary-extralight);
+$white: var(--pnpnd-white, #ffffff);
+$black: var(--pnpnd-black, #000e25);
+$gray-50: var(--pnpnd-gray-50, #f9fafb);
+$gray-100: var(--pnpnd-gray-100, #f3f4f6);
+$gray-200: var(--pnpnd-gray-200, #e5e7eb);
+$gray-300: var(--pnpnd-gray-300, #d1d5db);
+$gray-400: var(--pnpnd-gray-400, #9ca3af);
+$gray-500: var(--pnpnd-gray-500, #979797);
+$gray-600: var(--pnpnd-gray-600, #6b7280);
+$gray-700: var(--pnpnd-gray-700, #374151);
+$gray-800: var(--pnpnd-gray-800, #243247);
+$gray-900: var(--pnpnd-gray-900, #111827);
+$shadow-sm: var(--pnpnd-shadow-sm, #7587804d);
+$shadow-xs: var(--pnpnd-shadow-xs, #6c7f9e1a);
+$success: var(--pnpnd-success, #1f6cfa);
+$success-100: var(--pnpnd-success-100, #00ac4733);
+$success-50: var(--pnpnd-success-50, #00ac471a);
+$warning: var(--pnpnd-warning, #ff5900);
+$warning-100: var(--pnpnd-warning-100, #ff590033);
+$warning-50: var(--pnpnd-warning-50, #ff59001a);
+$error: var(--pnpnd-error, #ff0000);
+$error-100: var(--pnpnd-error-100, #ff000033);
+$error-50: var(--pnpnd-error-50, #ff00001a);
+$info: var(--pnpnd-info, #838383);
+$info-100: var(--pnpnd-info-100, #d9d9d9);
+$info-50: var(--pnpnd-info-50, #f2f2f2);
+$badge-pro: var(--pnpnd-badge-pro, #ffc300);
+$badge-new: var(--pnpnd-badge-new, #e3eeff);
+
+$primary-font: "Poppins", sans-serif !important;
+
+$colors: (
+    "primary": $primary,
+    "primary-hover": $primary-hover,
+    "secondary": $secondary,
+    "primary-light": $primary-light,
+    "primary-extralight": $primary-extralight,
+    "white": $white,
+    "black": $black,
+    "gray-50": $gray-50,
+    "gray-100": $gray-100,
+    "gray-200": $gray-200,
+    "gray-300": $gray-300,
+    "gray-400": $gray-400,
+    "gray-500": $gray-500,
+    "gray-600": $gray-600,
+    "gray-700": $gray-700,
+    "gray-800": $gray-800,
+    "gray-900": $gray-900,
+    "shadow-sm": $shadow-sm,
+    "shadow-xs": $shadow-xs,
+    "success": $success,
+    "success-100": $success-100,
+    "success-50": $success-50,
+    "warning": $warning,
+    "warning-100": $warning-100,
+    "warning-50": $warning-50,
+    "error": $error,
+    "error-100": $error-100,
+    "error-50": $error-50,
+    "info": $info,
+    "info-100": $info-100,
+    "info-50": $info-50,
+    "badge-pro": $badge-pro,
+    "badge-new": $badge-new,
+    "inherit": inherit,
+    "transparent": transparent,
+);
+
+$rounded-none: 0;
+$rounded-xs: 2px;
+$rounded-sm: 4px;
+$rounded-md: 8px;
+$rounded-lg: 12px;
+$rounded-xl: 24px;
+$rounded-2xl: 32px;
+$rounded-pill: 9999px;
+$rounded-full: 50%;
+
+$rounded: (
+    "none": 0,
+    "xs": 2px,
+    "sm": 4px,
+    "md": 8px,
+    "lg": 12px,
+    "xl": 24px,
+    "2xl": 32px,
+    "pill": 9999px,
+    "full": 50%,
+);
+
+$font-sizes: (
+    "xs": 12px,
+    "sm": 14px,
+    "md": 16px,
+    "lg": 18px,
+    "xl": 20px,
+    "2xl": 24px,
+    "3xl": 30px,
+    "4xl": 36px,
+    "5xl": 48px,
+    "6xl": 60px,
+    "inherit": inherit,
+);
+
+$font-weights: (
+    "thin": 100,
+    "extralight": 200,
+    "light": 300,
+    "normal": 400,
+    "medium": 500,
+    "semibold": 600,
+    "bold": 700,
+    "extrabold": 800,
+    "black": 900,
+    "inherit": "inherit",
+);

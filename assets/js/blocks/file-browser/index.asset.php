@@ -1,0 +1,1 @@
+<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-block-editor', 'wp-blocks', 'wp-components', 'wp-element', 'wp-i18n', 'pnpnd-shared'), 'version' => '441dcbc1698f8e0c3cd8', 'handle' => 'undefined-blocks/file-browser/index');

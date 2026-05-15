@@ -1,0 +1,197 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-top-level-wrapper {
+    .pnpnd-files {
+        user-select: none;
+        position: relative;
+
+        .pnpnd-file-thumbnail {
+            height: 150px;
+            overflow: hidden;
+
+            &--compact {
+                width: 32px;
+                height: 32px;
+            }
+
+            &--suggested {
+                width: 45px;
+                height: 45px;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                user-select: none;
+                pointer-events: none;
+            }
+
+            &--icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                    width: 80px;
+                    object-fit: contain;
+                }
+            }
+        }
+
+        .pnpnd-file-list {
+            border: 1px solid $primary-light;
+            border-radius: $rounded-md;
+
+            &__header {
+                background: $white;
+                border-bottom: 1px solid $primary-light;
+                border-radius: $rounded-md $rounded-md 0 0;
+
+                &-col {
+                    flex-shrink: 0;
+
+                    &--status {
+                        width: 30px;
+                    }
+
+                    &--name {
+                        flex: 1;
+                    }
+
+                    &--size {
+                        width: 100px;
+                    }
+
+                    &--type {
+                        width: 100px;
+                    }
+
+                    &--date {
+                        width: 120px;
+                    }
+
+                    &--actions {
+                        width: 100px;
+                    }
+                }
+            }
+
+            &__item {
+                background: $white;
+                border-bottom: 1px solid $primary-light;
+                transition: background 150ms ease;
+                cursor: pointer;
+
+                &--selected,
+                &:hover {
+                    background: $primary-extralight;
+                }
+
+                &:last-child {
+                    border-bottom: none;
+                    border-radius: 0 0 $rounded-md $rounded-md;
+                }
+            }
+
+            &__icon {
+                flex-shrink: 0;
+                overflow: hidden;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            &__status {
+                width: 30px;
+            }
+
+            &__name {
+                flex: 1;
+                min-width: 0;
+                span {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            &__size {
+                width: 100px;
+                text-align: center;
+            }
+
+            &__type {
+                width: 100px;
+                text-align: center;
+            }
+
+            &__date {
+                width: 120px;
+                font-size: 13px;
+            }
+
+            @media (max-width: 768px) {
+                &__type,
+                &__date {
+                    display: none;
+                }
+            }
+
+            &__actions {
+                width: 100px;
+            }
+        }
+
+        .pnpnd-file-list-loader {
+            border-bottom: 1px solid $primary-light;
+
+            &:last-child {
+                border-bottom: none;
+                border-radius: 0 0 $rounded-md $rounded-md;
+            }
+        }
+
+        .pnpnd-file-grid {
+            &__item {
+                cursor: pointer;
+                position: relative;
+
+                &--selected {
+                    background: $primary-light !important;
+                }
+            }
+
+            &__name {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-width: 0;
+                max-width: 145px;
+                line-height: normal !important;
+            }
+
+            &__status {
+                position: absolute;
+                left: 20px;
+                top: 20px;
+            }
+
+            &__meta {
+                span {
+                    &::after {
+                        content: "·";
+                        margin-left: var(--pnpnd-space-2);
+                        font-weight: bold;
+                    }
+
+                    &:last-child::after {
+                        content: "";
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,70 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-top-level-wrapper {
+    .pnpnd-file-browser-container {
+        .pnpnd-uploader {
+            width: 500px;
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 9999;
+            background-color: $white;
+            border: 1px solid $primary-light;
+            border-radius: $rounded-lg;
+            height: auto !important;
+            .pnpnd-file-list-wrapper {
+                height: 500px !important;
+            }
+            &.drag-active {
+                border: 1px solid $primary;
+            }
+
+            .close {
+                z-index: 1;
+            }
+        }
+    }
+
+    .pnpnd-suggested-files {
+        width: 100%;
+
+        &__suggested {
+            position: relative;
+            width: 100%;
+
+            &-container {
+                display: flex;
+                gap: 15px;
+                overflow-x: auto;
+                scroll-behavior: smooth;
+                scrollbar-width: none;
+                width: 100%;
+
+                &-file {
+                    flex-shrink: 0;
+                    width: 250px !important;
+                    cursor: pointer;
+                }
+            }
+
+            &-fade {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100px;
+                pointer-events: none;
+                z-index: 5;
+
+                &--left {
+                    left: 0;
+                    background: linear-gradient(to right, $primary-extralight, transparent);
+                }
+
+                &--right {
+                    right: 0;
+                    background: linear-gradient(to left, $primary-extralight, transparent);
+                }
+            }
+        }
+    }
+}

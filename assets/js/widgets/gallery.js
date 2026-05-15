@@ -1,0 +1,2 @@
+;"use strict";(globalThis.webpackChunkninja_drive=globalThis.webpackChunkninja_drive||[]).push([[97,473],{1609(e){e.exports=window.React},790(e){e.exports=window.ReactJSXRuntime},6427(e){e.exports=window.wp.components},6087(e){e.exports=window.wp.element},7723(e){e.exports=window.wp.i18n}},e=>{e.O(0,[96,804],()=>{return n=6357,e(e.s=n);var n});e.O()}]);
+//# sourceMappingURL=gallery.js.map

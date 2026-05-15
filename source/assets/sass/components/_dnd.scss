@@ -1,0 +1,45 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-top-level-wrapper {
+    .pn-dnd-item {
+        position: relative;
+        border-radius: 2px;
+        background: transparent;
+        transform: scale(1);
+        transform-origin: center;
+        transition: transform 0.18s cubic-bezier(0.2, 0, 0, 1);
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            border: 1px solid transparent;
+            transition:
+                inset 0.18s ease,
+                border-color 0.18s ease;
+            pointer-events: none;
+        }
+
+        &--hovering {
+            transform: scale(1.015);
+
+            &::after {
+                inset: -2px;
+                border-color: $secondary;
+            }
+        }
+
+        &--dragging {
+            opacity: 0.5;
+        }
+    }
+}

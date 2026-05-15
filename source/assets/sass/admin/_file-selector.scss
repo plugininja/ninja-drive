@@ -1,0 +1,27 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-top-level-wrapper {
+    .pnpnd-file-selector-modal {
+        padding: 0 !important;
+
+        .pn-alert-content {
+            height: 100%;
+
+            .pn-alert-html-content {
+                height: 100%;
+                
+                .pnpnd-content {
+                    padding-bottom: var(--pnpnd-space-5);
+                }
+            }
+        }
+
+        .pn-alert-buttons {
+            background: $white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            padding: 10px;
+        }
+    }
+}

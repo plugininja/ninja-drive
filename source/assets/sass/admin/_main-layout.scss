@@ -1,0 +1,69 @@
+@use "../utilities/variable" as *;
+@use "../utilities/mixin" as *;
+
+#pnpnd-admin {
+    height: 100%;
+    background-color: $white;
+    position: fixed;
+    width: calc(100% - 160px);
+    height: calc(100vh - 32px);
+
+    @include respond-to(960px) {
+        width: calc(100% - 36px);
+    }
+
+    @include respond-to(782px) {
+        width: 100% !important;
+    }
+}
+.toplevel_page_ninja-drive.folded {
+    #pnpnd-admin {
+        width: calc(100% - 36px);
+    }
+}
+
+.pnpnd {
+    display: flex;
+    height: 100%;
+
+    &-bg {
+        background-color: $primary-extralight;
+    }
+
+    &-content-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+        position: relative;
+    }
+
+    &-content {
+        flex-grow: 1;
+        height: calc(100vh - 110px);
+        padding: var(--pnpnd-space-5) !important;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #c7c7c7;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: #747775;
+        }
+    }
+}

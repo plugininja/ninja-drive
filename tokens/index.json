@@ -1,0 +1,373 @@
+{
+    "color": {
+        "core": {
+            "primary": {
+                "value": "#1F6CFA"
+            }
+        },
+        "derived": {
+            "primary-hover": {
+                "value": "hsl(from var(--pnpnd-primary) h s l / 80%)"
+            },
+            "secondary": {
+                "value": "hsl(from var(--pnpnd-primary) h s l / 18%)"
+            },
+            "primary-light": {
+                "value": "hsl(from var(--pnpnd-primary) h s l / 11%)"
+            },
+            "primary-extralight": {
+                "light": "hsl(from var(--pnpnd-primary) h s l / 5%)",
+                "dark": "#000000"
+            }
+        },
+        "semantic": {
+            "success": {
+                "value": "#00ac47"
+            },
+            "success-100": {
+                "value": "#00ac4733"
+            },
+            "success-50": {
+                "value": "#00ac471a"
+            },
+            "warning": {
+                "value": "#ff5900"
+            },
+            "warning-100": {
+                "value": "#ff590033"
+            },
+            "warning-50": {
+                "value": "#ff59001a"
+            },
+            "error": {
+                "value": "#ff0000"
+            },
+            "error-100": {
+                "value": "#ff000033"
+            },
+            "error-50": {
+                "value": "#ff00001a"
+            },
+            "info": {
+                "value": "#838383"
+            },
+            "info-100": {
+                "value": "#d9d9d9"
+            },
+            "info-50": {
+                "value": "#f2f2f2"
+            },
+            "badge-pro": {
+                "value": "#ffc300"
+            },
+            "badge-new": {
+                "value": "#e3eeff"
+            }
+        },
+        "neutral": {
+            "white": {
+                "light": "#ffffff",
+                "dark": "#151515"
+            },
+            "black": {
+                "light": "#000e25",
+                "dark": "#ffffff"
+            },
+            "gray-50": {
+                "value": "#f9fafb"
+            },
+            "gray-100": {
+                "value": "#f3f4f6"
+            },
+            "gray-200": {
+                "value": "#e5e7eb"
+            },
+            "gray-300": {
+                "value": "#d1d5db"
+            },
+            "gray-400": {
+                "value": "#9ca3af"
+            },
+            "gray-500": {
+                "value": "#979797"
+            },
+            "gray-600": {
+                "value": "#6b7280"
+            },
+            "gray-700": {
+                "value": "#374151"
+            },
+            "gray-800": {
+                "light": "#243247",
+                "dark": "#f6fcfa"
+            },
+            "gray-900": {
+                "value": "#111827"
+            },
+            "shadow-sm": {
+                "value": "#7587804d"
+            },
+            "shadow-xs": {
+                "value": "#6c7f9e1a"
+            }
+        }
+    },
+    "spacing": {
+        "0": {
+            "value": "0"
+        },
+        "1": {
+            "value": "4px"
+        },
+        "2": {
+            "value": "8px"
+        },
+        "3": {
+            "value": "12px"
+        },
+        "4": {
+            "value": "16px"
+        },
+        "5": {
+            "value": "20px"
+        },
+        "6": {
+            "value": "24px"
+        },
+        "7": {
+            "value": "32px"
+        },
+        "8": {
+            "value": "40px"
+        },
+        "9": {
+            "value": "48px"
+        },
+        "10": {
+            "value": "64px"
+        }
+    },
+    "typography": {
+        "font-family": {
+            "value": "'Poppins', sans-serif"
+        },
+        "size": {
+            "xs": {
+                "value": "12px"
+            },
+            "sm": {
+                "value": "14px"
+            },
+            "md": {
+                "value": "16px"
+            },
+            "lg": {
+                "value": "18px"
+            },
+            "xl": {
+                "value": "20px"
+            },
+            "2xl": {
+                "value": "24px"
+            },
+            "3xl": {
+                "value": "30px"
+            },
+            "4xl": {
+                "value": "36px"
+            },
+            "5xl": {
+                "value": "48px"
+            },
+            "6xl": {
+                "value": "60px"
+            }
+        },
+        "weight": {
+            "thin": {
+                "value": "100"
+            },
+            "extralight": {
+                "value": "200"
+            },
+            "light": {
+                "value": "300"
+            },
+            "normal": {
+                "value": "400"
+            },
+            "medium": {
+                "value": "500"
+            },
+            "semibold": {
+                "value": "600"
+            },
+            "bold": {
+                "value": "700"
+            },
+            "extrabold": {
+                "value": "800"
+            },
+            "black": {
+                "value": "900"
+            }
+        }
+    },
+    "border": {
+        "radius": {
+            "none": {
+                "value": "0"
+            },
+            "xs": {
+                "value": "2px"
+            },
+            "sm": {
+                "value": "4px"
+            },
+            "md": {
+                "value": "8px"
+            },
+            "lg": {
+                "value": "12px"
+            },
+            "xl": {
+                "value": "24px"
+            },
+            "2xl": {
+                "value": "32px"
+            },
+            "pill": {
+                "value": "9999px"
+            },
+            "full": {
+                "value": "50%"
+            }
+        },
+        "style": {
+            "none": {
+                "value": "none"
+            },
+            "solid": {
+                "value": "solid"
+            },
+            "dashed": {
+                "value": "dashed"
+            },
+            "dotted": {
+                "value": "dotted"
+            }
+        }
+    },
+    "layout": {
+        "size": {
+            "extrasmall": {
+                "value": "extrasmall"
+            },
+            "small": {
+                "value": "small"
+            },
+            "medium": {
+                "value": "medium"
+            },
+            "large": {
+                "value": "large"
+            },
+            "extralarge": {
+                "value": "extralarge"
+            }
+        },
+        "align": {
+            "start": {
+                "value": "start"
+            },
+            "end": {
+                "value": "end"
+            },
+            "center": {
+                "value": "center"
+            },
+            "between": {
+                "value": "between"
+            },
+            "around": {
+                "value": "around"
+            },
+            "evenly": {
+                "value": "evenly"
+            }
+        },
+        "inline-align": {
+            "start": {
+                "value": "start"
+            },
+            "end": {
+                "value": "end"
+            },
+            "center": {
+                "value": "center"
+            },
+            "baseline": {
+                "value": "baseline"
+            },
+            "stretch": {
+                "value": "stretch"
+            }
+        },
+        "text-align": {
+            "left": {
+                "value": "left"
+            },
+            "center": {
+                "value": "center"
+            },
+            "right": {
+                "value": "right"
+            },
+            "justify": {
+                "value": "justify"
+            }
+        },
+        "text-transform": {
+            "none": {
+                "value": "none"
+            },
+            "uppercase": {
+                "value": "uppercase"
+            },
+            "capitalize": {
+                "value": "capitalize"
+            },
+            "lowercase": {
+                "value": "lowercase"
+            }
+        }
+    },
+    "breakpoint": {
+        "sm": {
+            "value": "480px"
+        },
+        "md": {
+            "value": "768px"
+        },
+        "lg": {
+            "value": "1024px"
+        },
+        "xl": {
+            "value": "1280px"
+        }
+    },
+    "transition": {
+        "fast": {
+            "value": "150ms ease"
+        },
+        "normal": {
+            "value": "300ms ease"
+        },
+        "slow": {
+            "value": "500ms ease"
+        },
+        "spring": {
+            "value": "500ms cubic-bezier(0.34, 1.56, 0.64, 1)"
+        }
+    }
+}

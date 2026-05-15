@@ -1,0 +1,108 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-top-level-wrapper {
+    .pnpnd-widget-builder-layout {
+        .pnpnd-uploader {
+            bottom: 85px !important;
+        }
+    }
+
+    .pnpnd-widget-list {
+        background-color: $white;
+        border: 1px solid $primary-light;
+        border-radius: $rounded-md;
+        margin-top: 1.25rem;
+
+        &__header {
+            background-color: $white;
+            border-bottom: 1px solid $primary-light;
+            padding: 25px var(--pnpnd-space-5);
+            border-radius: $rounded-md $rounded-md 0 0;
+        }
+
+        &__row {
+            padding: 15px var(--pnpnd-space-5);
+            transition: background-color 0.5s ease;
+            border-bottom: 1px solid $primary-light;
+
+            &:hover {
+                background-color: $primary-extralight;
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        &__loader {
+            border-bottom: 1px solid $primary-light !important;
+            border-radius: $rounded-md $rounded-md 0 0 !important;
+
+            &:last-child {
+                border-bottom: none !important;
+                border-radius: 0 0 $rounded-md $rounded-md !important;
+            }
+        }
+    }
+
+    .pnpnd-widget-file-sidebar {
+        height: auto !important;
+        border-radius: 12px 0 0 12px;
+        border-right: 1px solid $primary-light !important;
+    }
+
+    .pnpnd-integration-icon {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        z-index: 10;
+
+        svg {
+            width: 15px !important;
+            height: 15px !important;
+            border-radius: $rounded-full;
+        }
+    }
+
+    .pnpnd-widget-selected-files {
+        &__header {
+            background-color: $primary-extralight;
+            padding: 10px !important;
+        }
+
+        &__file {
+            border-bottom: 1px solid $primary-light !important;
+
+            &:last-child {
+                border-bottom: none !important;
+            }
+        }
+    }
+
+    .pnpnd-file-selector-modal,
+    .pnpnd-widget-builder-modal {
+        padding: 0 !important;
+        .pn-sidebar {
+            height: 100%;
+        }
+        .pn-alert-content {
+            height: 100%;
+
+            .pn-alert-html-content {
+                height: 100%;
+
+                .pnpnd-content {
+                    padding-bottom: var(--pnpnd-space-5);
+                }
+            }
+        }
+
+        .pn-alert-buttons {
+            background: $white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            padding: 10px;
+        }
+    }
+}

@@ -1,0 +1,23 @@
+@use "./utilities/utility" as *;
+@use "./utilities/default" as *;
+@use "./components/index" as *;
+@use "./admin/notice-card" as *;
+
+.pnpnd-widget {
+    position: relative;
+
+    &__edit {
+        position: absolute;
+        z-index: 9999999;
+        bottom: 10px;
+        right: 10px;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    &:hover {
+        .pnpnd-widget__edit {
+            opacity: 1;
+        }
+    }
+}

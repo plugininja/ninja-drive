@@ -1,0 +1,40 @@
+.pnpnd-top-level-wrapper {
+    .pnpnd-offerbar {
+        position: relative;
+        width: 100%;
+        height: 60px;
+        background: linear-gradient(
+            90deg,
+            #e6ffc2c7 0%,
+            #f9fff0 50%,
+            #e6ffc2c7 100%
+        );
+        overflow: hidden;
+        cursor: pointer;
+
+        &-time {
+            background: linear-gradient(180deg, #ff0099 0%, #cc00ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        svg {
+            height: 80px;
+            width: auto;
+        }
+
+        &-offer-icon-left {
+            position: absolute;
+            left: 20px;
+            bottom: -25px;
+        }
+
+        &-offer-icon-right {
+            position: absolute;
+            right: 20px;
+            bottom: -25px;
+            transform: scaleX(-1);
+        }
+    }
+}

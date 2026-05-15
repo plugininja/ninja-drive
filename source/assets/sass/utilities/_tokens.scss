@@ -1,0 +1,125 @@
+// ================================================================
+// AUTO-GENERATED from tokens/index.json — DO NOT EDIT DIRECTLY
+// Run `npm run build:tokens` to regenerate
+// ================================================================
+
+// Default (light) theme
+:root {
+    --pnpnd-primary: #1F6CFA;
+    --pnpnd-primary-hover: hsl(from var(--pnpnd-primary) h s l / 80%);
+    --pnpnd-secondary: hsl(from var(--pnpnd-primary) h s l / 18%);
+    --pnpnd-primary-light: hsl(from var(--pnpnd-primary) h s l / 11%);
+    --pnpnd-primary-extralight: hsl(from var(--pnpnd-primary) h s l / 5%);
+    --pnpnd-success: #00ac47;
+    --pnpnd-success-100: #00ac4733;
+    --pnpnd-success-50: #00ac471a;
+    --pnpnd-warning: #ff5900;
+    --pnpnd-warning-100: #ff590033;
+    --pnpnd-warning-50: #ff59001a;
+    --pnpnd-error: #ff0000;
+    --pnpnd-error-100: #ff000033;
+    --pnpnd-error-50: #ff00001a;
+    --pnpnd-info: #838383;
+    --pnpnd-info-100: #d9d9d9;
+    --pnpnd-info-50: #f2f2f2;
+    --pnpnd-badge-pro: #ffc300;
+    --pnpnd-badge-new: #e3eeff;
+    --pnpnd-white: #ffffff;
+    --pnpnd-black: #000e25;
+    --pnpnd-gray-50: #f9fafb;
+    --pnpnd-gray-100: #f3f4f6;
+    --pnpnd-gray-200: #e5e7eb;
+    --pnpnd-gray-300: #d1d5db;
+    --pnpnd-gray-400: #9ca3af;
+    --pnpnd-gray-500: #979797;
+    --pnpnd-gray-600: #6b7280;
+    --pnpnd-gray-700: #374151;
+    --pnpnd-gray-800: #243247;
+    --pnpnd-gray-900: #111827;
+    --pnpnd-shadow-sm: #7587804d;
+    --pnpnd-shadow-xs: #6c7f9e1a;
+    --pnpnd-space-0: 0;
+    --pnpnd-space-1: 4px;
+    --pnpnd-space-2: 8px;
+    --pnpnd-space-3: 12px;
+    --pnpnd-space-4: 16px;
+    --pnpnd-space-5: 20px;
+    --pnpnd-space-6: 24px;
+    --pnpnd-space-7: 32px;
+    --pnpnd-space-8: 40px;
+    --pnpnd-space-9: 48px;
+    --pnpnd-space-10: 64px;
+    --pnpnd-font-family: 'Poppins', sans-serif;
+    --pnpnd-font-size-xs: 12px;
+    --pnpnd-font-size-sm: 14px;
+    --pnpnd-font-size-md: 16px;
+    --pnpnd-font-size-lg: 18px;
+    --pnpnd-font-size-xl: 20px;
+    --pnpnd-font-size-2xl: 24px;
+    --pnpnd-font-size-3xl: 30px;
+    --pnpnd-font-size-4xl: 36px;
+    --pnpnd-font-size-5xl: 48px;
+    --pnpnd-font-size-6xl: 60px;
+    --pnpnd-font-weight-thin: 100;
+    --pnpnd-font-weight-extralight: 200;
+    --pnpnd-font-weight-light: 300;
+    --pnpnd-font-weight-normal: 400;
+    --pnpnd-font-weight-medium: 500;
+    --pnpnd-font-weight-semibold: 600;
+    --pnpnd-font-weight-bold: 700;
+    --pnpnd-font-weight-extrabold: 800;
+    --pnpnd-font-weight-black: 900;
+    --pnpnd-radius-none: 0;
+    --pnpnd-radius-xs: 2px;
+    --pnpnd-radius-sm: 4px;
+    --pnpnd-radius-md: 8px;
+    --pnpnd-radius-lg: 12px;
+    --pnpnd-radius-xl: 24px;
+    --pnpnd-radius-2xl: 32px;
+    --pnpnd-radius-pill: 9999px;
+    --pnpnd-radius-full: 50%;
+    --pnpnd-style-none: none;
+    --pnpnd-style-solid: solid;
+    --pnpnd-style-dashed: dashed;
+    --pnpnd-style-dotted: dotted;
+    --pnpnd-size-extrasmall: extrasmall;
+    --pnpnd-size-small: small;
+    --pnpnd-size-medium: medium;
+    --pnpnd-size-large: large;
+    --pnpnd-size-extralarge: extralarge;
+    --pnpnd-align-start: start;
+    --pnpnd-align-end: end;
+    --pnpnd-align-center: center;
+    --pnpnd-align-between: between;
+    --pnpnd-align-around: around;
+    --pnpnd-align-evenly: evenly;
+    --pnpnd-inline-align-start: start;
+    --pnpnd-inline-align-end: end;
+    --pnpnd-inline-align-center: center;
+    --pnpnd-inline-align-baseline: baseline;
+    --pnpnd-inline-align-stretch: stretch;
+    --pnpnd-text-align-left: left;
+    --pnpnd-text-align-center: center;
+    --pnpnd-text-align-right: right;
+    --pnpnd-text-align-justify: justify;
+    --pnpnd-text-transform-none: none;
+    --pnpnd-text-transform-uppercase: uppercase;
+    --pnpnd-text-transform-capitalize: capitalize;
+    --pnpnd-text-transform-lowercase: lowercase;
+    --pnpnd-breakpoint-sm: 480px;
+    --pnpnd-breakpoint-md: 768px;
+    --pnpnd-breakpoint-lg: 1024px;
+    --pnpnd-breakpoint-xl: 1280px;
+    --pnpnd-transition-fast: 150ms ease;
+    --pnpnd-transition-normal: 300ms ease;
+    --pnpnd-transition-slow: 500ms ease;
+    --pnpnd-transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+// Dark theme overrides
+:root[pnpnd-theme-status="dark"] {
+    --pnpnd-primary-extralight: #000000;
+    --pnpnd-white: #151515;
+    --pnpnd-black: #ffffff;
+    --pnpnd-gray-800: #f6fcfa;
+}

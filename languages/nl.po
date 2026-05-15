@@ -1,0 +1,1383 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Ninja Drive 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ninja-drive\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-05-14T10:42:28+00:00\n"
+"PO-Revision-Date: 2026-05-14 16:48+0600\n"
+"Language: nl\n"
+"X-Generator: Poedit 3.9\n"
+"X-Domain: ninja-drive\n"
+
+#. Plugin Name of the plugin
+#: ninja-drive.php
+#: includes/Integrations/Blocks.php:58
+#: includes/Integrations/Elementor.php:46
+#: includes/Integrations/Forms/ContactForm7.php:54
+#: includes/Pages/AdminPages.php:63
+#: includes/Pages/AdminPages.php:64
+msgid "Ninja Drive"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: ninja-drive.php
+msgid "https://plugininja.com/ninja-drive/"
+msgstr ""
+
+#. Description of the plugin
+#: ninja-drive.php
+msgid "Seamlessly integrate Google Drive with WordPress to embed, share, play, and download documents and media files directly from Google Drive."
+msgstr ""
+
+#. Author of the plugin
+#: ninja-drive.php
+msgid "Plugininja"
+msgstr ""
+
+#. Author URI of the plugin
+#: ninja-drive.php
+msgid "https://plugininja.com"
+msgstr ""
+
+#: app/Accounts.php:180
+msgid "You do not have access to this account"
+msgstr ""
+
+#: app/Authorization.php:22
+msgid "Unable to get authorization code."
+msgstr ""
+
+#: app/Authorization.php:23
+msgid "Required parameters \"code\" is missing. so we are unable to get authorization this account. please try again"
+msgstr ""
+
+#: app/Authorization.php:47
+msgid "Unable to get access token."
+msgstr ""
+
+#: app/Authorization.php:48
+msgid "Access token is missing so we are not able to add this account. please try again"
+msgstr ""
+
+#: app/Authorization.php:63
+#: app/Authorization.php:74
+#: app/Authorization.php:94
+#: app/Authorization.php:124
+msgid "Unable to get account data."
+msgstr ""
+
+#: app/Authorization.php:75
+#: app/Authorization.php:95
+msgid "Account data is missing so we are not able to add this account. please try again"
+msgstr ""
+
+#: app/Authorization.php:106
+msgid "Unable to add account."
+msgstr ""
+
+#: app/Authorization.php:115
+msgid "Account added successfully."
+msgstr ""
+
+#: app/Authorization.php:116
+msgid "Great! Your account is added successfully. Now you can start using your files in your website. if you have any issue or need any help please feel free to contact us."
+msgstr ""
+
+#: app/Client.php:74
+msgid "Configuration Error"
+msgstr ""
+
+#: app/Client.php:198
+#: app/Client.php:208
+msgid "Account connection lost"
+msgstr ""
+
+#: app/Client.php:209
+msgid "Your account connection was lost. Please re-authorize to continue."
+msgstr ""
+
+#: app/Client.php:257
+msgid "Access token is empty. Please re-authenticate."
+msgstr ""
+
+#: app/Client.php:265
+msgid "Access token is invalid. Please re-authenticate."
+msgstr ""
+
+#: app/Client.php:278
+msgid "Refresh token is empty. Please re-authenticate."
+msgstr ""
+
+#: app/Client.php:327
+msgid "Client ID is required. Please set it in the settings."
+msgstr ""
+
+#: app/Client.php:331
+msgid "Client Secret is required. Please set it in the settings."
+msgstr ""
+
+#: app/Client.php:335
+msgid "Redirect URL is required. Please set it in the settings."
+msgstr ""
+
+#: app/Feature/BreadcrumbBuilder.php:16
+#: app/Feature/BreadcrumbBuilder.php:67
+#: app/Feature/BreadcrumbBuilder.php:127
+msgid "My Drive"
+msgstr ""
+
+#: app/Feature/BreadcrumbBuilder.php:68
+#: app/Feature/BreadcrumbBuilder.php:97
+msgid "Shared with me"
+msgstr ""
+
+#: app/Feature/BreadcrumbBuilder.php:69
+msgid "Starred"
+msgstr ""
+
+#: app/Feature/BreadcrumbBuilder.php:70
+#: app/Feature/BreadcrumbBuilder.php:96
+msgid "Computers"
+msgstr ""
+
+#: app/Feature/BreadcrumbBuilder.php:71
+#: app/Feature/BreadcrumbBuilder.php:95
+msgid "Shared Drives"
+msgstr ""
+
+#: app/Feature/BreadcrumbBuilder.php:90
+msgid "Home"
+msgstr ""
+
+#: app/Feature/FileEditor.php:34
+msgid "Invalid file ID"
+msgstr ""
+
+#: app/Feature/FileEditor.php:45
+msgid "File Keys are required to delete files."
+msgstr ""
+
+#: app/Feature/FileEditor.php:54
+msgid "No valid file IDs found for the provided file keys."
+msgstr ""
+
+#: app/Feature/FileEditor.php:64
+msgid "Failed to delete file."
+msgstr ""
+
+#: app/Feature/FileRetriever.php:18
+msgid "No file keys provided."
+msgstr ""
+
+#: app/Feature/FileRetriever.php:22
+msgid "File keys must be an array."
+msgstr ""
+
+#: app/Feature/FileRetriever.php:93
+msgid "Missing file id or account id."
+msgstr ""
+
+#: app/Feature/FileRetriever.php:115
+msgid "Something went wrong while fetching the file. Please try again."
+msgstr ""
+
+#: app/Feature/FileUploader.php:47
+msgid "Failed to get upload URL"
+msgstr ""
+
+#: app/Feature/FileUploader.php:55
+msgid "Invalid parameters for retrieving uploaded file"
+msgstr ""
+
+#: app/Feature/FileUploader.php:75
+msgid "You do not have permission to access this file"
+msgstr ""
+
+#: app/Feature/FileUploader.php:87
+msgid "Uploaded file not found"
+msgstr ""
+
+#: app/Feature/FolderManager.php:24
+msgid "Missing folder key."
+msgstr ""
+
+#: app/Feature/FolderManager.php:28
+#: app/Feature/FolderManager.php:120
+#: app/Feature/FolderManager.php:136
+msgid "You do not have permission to access this resource."
+msgstr ""
+
+#: app/Feature/FolderManager.php:149
+msgid "Folder not found."
+msgstr ""
+
+#: app/Feature/FolderManager.php:174
+msgid "Folder name or parent folder not found for new folder creation"
+msgstr ""
+
+#: app/Feature/FolderManager.php:178
+msgid "Parent folder not found key for new folder creation"
+msgstr ""
+
+#: app/Feature/FolderManager.php:190
+msgid "Failed to create folder"
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:24
+msgid "A file key is required to generate a preview link. Please provide a valid key and try again."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:34
+#: app/Feature/MediaLinkGenerator.php:78
+msgid "Unable to load file data. Please verify the file key and try again."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:51
+msgid "Unable to generate preview link due to insufficient permissions."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:56
+msgid "Invalid file ID. Please verify the file key and try again."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:68
+msgid "A file key is required to download a file. Please provide a valid key and try again."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:83
+msgid "Invalid file key. Please verify the file key and try again."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:92
+msgid "Unable to download file due to insufficient permissions."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:99
+msgid "This file is a directory"
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:100
+msgid "This file is a directory. Please download the file as a zip file."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:113
+#: app/Feature/MediaLinkGenerator.php:131
+msgid "The requested export format is not available for this file."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:136
+#: app/Feature/MediaLinkGenerator.php:173
+msgid "File not found"
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:153
+msgid "Unable to generate download link."
+msgstr ""
+
+#: app/Feature/MediaLinkGenerator.php:184
+msgid "Unable to generate shared link."
+msgstr ""
+
+#: app/Feature/PermissionManager.php:57
+msgid "Unable to create a permission for this file. Please try again."
+msgstr ""
+
+#: app/Feature/PermissionManager.php:71
+msgid "Failed to create preview/share due to insufficient permissions. Please enable the required access in Google Drive or in the plugin by going to Settings → Advanced → Manage Sharing Permissions."
+msgstr ""
+
+#: app/File.php:22
+msgid "Google response is not a valid Entry."
+msgstr ""
+
+#: app/File.php:180
+msgid "Found an item without a parent folder (orphaned):"
+msgstr ""
+
+#: app/Service/FileService.php:45
+msgid "Missing file id."
+msgstr ""
+
+#: app/Service/FileService.php:60
+#: app/Service/FileService.php:107
+#: app/Service/FileService.php:135
+#: app/Service/FileService.php:150
+#: app/Service/FileService.php:172
+#: app/Service/FileService.php:187
+msgid "File not found."
+msgstr ""
+
+#: includes/API/BaseController.php:128
+msgid "Current page of the collection."
+msgstr ""
+
+#: includes/API/BaseController.php:135
+msgid "Maximum number of items to be returned in result set."
+msgstr ""
+
+#: includes/API/BaseController.php:143
+msgid "Order sort attribute ascending or descending."
+msgstr ""
+
+#: includes/API/BaseController.php:149
+msgid "Sort collection by parameter."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:156
+#: includes/API/Controllers/Account.php:260
+#: includes/API/Controllers/Account.php:291
+#: includes/API/Controllers/Account.php:315
+#: includes/API/Controllers/Account.php:436
+msgid "Invalid account key provided."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:165
+#: includes/API/Controllers/Account.php:444
+msgid "Reconnected account successfully"
+msgstr ""
+
+#: includes/API/Controllers/Account.php:201
+msgid "Auth URL could not be generated"
+msgstr ""
+
+#: includes/API/Controllers/Account.php:208
+msgid "Auth URL retrieved successfully"
+msgstr ""
+
+#: includes/API/Controllers/Account.php:235
+#: includes/API/Controllers/Account.php:282
+#: includes/API/Controllers/Account.php:426
+msgid "Account key is required."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:351
+msgid "Unique identifier for the account."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:357
+msgid "Unique key for the account."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:363
+msgid "Display name of the account."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:368
+msgid "Email address associated with the account."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:374
+msgid "Avatar URL for the account."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:380
+msgid "Storage usage information."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:385
+msgid "Whether the account has lost authentication."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:391
+msgid "Root folder ID for the account."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:396
+msgid "Associated WordPress user."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:411
+msgid "Whether the account is active."
+msgstr ""
+
+#: includes/API/Controllers/Account.php:450
+msgid "Switched account successfully"
+msgstr ""
+
+#: includes/API/Controllers/File.php:604
+msgid "Google Drive file ID."
+msgstr ""
+
+#: includes/API/Controllers/File.php:610
+msgid "Unique key for the file."
+msgstr ""
+
+#: includes/API/Controllers/File.php:616
+msgid "File name."
+msgstr ""
+
+#: includes/API/Controllers/File.php:621
+msgid "File description."
+msgstr ""
+
+#: includes/API/Controllers/File.php:626
+#: includes/API/Controllers/Folder.php:287
+msgid "Parent folder ID."
+msgstr ""
+
+#: includes/API/Controllers/File.php:631
+#: includes/API/Controllers/Folder.php:292
+msgid "Owning account ID."
+msgstr ""
+
+#: includes/API/Controllers/File.php:637
+msgid "File size in bytes."
+msgstr ""
+
+#: includes/API/Controllers/File.php:642
+msgid "MIME type of the file."
+msgstr ""
+
+#: includes/API/Controllers/File.php:647
+msgid "File extension."
+msgstr ""
+
+#: includes/API/Controllers/File.php:652
+msgid "File icon URL."
+msgstr ""
+
+#: includes/API/Controllers/File.php:658
+msgid "File thumbnail URL."
+msgstr ""
+
+#: includes/API/Controllers/File.php:664
+msgid "Additional file metadata from Google Drive."
+msgstr ""
+
+#: includes/API/Controllers/File.php:669
+#: includes/API/Controllers/Folder.php:353
+msgid "Whether this is a directory."
+msgstr ""
+
+#: includes/API/Controllers/File.php:675
+msgid "Whether the file is shared."
+msgstr ""
+
+#: includes/API/Controllers/File.php:681
+msgid "Whether the file is starred."
+msgstr ""
+
+#: includes/API/Controllers/File.php:687
+msgid "Media metadata for images/videos."
+msgstr ""
+
+#: includes/API/Controllers/File.php:692
+msgid "File permissions from Google Drive."
+msgstr ""
+
+#: includes/API/Controllers/File.php:697
+#: includes/API/Controllers/Folder.php:359
+#: includes/API/Controllers/Notice.php:339
+#: includes/API/Controllers/Widget.php:535
+msgid "Creation date."
+msgstr ""
+
+#: includes/API/Controllers/File.php:704
+#: includes/API/Controllers/Folder.php:366
+#: includes/API/Controllers/Notice.php:346
+#: includes/API/Controllers/Widget.php:542
+msgid "Last update date."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:270
+msgid "Google Drive folder ID."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:276
+msgid "Unique key for the folder."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:282
+msgid "Folder name."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:298
+msgid "Breadcrumb trail for the folder."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:310
+msgid "Files and folders contained within."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:318
+msgid "Whether there are more items to load."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:323
+msgid "Total number of items."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:328
+msgid "Total number of pages."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:333
+msgid "Current page number."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:338
+msgid "Items per page."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:343
+msgid "Folder size in bytes."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:348
+msgid "MIME type."
+msgstr ""
+
+#: includes/API/Controllers/Folder.php:384
+msgid "Folder name and parent file key are required"
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:282
+msgid "Unique identifier for the notice."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:288
+msgid "Notice title."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:293
+msgid "Notice type."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:298
+msgid "Notice description."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:303
+msgid "Notice status."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:309
+msgid "Related widget ID."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:314
+msgid "ID of the user who triggered the notice."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:319
+msgid "Related file key."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:324
+msgid "Related file name."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:329
+msgid "Page where the event occurred."
+msgstr ""
+
+#: includes/API/Controllers/Notice.php:334
+msgid "Additional notice data."
+msgstr ""
+
+#: includes/API/Controllers/Settings.php:609
+msgid "Default settings values."
+msgstr ""
+
+#: includes/API/Controllers/Settings.php:615
+msgid "Current settings values."
+msgstr ""
+
+#: includes/API/Controllers/Users.php:32
+msgid "Whether to hide the current logged-in user from the list."
+msgstr ""
+
+#: includes/API/Controllers/Users.php:38
+msgid "Comma-separated list of user fields to retrieve. Allowed fields are: ID, user_login, user_nicename, user_email, user_url, user_registered, display_name, nickname, first_name, last_name, description, roles."
+msgstr ""
+
+#. translators: %s: Invalid field name
+#: includes/API/Controllers/Users.php:63
+#, php-format
+msgid "Invalid field: %s"
+msgstr ""
+
+#: includes/API/Controllers/Users.php:90
+msgid "List of WordPress users."
+msgstr ""
+
+#: includes/API/Controllers/Users.php:124
+msgid "List of WordPress roles."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:229
+msgid "Default template not found."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:238
+msgid "Failed to retrieve default template."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:271
+#: assets/js/admin.js:274
+msgid "Widget created successfully."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:274
+msgid "Failed to create widget."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:317
+#: models/Widget.php:886
+msgid "Widget not found."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:326
+msgid "Failed to retrieve widget."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:377
+msgid "Failed to retrieve widgets."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:409
+#: assets/js/admin.js:274
+msgid "Widget updated successfully."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:412
+msgid "Failed to update widget."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:430
+msgid "Widget deleted successfully."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:432
+msgid "Failed to delete widget."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:440
+msgid "Widget IDs are required."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:459
+msgid "Widget(s) duplicated successfully."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:462
+msgid "Failed to duplicate widget(s)."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:470
+msgid "Import widgets is required."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:484
+msgid "Widgets imported successfully."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:487
+msgid "Failed to import widgets."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:496
+msgid "Unique identifier for the widget."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:502
+msgid "Widget title."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:507
+msgid "Widget type."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:513
+msgid "Widget status."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:519
+msgid "Integration identifier."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:524
+msgid "Widget configuration data."
+msgstr ""
+
+#: includes/API/Controllers/Widget.php:529
+msgid "Widget location assignments."
+msgstr ""
+
+#: includes/Content.php:91
+msgid "Invalid action specified."
+msgstr ""
+
+#: includes/Content.php:91
+#: includes/Content.php:186
+#: includes/Content.php:221
+#: includes/Content.php:245
+#: includes/Content.php:283
+#: includes/Content.php:293
+#: includes/Content.php:305
+#: includes/Content.php:497
+#: includes/Content.php:510
+#: includes/Content.php:528
+msgid "Error"
+msgstr ""
+
+#: includes/Content.php:180
+msgid "Access denied!"
+msgstr ""
+
+#: includes/Content.php:245
+#: includes/Content.php:497
+msgid "File key is required."
+msgstr ""
+
+#: includes/Content.php:260
+msgid "Invalid Download URL"
+msgstr ""
+
+#: includes/Content.php:261
+msgid "Invalid or expired download link."
+msgstr ""
+
+#: includes/Content.php:294
+msgid "Something went wrong to download the file."
+msgstr ""
+
+#: includes/Content.php:510
+msgid "Invalid or expired share link."
+msgstr ""
+
+#: includes/Content.php:545
+msgid "Invalid authorization code!"
+msgstr ""
+
+#: includes/Content.php:577
+#: includes/Content.php:592
+msgid "Permission Denied"
+msgstr ""
+
+#: includes/Content.php:578
+msgid "You do not have permission to access this file. Widget ID is missing."
+msgstr ""
+
+#: includes/Content.php:593
+#: templates/notice-card/permission-denied.php:77
+msgid "You do not have permission to access this file."
+msgstr ""
+
+#. translators: %s: error code returned by the file lookup
+#: includes/Content.php:604
+#, php-format
+msgid "Error | %s"
+msgstr ""
+
+#: includes/Integrations/Elementor/BaseWidget.php:20
+msgid "Content"
+msgstr ""
+
+#: includes/Integrations/Elementor/BaseWidget.php:29
+#: includes/Integrations/Elementor/BaseWidget.php:150
+msgid "Configure Widget"
+msgstr ""
+
+#: includes/Integrations/Elementor/BaseWidget.php:37
+msgid "Widget Data"
+msgstr ""
+
+#: includes/Integrations/Elementor/BaseWidget.php:46
+msgid "Select Widget"
+msgstr ""
+
+#: includes/Integrations/Elementor/BaseWidget.php:50
+msgid "Select a widget to display its content."
+msgstr ""
+
+#: includes/Integrations/Elementor/BaseWidget.php:145
+msgid "Click Configure to setup your widget"
+msgstr ""
+
+#. translators: %s: Widget type
+#: includes/Integrations/Elementor/BaseWidget.php:178
+#, php-format
+msgid "-- Select %s Widget --"
+msgstr ""
+
+#: includes/Integrations/Elementor/EmbedDocuments.php:13
+#: assets/js/shared.js:1720
+msgid "Embed Documents"
+msgstr ""
+
+#: includes/Integrations/Elementor/FileBrowser.php:13
+#: assets/js/shared.js:1720
+msgid "File Browser"
+msgstr ""
+
+#: includes/Integrations/Elementor/Gallery.php:13
+#: assets/js/shared.js:1355
+#: assets/js/shared.js:1720
+msgid "Gallery"
+msgstr ""
+
+#: includes/Integrations/Forms/ContactForm7.php:76
+msgid "Ninja Drive Upload"
+msgstr ""
+
+#: includes/Integrations/Forms/ContactForm7.php:81
+msgid "Upload files attached to this form to Ninja Drive. Files will be uploaded to the selected folder. This settings will apply only the CF7 file fields."
+msgstr ""
+
+#: includes/Integrations/Forms/ContactForm7.php:88
+msgid "Enable Ninja Drive Upload"
+msgstr ""
+
+#: includes/Integrations/Forms/ContactForm7.php:98
+msgid "Upload Folder"
+msgstr ""
+
+#: includes/Integrations/Forms/ContactForm7.php:103
+msgid "— Select Folder —"
+msgstr ""
+
+#: includes/Integrations/Forms/ContactForm7.php:115
+msgid "Skip Local Upload"
+msgstr ""
+
+#: includes/Integrations/Forms/ContactForm7.php:121
+msgid "If enabled, files will only be uploaded to Google Drive and not stored locally on the server."
+msgstr ""
+
+#: includes/Integrations/Forms/ContactForm7.php:197
+msgid "Unknown error"
+msgstr ""
+
+#. translators: 1: File name, 2: Error message
+#: includes/Integrations/Forms/ContactForm7.php:203
+#, php-format
+msgid "Failed to upload file \"%1$s\" to Google Drive: %2$s"
+msgstr ""
+
+#. translators: 1: File name
+#: includes/Integrations/Forms/ContactForm7.php:215
+#, php-format
+msgid "File \"%s\" uploaded to Google Drive successfully."
+msgstr ""
+
+#: includes/Pages/AdminPages.php:13
+msgid "File Manager"
+msgstr ""
+
+#: includes/Pages/AdminPages.php:18
+#: assets/js/admin.js:284
+msgid "Widget Builder"
+msgstr ""
+
+#: includes/Pages/AdminPages.php:23
+#: includes/Pninja.php:96
+#: assets/js/admin.js:424
+#: assets/js/shared.js:1790
+msgid "Settings"
+msgstr ""
+
+#. translators: %s: Menu title (e.g. "File Manager")
+#: includes/Pages/AdminPages.php:79
+#, php-format
+msgid "%s - Ninja Drive"
+msgstr ""
+
+#: includes/Pninja.php:80
+msgid "Docs & FAQs"
+msgstr ""
+
+#: includes/Utils/Helpers.php:24
+msgid "Return to the Plugins page"
+msgstr ""
+
+#: includes/Utils/Helpers.php:26
+msgid "Plugin Activation Failed"
+msgstr ""
+
+#. translators: %s: Minimum required WordPress version
+#: includes/Utils/Helpers.php:34
+#, php-format
+msgid "WordPress %s or higher is required."
+msgstr ""
+
+#. translators: %s: Minimum required PHP version
+#: includes/Utils/Helpers.php:39
+#, php-format
+msgid "PHP %s or higher is required."
+msgstr ""
+
+#: includes/Widget.php:98
+msgid "Please provide a valid ID"
+msgstr ""
+
+#: includes/Widget.php:117
+#: includes/Widget.php:155
+msgid "Widget not found"
+msgstr ""
+
+#: includes/Widget.php:174
+msgid "Widget is disabled"
+msgstr ""
+
+#: includes/Widget.php:178
+msgid "Please enable this Widget from Widget Builder"
+msgstr ""
+
+#: includes/Widget.php:228
+msgid "No data available for this Widget"
+msgstr ""
+
+#: includes/Widget.php:255
+msgid "Type not given for this Widget"
+msgstr ""
+
+#: includes/Widget.php:274
+msgid "No data provided for this Widget"
+msgstr ""
+
+#: models/Account.php:255
+msgid "You do not have permission to update accounts."
+msgstr ""
+
+#: models/Account.php:310
+msgid "You do not have permission to delete this account."
+msgstr ""
+
+#: models/Account.php:319
+msgid "Account not found."
+msgstr ""
+
+#: models/Account.php:323
+msgid "Invalid account data."
+msgstr ""
+
+#: models/Account.php:333
+msgid "Failed to delete account."
+msgstr ""
+
+#: models/Account.php:410
+msgid "You do not have permission to retrieve tokens."
+msgstr ""
+
+#: models/Account.php:426
+msgid "Account ID is required."
+msgstr ""
+
+#: models/Account.php:461
+msgid "You do not have permission to update tokens."
+msgstr ""
+
+#: models/Account.php:465
+msgid "Account ID and token are required."
+msgstr ""
+
+#: models/BaseModel.php:54
+msgid "Clone is not allowed."
+msgstr ""
+
+#: models/BaseModel.php:63
+msgid "Serialization is forbidden."
+msgstr ""
+
+#: models/BaseModel.php:72
+msgid "Deserialization is forbidden."
+msgstr ""
+
+#: models/BaseModel.php:89
+#: models/BaseModel.php:119
+#: models/BaseModel.php:177
+#: models/Notices.php:292
+#: models/Widget.php:367
+msgid "A database error occurred: "
+msgstr ""
+
+#: models/BaseModel.php:107
+msgid "Data cannot be empty for insert operation."
+msgstr ""
+
+#: models/BaseModel.php:123
+msgid "Failed to insert data into database."
+msgstr ""
+
+#: models/BaseModel.php:153
+msgid "Data cannot be empty for update operation."
+msgstr ""
+
+#: models/BaseModel.php:157
+msgid "Where conditions cannot be empty for update operation."
+msgstr ""
+
+#: models/BaseModel.php:166
+msgid "Data and format array must have the same number of elements."
+msgstr ""
+
+#: models/BaseModel.php:170
+msgid "Where conditions and where format array must have the same number of elements."
+msgstr ""
+
+#: models/BaseModel.php:181
+msgid "Failed to update data in database."
+msgstr ""
+
+#: models/BaseModel.php:220
+msgid "Invalid field name provided."
+msgstr ""
+
+#: models/BaseModel.php:233
+msgid "Delete operation blocked: WHERE clause is required."
+msgstr ""
+
+#: models/BaseModel.php:250
+msgid "Failed to delete data from database."
+msgstr ""
+
+#: models/BaseModel.php:273
+msgid "Where conditions cannot be empty for exists check."
+msgstr ""
+
+#: models/BaseModel.php:286
+msgid "Invalid column name provided."
+msgstr ""
+
+#: models/BaseModel.php:364
+msgid "Data cannot be empty for batch insert operation."
+msgstr ""
+
+#: models/BaseModel.php:382
+msgid "Failed to insert any records in batch operation."
+msgstr ""
+
+#: models/Files.php:35
+#: models/Files.php:87
+#: models/Files.php:197
+#: models/Files.php:261
+#: models/Files.php:320
+#: models/Files.php:603
+#: models/Files.php:633
+#: models/Files.php:718
+#: models/Files.php:799
+#: models/Files.php:821
+msgid "This account is lost or does not exist. Please re-authorize it."
+msgstr ""
+
+#: models/Files.php:201
+msgid "The requested file could not be found. 3"
+msgstr ""
+
+#: models/Files.php:332
+msgid "The requested file could not be found. 1"
+msgstr ""
+
+#: models/Files.php:366
+msgid "The requested file could not be found. 4"
+msgstr ""
+
+#: models/Files.php:378
+msgid "The requested file could not be found. 5"
+msgstr ""
+
+#: models/Files.php:659
+msgid "The requested file could not be found. 7"
+msgstr ""
+
+#: models/Files.php:960
+msgid "This shared link is protected by a password. Please provide the password to access the file."
+msgstr ""
+
+#: models/Files.php:964
+#: models/Files.php:1017
+msgid "The provided password is incorrect."
+msgstr ""
+
+#: models/Files.php:999
+msgid "This download link has expired."
+msgstr ""
+
+#: models/Files.php:1007
+msgid "The download limit for this link has been exceeded."
+msgstr ""
+
+#: models/Files.php:1013
+msgid "This Download link is protected by a password. Please provide the password to access the file."
+msgstr ""
+
+#: models/Notices.php:88
+msgid "Invalid output type specified."
+msgstr ""
+
+#: models/Notices.php:157
+msgid "Type and title are required fields."
+msgstr ""
+
+#: models/Notices.php:208
+#: models/Notices.php:251
+#: models/Widget.php:189
+#: models/Widget.php:242
+#: models/Widget.php:270
+#: models/Widget.php:275
+#: models/Widget.php:300
+msgid "Invalid ID provided."
+msgstr ""
+
+#: models/Notices.php:212
+msgid "Notice not found."
+msgstr ""
+
+#: models/Widget.php:40
+#: models/Widget.php:867
+msgid "Widget ID is required."
+msgstr ""
+
+#: models/Widget.php:121
+#: models/Widget.php:759
+msgid "Invalid widget type."
+msgstr ""
+
+#: models/Widget.php:162
+msgid "Widget type is required."
+msgstr ""
+
+#: models/Widget.php:166
+msgid "Widget data is required."
+msgstr ""
+
+#: models/Widget.php:257
+msgid "Failed to delete any widgets."
+msgstr ""
+
+#: models/Widget.php:598
+msgid "Password is required"
+msgstr ""
+
+#: models/Widget.php:606
+msgid "Password is incorrect"
+msgstr ""
+
+#: models/Widget.php:611
+msgid "Password Error"
+msgstr ""
+
+#: models/Widget.php:634
+msgid "No file keys specified in the widget data."
+msgstr ""
+
+#: models/Widget.php:649
+msgid "The specified file key is not allowed for this widget."
+msgstr ""
+
+#: models/Widget.php:765
+msgid "Unsupported widget type for schema validation."
+msgstr ""
+
+#: templates/content-password.php:14
+msgid "Password Form"
+msgstr ""
+
+#: templates/content-password.php:170
+msgid "You do not have access to this file."
+msgstr ""
+
+#: templates/content-password.php:171
+msgid "Enter the secret password to access this."
+msgstr ""
+
+#: templates/content-password.php:177
+msgid "Enter Password"
+msgstr ""
+
+#: templates/content-password.php:186
+msgid "Submit"
+msgstr ""
+
+#: templates/notice-card/permission-denied.php:76
+msgid "Access Denied"
+msgstr ""
+
+#: assets/js/blocks/embed-documents/block.json
+#: source/gutenberg/Blocks/embed-documents/block.json
+msgctxt "block title"
+msgid "Embed Documents"
+msgstr ""
+
+#: assets/js/blocks/embed-documents/block.json
+#: source/gutenberg/Blocks/embed-documents/block.json
+msgctxt "block description"
+msgid "Display files from Google Drive as embedded documents"
+msgstr ""
+
+#: assets/js/blocks/embed-documents/block.json
+#: source/gutenberg/Blocks/embed-documents/block.json
+msgctxt "block keyword"
+msgid "embed documents"
+msgstr ""
+
+#: assets/js/blocks/embed-documents/block.json
+#: assets/js/blocks/file-browser/block.json
+#: assets/js/blocks/file-list/block.json
+#: assets/js/blocks/gallery/block.json
+#: assets/js/blocks/media-player/block.json
+#: assets/js/blocks/search-box/block.json
+#: assets/js/blocks/shortcode/block.json
+#: assets/js/blocks/slider/block.json
+#: source/gutenberg/Blocks/embed-documents/block.json
+#: source/gutenberg/Blocks/file-browser/block.json
+#: source/gutenberg/Blocks/file-list/block.json
+#: source/gutenberg/Blocks/gallery/block.json
+#: source/gutenberg/Blocks/media-player/block.json
+#: source/gutenberg/Blocks/search-box/block.json
+#: source/gutenberg/Blocks/shortcode/block.json
+#: source/gutenberg/Blocks/slider/block.json
+msgctxt "block keyword"
+msgid "google drive"
+msgstr ""
+
+#: assets/js/blocks/embed-documents/block.json
+#: assets/js/blocks/file-browser/block.json
+#: assets/js/blocks/file-list/block.json
+#: assets/js/blocks/gallery/block.json
+#: assets/js/blocks/media-player/block.json
+#: assets/js/blocks/search-box/block.json
+#: assets/js/blocks/shortcode/block.json
+#: assets/js/blocks/slider/block.json
+#: source/gutenberg/Blocks/embed-documents/block.json
+#: source/gutenberg/Blocks/file-browser/block.json
+#: source/gutenberg/Blocks/file-list/block.json
+#: source/gutenberg/Blocks/gallery/block.json
+#: source/gutenberg/Blocks/media-player/block.json
+#: source/gutenberg/Blocks/search-box/block.json
+#: source/gutenberg/Blocks/shortcode/block.json
+#: source/gutenberg/Blocks/slider/block.json
+msgctxt "block keyword"
+msgid "files"
+msgstr ""
+
+#: assets/js/blocks/file-browser/block.json
+#: source/gutenberg/Blocks/file-browser/block.json
+msgctxt "block title"
+msgid "File Browser"
+msgstr ""
+
+#: assets/js/blocks/file-browser/block.json
+#: source/gutenberg/Blocks/file-browser/block.json
+msgctxt "block description"
+msgid "Display files from Google Drive as a file browser"
+msgstr ""
+
+#: assets/js/blocks/file-browser/block.json
+#: source/gutenberg/Blocks/file-browser/block.json
+msgctxt "block keyword"
+msgid "file browser"
+msgstr ""
+
+#: assets/js/blocks/file-list/block.json
+#: source/gutenberg/Blocks/file-list/block.json
+msgctxt "block title"
+msgid "File List"
+msgstr ""
+
+#: assets/js/blocks/file-list/block.json
+#: source/gutenberg/Blocks/file-list/block.json
+msgctxt "block description"
+msgid "Display files from Google Drive as a file list"
+msgstr ""
+
+#: assets/js/blocks/file-list/block.json
+#: source/gutenberg/Blocks/file-list/block.json
+msgctxt "block keyword"
+msgid "file list"
+msgstr ""
+
+#: assets/js/blocks/gallery/block.json
+#: source/gutenberg/Blocks/gallery/block.json
+msgctxt "block title"
+msgid "Gallery"
+msgstr ""
+
+#: assets/js/blocks/gallery/block.json
+#: source/gutenberg/Blocks/gallery/block.json
+msgctxt "block description"
+msgid "Display files from Google Drive as a gallery"
+msgstr ""
+
+#: assets/js/blocks/gallery/block.json
+#: source/gutenberg/Blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "gallery"
+msgstr ""
+
+#: assets/js/blocks/media-player/block.json
+#: source/gutenberg/Blocks/media-player/block.json
+msgctxt "block title"
+msgid "Media Player"
+msgstr ""
+
+#: assets/js/blocks/media-player/block.json
+#: source/gutenberg/Blocks/media-player/block.json
+msgctxt "block description"
+msgid "Display files from Google Drive as a media player"
+msgstr ""
+
+#: assets/js/blocks/media-player/block.json
+#: source/gutenberg/Blocks/media-player/block.json
+msgctxt "block keyword"
+msgid "media player"
+msgstr ""
+
+#: assets/js/blocks/search-box/block.json
+#: source/gutenberg/Blocks/search-box/block.json
+msgctxt "block title"
+msgid "Search Box"
+msgstr ""
+
+#: assets/js/blocks/search-box/block.json
+#: source/gutenberg/Blocks/search-box/block.json
+msgctxt "block description"
+msgid "Display files from Google Drive as a search box"
+msgstr ""
+
+#: assets/js/blocks/search-box/block.json
+#: source/gutenberg/Blocks/search-box/block.json
+msgctxt "block keyword"
+msgid "search box"
+msgstr ""
+
+#: assets/js/blocks/shortcode/block.json
+#: source/gutenberg/Blocks/shortcode/block.json
+msgctxt "block title"
+msgid "Shortcode"
+msgstr ""
+
+#: assets/js/blocks/shortcode/block.json
+#: source/gutenberg/Blocks/shortcode/block.json
+msgctxt "block description"
+msgid "Display files from Google Drive as a shortcode"
+msgstr ""
+
+#: assets/js/blocks/shortcode/block.json
+#: source/gutenberg/Blocks/shortcode/block.json
+msgctxt "block keyword"
+msgid "shortcode"
+msgstr ""
+
+#: assets/js/blocks/slider/block.json
+#: source/gutenberg/Blocks/slider/block.json
+msgctxt "block title"
+msgid "Slider"
+msgstr ""
+
+#: assets/js/blocks/slider/block.json
+#: source/gutenberg/Blocks/slider/block.json
+msgctxt "block description"
+msgid "Display files from Google Drive as a slider"
+msgstr ""
+
+#: assets/js/blocks/slider/block.json
+#: source/gutenberg/Blocks/slider/block.json
+msgctxt "block keyword"
+msgid "slider"
+msgstr ""

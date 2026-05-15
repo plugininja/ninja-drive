@@ -1,0 +1,86 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-top-level-wrapper {
+    .pnpnd-folder-tree-fixed {
+        position: relative;
+        width: 100%;
+        min-height: 0;
+        height: 100%;
+        margin-top: 10px;
+    }
+
+    .pnpnd-folder-tree-container {
+        height: 100%;
+        min-height: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+    .pnpnd-folder-tree-gradient {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 50px;
+        width: 100%;
+        pointer-events: none;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), $white);
+    }
+
+    .pnpnd-folder-tree-wrapper {
+        margin-top: 5px;
+        user-select: none;
+
+        .pnpnd-folder-tree {
+            position: relative;
+            border-radius: $rounded-sm;
+            cursor: pointer;
+            border: 1px solid $white;
+
+            &--open {
+                background-color: $primary-extralight;
+                transition: background-color 0.2s ease-in-out;
+                border: 1px solid $primary-light;
+
+                .pnpnd-folder-tree__icon svg {
+                    :first-child {
+                        fill: $primary;
+                    }
+
+                    :last-child {
+                        fill: color(srgb 1 1 1 / 0.5);
+                    }
+                }
+            }
+
+            &__arrow {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: $rounded-md;
+                height: 20px;
+                background-color: transparent;
+
+                &--open {
+                    span {
+                        transform: rotate(90deg);
+                    }
+                }
+            }
+
+            &__icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 30px;
+                height: 30px;
+
+                svg {
+                    path {
+                        fill: $primary;
+                    }
+                }
+            }
+        }
+    }
+}

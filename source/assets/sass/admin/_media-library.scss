@@ -1,0 +1,236 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-top-level-wrapper {
+    .upload-php #pnpnd-media-library-sidebar-wrapper {
+        margin-left: -20px;
+    }
+
+    #wpfooter {
+        display: none;
+    }
+
+    .media-frame-menu-heading {
+        display: none;
+    }
+
+    .media-modal-content {
+        .media-menu {
+            padding: 0;
+
+            .media-menu-item {
+                display: none;
+            }
+        }
+
+        .media-toolbar-secondary {
+            display: flex;
+            align-items: center;
+
+            .pnpnd-media-folder-filter {
+                margin-top: var(--pnpnd-space-7);
+            }
+        }
+
+        .separator {
+            display: none;
+        }
+    }
+
+    #pnpnd-media-library-sidebar-wrapper {
+        position: fixed;
+        z-index: 9999;
+
+        .pnpnd-media-library-sidebar {
+            position: relative;
+            background-color: $white;
+            border-right: 1px solid #ddd;
+            height: calc(100vh - 30px);
+            font-family: $primary-font;
+
+            &--site-editor {
+                height: calc(100vh - 60px);
+
+                .pnpnd-media-library-folder-tree {
+                    height: 63vh;
+                }
+            }
+
+            &__media-library {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                border-bottom: 1px solid $primary-light;
+                cursor: pointer;
+            }
+
+            &__account {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+
+                &-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                &-logo {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    svg {
+                        width: 35px;
+                        height: 35px;
+                    }
+                }
+            }
+
+            &__trash-bin {
+                position: absolute;
+                bottom: 0;
+                z-index: 10;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                border-top: 1px solid $error-100 !important;
+                cursor: pointer;
+            }
+
+            &--toggle {
+                position: absolute;
+                top: 50%;
+                right: -15px;
+                transform: translateY(-50%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: $primary-light;
+                padding: 5px;
+                border: 1px solid $secondary;
+                border-radius: $rounded-md;
+                cursor: pointer;
+                z-index: 20;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+
+            &:hover {
+                .pnpnd-media-library-sidebar--toggle {
+                    opacity: 1;
+                }
+            }
+
+            &--resizer {
+                width: 5px;
+                cursor: ew-resize;
+                position: absolute;
+                right: 0;
+                top: 0;
+                height: 100%;
+                z-index: 20;
+                background-color: transparent;
+            }
+
+            &__folder-tree {
+                overflow-y: auto;
+                scrollbar-width: thin;
+                scroll-behavior: smooth;
+            }
+        }
+    }
+
+    .pnpnd-media-library-folder-tree {
+        position: relative;
+        height: 66vh;
+        margin-top: 10px;
+
+        &__scroll {
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        &__layer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45px;
+            pointer-events: none;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 1)
+            );
+        }
+
+        &__node {
+            padding: var(--pnpnd-space-2) var(--pnpnd-space-3) !important;
+            border-radius: $rounded-md;
+            user-select: none;
+            cursor: pointer;
+
+            &--active {
+                background-color: $primary-light;
+                transition: background-color 0.2s ease-in-out;
+            }
+
+            &-arrow {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 20px;
+                background-color: $primary-light;
+                border-radius: $rounded-sm;
+
+                &--active {
+                    background-color: $white;
+                }
+
+                &--expanded {
+                    span {
+                        transform: rotate(90deg);
+                    }
+                }
+            }
+
+            &-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                width: 30px;
+                height: 30px;
+
+                svg {
+                    path {
+                        fill: $primary;
+                    }
+                }
+
+                &--expanded svg {
+                    :first-child {
+                        fill: $primary;
+                    }
+
+                    :last-child {
+                        fill: color(srgb 1 1 1 / 0.5);
+                    }
+                }
+            }
+        }
+    }
+
+    .pnpnd-upload-google-drive {
+        max-height: 400px;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+
+        &--uploading {
+            max-height: 600px;
+        }
+    }
+}

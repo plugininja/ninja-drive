@@ -1,0 +1,205 @@
+@use "../utilities/variable" as *;
+@use "../utilities/mixin" as *;
+
+.pnpnd-top-level-wrapper {
+    .pnpnd-notifications {
+        padding: 0 !important;
+        width: 25rem;
+        overflow: hidden;
+
+        &--active {
+            .pn-icon {
+                color: $primary;
+                transform-origin: top center;
+                animation: pnpnd-ball-ring 1s ease-in-out 3;
+                animation-fill-mode: forwards;
+            }
+        }
+
+        &__badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: $error;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+
+            &--large {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
+        &__header {
+            padding: 10px 10px 0 10px;
+
+            &-button {
+                position: relative;
+                color: $black;
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    bottom: -2px;
+                    height: 2px;
+                    border-radius: 2px;
+                    background-color: $primary;
+                    width: 0;
+                }
+
+                &--active {
+                    opacity: 1;
+
+                    &::after {
+                        animation: pnpnd-active-line 0.3s ease forwards;
+                    }
+                }
+
+                &--inactive {
+                    opacity: 0.5;
+
+                    &::after {
+                        width: 100%;
+                        animation: pnpnd-inactive-line 0.3s ease forwards;
+                    }
+                }
+            }
+        }
+
+        &__content {
+            width: 100%;
+            max-height: 60vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            &::-webkit-scrollbar {
+                width: 5px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: $secondary;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: $primary;
+            }
+        }
+
+        &__item {
+            position: relative;
+            padding: 10px;
+            background-color: $primary-extralight;
+            border-bottom: 1px solid $secondary;
+            transition: all 0.3s ease;
+            overflow: visible;
+            cursor: pointer;
+
+            &--unread {
+                background-color: $white;
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &-status {
+                width: 7px;
+                aspect-ratio: 1 / 1;
+                border-radius: 50px;
+            }
+
+            &-delete {
+                position: absolute;
+                right: -50%;
+                top: 50%;
+                z-index: 5;
+                transform: translateY(-50%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 0;
+                height: 100%;
+                width: 0;
+                background: linear-gradient(
+                    to right,
+                    transparent 0%,
+                    $white 80%
+                );
+                transition: all 0.3s ease;
+            }
+
+            &:hover {
+                .pnpnd-notifications__item-delete {
+                    right: 10px;
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                &::after {
+                    width: 40%;
+                }
+            }
+        }
+    }
+
+    @keyframes pnpnd-ball-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+        15% {
+            transform: rotate(15deg);
+        }
+        30% {
+            transform: rotate(-15deg);
+        }
+        45% {
+            transform: rotate(10deg);
+        }
+        60% {
+            transform: rotate(-10deg);
+        }
+        75% {
+            transform: rotate(5deg);
+        }
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+
+    @keyframes pnpnd-active-line {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes pnpnd-inactive-line {
+        from {
+            width: 100%;
+        }
+        to {
+            width: 0;
+        }
+    }
+}

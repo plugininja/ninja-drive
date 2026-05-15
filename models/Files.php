@@ -1,0 +1,1362 @@
+<?php
+
+namespace Pninja\ND\Models;
+
+defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
+
+use function count;
+use function in_array;
+
+use Pninja\ND\Utils\Helpers;
+use Pninja\ND\Utils\Singleton;
+use WP_Error;
+
+defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
+
+class Files extends BaseModel {
+
+	use Singleton;
+
+	public function __construct() {
+		parent::__construct( 'pnpnd_files' );
+	}
+
+	/**
+	 * Retrieves a list of files from the specified folder and account.
+	 *
+	 * @param string $rootId The ID of the root folder to retrieve files from.
+	 * @param string $accountId The ID of the account associated with the files.
+	 * @param array  $config Optional configuration settings for retrieving files.
+	 *
+	 * @return array|null|WP_Error An array of processed file data from the specified folder.
+	 */
+	public function getFolder( $rootId, $accountId, $config = array() ) {
+		if ( Account::getInstance()->isValidAccount( $accountId ) === false ) {
+			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		$allowedOrderBy = array( 'createdAt', 'name', 'updatedAt', 'size' );
+
+		$order   = $this->sanitizeOrder( isset( $config['order'] ) ? $config['order'] : 'DESC' );
+		$orderBy = $this->sanitizeOrderBy( isset( $config['orderBy'] ) ? $config['orderBy'] : 'createdAt', $allowedOrderBy );
+
+		$page       = isset( $config['page'] ) ? (int) $config['page'] : 1;
+		$perPage    = isset( $config['perPage'] ) ? (int) $config['perPage'] : 24;
+		$extensions = isset( $config['extensions'] ) ? (array) $config['extensions'] : array();
+
+		$pagination = $this->sanitizePagination( $page, $perPage );
+
+		global $wpdb;
+
+		$sql = $wpdb->prepare( 'SELECT * FROM %i WHERE parentId = %s AND accountId = %s', $this->tableName, $rootId, $accountId );
+
+		if ( ! empty( $extensions ) ) {
+			$placeholders = implode( ',', array_fill( 0, count( $extensions ), '%s' ) );
+            // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$sql .= $wpdb->prepare( " AND extension IN ($placeholders)", $extensions );
+		}
+
+		if ( $order === 'ASC' ) {
+			$sql .= $wpdb->prepare(
+				" ORDER BY (CASE WHEN extension = 'folder' THEN 0 ELSE 1 END), %i ASC LIMIT %d OFFSET %d",
+				$orderBy,
+				$pagination['perPage'],
+				$pagination['offset']
+			);
+		} else {
+			$sql .= $wpdb->prepare(
+				" ORDER BY (CASE WHEN extension = 'folder' THEN 0 ELSE 1 END), %i DESC LIMIT %d OFFSET %d",
+				$orderBy,
+				$pagination['perPage'],
+				$pagination['offset']
+			);
+		}
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared - We are using $wpdb->prepare for the dynamic parts of the query, but the table name cannot be parameterized, so we have to use $wpdb->prepare for the rest of the query and then insert the table name directly.
+		$files = $wpdb->get_results( $sql );
+
+		if ( is_wp_error( $files ) ) {
+			return $files;
+		}
+
+		return $this->processFiles( $files );
+	}
+
+	public function getFolders( string $accountId, array $config = array() ) {
+		if ( Account::getInstance()->isValidAccount( $accountId ) === false ) {
+			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		$default = array(
+			'orderBy' => 'name',
+			'order'   => 'ASC',
+		);
+
+		$config = wp_parse_args( $config, $default );
+
+		$shouldCount = ! empty( $config['page'] ) && ! empty( $config['perPage'] );
+
+		global $wpdb;
+		$sql      = $wpdb->prepare( "SELECT * FROM %i WHERE accountId = %s AND extension = 'folder'", $this->tableName, $accountId );
+		$countSql = '';
+
+		if ( $shouldCount ) {
+			$countSql = $wpdb->prepare( "SELECT COUNT(*) FROM %i WHERE accountId = %s AND extension = 'folder'", $this->tableName, $accountId );
+		}
+
+		if ( ! empty( $config['parentId'] ) ) {
+			$sql .= $wpdb->prepare( ' AND parentId = %s', $config['parentId'] );
+			if ( $shouldCount ) {
+				$countSql .= $wpdb->prepare( ' AND parentId = %s', $config['parentId'] );
+			}
+		}
+
+		if ( ! empty( $config['orderBy'] ) && ! empty( $config['order'] ) ) {
+			$allowedOrderBy = array( 'createdAt', 'name', 'updatedAt', 'size' );
+			$orderBy        = $this->sanitizeOrderBy( $config['orderBy'], $allowedOrderBy );
+			$order          = $this->sanitizeOrder( $config['order'] );
+			if ( $order === 'ASC' ) {
+				$sql .= $wpdb->prepare( ' ORDER BY %i ASC', $orderBy );
+			} else {
+				$sql .= $wpdb->prepare( ' ORDER BY %i DESC', $orderBy );
+			}
+		}
+
+		if ( $shouldCount ) {
+			$pagination = $this->sanitizePagination( (int) $config['page'], (int) $config['perPage'] );
+			$sql       .= $wpdb->prepare( ' LIMIT %d OFFSET %d', $pagination['perPage'], $pagination['offset'] );
+		}
+
+		$cacheKey = "pnpnd_folders_{$accountId}_" . md5( $sql );
+
+		if ( $cache = wp_cache_get( $cacheKey, 'pnpnd_folders' ) ) {
+			return $cache;
+		}
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$files = $wpdb->get_results( $sql );
+
+		if ( is_wp_error( $files ) ) {
+			return $files;
+		}
+
+		$result = $this->processFiles( $files );
+		if ( is_wp_error( $result ) && empty( $result ) ) {
+			return array();
+		}
+
+		if ( $shouldCount ) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+			$totalCount = $wpdb->get_var( $countSql );
+
+			if ( is_wp_error( $totalCount ) ) {
+				return $totalCount;
+			}
+
+			$totalPage = ceil( (int) $totalCount / intval( $config['perPage'] ) );
+
+			$perPage     = (int) $config['perPage'];
+			$currentPage = (int) $config['page'];
+			$hasMore     = $currentPage < $totalPage;
+			$nextPage    = $hasMore ? $currentPage + 1 : null;
+
+			$response = array(
+				'files'       => $result,
+				'totalCount'  => (int) $totalCount,
+				'totalPage'   => $totalPage,
+				'currentPage' => $currentPage,
+				'perPage'     => $perPage,
+				'hasMore'     => $hasMore,
+			);
+
+			if ( $hasMore ) {
+				$response['nextPage'] = $nextPage;
+			}
+
+			wp_cache_set( $cacheKey, $response, 'pnpnd_folders', HOUR_IN_SECONDS );
+
+			return $response;
+		}
+
+		wp_cache_set( $cacheKey, $result, 'pnpnd_folders', HOUR_IN_SECONDS );
+
+		return $result;
+	}
+
+	public function search( array $data ) {
+		$accountId   = $data['accountId'] ?? '';
+		$searchQuery = $data['query'] ?? '';
+		$types       = $data['types'] ?? array( 'all' );
+		$limit       = isset( $data['limit'] ) ? (int) $data['limit'] : 100;
+		$order       = $data['order'] ?? 'ASC';
+		$orderBy     = $data['orderBy'] ?? 'name';
+		$folderId    = $data['folderId'] ?? '';
+		$scope       = isset( $data['scope'] ) && in_array( $data['scope'], array( 'parent', 'global' ) ) ? $data['scope'] : 'parent';
+
+		if ( ! Account::getInstance()->isValidAccount( $accountId ) ) {
+			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		if ( empty( $accountId ) ) {
+			return new WP_Error( 404, __( 'The requested file could not be found. 3', 'ninja-drive' ) );
+		}
+
+		$allowedOrderBy = array( 'name', 'createdAt', 'updatedAt', 'size' );
+		$orderBy        = $this->sanitizeOrderBy( $orderBy, $allowedOrderBy );
+		$order          = $this->sanitizeOrder( $order );
+		$limit          = max( 1, min( 1000, $limit ) ); // Limit to prevent memory issues
+
+		$extensions = pnpndGetExtensionGroups( $types );
+
+		global $wpdb;
+
+		$queryString = $wpdb->prepare( 'SELECT * FROM %i WHERE name LIKE %s AND accountId = %s', $this->tableName, '%' . $wpdb->esc_like( $searchQuery ) . '%', $accountId );
+
+		if ( ! empty( $extensions ) ) {
+			$placeholders = implode( ',', array_fill( 0, count( $extensions ), '%s' ) );
+            // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$queryString .= $wpdb->prepare( " AND extension IN ($placeholders)", $extensions );
+		}
+
+		if ( $scope === 'parent' && ! empty( $folderId ) ) {
+			$queryString .= $wpdb->prepare( ' AND parentId = %s', $folderId );
+		}
+
+		if ( 'ASC' === $order ) {
+			$queryString .= $wpdb->prepare( " ORDER BY (CASE WHEN extension = 'folder' THEN 0 ELSE 1 END), %i ASC LIMIT %d", $orderBy, $limit );
+		} else {
+			$queryString .= $wpdb->prepare( " ORDER BY (CASE WHEN extension = 'folder' THEN 0 ELSE 1 END), %i DESC LIMIT %d", $orderBy, $limit );
+		}
+
+		$cacheKey = "pnpnd_search_{$accountId}_" . md5( $queryString );
+		if ( $cache = wp_cache_get( $cacheKey, 'pnpnd_search' ) ) {
+			return $cache;
+		}
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$files = $wpdb->get_results( $queryString );
+
+		if ( is_wp_error( $files ) ) {
+			return $files;
+		}
+
+		$result = $this->processFiles( $files );
+		if ( ! is_wp_error( $result ) && ! empty( $result ) ) {
+			wp_cache_add( $cacheKey, $result, 'pnpnd_search', HOUR_IN_SECONDS );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Retrieves a list of all files associated with the specified account ID.
+	 *
+	 * @param string $accountId The ID of the account associated with the files.
+	 * @param array  $config Optional configuration settings for retrieving files.
+	 *
+	 * @return array|WP_Error An array of processed file data associated with the specified account.
+	 */
+	public function getFilesByAccountId( $accountId, $config = array() ) {
+		if ( Account::getInstance()->isValidAccount( $accountId ) === false ) {
+			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		$allowedOrderBy = array( 'createdAt', 'name', 'updatedAt', 'size' );
+
+		$order   = $this->sanitizeOrder( isset( $config['order'] ) ? $config['order'] : 'DESC' );
+		$orderBy = $this->sanitizeOrderBy( isset( $config['orderBy'] ) ? $config['orderBy'] : 'createdAt', $allowedOrderBy );
+
+		$page    = isset( $config['page'] ) ? (int) $config['page'] : 1;
+		$perPage = isset( $config['perPage'] ) ? (int) $config['perPage'] : 24;
+
+		$pagination = $this->sanitizePagination( $page, $perPage );
+
+		global $wpdb;
+
+		$sql = $wpdb->prepare( 'SELECT * FROM %i WHERE accountId = %s', $this->tableName, $accountId );
+
+		if ( $order === 'ASC' ) {
+			$sql .= $wpdb->prepare( " ORDER BY (CASE WHEN extension = 'folder' THEN 0 ELSE 1 END), %i ASC LIMIT %d OFFSET %d", $orderBy, $pagination['perPage'], $pagination['offset'] );
+		} else {
+			$sql .= $wpdb->prepare( " ORDER BY (CASE WHEN extension = 'folder' THEN 0 ELSE 1 END), %i DESC LIMIT %d OFFSET %d", $orderBy, $pagination['perPage'], $pagination['offset'] );
+		}
+
+		$cacheKey = "pnpnd_files_account_{$accountId}_" . md5( $sql );
+		if ( $cache = wp_cache_get( $cacheKey, 'pnpnd_files' ) ) {
+			return $cache;
+		}
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$files = $wpdb->get_results( $sql );
+
+		if ( is_wp_error( $files ) ) {
+			return $files;
+		}
+
+		$result = $this->processFiles( $files );
+		if ( ! is_wp_error( $result ) && ! empty( $result ) ) {
+			wp_cache_add( $cacheKey, $result, 'pnpnd_files', HOUR_IN_SECONDS );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Retrieves a file by its ID and account ID.
+	 *
+	 * This method queries the database for a file associated with the given
+	 * ID and account ID. If a matching file is found, it processes and returns
+	 * the file data. If no file is found, an error notice is added and null is
+	 * returned.
+	 *
+	 * @param string $id The ID of the file to retrieve.
+	 * @param string $accountId The ID of the account associated with the file.
+	 *
+	 * @return \Pninja\ND\App\File|array|WP_Error The processed file data if found, otherwise null.
+	 */
+	public function getFile( string $id, string $accountId, $returnType = 'object' ) {
+		global $wpdb;
+		if ( Account::getInstance()->isValidAccount( $accountId ) === false ) {
+			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+		$cacheKey = "pnpnd_file_{$id}_{$accountId}_{$returnType}";
+
+		if ( $cache = wp_cache_get( $cacheKey, 'pnpnd_files' ) ) {
+			return $cache;
+		}
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$file = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %s AND accountId = %s', $this->tableName, $id, $accountId ) );
+
+		if ( empty( $file ) ) {
+			return new WP_Error( 404, __( 'The requested file could not be found. 1', 'ninja-drive' ) );
+		}
+
+		$file = $this->processFile( $file, $returnType );
+		if ( is_wp_error( $file ) || empty( $file ) ) {
+			return $file;
+		}
+
+		wp_cache_add( $cacheKey, $file, 'pnpnd_files', HOUR_IN_SECONDS );
+
+		return $file;
+	}
+
+	/**
+	 * Retrieves a file by its unique key.
+	 *
+	 * This method queries the database for a file associated with the given key.
+	 * If a matching file is found, it processes and returns the file data.
+	 * If no file is found, an error notice is added and null is returned.
+	 *
+	 * @param string $key The unique key identifying the file.
+	 * @param string $returnType The type of return value, either 'object' or 'array'.
+	 *
+	 * @return \Pninja\ND\App\File|array|WP_Error The processed file data if found, otherwise null.
+	 */
+	public function getFileByKey( string $key, string $returnType = 'object' ) {
+		$rootKeys = array( 'my-drive', 'shared', 'starred', 'computers', 'shared-with-me' );
+
+		if ( in_array( $key, $rootKeys ) ) {
+			return array();
+		}
+
+		global $wpdb;
+		if ( empty( $key ) ) {
+			return new WP_Error( 404, __( 'The requested file could not be found. 4', 'ninja-drive' ) );
+		}
+
+		$cacheKey = "pnpnd_file_key_{$key}_{$returnType}";
+		if ( $cache = wp_cache_get( $cacheKey, 'pnpnd_files' ) ) {
+			return $cache;
+		}
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$file = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE `fileKey` = %s', $this->tableName, $key ) );
+
+		if ( empty( $file ) ) {
+			return new WP_Error( 404, __( 'The requested file could not be found. 5', 'ninja-drive' ) );
+		}
+
+		$file = $this->processFile( $file, $returnType );
+		if ( is_wp_error( $file ) || empty( $file ) ) {
+			return $file;
+		}
+
+		wp_cache_add( $cacheKey, $file, 'pnpnd_files', HOUR_IN_SECONDS );
+
+		return $file;
+	}
+
+	public function getFilesByKeys( array $keys, array $args = array() ) {
+		if ( empty( $keys ) ) {
+			return array();
+		}
+
+		$defaults = array(
+			'recursive'      => false,
+			'returnType'     => 'array',
+			'page'           => 1,
+			'perPage'        => 24,
+			'orderBy'        => 'updatedAt',
+			'order'          => 'DESC',
+			'search'         => '',
+			'searchScope'    => 'folder',
+			'searchLocation' => 'cache',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$recursive            = $args['recursive'];
+		$returnType           = $args['returnType'];
+		$widgetType           = $args['widgetType'] ?? '';
+		$additionalExtensions = $args['extensions'] ?? array();
+		$extensionsFilterType = $args['extensionsFilterType'] ?? '';
+		$search               = $args['search'];
+		$searchScope          = $args['searchScope'];
+		$namesString          = $args['names'] ?? '';
+		$namesFilterType      = $args['namesFilterType'] ?? '';
+		$applyNamesFilter     = $args['applyNameFilter'] ?? array();
+
+		$extensions = pnpndGetAllowedWidgetExtensions( $widgetType );
+
+		$allowedExtensions = $this->processExtensions(
+			$extensions,
+			$additionalExtensions,
+			$extensionsFilterType
+		);
+
+		$filesData = $this->getFileAttributesByKeys( $keys, array( 'id', 'accountId', 'name', 'isDir' ) );
+
+		if ( is_wp_error( $filesData ) || empty( $filesData ) ) {
+			return $filesData ?: array();
+		}
+
+		if ( empty( $filesData ) ) {
+			return array();
+		}
+
+		$ids    = array_map( fn ( $file ) => $file['id'], $filesData );
+		$params = $ids;
+
+		global $wpdb;
+		$sql           = $wpdb->prepare( 'SELECT * FROM %i WHERE 1 =1', $this->tableName );
+		$totalCountSQL = $wpdb->prepare( 'SELECT COUNT(*) as count FROM %i WHERE 1 =1', $this->tableName );
+
+		if ( ! empty( $search ) ) {
+
+			$searchIds = array();
+
+			if ( $searchScope === 'global' ) {
+				foreach ( $filesData as $file ) {
+					$searchIds[] = $this->getSuccessors( $file['id'], $file['accountId'] );
+				}
+				$params = array_merge( ...$searchIds );
+			} elseif ( $searchScope === 'folder' && ! empty( $args['fileId'] ) ) {
+				$params = array( $args['fileId'] );
+			}
+
+			if ( empty( $params ) ) {
+				return array();
+			}
+
+			$placeholders = implode( ',', array_fill( 0, count( $params ), '%s' ) );
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$sql .= $wpdb->prepare( " AND (`id` IN ($placeholders) OR `parentId` IN ($placeholders)) AND `name` LIKE %s", array_merge( $params, $params, array( '%' . $wpdb->esc_like( $search ) . '%' ) ) );
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$totalCountSQL .= $wpdb->prepare( " AND (`id` IN ($placeholders) OR `parentId` IN ($placeholders)) AND `name` LIKE %s", array_merge( $params, $params, array( '%' . $wpdb->esc_like( $search ) . '%' ) ) );
+
+		} elseif ( $recursive ) {
+			$placeholders = implode( ',', array_fill( 0, count( $params ), '%s' ) );
+
+			if ( $widgetType === 'file-browser' ) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				$sql .= $wpdb->prepare( " AND `parentId` IN ($placeholders)", $params );
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				$totalCountSQL .= $wpdb->prepare( " AND `parentId` IN ($placeholders)", $params );
+			} else {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				$sql .= $wpdb->prepare( " AND (`id` IN ($placeholders) OR `parentId` IN ($placeholders)) AND `extension` != 'folder'", array_merge( $params, $params ) );
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				$totalCountSQL .= $wpdb->prepare( " AND (`id` IN ($placeholders) OR `parentId` IN ($placeholders)) AND `extension` != 'folder'", array_merge( $params, $params ) );
+			}
+		} else {
+			if ( ! empty( $allowedExtensions ) && ! in_array( 'folder', $allowedExtensions ) ) {
+				$allowedExtensions[] = 'folder';
+			}
+
+			$placeholders = implode( ',', array_fill( 0, count( $params ), '%s' ) );
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			$sql .= $wpdb->prepare( " AND `id` IN ($placeholders)", $params );
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			$totalCountSQL .= $wpdb->prepare( " AND `id` IN ($placeholders)", $params );
+		}
+
+		$filterSql    = '';
+		$filterParams = array();
+
+		if ( ! empty( $allowedExtensions ) ) {
+			$extPlaceholders = implode( ',', array_fill( 0, count( $allowedExtensions ), '%s' ) );
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			$sql .= $wpdb->prepare( " AND `extension` IN ($extPlaceholders)", $allowedExtensions );
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			$totalCountSQL .= $wpdb->prepare( " AND `extension` IN ($extPlaceholders)", $allowedExtensions );
+
+			$filterSql    = " AND `extension` IN ($extPlaceholders)";
+			$filterParams = $allowedExtensions;
+		}
+
+		if ( ! empty( $args['orderBy'] ) && ! empty( $args['order'] ) ) {
+			$allowedOrderBy = array( 'id', 'name', 'size', 'createdAt', 'updatedAt' );
+			$orderBy        = $this->sanitizeOrderBy( $args['orderBy'], $allowedOrderBy );
+			$order          = $this->sanitizeOrder( $args['order'] );
+			$offset         = $this->sanitizePagination( $args['page'], $args['perPage'] );
+
+			if ( $order === 'ASC' ) {
+				$sql .= $wpdb->prepare( " ORDER BY (CASE WHEN extension = 'folder' THEN 0 ELSE 1 END), %i ASC LIMIT %d OFFSET %d", $orderBy, $offset['perPage'], $offset['offset'] );
+			} else {
+				$sql .= $wpdb->prepare( " ORDER BY (CASE WHEN extension = 'folder' THEN 0 ELSE 1 END), %i DESC LIMIT %d OFFSET %d", $orderBy, $offset['perPage'], $offset['offset'] );
+			}
+		}
+
+		$cacheKey = 'pnpnd_file_by_keys_' . md5( $sql );
+
+		if ( $cache = wp_cache_get( $cacheKey, 'pnpnd_files' ) ) {
+			return $cache;
+		}
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$files = $wpdb->get_results( $sql );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$totalCount = $wpdb->get_row( $totalCountSQL );
+
+		if ( empty( $files ) || is_wp_error( $files ) || is_wp_error( $totalCount ) ) {
+			return array();
+		}
+
+		$files = $this->processFiles(
+			$files,
+			$returnType,
+			array(
+				'filterSql'    => $filterSql,
+				'filterParams' => $filterParams,
+			)
+		);
+
+		$result = array(
+			'files'      => $files,
+			'totalCount' => isset( $totalCount->count ) ? (int) $totalCount->count : count( $files ),
+		);
+
+		wp_cache_set( $cacheKey, $result, 'pnpnd_files', HOUR_IN_SECONDS );
+
+		return $result;
+	}
+
+	/**
+	 * Retrieve selected attributes from files by their keys.
+	 *
+	 * @param array $keys An array of file keys to search for.
+	 * @param array $attributes An array of attributes to return for each file.
+	 *                          Defaults to ['id'].
+	 *                          Example: ['fileKey', 'name'].
+	 *
+	 * @return WP_Error|array Returns:
+	 *                        - A flat array if one attribute is requested (e.g., ['id1', 'id2']).
+	 *                        - An array of associative arrays if multiple attributes are requested.
+	 *                        Example:
+	 *                        [
+	 *                        ['fileKey' => 'abc123', 'name' => 'File A'],
+	 *                        ['fileKey' => 'def456', 'name' => 'File B']
+	 *                        ]
+	 */
+	public function getFileAttributesByKeys( array $keys, array $attributes = array( 'id' ) ) {
+		if ( empty( $keys ) ) {
+			return array();
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $keys ), '%s' ) );
+
+		global $wpdb;
+
+		$cacheKey = 'pnpnd_file_by_keys_' . md5( implode( ',', $keys ) . implode( ',', $attributes ) );
+
+		$cacheFiles = wp_cache_get( $cacheKey, 'pnpnd_files' );
+		if ( $cacheFiles !== false ) {
+			return $cacheFiles;
+		}
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$files = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i WHERE `fileKey` IN ($placeholders)", array_merge( array( $this->tableName ), $keys ) ) );
+
+		if ( empty( $files ) ) {
+			return array();
+		}
+
+		$processedFiles = $this->processFiles( $files, 'object' );
+
+		$firstFile = reset( $processedFiles );
+		if ( Account::getInstance()->isValidAccount( $firstFile->accountId ) === false ) {
+			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		if ( count( $attributes ) === 1 ) {
+			$attr   = $attributes[0];
+			$result = array();
+			foreach ( $processedFiles as $file ) {
+				$result[] = $file->$attr ?? null;
+			}
+
+			return $result;
+		}
+
+		$result = array();
+		foreach ( $processedFiles as $file ) {
+			$fileData = array();
+			foreach ( $attributes as $attr ) {
+				$fileData[ $attr ] = $file->$attr ?? null;
+			}
+			$result[] = $fileData;
+		}
+
+		wp_cache_set( $cacheKey, $result, 'pnpnd_files', HOUR_IN_SECONDS );
+
+		return $result;
+	}
+
+	public function addFile( array $data ) {
+		$accountId = isset( $data['accountId'] ) ? $data['accountId'] : null;
+		if ( ! Account::getInstance()->isValidAccount( $accountId ) ) {
+			return new WP_Error( 'error', __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		$file = array(
+			'id'             => $data['id'] ?? null,
+			'fileKey'        => $data['fileKey'] ?? null,
+			'name'           => $data['name'] ?? null,
+			'description'    => $data['description'] ?? null,
+			'parentId'       => $data['parentId'] ?? null,
+			'accountId'      => $data['accountId'] ?? null,
+			'size'           => $data['size'] ?? null,
+			'mimeType'       => $data['mimeType'] ?? null,
+			'extension'      => $data['extension'] ?? null,
+			'icon'           => $data['icon'] ?? null,
+			'thumbnail'      => $data['thumbnail'] ?? null,
+			'additionalData' => isset( $data['additionalData'] ) ? maybe_serialize( $data['additionalData'] ) : null,
+			'isDir'          => $data['isDir'] ?? null,
+			'isShared'       => $data['isShared'] ?? null,
+			'isStarred'      => $data['isStarred'] ?? null,
+			'media'          => isset( $data['media'] ) ? maybe_serialize( $data['media'] ) : null,
+			'permissions'    => isset( $data['permissions'] ) ? maybe_serialize( $data['permissions'] ) : null,
+			'createdAt'      => current_time( 'mysql' ),
+			'updatedAt'      => current_time( 'mysql' ),
+		);
+
+		if ( empty( $file['id'] ) || empty( $file['accountId'] ) ) {
+			return new WP_Error( 404, __( 'The requested file could not be found. 7', 'ninja-drive' ) );
+		}
+
+		$format = array(
+			'%s', // id
+			'%s', // fileKey
+			'%s', // name
+			'%s', // description
+			'%s', // parentId
+			'%s', // accountId
+			'%d', // size
+			'%s', // mimeType
+			'%s', // extension
+			'%s', // icon
+			'%s', // thumbnail
+			'%s', // additionalData
+			'%d', // isDir
+			'%d', // isShared
+			'%d', // isStarred
+			'%s', // media
+			'%s', // permissions
+			'%s', // createdAt
+			'%s', // updatedAt
+		);
+
+		if ( $this->isCachedFile( $file['id'], $file['accountId'] ) ) {
+			$id        = $file['id'];
+			$accountId = $file['accountId'];
+
+			unset( $file['id'] );
+			unset( $file['fileKey'] );
+			unset( $file['createdAt'] );
+
+			$updateFormat = array_slice( $format, 2 ); // Remove id, key, and createdAt formats
+			array_pop( $updateFormat ); // Remove createdAt format
+
+			return $this->update(
+				$file,
+				array(
+					'id'        => $id,
+					'accountId' => $accountId,
+				),
+				$updateFormat,
+				array( '%s', '%s' )
+			);
+		}
+
+		return $this->insert( $file, $format );
+	}
+
+	/**
+	 * Delete a file from the database
+	 *
+	 * @param string $id The ID of the file to be deleted
+	 *
+	 * @return bool|WP_Error True if the deletion was successful, false otherwise
+	 */
+	public function deleteFile( $id, $accountId ) {
+		if ( ! Account::getInstance()->isValidAccount( $accountId ) ) {
+			return new WP_Error( 'error', __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		$file = $this->getFile( $id, $accountId );
+		if ( is_wp_error( $file ) ) {
+			return $file;
+		}
+
+		if ( $file->isDir ) {
+			$successors = $this->getSuccessors( $id, $accountId );
+			if ( is_wp_error( $successors ) ) {
+				return $successors;
+			}
+			if ( empty( $successors ) ) {
+				return 0;
+			}
+
+			global $wpdb;
+
+			$placeholders = implode( ',', array_fill( 0, count( $successors ), '%s' ) );
+            // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$sql = $wpdb->prepare( "DELETE FROM %i WHERE (id IN ($placeholders) OR parentId IN ($placeholders)) AND accountId = %s", array_merge( array( $this->tableName ), $successors, $successors, array( $accountId ) ) );
+
+			$cacheKey          = "pnpnd_file_{$id}";
+			$fileKey           = pnpndGenerateKey( $id, $accountId );
+			$cacheKeyByFileKey = "pnpnd_file_key_{$fileKey}";
+
+			wp_cache_delete( $cacheKey, 'pnpnd_files' );
+			wp_cache_delete( $cacheKeyByFileKey, 'pnpnd_files' );
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			return $wpdb->query( $sql ) !== false;
+		}
+
+		$cacheKey          = "pnpnd_file_{$id}";
+		$fileKey           = pnpndGenerateKey( $id, $accountId );
+		$cacheKeyByFileKey = "pnpnd_file_key_{$fileKey}";
+
+		wp_cache_delete( $cacheKey, 'pnpnd_files' );
+		wp_cache_delete( $cacheKeyByFileKey, 'pnpnd_files' );
+
+		return $this->delete(
+			array(
+				'id'        => $id,
+				'accountId' => $accountId,
+			),
+			array( '%s', '%s' )
+		);
+	}
+
+	/**
+	 * Deletes all files associated with a given account ID from the database.
+	 *
+	 * @param string $accountId The ID of the account whose files are to be deleted.
+	 * @return bool|WP_Error True if the deletion was successful, false otherwise or an error.
+	 */
+	public function deleteFilesByAccountId( $accountId ) {
+		wp_cache_flush_group( 'pnpnd_files' );
+
+		return $this->delete( array( 'accountId' => $accountId ), array( '%s' ) );
+	}
+
+	/**
+	 * Update a file in the database
+	 *
+	 * @param string $id The ID of the file to be updated
+	 * @param array  $data The data to be updated
+	 * @param array  $dataFormat The format of the data
+	 * @return bool|WP_Error True if the update was successful, false otherwise
+	 */
+	public function updateFile( $id, $data, $dataFormat ) {
+		$cacheKey = "pnpnd_file_{$id}";
+
+		wp_cache_delete( $cacheKey, 'pnpnd_files' );
+
+		return $this->update( $data, array( 'id' => $id ), $dataFormat, array( '%s' ) );
+	}
+
+	public function isCachedFolder( $folderId, $accountId ) {
+		global $wpdb;
+		if ( Account::getInstance()->isValidAccount( $accountId ) === false ) {
+			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		$cacheKey = "pnpnd_file_{$folderId}";
+		if ( wp_cache_get( $cacheKey, 'pnpnd_files' ) ) {
+			return true;
+		}
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$folder = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE parentId = %s AND accountId = %s', $this->tableName, $folderId, $accountId ) );
+
+		if ( is_wp_error( $folder ) || empty( $folder ) ) {
+			return false;
+		}
+
+		wp_cache_add( $cacheKey, $folder, 'pnpnd_files', HOUR_IN_SECONDS );
+
+		return ! empty( $folder );
+	}
+
+	public function isCachedFile( $folderId, $accountId ) {
+		if ( Account::getInstance()->isValidAccount( $accountId ) === false ) {
+			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
+		}
+
+		$cacheKey = "pnpnd_file_{$folderId}";
+		if ( wp_cache_get( $cacheKey, 'pnpnd_files' ) ) {
+			return true;
+		}
+
+		global $wpdb;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$folder = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %s AND accountId = %s', $this->tableName, $folderId, $accountId ) );
+
+		if ( is_wp_error( $folder ) || empty( $folder ) ) {
+			return false;
+		}
+
+		wp_cache_add( $cacheKey, $folder, 'pnpnd_files', HOUR_IN_SECONDS );
+
+		return ! empty( $folder );
+	}
+
+	/**
+	 * Counts the number of files in a folder
+	 *
+	 * @param string $folderId The ID of the folder
+	 * @param string $accountId The ID of the account
+	 *
+	 * @return int|WP_Error The number of files in the folder, or a WP_Error if the query fails
+	 */
+	public function childrenCount( $folderId, $accountId, $filter = null ) {
+		global $wpdb;
+		$sql = $wpdb->prepare( 'SELECT COUNT(*) as count FROM %i WHERE parentId = %s AND accountId = %s', array( $this->tableName, $folderId, $accountId ) );
+
+		if ( ! empty( $filter['filterParams'] ) && ! empty( $filter['filterSql'] ) ) {
+            // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared
+			$sql .= $wpdb->prepare( $filter['filterSql'], $filter['filterParams'] );
+		}
+
+		$cacheKey = "pnpnd_child_folder_count_{$folderId}_{$accountId}";
+		if ( false !== ( $cachedCount = wp_cache_get( $cacheKey, 'pnpnd_folder_counts' ) ) ) {
+			return $cachedCount;
+		}
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$count = $wpdb->get_row( $sql );
+
+		if ( is_wp_error( $count ) ) {
+
+			return $count;
+		}
+
+		if ( ! isset( $count->count ) ) {
+			return 0;
+		}
+
+		wp_cache_add( $cacheKey, $count->count, 'pnpnd_folder_counts', HOUR_IN_SECONDS );
+
+		return $count->count;
+	}
+
+	public function getSuccessors( string $parentId, string $accountId ) {
+		$successor = array();
+		$folders   = $this->getChildFolderIds( $parentId, $accountId );
+
+		foreach ( $folders as $folderRow ) {
+			$folderId     = $folderRow['id'];
+			$successor[]  = $folderId;
+			$childFolders = $this->getChildFolderIds( $folderId, $accountId );
+			if ( ! empty( $childFolders ) ) {
+				$successor = array_merge( $successor, $this->getSuccessors( $folderId, $accountId ) );
+			}
+		}
+
+		$successor[] = $parentId;
+
+		return array_unique( $successor );
+	}
+
+	public function getSharedKey( string $fileKey, array $options = array() ) {
+		$defaults = array(
+			'expireIn' => 3600,
+			'password' => null,
+		);
+
+		$options = wp_parse_args( $options, $defaults );
+
+		$expireIn = intval( $options['expireIn'] );
+		$password = sanitize_text_field( $options['password'] ?? null );
+
+		$expiry       = $expireIn > 0 ? time() + $expireIn : 0;
+		$passwordHash = ! empty( $password ) ? md5( $password ) : '';
+
+		$sharedData = $this->getSharedData( $fileKey );
+
+		$key = md5( "$fileKey|$expiry|$passwordHash" );
+
+		if ( ! empty( $sharedData[ $key ] ) && $sharedData[ $key ]['expiry'] >= time() ) {
+			return "{$fileKey}-{$key}";
+		}
+
+		$sharedData[ $key ] = array(
+			'expiry'     => $expiry,
+			'password'   => $passwordHash,
+			'viewCount'  => 0,
+			'lastViewed' => null,
+		);
+
+		// Save entire sharedData list
+		$this->saveSharedData( $fileKey, $sharedData );
+
+		return "{$fileKey}-{$key}";
+	}
+
+	public function validateSharedLink( $combinedKey, $password = '' ) {
+		[$fileKey, $linkKey] = $this->parseCombinedKey( $combinedKey );
+
+		if ( ! $fileKey || ! $linkKey ) {
+
+			return false;
+		}
+
+		$sharedData = $this->getSharedData( $fileKey );
+
+		if ( empty( $sharedData[ $linkKey ] ) ) {
+			return false;
+		}
+
+		$shareInfo = $sharedData[ $linkKey ];
+
+		if ( $shareInfo['expiry'] < time() && $shareInfo['expiry'] != 0 ) {
+			$this->deleteSharedEntry( $fileKey, $linkKey );
+
+			return false;
+		}
+
+		$hashedPassword = md5( sanitize_text_field( $password ) );
+		if ( ! empty( $shareInfo['password'] ) ) {
+			if ( empty( $password ) ) {
+				return new WP_Error( 'password_required', __( 'This shared link is protected by a password. Please provide the password to access the file.', 'ninja-drive' ) );
+			}
+
+			if ( $shareInfo['password'] !== $hashedPassword ) {
+				return new WP_Error( 'invalid_password', __( 'The provided password is incorrect.', 'ninja-drive' ) );
+			}
+		}
+
+		$shareInfo['viewCount']  = intval( $shareInfo['viewCount'] ?? 0 ) + 1;
+		$shareInfo['lastViewed'] = current_time( 'mysql' );
+
+		$result = $this->updateSharedData( $combinedKey, $shareInfo );
+
+		if ( is_wp_error( $result ) ) {
+			return false;
+		}
+
+		return $sharedData[ $linkKey ];
+	}
+
+	public function validateDownloadLink( $combinedKey, $password = '' ) {
+		[$fileKey, $linkKey] = $this->parseCombinedKey( $combinedKey );
+
+		if ( ! $fileKey || ! $linkKey ) {
+
+			return false;
+		}
+
+		$downloadData = $this->getDownloadData( $fileKey );
+
+		if ( empty( $downloadData[ $linkKey ] ) ) {
+			return false;
+		}
+
+		$downloadInfo = $downloadData[ $linkKey ];
+
+		if ( $downloadInfo['expiry'] < time() && $downloadInfo['expiry'] != 0 ) {
+			// $this->deleteDownloadEntry($fileKey, $linkKey);
+
+			return new WP_Error( 'link_expired', __( 'This download link has expired.', 'ninja-drive' ) );
+		}
+
+		$downloadLimit = intval( $downloadInfo['limit'] ?? 0 );
+
+		if ( $downloadLimit > 0 && intval( $downloadInfo['downloadCount'] ?? 0 ) >= $downloadLimit ) {
+			// $this->deleteDownloadEntry($fileKey, $linkKey);
+
+			return new WP_Error( 'download_limit_exceeded', __( 'The download limit for this link has been exceeded.', 'ninja-drive' ) );
+		}
+
+		$hashedPassword = md5( sanitize_text_field( $password ) );
+		if ( ! empty( $downloadInfo['password'] ) ) {
+			if ( empty( $password ) ) {
+				return new WP_Error( 'password_required', __( 'This Download link is protected by a password. Please provide the password to access the file.', 'ninja-drive' ) );
+			}
+
+			if ( $downloadInfo['password'] !== $hashedPassword ) {
+				return new WP_Error( 'invalid_password', __( 'The provided password is incorrect.', 'ninja-drive' ) );
+			}
+		}
+
+		$downloadInfo['downloadCount'] = intval( $downloadInfo['downloadCount'] ?? 0 ) + 1;
+		$downloadInfo['lastViewed']    = current_time( 'mysql' );
+
+		$result = $this->updateDownloadData( $combinedKey, $downloadInfo );
+
+		if ( is_wp_error( $result ) ) {
+			return false;
+		}
+
+		return $downloadData[ $linkKey ];
+	}
+
+	public function getDownloadKey( string $fileKey, array $options = array() ) {
+		$defaults = array(
+			'expireIn' => 3600,
+			'password' => null,
+			'limit'    => 0,
+		);
+
+		$options = wp_parse_args( $options, $defaults );
+
+		$expireIn = intval( $options['expireIn'] );
+		$password = sanitize_text_field( $options['password'] ?? null );
+		$limit    = intval( $options['limit'] );
+
+		$expiry       = $expireIn > 0 ? time() + $expireIn : 0;
+		$passwordHash = ! empty( $password ) ? md5( $password ) : '';
+
+		$downloadData = $this->getDownloadData( $fileKey );
+
+		$key = md5( "$fileKey|$expiry|$passwordHash|$limit" );
+
+		if ( ! empty( $downloadData[ $key ] ) && $downloadData[ $key ]['expiry'] >= time() ) {
+			return "{$fileKey}-{$key}";
+		}
+
+		$downloadData[ $key ] = array(
+			'expiry'     => $expiry,
+			'password'   => $passwordHash,
+			'limit'      => $limit,
+			'viewCount'  => 0,
+			'lastViewed' => null,
+		);
+
+		// Save entire sharedData list
+		$this->saveDownloadData( $fileKey, $downloadData );
+
+		return "{$fileKey}-{$key}";
+	}
+
+	// =============================== PRIVATE METHODS =============================== //
+
+	private function parseCombinedKey( $sharedKey ) {
+		$parts = explode( '-', $sharedKey, 2 );
+
+		return array( $parts[0] ?? '', $parts[1] ?? '' );
+	}
+
+	private function getSharedData( $fileKey ) {
+		global $wpdb;
+
+		$file = $this->getFileByKey( $fileKey );
+
+		if ( ! $file ) {
+			return array();
+		}
+
+		$metaData = maybe_unserialize( $file->metaData );
+
+		return $metaData['sharedData'] ?? array();
+	}
+
+	private function saveSharedData( $fileKey, $sharedData ) {
+		global $wpdb;
+
+		$file = $this->getFileByKey( $fileKey );
+
+		if ( ! $file ) {
+			return false;
+		}
+
+		$metaData               = maybe_unserialize( $file->metaData ) ?? array();
+		$metaData['sharedData'] = $sharedData;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$result = $wpdb->update(
+			$this->tableName,
+			array( 'metaData' => maybe_serialize( $metaData ) ),
+			array( 'fileKey' => $fileKey ),
+			array( '%s' ),
+			array( '%s' )
+		);
+
+		if ( ! is_wp_error( $result ) && $result !== false ) {
+			wp_cache_flush_group( 'pnpnd_files' );
+		}
+
+		return $result;
+	}
+
+	private function deleteSharedEntry( $fileKey, $linkKey ) {
+		$sharedData = $this->getSharedData( $fileKey );
+
+		if ( isset( $sharedData[ $linkKey ] ) ) {
+			unset( $sharedData[ $linkKey ] );
+
+			return $this->saveSharedData( $fileKey, $sharedData );
+		}
+
+		return false;
+	}
+
+	public function updateSharedData( $combinedKey, $updates = array() ) {
+		[$fileKey, $linkKey] = $this->parseCombinedKey( $combinedKey );
+
+		if ( ! $fileKey || ! $linkKey ) {
+			return false;
+		}
+
+		$sharedData = $this->getSharedData( $fileKey );
+
+		if ( empty( $sharedData[ $linkKey ] ) ) {
+			return false;
+		}
+
+		// Only update provided fields
+		$sharedData[ $linkKey ] = array_merge(
+			$sharedData[ $linkKey ],
+			array_filter(
+				$updates,
+				function ( $v ) {
+					return $v !== null;
+				}
+			)
+		);
+
+		return $this->saveSharedData( $fileKey, $sharedData );
+	}
+
+	private function getDownloadData( $fileKey ) {
+		global $wpdb;
+
+		$file = $this->getFileByKey( $fileKey );
+
+		if ( ! $file ) {
+			return array();
+		}
+
+		if ( $file->extension === 'folder' ) {
+			return array();
+		}
+
+		$metaData = maybe_unserialize( $file->metaData );
+
+		return $metaData['downloadData'] ?? array();
+	}
+
+	private function saveDownloadData( string $fileKey, array $downloadData ) {
+		global $wpdb;
+
+		$file = $this->getFileByKey( $fileKey );
+
+		if ( ! $file ) {
+			return false;
+		}
+
+		$metaData                 = maybe_unserialize( $file->metaData ) ?? array();
+		$metaData['downloadData'] = $downloadData;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$result = $wpdb->update(
+			$this->tableName,
+			array( 'metaData' => maybe_serialize( $metaData ) ),
+			array( 'fileKey' => $fileKey ),
+			array( '%s' ),
+			array( '%s' )
+		);
+
+		if ( ! is_wp_error( $result ) && $result !== false ) {
+			wp_cache_flush_group( 'pnpnd_files' );
+		}
+
+		return $result;
+	}
+
+	public function updateDownloadData( $combinedKey, $updates = array() ) {
+		[$fileKey, $linkKey] = $this->parseCombinedKey( $combinedKey );
+
+		if ( ! $fileKey || ! $linkKey ) {
+			return false;
+		}
+
+		$downloadData = $this->getDownloadData( $fileKey );
+
+		if ( empty( $downloadData[ $linkKey ] ) ) {
+			return false;
+		}
+
+		// Only update provided fields
+		$downloadData[ $linkKey ] = array_merge(
+			$downloadData[ $linkKey ],
+			array_filter(
+				$updates,
+				function ( $v ) {
+					return $v !== null;
+				}
+			)
+		);
+
+		return $this->saveDownloadData( $fileKey, $downloadData );
+	}
+
+	// private function deleteDownloadEntry($fileKey, $linkKey)
+	// {
+	// $downloadData = $this->getDownloadData($fileKey);
+
+	// if (isset($downloadData[$linkKey])) {
+	// unset($downloadData[$linkKey]);
+
+	// return $this->saveDownloadData($fileKey, $downloadData);
+	// }
+
+	// return false;
+	// }
+
+	private function processFiles( $files, $returnType = 'array', $filter = null ) {
+		$processedFiles = array();
+		foreach ( $files as $file ) {
+			$processedFiles[] = $this->processFile( $file, $returnType, $filter );
+		}
+
+		return $processedFiles;
+	}
+
+	/**
+	 * Process a file object and return an enriched array representation.
+	 *
+	 * @param object|null $file
+	 * @return array|\Pninja\ND\App\File
+	 */
+	private function processFile( $file, $returnType = 'object', $filter = null ) {
+		if ( empty( $file ) ) {
+
+			return array();
+		}
+
+		$fileData = array(
+			'id'             => $file->id,
+			'fileKey'        => $file->fileKey,
+			'name'           => $file->name,
+			'description'    => $file->description,
+			'parentId'       => $file->parentId,
+			'accountId'      => $file->accountId,
+			'size'           => $file->size,
+			'mimeType'       => $file->mimeType,
+			'extension'      => $file->extension,
+			'icon'           => $file->icon,
+			'additionalData' => maybe_unserialize( $file->additionalData ),
+			'isDir'          => $file->isDir,
+			'isShared'       => $file->isShared,
+			'isStarred'      => $file->isStarred,
+			'media'          => maybe_unserialize( $file->media ),
+			'permissions'    => maybe_unserialize( $file->permissions ),
+			'createdAt'      => $file->createdAt,
+			'updatedAt'      => $file->updatedAt,
+		);
+
+		$fileData['thumbnail'] = ( Helpers::checkLifeTime( $file->updatedAt ) > 0 ) ? $file->thumbnail : null;
+
+		if ( $returnType === 'object' ) {
+			$file = new \Pninja\ND\App\File( $fileData );
+
+			return $file;
+		} elseif ( $returnType === 'array' ) {
+			return $fileData;
+		}
+
+		return array(
+			'id'       => $file->id,
+			'name'     => $file->name,
+			'fileKey'  => $file->fileKey,
+			'mimeType' => $file->mimeType,
+			'size'     => $file->size,
+		);
+	}
+
+	private function processExtensions( array $extensions, array $additionalExtensions, string $filterType ): array {
+		if ( empty( $additionalExtensions ) ) {
+			return $extensions;
+		}
+
+		if ( empty( $extensions ) ) {
+			return $additionalExtensions;
+		}
+
+		if ( $filterType === 'include' ) {
+			$filterExtensions = array_filter(
+				$extensions,
+				function ( $ext ) use ( $additionalExtensions ) {
+					return in_array( $ext, $additionalExtensions );
+				}
+			);
+
+			return array_values( $filterExtensions );
+		} elseif ( $filterType === 'exclude' ) {
+			$filterExtensions = array_filter(
+				$extensions,
+				function ( $ext ) use ( $additionalExtensions ) {
+					return ! in_array( $ext, $additionalExtensions );
+				}
+			);
+
+			return array_values( $filterExtensions );
+		}
+
+		return $extensions;
+	}
+
+	private function getChildFolderIds( string $parentId, string $accountId ) {
+		global $wpdb;
+
+		$cacheKey = "pnpnd_child_folder_ids_{$parentId}_{$accountId}";
+		if ( false !== ( $cachedResult = wp_cache_get( $cacheKey, 'pnpnd_files' ) ) ) {
+			return $cachedResult;
+		}
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$result = $wpdb->get_results(
+			$wpdb->prepare( "SELECT `id` FROM %i WHERE `parentId` = %s AND `accountId` = %s AND `extension` = 'folder'", $this->tableName, $parentId, $accountId ),
+			ARRAY_A
+		);
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		wp_cache_add( $cacheKey, $result, 'pnpnd_files', HOUR_IN_SECONDS );
+
+		return $result;
+	}
+}
