@@ -1,10 +1,10 @@
 <?php
 
-namespace Pninja\ND\App\Feature;
+namespace Pnpnd\ND\App\Feature;
 
-use Pninja\ND\App\Accounts;
-use Pninja\ND\App\Service\FileService;
-use Pninja\ND\Models\Files;
+use Pnpnd\ND\App\Accounts;
+use Pnpnd\ND\App\Service\FileService;
+use Pnpnd\ND\Models\Files;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\App\Service;
+namespace Pnpnd\ND\App\Service;
 
 use Exception;
 use WP_Error;

@@ -1,1 +1,32 @@
-.pnpnd-block-icon{font-size:35px !important}.pnpnd-block-icon-wrapper{position:relative;display:flex;justify-content:center;align-items:center}.pnpnd-block-icon-wrapper .components-button{border:1px solid}.pnpnd-block-icon-wrapper .pnpnd-configure-icon-pro{position:absolute;top:2px;left:2px;color:#d1a40e}.pnpnd-block-icon-wrapper .pnpnd-icon-outside{top:-18px;left:-18px}.pnpnd-block-icon-wrapper .pnpnd-icon-pro{position:absolute;top:-15px;left:-15px;color:#d1a40e}
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./source/gutenberg/assets/sass/block.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
+.pnpnd-block-icon {
+  font-size: 35px !important;
+}
+
+.pnpnd-block-icon-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pnpnd-block-icon-wrapper .components-button {
+  border: 1px solid;
+}
+.pnpnd-block-icon-wrapper .pnpnd-configure-icon-pro {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  color: #d1a40e;
+}
+.pnpnd-block-icon-wrapper .pnpnd-icon-outside {
+  top: -18px;
+  left: -18px;
+}
+.pnpnd-block-icon-wrapper .pnpnd-icon-pro {
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  color: #d1a40e;
+}

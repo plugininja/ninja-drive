@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND;
+namespace Pnpnd\ND;
 
-use Pninja\ND\Models\Widget as ModelsWidget;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\Models\Widget as ModelsWidget;
+use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -31,7 +31,7 @@ class Widget {
 	);
 
 	public const ALLOW_HTML_TAGS = array(
-		'div'    => array(
+		'div' => array(
 			'id'                 => true,
 			'class'              => true,
 			'style'              => true,
@@ -45,10 +45,6 @@ class Widget {
 
 			// Custom plugin attributes
 			'pnpnd-theme-status' => true,
-		),
-
-		'script' => array(
-			'type' => true,
 		),
 	);
 
@@ -105,7 +101,7 @@ class Widget {
 			ob_start();
 			pnpndGetTemplate( 'notice-card/notice-card-common', $args );
 
-			return ob_get_clean();
+			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
 		}
 
 		$widget = $this->scModel->get( $id );
@@ -126,7 +122,7 @@ class Widget {
 			ob_start();
 			pnpndGetTemplate( 'notice-card/notice-card-common', $args );
 
-			return ob_get_clean();
+			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
 		}
 
 		if ( is_wp_error( $widget ) ) {
@@ -145,7 +141,7 @@ class Widget {
 			ob_start();
 			pnpndGetTemplate( 'notice-card/notice-card-common', $args );
 
-			return ob_get_clean();
+			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
 		}
 
 		if ( empty( $widget ) ) {
@@ -164,7 +160,7 @@ class Widget {
 			ob_start();
 			pnpndGetTemplate( 'notice-card/notice-card-common', $args );
 
-			return ob_get_clean();
+			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
 		}
 
 		if ( empty( $widget['status'] ) || ( isset( $widget['status'] ) && $widget['status'] !== 'active' ) ) {
@@ -189,7 +185,7 @@ class Widget {
 			ob_start();
 			pnpndGetTemplate( 'notice-card/notice-card-common', $args );
 
-			return ob_get_clean();
+			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
 		}
 
 		$data = maybe_unserialize( $widget['data'] ?? '' );
@@ -209,7 +205,7 @@ class Widget {
 			ob_start();
 			pnpndGetTemplate( 'notice-card/notice-card-common', $args );
 
-			return ob_get_clean();
+			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
 		}
 
 		$widget['data'] = $data;
@@ -236,7 +232,7 @@ class Widget {
 			ob_start();
 			pnpndGetTemplate( 'notice-card/notice-card-common', $args );
 
-			return ob_get_clean();
+			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
 		}
 
 		if ( ! isset( $data['data'] ) || empty( $data['data'] ) ) {
@@ -255,7 +251,7 @@ class Widget {
 			ob_start();
 			pnpndGetTemplate( 'notice-card/notice-card-common', $args );
 
-			return ob_get_clean();
+			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
 		}
 
 		$status = 'public';
@@ -309,7 +305,7 @@ class Widget {
 			$escaped_status,
 			$escaped_id,
 			$escaped_enqueue_handle,
-			$theme,
+			esc_attr( $theme ),
 			esc_attr( $style ),
 			esc_html( $this->attributes )
 		);
@@ -335,12 +331,11 @@ class Widget {
 			$json_data = '{}';
 		}
 
-		$html .= sprintf(
-			'<script>window.%s = %s;</script>',
-			$escaped_object_key,
-			$json_data
+		wp_add_inline_script(
+			$enqueueHandle,
+			'window.' . $escaped_object_key . ' = ' . $json_data . ';'
 		);
 
-		return $html;
+		return wp_kses( $html, self::ALLOW_HTML_TAGS );
 	}
 }

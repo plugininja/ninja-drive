@@ -1,8 +1,6 @@
 <?php
 
-namespace Pninja\ND\Models;
-
-defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
+namespace Pnpnd\ND\Models;
 
 use Exception;
 use WP_Error;
@@ -23,7 +21,7 @@ defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
  * - Account validation
  * - Protection against cloning and serialization
  *
- * @package Pninja\ND\Models
+ * @package Pnpnd\ND\Models
  * @since 1.0.0
  */
 abstract class BaseModel {
@@ -86,9 +84,19 @@ abstract class BaseModel {
 		$result = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $this->tableName ) );
 
 		if ( $wpdb->last_error ) {
+			$message = __( 'A database error occurred. Please try again.', 'ninja-drive' );
+			if ( current_user_can( 'manage_options' ) ) {
+				$message = sprintf(
+					// translators: %1$s is the table name, %2$s is the database error message.
+					__( 'A database error occurred while counting records in %1$s: %2$s', 'ninja-drive' ),
+					esc_html( $this->tableName ),
+					$wpdb->last_error
+				);
+			}
+
 			return new WP_Error(
 				400,
-				__( 'A database error occurred: ', 'ninja-drive' ) . $wpdb->last_error
+				$message
 			);
 		}
 
@@ -118,7 +126,17 @@ abstract class BaseModel {
 		$inserted = $wpdb->insert( $this->tableName, $data, $format );
 
 		if ( $wpdb->last_error ) {
-			return new WP_Error( 400, __( 'A database error occurred: ', 'ninja-drive' ) . $wpdb->last_error );
+			$message = __( 'A database error occurred. Please try again.', 'ninja-drive' );
+			if ( current_user_can( 'manage_options' ) ) {
+				$message = sprintf(
+					// translators: %1$s is the table name, %2$s is the database error message.
+					__( 'A database error occurred while inserting record into %1$s: %2$s', 'ninja-drive' ),
+					esc_html( $this->tableName ),
+					$wpdb->last_error
+				);
+			}
+
+			return new WP_Error( 400, $message );
 		}
 
 		if ( ! $inserted ) {
@@ -176,7 +194,17 @@ abstract class BaseModel {
 		$updated = $wpdb->update( $this->tableName, $data, $where, $format, $where_format );
 
 		if ( $wpdb->last_error ) {
-			return new WP_Error( 400, __( 'A database error occurred: ', 'ninja-drive' ) . $wpdb->last_error );
+			$message = __( 'A database error occurred. Please try again.', 'ninja-drive' );
+			if ( current_user_can( 'manage_options' ) ) {
+				$message = sprintf(
+					// translators: %1$s is the table name, %2$s is the database error message.
+					__( 'A database error occurred while updating record in %1$s: %2$s', 'ninja-drive' ),
+					esc_html( $this->tableName ),
+					$wpdb->last_error
+				);
+			}
+
+			return new WP_Error( 400, $message );
 		}
 
 		if ( $updated === false ) {
@@ -237,12 +265,19 @@ abstract class BaseModel {
 		}
 
 		if ( $wpdb->last_error ) {
+			$message = __( 'A database error occurred. Please try again.', 'ninja-drive' );
+			if ( current_user_can( 'manage_options' ) ) {
+				$message = sprintf(
+					/* translators: %1$s is the table name, %2$s is the database error message. */
+					__( 'A database error occurred while deleting record from %1$s: %2$s', 'ninja-drive' ),
+					esc_html( $this->tableName ),
+					$wpdb->last_error
+				);
+			}
+
 			return new WP_Error(
 				'db_error',
-				sprintf(
-					'A database error occurred: %s',
-					$wpdb->last_error
-				)
+				$message
 			);
 		}
 
@@ -298,12 +333,19 @@ abstract class BaseModel {
 		$result = $wpdb->get_var( $sql );
 
 		if ( $wpdb->last_error ) {
+			$message = __( 'A database error occurred. Please try again.', 'ninja-drive' );
+			if ( current_user_can( 'manage_options' ) ) {
+				$message = sprintf(
+					// translators: %1$s is the table name, %2$s is the database error message.
+					__( 'A database error occurred while checking existence in %1$s: %2$s', 'ninja-drive' ),
+					esc_html( $this->tableName ),
+					$wpdb->last_error
+				);
+			}
+
 			return new WP_Error(
 				'db_error',
-				sprintf(
-					'A database error occurred: %s',
-					$wpdb->last_error
-				)
+				$message
 			);
 		}
 

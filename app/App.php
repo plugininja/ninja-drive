@@ -1,17 +1,17 @@
 <?php
 
-namespace Pninja\ND\App;
+namespace Pnpnd\ND\App;
 
-use Pninja\ND\App\Feature\BreadcrumbBuilder;
-use Pninja\ND\App\Feature\FileEditor;
-use Pninja\ND\App\Feature\FileLister;
-use Pninja\ND\App\Feature\FileRetriever;
-use Pninja\ND\App\Feature\FileUploader;
-use Pninja\ND\App\Feature\FolderManager;
-use Pninja\ND\App\Feature\MediaLinkGenerator;
-use Pninja\ND\App\Feature\SearchEngine;
-use Pninja\ND\App\Service\FileService;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\App\Feature\BreadcrumbBuilder;
+use Pnpnd\ND\App\Feature\FileEditor;
+use Pnpnd\ND\App\Feature\FileLister;
+use Pnpnd\ND\App\Feature\FileRetriever;
+use Pnpnd\ND\App\Feature\FileUploader;
+use Pnpnd\ND\App\Feature\FolderManager;
+use Pnpnd\ND\App\Feature\MediaLinkGenerator;
+use Pnpnd\ND\App\Feature\SearchEngine;
+use Pnpnd\ND\App\Service\FileService;
+use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

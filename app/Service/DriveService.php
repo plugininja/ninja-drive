@@ -1,10 +1,10 @@
 <?php
 
-namespace Pninja\ND\App\Service;
+namespace Pnpnd\ND\App\Service;
 
-use Pninja\ND\App\Client;
-use Pninja\ND\Google\Client as GoogleClient;
-use Pninja\ND\Google\Service\ServiceDrive;
+use Pnpnd\ND\App\Client;
+use Pnpnd\ND\Google\Client as GoogleClient;
+use Pnpnd\ND\Google\Service\ServiceDrive;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -20,35 +20,35 @@ abstract class DriveService {
 	/**
 	 * ServiceDrive instance.
 	 *
-	 * @var \Pninja\ND\Google\Service\ServiceDrive
+	 * @var \Pnpnd\ND\Google\Service\ServiceDrive
 	 */
 	protected $service;
 
 	/**
 	 * About API instance.
 	 *
-	 * @var \Pninja\ND\Google\Service\ServiceDriveAboutResource
+	 * @var \Pnpnd\ND\Google\Service\ServiceDriveAboutResource
 	 */
 	protected $about;
 
 	/**
 	 * Files API instance.
 	 *
-	 * @var \Pninja\ND\Google\Service\ServiceDriveFilesResource
+	 * @var \Pnpnd\ND\Google\Service\ServiceDriveFilesResource
 	 */
 	protected $files;
 
 	/**
 	 * Permissions API instance.
 	 *
-	 * @var \Pninja\ND\Google\Service\ServiceDrivePermissionsResource
+	 * @var \Pnpnd\ND\Google\Service\ServiceDrivePermissionsResource
 	 */
 	protected $permissions;
 
 	/**
 	 * Drives API instance.
 	 *
-	 * @var \Pninja\ND\Google\Service\ServiceDriveDrivesResource
+	 * @var \Pnpnd\ND\Google\Service\ServiceDriveDrivesResource
 	 */
 	protected $drives;
 

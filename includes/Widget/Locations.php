@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\Widget;
+namespace Pnpnd\ND\Widget;
 
 use function defined;
 use function in_array;
 use function is_array;
 
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

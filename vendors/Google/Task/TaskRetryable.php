@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Google\Task;
+namespace Pnpnd\ND\Google\Task;
 
 /*
  * Copyright 2014 Google Inc.

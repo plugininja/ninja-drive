@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\API;
+namespace Pnpnd\ND\API;
 
 use function defined;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Google\Logger;
+namespace Pnpnd\ND\Google\Logger;
 
-use Pninja\ND\Google\Client;
+use Pnpnd\ND\Google\Client;
 use DateTime;
 
 /*

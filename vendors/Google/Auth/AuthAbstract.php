@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Google\Auth;
+namespace Pnpnd\ND\Google\Auth;
 
-use Pninja\ND\Google\Http\HttpRequest;
+use Pnpnd\ND\Google\Http\HttpRequest;
 
 /*
  * Copyright 2010 Google Inc.

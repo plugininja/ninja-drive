@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\App\Feature;
+namespace Pnpnd\ND\App\Feature;
 
-use Pninja\ND\App\Client;
-use Pninja\ND\App\File;
-use Pninja\ND\Models\Files;
-use Pninja\ND\Models\Notices;
-use Pninja\ND\Utils\MimeTypeManager;
+use Pnpnd\ND\App\Client;
+use Pnpnd\ND\App\File;
+use Pnpnd\ND\Models\Files;
+use Pnpnd\ND\Models\Notices;
+use Pnpnd\ND\Utils\MimeTypeManager;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );

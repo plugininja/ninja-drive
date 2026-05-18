@@ -1,14 +1,14 @@
 <?php
 
-namespace Pninja\ND\Models;
+namespace Pnpnd\ND\Models;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
 use function count;
 use function in_array;
 
-use Pninja\ND\Utils\Helpers;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\Utils\Helpers;
+use Pnpnd\ND\Utils\Singleton;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
@@ -312,7 +312,7 @@ class Files extends BaseModel {
 	 * @param string $id The ID of the file to retrieve.
 	 * @param string $accountId The ID of the account associated with the file.
 	 *
-	 * @return \Pninja\ND\App\File|array|WP_Error The processed file data if found, otherwise null.
+	 * @return \Pnpnd\ND\App\File|array|WP_Error The processed file data if found, otherwise null.
 	 */
 	public function getFile( string $id, string $accountId, $returnType = 'object' ) {
 		global $wpdb;
@@ -352,7 +352,7 @@ class Files extends BaseModel {
 	 * @param string $key The unique key identifying the file.
 	 * @param string $returnType The type of return value, either 'object' or 'array'.
 	 *
-	 * @return \Pninja\ND\App\File|array|WP_Error The processed file data if found, otherwise null.
+	 * @return \Pnpnd\ND\App\File|array|WP_Error The processed file data if found, otherwise null.
 	 */
 	public function getFileByKey( string $key, string $returnType = 'object' ) {
 		$rootKeys = array( 'my-drive', 'shared', 'starred', 'computers', 'shared-with-me' );
@@ -1257,7 +1257,7 @@ class Files extends BaseModel {
 	 * Process a file object and return an enriched array representation.
 	 *
 	 * @param object|null $file
-	 * @return array|\Pninja\ND\App\File
+	 * @return array|\Pnpnd\ND\App\File
 	 */
 	private function processFile( $file, $returnType = 'object', $filter = null ) {
 		if ( empty( $file ) ) {
@@ -1289,7 +1289,7 @@ class Files extends BaseModel {
 		$fileData['thumbnail'] = ( Helpers::checkLifeTime( $file->updatedAt ) > 0 ) ? $file->thumbnail : null;
 
 		if ( $returnType === 'object' ) {
-			$file = new \Pninja\ND\App\File( $fileData );
+			$file = new \Pnpnd\ND\App\File( $fileData );
 
 			return $file;
 		} elseif ( $returnType === 'array' ) {

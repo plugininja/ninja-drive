@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\Google\Service;
+namespace Pnpnd\ND\Google\Service;
 
-use Pninja\ND\Google\Client;
-use Pninja\ND\Google\Collection;
-use Pninja\ND\Google\Http\HttpRequest;
-use Pninja\ND\Google\Model;
-use Pninja\ND\Google\Service;
+use Pnpnd\ND\Google\Client;
+use Pnpnd\ND\Google\Collection;
+use Pnpnd\ND\Google\Http\HttpRequest;
+use Pnpnd\ND\Google\Model;
+use Pnpnd\ND\Google\Service;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

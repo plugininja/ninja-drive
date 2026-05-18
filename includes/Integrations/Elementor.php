@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\Integrations;
+namespace Pnpnd\ND\Integrations;
 
-use Pninja\ND\Enqueue;
-use Pninja\ND\Integrations\Elementor\EmbedDocuments;
-use Pninja\ND\Integrations\Elementor\FileBrowser;
-use Pninja\ND\Integrations\Elementor\Gallery;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\Enqueue;
+use Pnpnd\ND\Integrations\Elementor\EmbedDocuments;
+use Pnpnd\ND\Integrations\Elementor\FileBrowser;
+use Pnpnd\ND\Integrations\Elementor\Gallery;
+use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Google\Cache;
+namespace Pnpnd\ND\Google\Cache;
 
-use Pninja\ND\Google\Exception;
+use Pnpnd\ND\Google\Exception;
 
 /*
  * Copyright 2013 Google Inc.

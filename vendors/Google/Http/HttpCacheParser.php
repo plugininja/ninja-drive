@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Google\Http;
+namespace Pnpnd\ND\Google\Http;
 
-use Pninja\ND\Google\Exception;
+use Pnpnd\ND\Google\Exception;
 
 /*
  * Copyright 2012 Google Inc.

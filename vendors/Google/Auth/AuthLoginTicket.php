@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Google\Auth;
+namespace Pnpnd\ND\Google\Auth;
 
 /*
  * Copyright 2011 Google Inc.

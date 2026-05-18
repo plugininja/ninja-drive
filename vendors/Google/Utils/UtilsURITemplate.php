@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Google\Utils;
+namespace Pnpnd\ND\Google\Utils;
 
 /*
  * Copyright 2013 Google Inc.

@@ -1,13 +1,13 @@
 <?php
 
-namespace Pninja\ND\Google\Service;
+namespace Pnpnd\ND\Google\Service;
 
-use Pninja\ND\Google\Client;
-use Pninja\ND\Google\Exception;
-use Pninja\ND\Google\Http\HttpMediaFileUpload;
-use Pninja\ND\Google\Http\HttpRequest;
-use Pninja\ND\Google\Http\HttpREST;
-use Pninja\ND\Google\Model;
+use Pnpnd\ND\Google\Client;
+use Pnpnd\ND\Google\Exception;
+use Pnpnd\ND\Google\Http\HttpMediaFileUpload;
+use Pnpnd\ND\Google\Http\HttpRequest;
+use Pnpnd\ND\Google\Http\HttpREST;
+use Pnpnd\ND\Google\Model;
 
 /**
  * Copyright 2010 Google Inc.

@@ -1,13 +1,13 @@
 <?php
 
-namespace Pninja\ND\API\Controllers;
+namespace Pnpnd\ND\API\Controllers;
 
 use Exception;
-use Pninja\ND\API\BaseController;
-use Pninja\ND\API\Traits\HasWidgetPermission;
-use Pninja\ND\App\App;
-use Pninja\ND\Models\Files as ModelFiles;
-use Pninja\ND\Models\Widget;
+use Pnpnd\ND\API\BaseController;
+use Pnpnd\ND\API\Traits\HasWidgetPermission;
+use Pnpnd\ND\App\App;
+use Pnpnd\ND\Models\Files as ModelFiles;
+use Pnpnd\ND\Models\Widget;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

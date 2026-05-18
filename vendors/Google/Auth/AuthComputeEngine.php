@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND\Google\Auth;
+namespace Pnpnd\ND\Google\Auth;
 
-use Pninja\ND\Google\Client;
-use Pninja\ND\Google\Http\HttpRequest;
+use Pnpnd\ND\Google\Client;
+use Pnpnd\ND\Google\Http\HttpRequest;
 
 /*
  * Copyright 2014 Google Inc.

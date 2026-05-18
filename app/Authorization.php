@@ -1,11 +1,11 @@
 <?php
 
-namespace Pninja\ND\App;
+namespace Pnpnd\ND\App;
 
 use Exception;
-use Pninja\ND\App\Service\AccountService;
-use Pninja\ND\Models\Notices;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\App\Service\AccountService;
+use Pnpnd\ND\Models\Notices;
+use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

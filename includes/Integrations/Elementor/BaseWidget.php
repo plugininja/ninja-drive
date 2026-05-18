@@ -1,10 +1,10 @@
 <?php
 
-namespace Pninja\ND\Integrations\Elementor;
+namespace Pnpnd\ND\Integrations\Elementor;
 
 use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
-use Pninja\ND\Widget;
+use Pnpnd\ND\Widget;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -117,23 +117,27 @@ abstract class BaseWidget extends Widget_Base {
 			return;
 		}
 
-		printf(
-			'<script>window.%s = %s;</script>%s',
-			esc_js( $widget_data['data_id'] ),
-			wp_json_encode( $widget_data['data'] ),
-			wp_kses(
-				$widget_data['html'],
-				array(
-					'div' => array(
-						'class'              => array(),
-						'id'                 => array(),
-						'data-post_id'       => array(),
-						'data-id'            => array(),
-						'data-status'        => array(),
-						'pnpnd-theme-status' => array(),
-						'style'              => array(),
-					),
-				)
+		$script_handle = 'pnpnd-elementor-data-' . uniqid();
+		wp_register_script( $script_handle, false, array(), PNPND_VERSION, false );
+		wp_enqueue_script( $script_handle );
+		wp_add_inline_script(
+			$script_handle,
+			'window.' . esc_js( $widget_data['data_id'] ) . ' = ' . wp_json_encode( $widget_data['data'] ) . ';'
+		);
+		wp_print_scripts( $script_handle );
+
+		echo wp_kses(
+			$widget_data['html'],
+			array(
+				'div' => array(
+					'class'              => array(),
+					'id'                 => array(),
+					'data-post_id'       => array(),
+					'data-id'            => array(),
+					'data-status'        => array(),
+					'pnpnd-theme-status' => array(),
+					'style'              => array(),
+				),
 			)
 		);
 	}
@@ -158,7 +162,7 @@ abstract class BaseWidget extends Widget_Base {
 
 	public function get_module_options( $type = '' ) {
 		try {
-			$widgets = \Pninja\ND\Models\Widget::getInstance()->getAll( array( 'perPage' => 0 ) );
+			$widgets = \Pnpnd\ND\Models\Widget::getInstance()->getAll( array( 'perPage' => 0 ) );
 
 			if ( empty( $widgets ) ) {
 				return array();

@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Models;
+namespace Pnpnd\ND\Models;
 
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\Utils\Singleton;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
  * This class extends BaseModel to provide notice/log management functionality
  * with full compatibility with the base model's CRUD operations and error handling.
  *
- * @package Pninja\ND\Models
+ * @package Pnpnd\ND\Models
  * @since 1.0.0
  */
 class Notices extends BaseModel {
@@ -289,7 +289,17 @@ class Notices extends BaseModel {
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$result = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE status = %s', $this->tableName, 'unread' ) );
 		if ( $wpdb->last_error ) {
-			return new WP_Error( 400, __( 'A database error occurred: ', 'ninja-drive' ) . $wpdb->last_error );
+			$message = __( 'A database error occurred while fetching unread count. Please try again.', 'ninja-drive' );
+			if ( current_user_can( 'manage_options' ) ) {
+				$message = sprintf(
+					// translators: %1$s is the table name, %2$s is the database error message.
+					__( 'A database error occurred while fetching unread count from %1$s: %2$s', 'ninja-drive' ),
+					esc_html( $this->tableName ),
+					$wpdb->last_error
+				);
+			}
+
+			return new WP_Error( 400, $message );
 		}
 
 		wp_cache_set( $cacheKey, (int) $result, 'pnpnd_notices' );

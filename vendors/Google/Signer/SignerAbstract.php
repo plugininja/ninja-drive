@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Google\Signer;
+namespace Pnpnd\ND\Google\Signer;
 
 /*
  * Copyright 2011 Google Inc.

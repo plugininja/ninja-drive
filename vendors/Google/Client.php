@@ -1,17 +1,17 @@
 <?php
 
-namespace Pninja\ND\Google;
+namespace Pnpnd\ND\Google;
 
-use Pninja\ND\Google\Auth\AuthAbstract;
-use Pninja\ND\Google\Auth\AuthAssertionCredentials;
-use Pninja\ND\Google\Auth\AuthException;
-use Pninja\ND\Google\Auth\AuthOAuth2;
-use Pninja\ND\Google\Cache\CacheAbstract;
-use Pninja\ND\Google\Http\HttpBatch;
-use Pninja\ND\Google\Http\HttpRequest;
-use Pninja\ND\Google\Http\HttpREST;
-use Pninja\ND\Google\IO\IOAbstract;
-use Pninja\ND\Google\Logger\LoggerAbstract;
+use Pnpnd\ND\Google\Auth\AuthAbstract;
+use Pnpnd\ND\Google\Auth\AuthAssertionCredentials;
+use Pnpnd\ND\Google\Auth\AuthException;
+use Pnpnd\ND\Google\Auth\AuthOAuth2;
+use Pnpnd\ND\Google\Cache\CacheAbstract;
+use Pnpnd\ND\Google\Http\HttpBatch;
+use Pnpnd\ND\Google\Http\HttpRequest;
+use Pnpnd\ND\Google\Http\HttpREST;
+use Pnpnd\ND\Google\IO\IOAbstract;
+use Pnpnd\ND\Google\Logger\LoggerAbstract;
 
 /*
  * Copyright 2010 Google Inc.

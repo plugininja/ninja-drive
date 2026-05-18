@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Google;
+namespace Pnpnd\ND\Google;
 
-use Pninja\ND\Google\Http\HttpBatch;
+use Pnpnd\ND\Google\Http\HttpBatch;
 
 /*
  * Copyright 2010 Google Inc.

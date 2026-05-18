@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\App;
+namespace Pnpnd\ND\App;
 
 use Exception;
-use Pninja\ND\Google\Client as GoogleClient;
-use Pninja\ND\Models\Notices;
-use Pninja\ND\Utils\Helpers;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\Google\Client as GoogleClient;
+use Pnpnd\ND\Models\Notices;
+use Pnpnd\ND\Utils\Helpers;
+use Pnpnd\ND\Utils\Singleton;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );

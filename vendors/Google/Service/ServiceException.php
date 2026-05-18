@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND\Google\Service;
+namespace Pnpnd\ND\Google\Service;
 
-use Pninja\ND\Google\Exception;
-use Pninja\ND\Google\Task\TaskRetryable;
+use Pnpnd\ND\Google\Exception;
+use Pnpnd\ND\Google\Task\TaskRetryable;
 
 /*
  * Copyright 2014 Google Inc.

@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND\Google\Http;
+namespace Pnpnd\ND\Google\Http;
 
-use Pninja\ND\Google\Client;
-use Pninja\ND\Google\Service\ServiceException;
+use Pnpnd\ND\Google\Client;
+use Pnpnd\ND\Google\Service\ServiceException;
 
 /*
  * Copyright 2012 Google Inc.

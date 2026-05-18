@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Utils;
+namespace Pnpnd\ND\Utils;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

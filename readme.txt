@@ -12,7 +12,7 @@ Complete Google Drive plugin for WordPress. Browse, manage, embed, and serve Goo
 
 == Description ==
 
-Ninja Drive is a Google Drive integration for WordPress — file manager, gallery, media player, uploader, and more, all in one plugin.
+Ninja Drive is a Google Drive integration for WordPress. With Ninja Drive, you can have a file browser, a gallery, an embedded document, and more, all in one plugin.
 
 It's a feature-complete, self-hosted Google Drive experience built entirely inside your WordPress dashboard. Connect your Drive account, manage files, embed content, and let visitors upload — no third-party portals, no switching tabs, no complicated setups.
 
@@ -37,13 +37,13 @@ This isn't a simple embed tool. It's a full file management and content delivery
 * **Advanced Search** – Locate any file or folder instantly using powerful real-time search filters
 * **Caching & Pagination** – Optimized browsing experience for large folders with hundreds of files.
 
-#### 🧩 Module Builder
+#### 🧩 Widget Builder
 
 Build custom display modules and place them anywhere on your site using blocks, Elementor widgets, or shortcodes.
 
-* **File Browser Module** – A fully customizable file browser for any folder, displayed beautifully on the frontend
-* **Gallery Module** – Let clients preview, select, and download approved images or send selections directly to you
-* **Embed Module** – Embed documents, PDFs, images, audio, and video anywhere using blocks, widgets, or shortcodes
+* **File Browser Widget** – A fully customizable file browser for any folder, displayed beautifully on the frontend
+* **Gallery Widget** – Let clients preview, select, and download approved images or send selections directly to you
+* **Embed Widget** – Embed documents, PDFs, images, audio, and video anywhere using blocks, widgets, or shortcodes
 
 #### 🎨 Appearance & Customization
 
@@ -69,24 +69,26 @@ Build custom display modules and place them anywhere on your site using blocks, 
 
 * **REST API** – All plugin endpoints run on REST API for better performance and security
 
-== External Services ==
+== Third Party / External Services ==
 
 This plugin connects to the **Google Drive API** to enable full integration with your Google Drive account.
+It uses the following Google OAuth scope:
+- https://www.googleapis.com/auth/drive
 
-=== What data is sent and when ===
+**What data is sent and when**
 
 * When you authorize the plugin, it requests OAuth 2.0 permission to access your Google Drive
 * The plugin sends authentication tokens and API requests to Google Drive API endpoints when you perform file actions
 * No data is shared with any third party other than Google
 * The plugin does not store or transmit sensitive user data beyond what is required for Drive access
 
-=== Why this data is sent ===
+**Why this data is sent**
 
 * To retrieve and display your Google Drive file lists
 * To upload and manage files within Google Drive
 * To display embedded documents such as Google Sheets, Docs, or Slides on your site
 
-=== Service Provider Information ===
+**Service Provider Information**
 
 **Service Provider:** Google LLC
 **Service Used:** Google Drive API
@@ -99,7 +101,7 @@ This plugin connects to the **Google Drive API** to enable full integration with
 **Terms of Service:** https://www.microsoft.com/en-us/legal/terms-of-use
 **Privacy Policy:** https://www.microsoft.com/en-us/privacy/privacystatement
 
-=== External Domains Used ===
+**External Domains Used**
 
 * `https://www.googleapis.com/drive/v3/files/` – Google Drive file operations
 * `https://www.googleapis.com/auth/drive` – OAuth scope for Drive access
@@ -144,6 +146,15 @@ This plugin bundles a modified version of the Google API Client library, which i
 
 File type thumbnail icons are loaded from Google's CDN (drive-thirdparty.googleusercontent.com) as a fallback when no local thumbnail is available. This is an image resource only — no executable code. Thumbnail requests may also proxy content through Google's servers (googleapis.com, lh3.googleusercontent.com) when displaying file previews in the WordPress admin or frontend.
 
+== Shortcodes ==
+
+Use the built-in Shortcode Builder to generate all parameters visually. Example: `[ninja-drive id="1"]`
+
+== Contribute ==
+
+Ninja Drive is an open-source project. You can view the full unminified source and contribute on GitHub:
+https://github.com/plugininja/ninja-drive
+
 == Frequently Asked Questions ==
 
 = Do files get copied to my server? =
@@ -163,15 +174,6 @@ Yes. You can restrict access by user role, login status, or password. Private fo
 
 = Can visitors upload files to my Google Drive? =
 Yes. The File Uploader Module allows visitors, clients, or customers to upload files directly to your connected Drive account from any page on your site.
-
-== Shortcodes ==
-
-Use the built-in Shortcode Builder to generate all parameters visually. Example: `[ninja-drive id="1"]`
-
-== Contribute ==
-
-Ninja Drive is an open-source project. You can view the full unminified source and contribute on GitHub:
-https://github.com/plugininja/ninja-drive
 
 == Changelog ==
 

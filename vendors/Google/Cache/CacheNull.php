@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Google\Cache;
+namespace Pnpnd\ND\Google\Cache;
 
-use Pninja\ND\Google\Client;
+use Pnpnd\ND\Google\Client;
 
 /*
  * Copyright 2014 Google Inc.

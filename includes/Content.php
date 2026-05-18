@@ -1,18 +1,18 @@
 <?php
 
-namespace Pninja\ND;
+namespace Pnpnd\ND;
 
 use function array_slice;
 use function count;
 use function in_array;
 use function is_array;
 
-use Pninja\ND\App\App;
-use Pninja\ND\App\Authorization;
-use Pninja\ND\Models\Files;
-use Pninja\ND\Utils\Helpers;
-use Pninja\ND\Utils\MimeTypeManager;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\App\App;
+use Pnpnd\ND\App\Authorization;
+use Pnpnd\ND\Models\Files;
+use Pnpnd\ND\Utils\Helpers;
+use Pnpnd\ND\Utils\MimeTypeManager;
+use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -123,7 +123,6 @@ class Content {
 			array(
 				'timeout'     => 15,
 				'redirection' => 5,
-				'sslverify'   => false,
 			)
 		);
 		if ( is_wp_error( $response ) ) {
@@ -340,7 +339,11 @@ class Content {
 		}
 
 		if ( is_wp_error( $previewLink ) ) {
-			$this->denyAccess( $previewLink->get_error_message(), 500 );
+			$message = __( 'Unable to generate preview link.', 'ninja-drive' );
+			if ( current_user_can( 'manage_options' ) ) {
+				$message .= ' ' . $previewLink->get_error_message();
+			}
+			$this->denyAccess( esc_html( $message ), 500 );
 		}
 
 		if ( empty( $previewLink ) ) {

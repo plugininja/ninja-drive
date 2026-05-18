@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND\Integrations;
+namespace Pnpnd\ND\Integrations;
 
-use Pninja\ND\Utils\Singleton;
-use Pninja\ND\Widget;
+use Pnpnd\ND\Utils\Singleton;
+use Pnpnd\ND\Widget;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -43,11 +43,11 @@ class Blocks extends BaseIntegration {
 
 		$html = Widget::getInstance()->render(
 			array(
-				'id' => $attributes['id'],
+				'id' => absint( $attributes['id'] ),
 			)
 		);
 
-		return $html;
+		return wp_kses( $html, Widget::ALLOW_HTML_TAGS );
 	}
 
 	public function blockCategory( $categories ) {

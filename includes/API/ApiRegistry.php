@@ -1,15 +1,15 @@
 <?php
 
-namespace Pninja\ND\API;
+namespace Pnpnd\ND\API;
 
-use Pninja\ND\API\Controllers\Account;
-use Pninja\ND\API\Controllers\File;
-use Pninja\ND\API\Controllers\Folder;
-use Pninja\ND\API\Controllers\Notice;
-use Pninja\ND\API\Controllers\Settings;
-use Pninja\ND\API\Controllers\Users;
-use Pninja\ND\API\Controllers\Widget;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\API\Controllers\Account;
+use Pnpnd\ND\API\Controllers\File;
+use Pnpnd\ND\API\Controllers\Folder;
+use Pnpnd\ND\API\Controllers\Notice;
+use Pnpnd\ND\API\Controllers\Settings;
+use Pnpnd\ND\API\Controllers\Users;
+use Pnpnd\ND\API\Controllers\Widget;
+use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

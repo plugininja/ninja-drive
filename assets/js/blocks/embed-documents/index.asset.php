@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-block-editor', 'wp-blocks', 'wp-components', 'wp-element', 'wp-i18n', 'pnpnd-shared'), 'version' => 'af7b823e4edd9d0715a8', 'handle' => 'undefined-blocks/embed-documents/index');
+<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-block-editor', 'wp-blocks', 'wp-components', 'wp-element', 'wp-i18n', 'pnpnd-shared'), 'version' => 'd79ff411b9d956589a7e', 'handle' => 'undefined-blocks/embed-documents/index');

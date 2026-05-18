@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND;
+namespace Pnpnd\ND;
 
-use Pninja\ND\Utils\Helpers;
+use Pnpnd\ND\Utils\Helpers;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -22,6 +22,7 @@ class Activation {
 					restore_current_blog();
 				}
 				update_network_option( null, 'pnpnd_network_activated', true );
+
 				return;
 			}
 		}

@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\Models;
+namespace Pnpnd\ND\Models;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
-use Pninja\ND\App\Account as AppAccount;
-use Pninja\ND\Utils\Helpers;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\App\Account as AppAccount;
+use Pnpnd\ND\Utils\Helpers;
+use Pnpnd\ND\Utils\Singleton;
 use stdClass;
 use WP_Error;
 use WP_User;

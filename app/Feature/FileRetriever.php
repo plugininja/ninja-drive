@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\App\Feature;
+namespace Pnpnd\ND\App\Feature;
 
-use Pninja\ND\App\Client;
-use Pninja\ND\App\Feature\FileLister;
-use Pninja\ND\App\Feature\SearchEngine;
-use Pninja\ND\App\Service\FileService;
-use Pninja\ND\Models\Files;
+use Pnpnd\ND\App\Client;
+use Pnpnd\ND\App\Feature\FileLister;
+use Pnpnd\ND\App\Feature\SearchEngine;
+use Pnpnd\ND\App\Service\FileService;
+use Pnpnd\ND\Models\Files;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );

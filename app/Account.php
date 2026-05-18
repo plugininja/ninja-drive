@@ -1,15 +1,15 @@
 <?php
 
-namespace Pninja\ND\App;
+namespace Pnpnd\ND\App;
 
-use Pninja\ND\Models\Account as AccountModel;
+use Pnpnd\ND\Models\Account as AccountModel;
 
 use function defined;
 
 use JsonSerializable;
 use WP_Error;
 
-// use Pninja\ND\Utils\Singleton;
+// use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

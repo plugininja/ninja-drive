@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Pages;
+namespace Pnpnd\ND\Pages;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -65,7 +65,7 @@ class AdminPages {
 			'manage_options',
 			PNPND_SLUG,
 			array( self::class, 'adminPage' ),
-			PNPND_ASSETS . '/images/drive.png'
+			PNPND_ASSETS . '/images/ninja-drive.png'
 		);
 
 		self::addSubMenuPage( $menu, $slug );

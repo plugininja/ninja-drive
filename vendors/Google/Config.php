@@ -1,11 +1,11 @@
 <?php
 
-namespace Pninja\ND\Google;
+namespace Pnpnd\ND\Google;
 
-use Pninja\ND\Google\Auth\AuthOAuth2;
-use Pninja\ND\Google\Cache\CacheFile;
-use Pninja\ND\Google\IO\IOWPHttp;
-use Pninja\ND\Google\Logger\LoggerNull;
+use Pnpnd\ND\Google\Auth\AuthOAuth2;
+use Pnpnd\ND\Google\Cache\CacheFile;
+use Pnpnd\ND\Google\IO\IOWPHttp;
+use Pnpnd\ND\Google\Logger\LoggerNull;
 
 /*
  * Copyright 2010 Google Inc.

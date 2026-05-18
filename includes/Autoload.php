@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND;
+namespace Pnpnd\ND;
 
 defined( 'ABSPATH' ) or exit( 'No direct script access allowed' );
 
@@ -11,7 +11,7 @@ class Autoload {
 	}
 
 	/**
-	 * PSR-4 style autoloader for the Pninja\ND namespace.
+	 * PSR-4 style autoloader for the Pnpnd\ND namespace.
 	 *
 	 * @param string $class Fully qualified class name.
 	 */
@@ -45,11 +45,11 @@ class Autoload {
 	private static function getAutoloadPaths() {
 		return array(
 			// Order matters: more specific namespaces first
-			'Pninja\\ND\\ZipStream\\' => array( PNPND_VENDORS . '/ZipStream' ),
-			'Pninja\\ND\\Google\\'    => array( PNPND_VENDORS . '/Google' ),
-			'Pninja\\ND\\Models\\'    => array( PNPND_MODELS ),
-			'Pninja\\ND\\App\\'       => array( PNPND_APP ),
-			'Pninja\\ND\\'            => array( PNPND_INCLUDES ),
+			'Pnpnd\\ND\\ZipStream\\' => array( PNPND_VENDORS . '/ZipStream' ),
+			'Pnpnd\\ND\\Google\\'    => array( PNPND_VENDORS . '/Google' ),
+			'Pnpnd\\ND\\Models\\'    => array( PNPND_MODELS ),
+			'Pnpnd\\ND\\App\\'       => array( PNPND_APP ),
+			'Pnpnd\\ND\\'            => array( PNPND_INCLUDES ),
 		);
 	}
 }

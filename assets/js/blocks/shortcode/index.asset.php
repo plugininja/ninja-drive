@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-block-editor', 'wp-blocks', 'wp-components', 'wp-element', 'wp-i18n', 'pnpnd-shared'), 'version' => '9d23990f6f9dd1e66d33', 'handle' => 'undefined-blocks/shortcode/index');
+<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-block-editor', 'wp-blocks', 'wp-components', 'wp-element', 'wp-i18n', 'pnpnd-shared'), 'version' => '285303986334dda18490', 'handle' => 'undefined-blocks/shortcode/index');

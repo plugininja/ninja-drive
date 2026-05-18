@@ -1,18 +1,18 @@
 <?php
 
-namespace Pninja\ND\App\Service;
+namespace Pnpnd\ND\App\Service;
 
 use Exception;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
-use Pninja\ND\App\Client;
-use Pninja\ND\App\File;
-use Pninja\ND\Google\Http\HttpBatch;
-use Pninja\ND\Google\Service\ServiceDriveDrive;
-use Pninja\ND\Google\Service\ServiceDriveDriveFile;
-use Pninja\ND\Models\Files as ModelsFiles;
+use Pnpnd\ND\App\Client;
+use Pnpnd\ND\App\File;
+use Pnpnd\ND\Google\Http\HttpBatch;
+use Pnpnd\ND\Google\Service\ServiceDriveDrive;
+use Pnpnd\ND\Google\Service\ServiceDriveDriveFile;
+use Pnpnd\ND\Models\Files as ModelsFiles;
 
 class FileService extends DriveService {
 

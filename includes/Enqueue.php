@@ -1,14 +1,14 @@
 <?php
 
-namespace Pninja\ND;
+namespace Pnpnd\ND;
 
 use function defined;
 
-use Pninja\ND\App\Account;
-use Pninja\ND\App\Accounts;
-use Pninja\ND\Models\Notices;
-use Pninja\ND\Utils\Helpers;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\App\Account;
+use Pnpnd\ND\App\Accounts;
+use Pnpnd\ND\Models\Notices;
+use Pnpnd\ND\Utils\Helpers;
+use Pnpnd\ND\Utils\Singleton;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace Pninja\ND\API\Controllers;
+namespace Pnpnd\ND\API\Controllers;
 
 use function in_array;
 use function is_array;
 
-use Pninja\ND\API\BaseController;
-use Pninja\ND\API\Traits\HasWidgetPermission;
-use Pninja\ND\Models\Widget as WidgetModel;
+use Pnpnd\ND\API\BaseController;
+use Pnpnd\ND\API\Traits\HasWidgetPermission;
+use Pnpnd\ND\Models\Widget as WidgetModel;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

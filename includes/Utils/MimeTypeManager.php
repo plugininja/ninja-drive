@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Utils;
+namespace Pnpnd\ND\Utils;
 
 use function in_array;
 

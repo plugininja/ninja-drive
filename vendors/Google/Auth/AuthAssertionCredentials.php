@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND\Google\Auth;
+namespace Pnpnd\ND\Google\Auth;
 
-use Pninja\ND\Google\Signer\SignerP12;
-use Pninja\ND\Google\Utils;
+use Pnpnd\ND\Google\Signer\SignerP12;
+use Pnpnd\ND\Google\Utils;
 
 /*
  * Copyright 2012 Google Inc.

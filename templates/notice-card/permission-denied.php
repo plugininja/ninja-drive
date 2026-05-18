@@ -6,7 +6,10 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Access Denied</title>
-	<style>
+	<?php
+    wp_register_style('pnpnd-permission-denied', false, [], PNPND_VERSION);
+wp_enqueue_style('pnpnd-permission-denied');
+wp_add_inline_style('pnpnd-permission-denied', '
 		body {
 			margin: 0;
 			height: 100vh;
@@ -63,7 +66,9 @@
 			line-height: 1.6;
 			color: #636e72;
 		}
-	</style>
+	');
+wp_print_styles('pnpnd-permission-denied');
+?>
 </head>
 
 <body>
@@ -74,7 +79,7 @@
 		</svg>
 
 		<?php $pnpnd_title       = $args['title']             ?? __('Access Denied', 'ninja-drive'); ?>
-		<?php $pnpnd_description = $args['description'] ?? __('You do not have permission to access this file.', 'ninja-drive'); ?>
+		<?php $pnpnd_description = $args['description']       ?? __('You do not have permission to access this file.', 'ninja-drive'); ?>
 
 		<h1><?php echo esc_html($pnpnd_title); ?></h1>
 		<p><?php echo esc_html($pnpnd_description); ?></p>

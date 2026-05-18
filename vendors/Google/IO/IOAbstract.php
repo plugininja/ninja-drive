@@ -1,10 +1,10 @@
 <?php
 
-namespace Pninja\ND\Google\IO;
+namespace Pnpnd\ND\Google\IO;
 
-use Pninja\ND\Google\Client;
-use Pninja\ND\Google\Http\HttpCacheParser;
-use Pninja\ND\Google\Http\HttpRequest;
+use Pnpnd\ND\Google\Client;
+use Pnpnd\ND\Google\Http\HttpCacheParser;
+use Pnpnd\ND\Google\Http\HttpRequest;
 
 /*
  * Copyright 2013 Google Inc.

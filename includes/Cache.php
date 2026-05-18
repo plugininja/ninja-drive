@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND;
+namespace Pnpnd\ND;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -34,7 +34,7 @@ class Cache {
 	 *
 	 * @var array
 	 */
-	protected $allowedSizes = array( 'md', 'lg', 'xl', '4xl', '5xl' );
+	protected $allowedSizes = array( 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl' );
 
 	public function __construct() {
 		$this->initFilesystem();
@@ -64,6 +64,7 @@ class Cache {
 		// Ensure base directory exists
 		if ( ! $this->fs->exists( $this->baseDir ) ) {
 			$this->fs->mkdir( $this->baseDir, FS_CHMOD_DIR );
+			$this->fs->put_contents( $this->baseDir . 'index.php', '<?php // Silence is golden.' );
 		}
 	}
 
@@ -99,6 +100,7 @@ class Cache {
 				if ( ! $this->fs->mkdir( $sizeDir, FS_CHMOD_DIR ) ) {
 					return false;
 				}
+				$this->fs->put_contents( $sizeDir . 'index.php', '<?php // Silence is golden.' );
 			}
 
 			$filePath = $sizeDir . sanitize_file_name( $filename ) . '.' . $ext;

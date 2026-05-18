@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Google\Task;
+namespace Pnpnd\ND\Google\Task;
 
-use Pninja\ND\Google\Exception;
+use Pnpnd\ND\Google\Exception;
 
 /*
  * Copyright 2014 Google Inc.

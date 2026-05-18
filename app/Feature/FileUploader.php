@@ -1,11 +1,11 @@
 <?php
 
-namespace Pninja\ND\App\Feature;
+namespace Pnpnd\ND\App\Feature;
 
-use Pninja\ND\App\Client;
-use Pninja\ND\App\File;
-use Pninja\ND\App\Service\UploadService;
-use Pninja\ND\Google\Service\ServiceDriveDriveFile;
+use Pnpnd\ND\App\Client;
+use Pnpnd\ND\App\File;
+use Pnpnd\ND\App\Service\UploadService;
+use Pnpnd\ND\Google\Service\ServiceDriveDriveFile;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );

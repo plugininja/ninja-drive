@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Google\Logger;
+namespace Pnpnd\ND\Google\Logger;
 
 /*
  * Copyright 2014 Google Inc.

@@ -1,10 +1,10 @@
 <?php
 
-namespace Pninja\ND\Integrations;
+namespace Pnpnd\ND\Integrations;
 
-use Pninja\ND\App\App;
-use Pninja\ND\Integration;
-use Pninja\ND\Utils\Helpers;
+use Pnpnd\ND\App\App;
+use Pnpnd\ND\Integration;
+use Pnpnd\ND\Utils\Helpers;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

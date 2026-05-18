@@ -1,13 +1,13 @@
 <?php
 
-namespace Pninja\ND\App;
+namespace Pnpnd\ND\App;
 
 use function in_array;
 
-use Pninja\ND\App\Service\AccountService;
-use Pninja\ND\Models\Account as AccountModel;
-use Pninja\ND\Models\Files;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\App\Service\AccountService;
+use Pnpnd\ND\Models\Account as AccountModel;
+use Pnpnd\ND\Models\Files;
+use Pnpnd\ND\Utils\Singleton;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );

@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\App\Service;
+namespace Pnpnd\ND\App\Service;
 
-use Pninja\ND\Google\Http\HttpMediaFileUpload;
+use Pnpnd\ND\Google\Http\HttpMediaFileUpload;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
-use Pninja\ND\Google\Service\ServiceDriveDriveFile;
+use Pnpnd\ND\Google\Service\ServiceDriveDriveFile;
 use WP_Error;
 
 class UploadService extends DriveService {

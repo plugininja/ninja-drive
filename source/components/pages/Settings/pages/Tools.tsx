@@ -84,7 +84,7 @@ const Tools = () => {
         downloadAnchorNode.setAttribute("href", dataStr);
         downloadAnchorNode.setAttribute(
             "download",
-            `ninja_drive_${filenamePart}_${new Date().getTime()}.json`,
+            `pnpnd_${filenamePart}_${new Date().getTime()}.json`,
         );
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();

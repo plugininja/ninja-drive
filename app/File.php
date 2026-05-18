@@ -1,11 +1,11 @@
 <?php
 
-namespace Pninja\ND\App;
+namespace Pnpnd\ND\App;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
-use Pninja\ND\Google\Service\ServiceDriveDriveFile;
-use Pninja\ND\Google\Service\ServiceDriveDriveFileCapabilities;
+use Pnpnd\ND\Google\Service\ServiceDriveDriveFile;
+use Pnpnd\ND\Google\Service\ServiceDriveDriveFileCapabilities;
 use WP_Error;
 
 class File extends BaseFile {

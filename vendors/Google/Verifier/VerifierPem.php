@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND\Google\Verifier;
+namespace Pnpnd\ND\Google\Verifier;
 
-use Pninja\ND\Google\Auth\AuthException;
-use Pninja\ND\Google\Exception;
+use Pnpnd\ND\Google\Auth\AuthException;
+use Pnpnd\ND\Google\Exception;
 
 /*
  * Copyright 2011 Google Inc.

@@ -1,0 +1,1 @@
+<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-components', 'wp-element', 'wp-i18n'), 'version' => '8cc7b4b2649323376974', 'handle' => 'undefined-widgets/file-uploader');

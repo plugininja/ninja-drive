@@ -1,14 +1,14 @@
 <?php
 
-namespace Pninja\ND\Utils;
+namespace Pnpnd\ND\Utils;
 
 use function in_array;
 use function is_array;
 use function is_string;
 
-use Pninja\ND\App\App;
-use Pninja\ND\Models\Notices;
-use Pninja\ND\Models\Widget;
+use Pnpnd\ND\App\App;
+use Pnpnd\ND\Models\Notices;
+use Pnpnd\ND\Models\Widget;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -138,8 +138,8 @@ class Helpers {
 
 				if ( self::isSequentialArray( $value ) || ( empty( $value ) && self::isSequentialArray( $settings[ $key ] ) ) ) {
 					$sanitized[ $key ] = array_key_exists( $key, $settings ) && is_array( $settings[ $key ] )
-								? array_values( $settings[ $key ] )
-								: $value;
+							? array_values( $settings[ $key ] )
+							: $value;
 
 				} else {
 					$sanitized[ $key ] = array_key_exists( $key, $settings ) && is_array( $settings[ $key ] ) ? self::sanitizeRecursiveSettings( wp_parse_args( $settings[ $key ], $value ), $value, $sensitive ) : $value;
@@ -273,30 +273,107 @@ class Helpers {
 		}
 	}
 
-	public static function encode( string $input, $key = null, $prefix = 'ND' ) {
-		if ( null === $key ) {
-			$key = get_option( 'pnpnd_encryption_key', 'pnpnd' );
+	public static function encode( string $input ): string|false {
+		$uuid = get_option( 'pnpnd_encryption_key', 'pnpnd' );
+		$key  = hash( 'sha256', $uuid, true );
+
+		if ( function_exists( 'sodium_crypto_secretbox' ) ) {
+			return self::sodiumEncrypt( $input, $key );
 		}
 
-		$base64Encoded = base64_encode( $input );
-
-		$keyLength  = strlen( $key );
-		$xorEncoded = '';
-		for ( $i = 0, $len = strlen( $base64Encoded ); $i < $len; $i++ ) {
-			$xorEncoded .= chr( ord( $base64Encoded[ $i ] ) ^ ord( $key[ $i % $keyLength ] ) );
-		}
-
-		$hexEncoded = bin2hex( $xorEncoded );
-
-		return "PNP{$prefix}{$hexEncoded}";
+		return self::opensslEncrypt( $input, $key );
 	}
 
-	public static function decode( string $input, $key = null, $prefix = 'ND' ) {
+	public static function decode( string $input ): string|false {
+		$uuid = get_option( 'pnpnd_encryption_key', 'pnpnd' );
+		$key  = hash( 'sha256', $uuid, true );
+
+		// Legacy format detection
+		if ( strpos( $input, 'PNPND' ) === 0 && strpos( $input, 'PNPNDSEC' ) !== 0 ) {
+			// Old format - XOR encryption
+			return self::legacyDecode( $input );
+		}
+
+		if ( function_exists( 'sodium_crypto_secretbox' ) ) {
+			return self::sodiumDecrypt( $input, $key );
+		}
+
+		return self::opensslDecrypt( $input, $key );
+	}
+
+	private static function sodiumEncrypt( string $input, string $key ): string {
+		$nonce      = random_bytes( SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
+		$ciphertext = sodium_crypto_secretbox( $input, $nonce, $key );
+
+		return 'PNPNDSEC' . base64_encode( $nonce . $ciphertext );
+	}
+
+	private static function sodiumDecrypt( string $input, string $key ): string|false {
+		if ( strpos( $input, 'PNPNDSEC' ) !== 0 ) {
+			return false;
+		}
+
+		$data = base64_decode( substr( $input, 8 ) );
+		if ( $data === false ) {
+			return false;
+		}
+
+		$nonce      = substr( $data, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
+		$ciphertext = substr( $data, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
+
+		return sodium_crypto_secretbox_open( $ciphertext, $nonce, $key );
+	}
+
+	private static function opensslEncrypt( string $input, string $key ): string|false {
+		$nonce      = random_bytes( 12 );
+		$ciphertext = openssl_encrypt(
+			$input,
+			'aes-256-gcm',
+			$key,
+			OPENSSL_RAW_DATA,
+			$nonce
+		);
+
+		if ( $ciphertext === false ) {
+			return false;
+		}
+
+		$tag        = substr( $ciphertext, -16 );
+		$ciphertext = substr( $ciphertext, 0, -16 );
+
+		return 'PNPNDSEC' . base64_encode( $nonce . $ciphertext . $tag );
+	}
+
+	private static function opensslDecrypt( string $input, string $key ): string|false {
+		if ( strpos( $input, 'PNPNDSEC' ) !== 0 ) {
+			return false;
+		}
+
+		$data = base64_decode( substr( $input, 8 ) );
+		if ( $data === false ) {
+			return false;
+		}
+
+		$nonce      = substr( $data, 0, 12 );
+		$ciphertext = substr( $data, 12, -16 );
+		$tag        = substr( $data, -16 );
+
+		return openssl_decrypt(
+			$ciphertext,
+			'aes-256-gcm',
+			$key,
+			OPENSSL_RAW_DATA,
+			$nonce,
+			$tag
+		);
+	}
+
+	private static function legacyDecode( string $input, ?string $key = null ): string|false {
 		if ( null === $key ) {
 			$key = get_option( 'pnpnd_encryption_key', 'pnpnd' );
 		}
 
-		$prefix       = "PNP{$prefix}";
+		$prefix       = 'PNPND';
 		$prefixLength = strlen( $prefix );
 
 		if ( substr( $input, 0, $prefixLength ) === $prefix ) {
@@ -316,9 +393,7 @@ class Helpers {
 			$base64Encoded .= chr( ord( $xorEncoded[ $i ] ) ^ ord( $key[ $i % $keyLength ] ) );
 		}
 
-		$decoded = base64_decode( $base64Encoded );
-
-		return $decoded;
+		return base64_decode( $base64Encoded );
 	}
 
 	public static function validateFileKey( $targetFileKey, $allowedKeys ) {

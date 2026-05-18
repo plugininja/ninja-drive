@@ -13,7 +13,10 @@ $pnpnd_field_name = $args['fieldName'] ?? 'pnpnd-field-password';
 <head>
 	<title><?php esc_html_e('Password Form', 'ninja-drive'); ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<style>
+	<?php
+    wp_register_style('pnpnd-content-password', false, [], PNPND_VERSION);
+wp_enqueue_style('pnpnd-content-password');
+wp_add_inline_style('pnpnd-content-password', '
 		* {
 			margin: 0;
 			padding: 0;
@@ -33,7 +36,6 @@ $pnpnd_field_name = $args['fieldName'] ?? 'pnpnd-field-password';
 			background: var(--extra-light);
 			margin: clamp(30px, 10vw, 100px) 0;
 			padding: 0 clamp(10px, 5vw, 30px);
-
 		}
 
 		.pnpnd-password .pnpnd-password-field {
@@ -45,7 +47,6 @@ $pnpnd_field_name = $args['fieldName'] ?? 'pnpnd-field-password';
 			padding: clamp(15px, 2vw, 30px);
 			border-radius: 12px;
 			background: var(--white);
-
 		}
 
 		.pnpnd-password .pnpnd-password-field .pnpnd-password-field__wrapper {
@@ -67,7 +68,6 @@ $pnpnd_field_name = $args['fieldName'] ?? 'pnpnd-field-password';
 			height: clamp(30px, 10vw, 100px);
 			aspect-ratio: 1 / 1;
 			fill: var(--primary);
-
 		}
 
 		.pnpnd-password .pnpnd-password-field .pnpnd-password-field__wrapper .pnpnd-password-field__wrapper-content .pnpnd-password-field__title {
@@ -92,7 +92,6 @@ $pnpnd_field_name = $args['fieldName'] ?? 'pnpnd-field-password';
 			gap: 10px;
 			flex-wrap: wrap;
 			padding-bottom: 10px;
-
 		}
 
 		.pnpnd-password .pnpnd-password-field .pnpnd-password-field__wrapper .pnpnd-password-field__wrapper-input .pnpnd-input {
@@ -106,7 +105,6 @@ $pnpnd_field_name = $args['fieldName'] ?? 'pnpnd-field-password';
 			padding: 10px 15px;
 			transition: all 0.3s ease;
 			position: relative;
-
 		}
 
 		.pnpnd-password .pnpnd-password-field .pnpnd-password-field__wrapper .pnpnd-password-field__wrapper-input .pnpnd-input:hover {
@@ -133,31 +131,9 @@ $pnpnd_field_name = $args['fieldName'] ?? 'pnpnd-field-password';
 		.pnpnd-password .pnpnd-password-field .pnpnd-password-field__wrapper .pnpnd-password-field__wrapper-input .pnpnd-submit-btn:hover {
 			background: var(--secondary);
 		}
-
-		.pnpnd-password .pnpnd-password-field .pnpnd-password-field__wrapper .pnpnd-password-field__wrapper-input .pnpnd-submit-btn {
-			background: var(--primary);
-			color: var(--white);
-			padding: 8px 15px;
-			border-radius: 4px;
-			font-size: clamp(14px, 3vw, 18px);
-			cursor: pointer;
-			transition: all 0.3s ease;
-
-		}
-
-		.pnpnd-password .pnpnd-password-field .pnpnd-password-field__wrapper .pnpnd-password-field__wrapper-input .pnpnd-submit-btn:hover {
-			background: var(--secondary);
-		}
-
-		.pnpnd-password .pnpnd-password-field .pnpnd-password-field__wrapper .pnpnd-password-field__wrapper-input .pnpnd-input .pnpnd-password-field__wrapper-error {
-			position: absolute;
-			bottom: -20px;
-			left: 0;
-			font-size: 14px;
-			font-weight: 500;
-			color: red;
-		}
-	</style>
+	');
+wp_print_styles('pnpnd-content-password');
+?>
 </head>
 
 <body class="pnpnd-password">
@@ -176,9 +152,9 @@ $pnpnd_field_name = $args['fieldName'] ?? 'pnpnd-field-password';
 				<div class="pnpnd-input">
 					<input id="<?php echo esc_attr($pnpnd_field_name); ?>" type="password" name="<?php echo esc_attr($pnpnd_field_name); ?>" placeholder="<?php esc_attr_e('Enter Password', 'ninja-drive'); ?>" class="pnpnd-input__input" aria-invalid="false" required>
 					<?php
-                    if (! empty($pnpnd_message) && $pnpnd_code === 'invalid_password') {
-                        echo '<p class="pnpnd-password-field__wrapper-error">' . esc_html($pnpnd_message) . '</p>';
-                    }
+                if (! empty($pnpnd_message) && $pnpnd_code === 'invalid_password') {
+                    echo '<p class="pnpnd-password-field__wrapper-error">' . esc_html($pnpnd_message) . '</p>';
+                }
 ?>
 				</div>
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Google\Verifier;
+namespace Pnpnd\ND\Google\Verifier;
 
 /*
  * Copyright 2011 Google Inc.

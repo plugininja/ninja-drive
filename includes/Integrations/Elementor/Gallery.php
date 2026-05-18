@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Integrations\Elementor;
+namespace Pnpnd\ND\Integrations\Elementor;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Models;
+namespace Pnpnd\ND\Models;
 
 use function count;
 use function gettype;
@@ -11,10 +11,10 @@ use function is_int;
 use function is_object;
 use function is_string;
 
-use Pninja\ND\App\App;
-use Pninja\ND\Utils\Helpers;
-use Pninja\ND\Utils\Singleton;
-use Pninja\ND\Widget as MainWidget;
+use Pnpnd\ND\App\App;
+use Pnpnd\ND\Utils\Helpers;
+use Pnpnd\ND\Utils\Singleton;
+use Pnpnd\ND\Widget as MainWidget;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
@@ -361,9 +361,19 @@ class Widget extends BaseModel {
 		$count = $wpdb->get_var( $sql );
 
 		if ( $wpdb->last_error ) {
+			$message = __( 'A database error occurred. Please try again.', 'ninja-drive' );
+			if ( current_user_can( 'manage_options' ) ) {
+				$message = sprintf(
+					// translators: %1$s is the table name, %2$s is the database error message.
+					esc_html__( 'A database error occurred while counting widgets in %1$s: %2$s', 'ninja-drive' ),
+					esc_html( $this->tableName ),
+					esc_html( $wpdb->last_error )
+				);
+			}
+
 			return new WP_Error(
 				400,
-				__( 'A database error occurred: ', 'ninja-drive' ) . $wpdb->last_error
+				$message
 			);
 		}
 

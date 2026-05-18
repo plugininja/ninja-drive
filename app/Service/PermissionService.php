@@ -1,11 +1,11 @@
 <?php
 
-namespace Pninja\ND\App\Service;
+namespace Pnpnd\ND\App\Service;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
-use Pninja\ND\Google\Http\HttpRequest;
-use Pninja\ND\Google\Service\ServiceDrivePermission;
+use Pnpnd\ND\Google\Http\HttpRequest;
+use Pnpnd\ND\Google\Service\ServiceDrivePermission;
 use WP_Error;
 
 class PermissionService extends DriveService {
@@ -54,7 +54,7 @@ class PermissionService extends DriveService {
 	 *
 	 * Checks if a file is shared with the current user.
 	 *
-	 * @param \Pninja\ND\App\File $file The file to be checked.
+	 * @param \Pnpnd\ND\App\File $file The file to be checked.
 	 * @return bool|WP_Error True if the file is shared, false if not.
 	 */
 	public function isShared( $file ) {

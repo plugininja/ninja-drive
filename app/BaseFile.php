@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\App;
+namespace Pnpnd\ND\App;
 
 use function is_array;
 
-use Pninja\ND\Google\Service\ServiceDriveDriveFile;
-use Pninja\ND\Models\Files;
-use Pninja\ND\Utils\Helpers;
+use Pnpnd\ND\Google\Service\ServiceDriveDriveFile;
+use Pnpnd\ND\Models\Files;
+use Pnpnd\ND\Utils\Helpers;
 
 defined( 'ABSPATH' ) or die( 'Direct access is not allowed' );
 

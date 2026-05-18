@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\API\Traits;
+namespace Pnpnd\ND\API\Traits;
 
-use Pninja\ND\Utils\Helpers;
+use Pnpnd\ND\Utils\Helpers;
 use WP_Error;
 use WP_REST_Request;
 

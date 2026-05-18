@@ -1,11 +1,11 @@
 <?php
 
-namespace Pninja\ND\Google\Auth;
+namespace Pnpnd\ND\Google\Auth;
 
-use Pninja\ND\Google\Client;
-use Pninja\ND\Google\Http\HttpRequest;
-use Pninja\ND\Google\Utils;
-use Pninja\ND\Google\Verifier\VerifierPem;
+use Pnpnd\ND\Google\Client;
+use Pnpnd\ND\Google\Http\HttpRequest;
+use Pnpnd\ND\Google\Utils;
+use Pnpnd\ND\Google\Verifier\VerifierPem;
 
 /*
  * Copyright 2008 Google Inc.

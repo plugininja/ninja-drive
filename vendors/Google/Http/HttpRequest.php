@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND\Google\Http;
+namespace Pnpnd\ND\Google\Http;
 
-use Pninja\ND\Google\Client;
-use Pninja\ND\Google\Utils;
+use Pnpnd\ND\Google\Client;
+use Pnpnd\ND\Google\Utils;
 
 /*
  * Copyright 2010 Google Inc.

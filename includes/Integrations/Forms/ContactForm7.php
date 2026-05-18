@@ -1,14 +1,14 @@
 <?php
 
-namespace Pninja\ND\Integrations\Forms;
+namespace Pnpnd\ND\Integrations\Forms;
 
-use Pninja\ND\App\App;
-use Pninja\ND\Integrations\BaseIntegration;
-use Pninja\ND\Models\Notices;
-use Pninja\ND\Utils\Singleton;
+use Pnpnd\ND\App\App;
+use Pnpnd\ND\Integrations\BaseIntegration;
+use Pnpnd\ND\Models\Notices;
+use Pnpnd\ND\Utils\Singleton;
 use WPCF7_Submission;
 
-defined( 'ABSPATH' ) or exit;
+defined( 'ABSPATH' ) || exit;
 
 class ContactForm7 extends BaseIntegration {
 
@@ -36,11 +36,11 @@ class ContactForm7 extends BaseIntegration {
 	}
 
 	/**
-	 * Register the ninja_drive property on CF7 forms.
+	 * Register the pnpnd_cf7 property on CF7 forms.
 	 */
 	public function registerProperty( $properties, $contact_form ) {
 		$properties += array(
-			'ninja_drive' => array(),
+			'pnpnd_cf7' => array(),
 		);
 
 		return $properties;
@@ -63,7 +63,7 @@ class ContactForm7 extends BaseIntegration {
 	 */
 	public function renderEditorPanel( $post ) {
 		$prop = wp_parse_args(
-			$post->prop( 'ninja_drive' ),
+			$post->prop( 'pnpnd_cf7' ),
 			array(
 				'enable'            => false,
 				'upload_folder'     => '',
@@ -74,7 +74,7 @@ class ContactForm7 extends BaseIntegration {
 		$folders = $this->getGoogleDriveFolder();
 		?>
 		<h2><?php esc_html_e( 'Ninja Drive Upload', 'ninja-drive' ); ?></h2>
-		<?php wp_nonce_field( 'pnpnd_cf7_ninja_drive_settings', 'pnpnd_cf7_ninja_drive_nonce' ); ?>
+		<?php wp_nonce_field( 'pnpnd_cf7_settings', 'pnpnd_cf7_nonce' ); ?>
 
 		<fieldset>
 			<legend>
@@ -131,7 +131,7 @@ class ContactForm7 extends BaseIntegration {
 	 * Save the Ninja Drive settings when the form is saved.
 	 */
 	public function saveForm( $contact_form, $args, $context ) {
-		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['pnpnd_cf7_ninja_drive_nonce'] ?? '' ) ), 'pnpnd_cf7_ninja_drive_settings' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['pnpnd_cf7_nonce'] ?? '' ) ), 'pnpnd_cf7_settings' ) ) {
 			return;
 		}
 
@@ -147,16 +147,16 @@ class ContactForm7 extends BaseIntegration {
 
 		$contact_form->set_properties(
 			array(
-				'ninja_drive' => $prop,
+				'pnpnd_cf7' => $prop,
 			)
 		);
 	}
 
 	public function processUploadedFiles( $contact_form, $abort, $submission ) {
-		$submission  = WPCF7_Submission::get_instance();
-		$ninja_drive = $contact_form->prop( 'ninja_drive' );
+		$submission = WPCF7_Submission::get_instance();
+		$pnpnd_cf7  = $contact_form->prop( 'pnpnd_cf7' );
 
-		if ( empty( $ninja_drive['enable'] ) || empty( $ninja_drive['upload_folder'] ) ) {
+		if ( empty( $pnpnd_cf7['enable'] ) || empty( $pnpnd_cf7['upload_folder'] ) ) {
 			return;
 		}
 
@@ -187,7 +187,7 @@ class ContactForm7 extends BaseIntegration {
 					$name      = basename( $path );
 					$type      = wp_check_filetype( $name )['type'];
 					$content   = $wp_filesystem->get_contents( $path );
-					$folderKey = $ninja_drive['upload_folder'];
+					$folderKey = $pnpnd_cf7['upload_folder'];
 
 					$result = App::getInstance()->upload( $name, $type, $folderKey, $content );
 				}
@@ -219,7 +219,7 @@ class ContactForm7 extends BaseIntegration {
 				);
 
 				// If skip_local_upload is enabled, remove the local file after uploading to Google Drive
-				if ( ! empty( $ninja_drive['skip_local_upload'] ) ) {
+				if ( ! empty( $pnpnd_cf7['skip_local_upload'] ) ) {
 					wpcf7_rmdir_p( $path );
 				}
 			}

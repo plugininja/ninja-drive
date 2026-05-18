@@ -1,11 +1,11 @@
 <?php
 
-namespace Pninja;
+namespace Pnpnd;
 
-use Pninja\ND\Activation;
-use Pninja\ND\Autoload;
-use Pninja\ND\Deactivation;
-use Pninja\ND\Pninja;
+use Pnpnd\ND\Activation;
+use Pnpnd\ND\Autoload;
+use Pnpnd\ND\Deactivation;
+use Pnpnd\ND\Plugininja;
 
 /**
  * Plugin Name:       Ninja Drive
@@ -27,20 +27,20 @@ use Pninja\ND\Pninja;
  * the combined work may be distributed under GPLv3 terms.
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit( 'Direct access to this file is not allowed.' );
+if (! defined('ABSPATH')) {
+    exit('Direct access to this file is not allowed.');
 }
 
-if ( ! class_exists( '\Pninja\ND\Autoload' ) ) {
+if (! class_exists('\Pnpnd\ND\Autoload')) {
 
-	define( 'PNPND_FILE', __FILE__ );
+    define('PNPND_FILE', __FILE__);
 
-	require_once plugin_dir_path( PNPND_FILE ) . 'core/config.php';
-	require_once plugin_dir_path( PNPND_FILE ) . 'core/functions.php';
-	require_once plugin_dir_path( PNPND_FILE ) . 'includes/Autoload.php';
+    require_once plugin_dir_path(PNPND_FILE) . 'core/config.php';
+    require_once plugin_dir_path(PNPND_FILE) . 'core/functions.php';
+    require_once plugin_dir_path(PNPND_FILE) . 'includes/Autoload.php';
 
-	Autoload::register();
-	register_activation_hook( __FILE__, array( Activation::class, 'init' ) );
-	register_deactivation_hook( __FILE__, array( Deactivation::class, 'init' ) );
-	Pninja::getInstance();
+    Autoload::register();
+    register_activation_hook(__FILE__, [ Activation::class, 'init' ]);
+    register_deactivation_hook(__FILE__, [ Deactivation::class, 'init' ]);
+    Plugininja::getInstance();
 }

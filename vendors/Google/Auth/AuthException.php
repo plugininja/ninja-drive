@@ -1,8 +1,8 @@
 <?php
 
-namespace Pninja\ND\Google\Auth;
+namespace Pnpnd\ND\Google\Auth;
 
-use Pninja\ND\Google\Exception;
+use Pnpnd\ND\Google\Exception;
 
 /*
  * Copyright 2013 Google Inc.

@@ -1,11 +1,11 @@
 <?php
 
-namespace Pninja\ND\Google\Http;
+namespace Pnpnd\ND\Google\Http;
 
-use Pninja\ND\Google\Client;
-use Pninja\ND\Google\Service\ServiceException;
-use Pninja\ND\Google\Task\TaskRunner;
-use Pninja\ND\Google\Utils\UtilsURITemplate;
+use Pnpnd\ND\Google\Client;
+use Pnpnd\ND\Google\Service\ServiceException;
+use Pnpnd\ND\Google\Task\TaskRunner;
+use Pnpnd\ND\Google\Utils\UtilsURITemplate;
 
 /*
  * Copyright 2010 Google Inc.

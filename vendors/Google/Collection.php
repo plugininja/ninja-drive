@@ -1,6 +1,6 @@
 <?php
 
-namespace Pninja\ND\Google;
+namespace Pnpnd\ND\Google;
 
 use Countable;
 use Iterator;

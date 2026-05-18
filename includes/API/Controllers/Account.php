@@ -1,12 +1,12 @@
 <?php
 
-namespace Pninja\ND\API\Controllers;
+namespace Pnpnd\ND\API\Controllers;
 
-use Pninja\ND\API\BaseController;
-use Pninja\ND\App\Account as AppAccount;
-use Pninja\ND\App\Accounts;
-use Pninja\ND\App\Client;
-use Pninja\ND\Utils\Helpers;
+use Pnpnd\ND\API\BaseController;
+use Pnpnd\ND\App\Account as AppAccount;
+use Pnpnd\ND\App\Accounts;
+use Pnpnd\ND\App\Client;
+use Pnpnd\ND\Utils\Helpers;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

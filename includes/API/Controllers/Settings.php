@@ -1,9 +1,9 @@
 <?php
 
-namespace Pninja\ND\API\Controllers;
+namespace Pnpnd\ND\API\Controllers;
 
-use Pninja\ND\API\BaseController;
-use Pninja\ND\Utils\Helpers;
+use Pnpnd\ND\API\BaseController;
+use Pnpnd\ND\Utils\Helpers;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
