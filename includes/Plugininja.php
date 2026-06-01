@@ -131,9 +131,9 @@ class Plugininja {
 			'top'
 		);
 
-		if ( get_transient( 'pnpnd_rewrite_rules_error' ) ) {
-			delete_transient( 'pnpnd_rewrite_rules_error' );
-			flush_rewrite_rules();
+		if ( get_option( 'pnpnd_flush_rewrite_rules' ) ) {
+            flush_rewrite_rules( false );
+			delete_option( 'pnpnd_flush_rewrite_rules' );
 		}
 	}
 

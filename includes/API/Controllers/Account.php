@@ -7,7 +7,6 @@ use Pnpnd\ND\App\Account as AppAccount;
 use Pnpnd\ND\App\Accounts;
 use Pnpnd\ND\App\Client;
 use Pnpnd\ND\Utils\Helpers;
-use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -20,7 +19,7 @@ class Account extends BaseController {
 		parent::__construct( 'pnpnd/v1', 'account' );
 	}
 
-	public function managePermission(): bool {
+	public function managePermission(WP_REST_Request $request): bool {
 		return current_user_can( 'manage_options' );
 	}
 

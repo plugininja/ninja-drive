@@ -4,10 +4,8 @@ namespace Pnpnd\ND\API\Controllers;
 
 use Exception;
 use Pnpnd\ND\API\BaseController;
-use Pnpnd\ND\API\Traits\HasWidgetPermission;
 use Pnpnd\ND\App\App;
 use Pnpnd\ND\Models\Widget;
-use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -16,40 +14,16 @@ defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
 class Folder extends BaseController {
 
-	use HasWidgetPermission;
-
 	public function __construct() {
 		parent::__construct( 'pnpnd/v1', 'folder' );
 	}
 
-	public function managePermission( WP_REST_Request $request ) {
+	public function managePermission( WP_REST_Request $request ): bool {
 		if ( $this->hasPermission() ) {
 			return true;
 		}
 
-		$route  = $request->get_route();
-		$method = $request->get_method();
-		$action = '';
-
-		switch ( true ) {
-			case strpos( $route, '/folder/tree' ) !== false && $method === 'GET':
-				$action = 'tree';
-
-				if ( $request->get_param( 'fileKey' ) === 'my-drive' ) {
-					return \Pnpnd\ND\Utils\Helpers::hasWidgetPermission( $request->get_param( 'widgetId' ), 'tree' );
-				}
-
-				break;
-			case strpos( $route, '/folder/create' ) !== false && $method === 'POST':
-				$action = 'newFolder';
-				break;
-		}
-
-		if ( empty( $action ) ) {
-			return new WP_Error( 'forbidden', 'You do not have permission.', array( 'status' => 403 ) );
-		}
-
-		return $this->checkWidgetPermission( $request, $action );
+		return false;
 	}
 
 	public function register_routes(): void {

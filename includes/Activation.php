@@ -99,44 +99,8 @@ class Activation {
 		}
 	}
 
-	/**
-	 * Sets up rewrite rules for the plugin.
-	 *
-	 * This function adds a rewrite rule that matches the following pattern:
-	 * ^pnpnd/([^/]+)/([^/]+)/([^/]+)\.([^/]+)$
-	 * The pattern matches the following example URL:
-	 * https://example.com/pnpnd/action/key/name.ext
-	 *
-	 * The matched groups are mapped to the following query parameters:
-	 * - action: $matches[1]
-	 * - key: $matches[2]
-	 * - name: $matches[3]
-	 * - ext: $matches[4]
-	 * The rewrite rule is added with a priority of 'top' to ensure it takes precedence over other rules.
-	 *
-	 * @since 1.2.0
-	 *
-	 * @return void
-	 */
 	private static function setRewriteRules() {
-		add_rewrite_rule(
-			'^pnpnd/([^/]+)/([^/]+)/([^/]+)\.([^/]+)$',
-			'index.php?pnpnd-action=$matches[1]&pnpnd-key=$matches[2]&pnpnd-name=$matches[3]&pnpnd-ext=$matches[4]',
-			'top'
-		);
-
-		add_rewrite_rule(
-			'^pnpnd/([^/]+)/([^/]+)/([^/]+)/([^/]+)$',
-			'index.php?pnpnd-action=$matches[1]&pnpnd-key=$matches[2]&pnpnd-name=$matches[3]&pnpnd-ext=$matches[4]',
-			'top'
-		);
-
-		add_rewrite_rule(
-			'^pnpnd/([^/]+)/([^/]+)$',
-			'index.php?pnpnd-action=$matches[1]&pnpnd-key=$matches[2]',
-			'top'
-		);
-
-		flush_rewrite_rules();
+		
+		update_option( 'pnpnd_flush_rewrite_rules', true );
 	}
 }

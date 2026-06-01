@@ -85,7 +85,7 @@ class Notice extends BaseController {
 		);
 	}
 
-	public function managePermission(): bool {
+	public function managePermission(WP_REST_Request $request): bool {
 		return current_user_can( 'manage_options' );
 	}
 

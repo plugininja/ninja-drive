@@ -4,11 +4,9 @@ namespace Pnpnd\ND\API\Controllers;
 
 use Exception;
 use Pnpnd\ND\API\BaseController;
-use Pnpnd\ND\API\Traits\HasWidgetPermission;
 use Pnpnd\ND\App\App;
 use Pnpnd\ND\Models\Files as ModelFiles;
 use Pnpnd\ND\Models\Widget;
-use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -17,50 +15,16 @@ defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
 class File extends BaseController {
 
-	use HasWidgetPermission;
-
 	public function __construct() {
 		parent::__construct( 'pnpnd/v1', 'file' );
 	}
 
-	public function managePermission( WP_REST_Request $request ) {
+	public function managePermission( WP_REST_Request $request ): bool {
 		if ( $this->hasPermission() ) {
 			return true;
 		}
 
-		$route  = $request->get_route();
-		$method = $request->get_method();
-		$action = '';
-
-		switch ( true ) {
-			case strpos( $route, '/file/rename' ) !== false && $method === 'POST':
-				$action = 'rename';
-				break;
-			case strpos( $route, '/file/upload' ) !== false:
-				$action = 'upload';
-				break;
-			case strpos( $route, '/file/share' ) !== false && $method === 'GET':
-				$action = 'share';
-				break;
-			case strpos( $route, '/file/download' ) !== false && $method === 'GET':
-				$action = 'download';
-				break;
-			case strpos( $route, '/file/open-in-drive' ) !== false && $method === 'GET':
-				$action = 'preview';
-				break;
-			case strpos( $route, '/file/by-keys' ) !== false && $method === 'GET':
-				$action = 'byKeys';
-				break;
-			case strpos( $route, '/file/' ) !== false && $method === 'DELETE':
-				$action = 'delete';
-				break;
-		}
-
-		if ( empty( $action ) ) {
-			return new WP_Error( 'forbidden', 'You do not have permission.', array( 'status' => 403 ) );
-		}
-
-		return $this->checkWidgetPermission( $request, $action );
+		return false;
 	}
 
 	public function register_routes(): void {

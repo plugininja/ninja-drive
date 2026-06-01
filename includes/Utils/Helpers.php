@@ -273,7 +273,7 @@ class Helpers {
 		}
 	}
 
-	public static function encode( string $input ): string|false {
+	public static function encode( string $input ) {
 		$uuid = get_option( 'pnpnd_encryption_key', 'pnpnd' );
 		$key  = hash( 'sha256', $uuid, true );
 
@@ -284,7 +284,7 @@ class Helpers {
 		return self::opensslEncrypt( $input, $key );
 	}
 
-	public static function decode( string $input ): string|false {
+	public static function decode( string $input ) {
 		$uuid = get_option( 'pnpnd_encryption_key', 'pnpnd' );
 		$key  = hash( 'sha256', $uuid, true );
 
@@ -308,7 +308,7 @@ class Helpers {
 		return 'PNPNDSEC' . base64_encode( $nonce . $ciphertext );
 	}
 
-	private static function sodiumDecrypt( string $input, string $key ): string|false {
+	private static function sodiumDecrypt( string $input, string $key ) {
 		if ( strpos( $input, 'PNPNDSEC' ) !== 0 ) {
 			return false;
 		}
@@ -324,7 +324,7 @@ class Helpers {
 		return sodium_crypto_secretbox_open( $ciphertext, $nonce, $key );
 	}
 
-	private static function opensslEncrypt( string $input, string $key ): string|false {
+	private static function opensslEncrypt( string $input, string $key ) {
 		$nonce      = random_bytes( 12 );
 		$ciphertext = openssl_encrypt(
 			$input,
@@ -344,7 +344,7 @@ class Helpers {
 		return 'PNPNDSEC' . base64_encode( $nonce . $ciphertext . $tag );
 	}
 
-	private static function opensslDecrypt( string $input, string $key ): string|false {
+	private static function opensslDecrypt( string $input, string $key ) {
 		if ( strpos( $input, 'PNPNDSEC' ) !== 0 ) {
 			return false;
 		}
@@ -368,7 +368,7 @@ class Helpers {
 		);
 	}
 
-	private static function legacyDecode( string $input, ?string $key = null ): string|false {
+	private static function legacyDecode( string $input, ?string $key = null ) {
 		if ( null === $key ) {
 			$key = get_option( 'pnpnd_encryption_key', 'pnpnd' );
 		}

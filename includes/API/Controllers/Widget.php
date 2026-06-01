@@ -8,7 +8,6 @@ use function is_array;
 use Pnpnd\ND\API\BaseController;
 use Pnpnd\ND\API\Traits\HasWidgetPermission;
 use Pnpnd\ND\Models\Widget as WidgetModel;
-use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -23,7 +22,7 @@ class Widget extends BaseController {
 		parent::__construct( 'pnpnd/v1', 'widget' );
 	}
 
-	public function managePermission( WP_REST_Request $request ) {
+	public function managePermission( WP_REST_Request $request ):bool {
 		if ( $this->hasPermission() ) {
 			return true;
 		}
@@ -32,15 +31,12 @@ class Widget extends BaseController {
 		$method = $request->get_method();
 		$action = '';
 
-		switch ( true ) {
-			case strpos( $route, '/shortcode' ) !== false && $method === 'GET':
-				$action = 'getFolder';
-
-				break;
-		}
+		if(strpos( $route, '/widget' ) !== false && $method === 'GET') {
+            $action = 'getFolder';
+        }
 
 		if ( empty( $action ) ) {
-			return new WP_Error( 'forbidden', 'You do not have permission.', array( 'status' => 403 ) );
+			return false;
 		}
 
 		return $this->checkWidgetPermission( $request, $action );
@@ -55,6 +51,57 @@ class Widget extends BaseController {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'getAll' ),
 					'permission_callback' => array( $this, 'managePermission' ),
+                    'args'               => array(
+                        'type' => array(
+                            'required'          => false,
+                            'type'              => 'string',
+                            'description'       => 'Filter by widget type',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'search' => array(
+                            'required'          => false,
+                            'type'              => 'string',
+                            'description'       => 'Search term for widget title',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'status' => array(
+                            'required'          => false,
+                            'type'              => 'string',
+                            'description'       => 'Filter by widget status',
+                            'enum'              => array( 'active', 'inactive', 'on', 'off' ),
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'order' => array(
+                            'required'          => false,
+                            'type'              => 'string',
+                            'description'       => 'Order direction',
+                            'enum'              => array( 'ASC', 'DESC' ),
+                            'default'           => 'DESC',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'orderBy' => array(
+                            'required'          => false,
+                            'type'              => 'string',
+                            'description'       => 'Field to order by',
+                            'enum'              => array( 'createdAt', 'title', 'type',  ),
+                            'default'           => 'createdAt',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'page' => array(
+                            'required'          => false,
+                            'type'              => 'integer',
+                            'description'       => 'Page number for pagination',
+                            'default'           => 1,
+                            'sanitize_callback' => 'absint',
+                        ),
+                        'perPage' => array(
+                            'required'          => false,
+                            'type'              => 'integer',
+                            'description'       => 'Number of items per page for pagination',
+                            'default'           => 20,
+                            'sanitize_callback' => 'absint',
+                        ),
+                    ),
 				),
 				array(
 					'methods'             => WP_REST_Server::CREATABLE,
@@ -66,6 +113,26 @@ class Widget extends BaseController {
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete' ),
 					'permission_callback' => array( $this, 'managePermission' ),
+                    'args'               => array(
+                        'ids' => array(
+                            'required' => true,
+                            'type'     => 'array',
+                            'description' => 'Array of widget IDs to delete',
+                            'sanitize_callback' => function ( $value, $request, $param ) {
+                                if ( ! is_array( $value ) ) {
+                                    return new \WP_Error( 'invalid_ids', 'IDs must be an array.' );
+                                }
+
+                                foreach ( $value as $id ) {
+                                    if ( ! is_numeric( $id ) || intval( $id ) <= 0 ) {
+                                        return new \WP_Error( 'invalid_id', 'Each ID must be a positive integer.' );
+                                    }
+                                }
+
+                                return true;
+                            },
+                        ),
+                    ),
 				),
 			)
 		);
@@ -123,16 +190,19 @@ class Widget extends BaseController {
 						'widgetId'    => array(
 							'required' => true,
 							'type'     => 'integer',
+                            'sanitize_callback' => 'absint',
 						),
 						'page'        => array(
 							'required' => false,
 							'type'     => 'integer',
 							'default'  => 1,
+                            'sanitize_callback' => 'absint',
 						),
 						'perPage'     => array(
 							'required' => false,
 							'type'     => 'integer',
 							'default'  => 20,
+                            'sanitize_callback' => 'absint',
 						),
 						'fileKey'     => array(
 							'required'          => false,
@@ -186,6 +256,7 @@ class Widget extends BaseController {
 							'required' => false,
 							'type'     => 'boolean',
 							'default'  => false,
+                            'sanitize_callback' => 'rest_sanitize_boolean',
 						),
 					),
 				),
@@ -197,18 +268,24 @@ class Widget extends BaseController {
 						'widgetId' => array(
 							'required' => true,
 							'type'     => 'integer',
+                            'sanitize_callback' => 'absint',
 						),
 						'title'    => array(
 							'required' => false,
 							'type'     => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
 						),
 						'type'     => array(
 							'required' => false,
 							'type'     => 'string',
+                            'enum'     => array( 'file-browser', 'gallery', 'embed-documents' ),
+                            'sanitize_callback' => 'sanitize_text_field',
 						),
 						'status'   => array(
 							'required' => false,
 							'type'     => 'string',
+                            'enum'     => array( 'active', 'inactive' ),
+                            'sanitize_callback' => 'sanitize_text_field',
 						),
 						'data'     => array(
 							'required'          => false,
@@ -224,21 +301,11 @@ class Widget extends BaseController {
 						'location' => array(
 							'required' => false,
 							'type'     => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
 						),
 					),
 				),
-				array(
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete' ),
-					'permission_callback' => array( $this, 'managePermission' ),
-					'args'                => array(
-						'widgetId' => array(
-							'required' => true,
-							'type'     => 'integer',
-						),
-					),
-				),
-			)
+			),
 		);
 	}
 
@@ -351,23 +418,24 @@ class Widget extends BaseController {
 	}
 
 	public function getAll( WP_REST_Request $request ): WP_REST_Response {
-		$defaults = array(
-			'type'    => 'all',
-			'search'  => '',
-			'status'  => 'all',
-			'order'   => 'DESC',
-			'orderBy' => 'updatedAt',
-			'page'    => 1,
-			'perPage' => 10,
-		);
 
-		$queryArgs = array();
-		foreach ( $defaults as $key => $default ) {
-			$queryArgs[ $key ] = $request->get_param( $key ) ?? $default;
-		}
+        $type = $request->get_param( 'type' );
+        $search = $request->get_param( 'search' );
+        $status = $request->get_param( 'status' );
+        $order = $request->get_param( 'order' );
+        $orderBy = $request->get_param( 'orderBy' );
+        $page = $request->get_param( 'page' );
+        $perPage = $request->get_param( 'perPage' );
 
-		$queryArgs['page']    = (int) $queryArgs['page'];
-		$queryArgs['perPage'] = (int) $queryArgs['perPage'];
+        $queryArgs = array(
+            'type' => $type,
+            'search' => $search,
+            'status' => $status,
+            'order' => $order,
+            'orderBy' => $orderBy,
+            'page' => $page,
+            'perPage' => $perPage,
+        );
 
 		try {
 			$widgets     = WidgetModel::getInstance()->getAll( $queryArgs );
@@ -438,10 +506,6 @@ class Widget extends BaseController {
 
 	public function delete( WP_REST_Request $request ): WP_REST_Response {
 		$ids = $request->get_param( 'ids' );
-		$id  = $request->get_param( 'widgetId' );
-		if ( ! empty( $id ) ) {
-			$ids = array( $id );
-		}
 
 		try {
 			$deleted = WidgetModel::getInstance()->remove( $ids );
