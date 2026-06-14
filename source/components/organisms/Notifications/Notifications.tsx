@@ -1,14 +1,14 @@
-import useNotifications from "~/hooks/useNotifications";
-import { TNotification } from "./Notifications.type";
 import InlineStack from "~/components/molecules/InlineStack";
-import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
-import { useState } from "@wordpress/element";
+import BlockStack from "~/components/molecules/BlockStack";
+import useNotifications from "~/hooks/useNotifications";
 import Dropdown from "~/components/molecules/Dropdown";
+import { TNotification } from "./Notifications.type";
 import Divider from "~/components/atoms/Divider";
 import Loading from "~/components/atoms/Loading";
-import { __ } from "@wordpress/i18n";
+import { useState } from "@wordpress/element";
 import Text from "~/components/atoms/Text";
+import { __ } from "@wordpress/i18n";
 import Details from "./Details";
 import Header from "./Header";
 import Item from "./Item";
@@ -21,8 +21,8 @@ const Notifications = ({ skip }: { skip: boolean }) => {
     const {
         notifications,
         total,
-        unreadCount: unread,
-        hasMore,
+        unread_count: unread,
+        has_more,
         loadMoreRef,
         isLoading,
         isFetching,
@@ -99,9 +99,9 @@ const Notifications = ({ skip }: { skip: boolean }) => {
                         ))
                     )}
 
-                    {!loading && hasMore && <div ref={loadMoreRef} />}
+                    {!loading && has_more && <div ref={loadMoreRef} />}
 
-                    {hasMore && !details && (
+                    {has_more && !details && (
                         <InlineStack align="center">
                             <Loading />
                         </InlineStack>
@@ -116,10 +116,7 @@ const Notifications = ({ skip }: { skip: boolean }) => {
                                 inlineAlign="center"
                             >
                                 <Text size="sm">
-                                    {__(
-                                        "No notifications yet.",
-                                        "ninja-drive",
-                                    )}
+                                    {__("No notifications yet.", "ninja-drive")}
                                 </Text>
                             </BlockStack>
                         )}

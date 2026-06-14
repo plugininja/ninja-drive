@@ -1,7 +1,7 @@
 import type { AccordionGroupProps, AccordionProps } from "./Accordion.type";
 import { useRef, useEffect, useState } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 
 export const Accordion = ({
@@ -11,6 +11,7 @@ export const Accordion = ({
     title = __("title", "ninja-drive"),
     rounded = "lg",
     defaultOpen = false,
+    arrow = true,
     disabled = false,
     single = true,
     children,
@@ -46,14 +47,16 @@ export const Accordion = ({
                 disabled={disabled}
             >
                 <span className="pn-accordion__header-title">{title}</span>
-                <span
-                    className={clsx(
-                        "pn-accordion__header-icon",
-                        isOpen && "pn-accordion__header-icon--open",
-                    )}
-                >
-                    <Icon name="keyboard_arrow_down" fontSize="2xl" />
-                </span>
+                {arrow && (
+                    <span
+                        className={clsx(
+                            "pn-accordion__header-icon",
+                            isOpen && "pn-accordion__header-icon--open",
+                        )}
+                    >
+                        <Icon name="keyboard_arrow_down" fontSize="2xl" />
+                    </span>
+                )}
             </button>
             <div
                 className="pn-accordion__body"

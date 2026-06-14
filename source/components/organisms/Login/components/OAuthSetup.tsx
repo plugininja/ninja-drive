@@ -1,12 +1,12 @@
-import { useState } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import { useCustomAlert } from "~/components/molecules/Alert";
 import { selectSettings } from "~/store/features/settingSlice";
 import { useAppSelector } from "~/store/hooks";
+import { useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
 
 const OAuthSetup = () => {
     const { data } = useAppSelector(selectSettings);
-    const { redirectUri } = data?.accounts || {};
+    const { redirect_uri } = data?.accounts || {};
 
     const [activeStep, setActiveStep] = useState<number | null>(1);
 
@@ -18,7 +18,7 @@ const OAuthSetup = () => {
 
     const copyToClipboard = async () => {
         try {
-            await navigator.clipboard.writeText(redirectUri || "");
+            await navigator.clipboard.writeText(redirect_uri || "");
 
             showAlert({
                 toast: true,
@@ -49,17 +49,14 @@ const OAuthSetup = () => {
             content: (
                 <ol className="pnpnd-accordion-card__list">
                     <li>
-                        {__("Go to the", "ninja-drive")} {" "}
+                        {__("Go to the", "ninja-drive")}{" "}
                         <a
                             href="https://console.cloud.google.com/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="pnpnd-accordion-card__link"
                         >
-                            {__(
-                                "Google Cloud Console",
-                                "ninja-drive",
-                            )}
+                            {__("Google Cloud Console", "ninja-drive")}
                         </a>
                     </li>
 
@@ -156,7 +153,7 @@ const OAuthSetup = () => {
 
                     <div className="pnpnd-copy-field">
                         <code className="pnpnd-copy-field__url">
-                            {redirectUri}
+                            {redirect_uri}
                         </code>
 
                         <button
@@ -182,12 +179,12 @@ const OAuthSetup = () => {
 
                     <li>
                         {__(
-                            "Paste both credentials into the fields above",
+                            "Paste both credentials into the fields",
                             "ninja-drive",
                         )}
                     </li>
 
-                    <li>{__("Click Save Credentials", "ninja-drive")}</li>
+                    <li>{__("Click Sign in With Google", "ninja-drive")}</li>
                 </ol>
             ),
         },
@@ -203,7 +200,7 @@ const OAuthSetup = () => {
                         <div
                             key={step.number}
                             className={`pnpnd-accordion-card ${
-                                isActive ? "active" : ""
+                                isActive ? "pnpnd-active" : ""
                             }`}
                         >
                             <button

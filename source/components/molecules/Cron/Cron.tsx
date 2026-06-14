@@ -1,9 +1,9 @@
-import { __ } from "@wordpress/i18n";
 import InlineStack from "~/components/molecules/InlineStack";
-import { CronProps } from "./Cron.type";
 import BlockStack from "~/components/molecules/BlockStack";
 import Icon from "~/components/atoms/Icon";
 import Text from "~/components/atoms/Text";
+import { CronProps } from "./Cron.type";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 
 const Cron = ({
@@ -20,9 +20,7 @@ const Cron = ({
             wrap={false}
             style={{
                 borderLeft: `4px solid var(--pnpnd-${variant})`,
-                borderBottom: `1px solid var(--pnpnd-${
-                    variant === "primary" ? "" : variant
-                }light)`,
+                borderBottom: `1px solid var(--pnpnd-${variant}-light)`,
             }}
         >
             <InlineStack gap={10} wrap={false}>
@@ -42,7 +40,8 @@ const Cron = ({
                         fontSize: "13px",
                     }}
                 >
-                    {description || __("Plugininja Cron is running.", "ninja-drive")}
+                    {description ||
+                        __("Plugininja Cron is running.", "ninja-drive")}
                 </Text>
             </InlineStack>
 

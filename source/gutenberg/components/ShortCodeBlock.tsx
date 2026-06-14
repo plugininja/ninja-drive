@@ -1,7 +1,7 @@
 import { useGetModulesQuery } from "~/store/api/widgetApi";
 import { useEffect, useState } from "@wordpress/element";
-import { BlockContainerProps } from "./BlockContainer";
 import SelectBox from "~/components/molecules/SelectBox";
+import { BlockContainerProps } from "./BlockContainer";
 import useDebounce from "~/hooks/useDebounce";
 import { __ } from "@wordpress/i18n";
 
@@ -65,7 +65,12 @@ const ShortCodeBlock = ({
     return (
         <SelectBox
             options={options}
-            value={[String(selectedOption || __("Search for a widget...", "ninja-drive"))]}
+            value={[
+                String(
+                    selectedOption ||
+                        __("Search for a widget...", "ninja-drive"),
+                ),
+            ]}
             onChange={(selected) => {
                 setSelectedOption(selected[0]);
                 setAttributes({

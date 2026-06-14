@@ -1,27 +1,27 @@
-import { __ } from "@wordpress/i18n";
 import { StatusProps } from "~/components/atoms/Status/Status.type";
 import { ModuleKey } from "~/types/widget.types";
+import { __ } from "@wordpress/i18n";
 
 export const MODULE_LISTS: {
     key:
-        | "file-browser"
-        | "file-uploader"
-        | "media-player"
+        | "file_browser"
+        | "file_list"
+        | "media_player"
         | "gallery"
-        | "slider-carousel"
-        | "embed-documents"
-        | "search-box"
-        | "file-list";
+        | "slider_carousel"
+        | "file_uploader"
+        | "embed_documents"
+        | "search_box";
     title: string;
     description: string;
     icon: string;
     statusProps?: StatusProps;
 }[] = [
     {
-        key: "file-browser",
+        key: "file_browser",
         title: __("File Browser", "ninja-drive"),
         description: __(
-            "Allow users to browse selected Google Drive files and folders directly on your site.",
+            "Allow to browse selected Google Drive files and folders on your site.",
             "ninja-drive",
         ),
         icon: "folder",
@@ -30,13 +30,13 @@ export const MODULE_LISTS: {
         key: "gallery",
         title: __("Gallery", "ninja-drive"),
         description: __(
-            "Showcase images from Google Drive in a visually appealing gallery format.",
+            "Showcase images from Google Drive in a appealing gallery format.",
             "ninja-drive",
         ),
         icon: "imagesmode",
     },
     {
-        key: "embed-documents",
+        key: "embed_documents",
         title: __("Embed Documents", "ninja-drive"),
         description: __(
             "Easily embed Docs, Sheets, and Slides into your website securely.",
@@ -48,8 +48,8 @@ export const MODULE_LISTS: {
 
 export const SORT_BY_OPTIONS: { name: string; value: string }[] = [
     { name: __("Name", "ninja-drive"), value: "name" },
-    { name: __("Created At", "ninja-drive"), value: "createdAt" },
-    { name: __("Updated At", "ninja-drive"), value: "updatedAt" },
+    { name: __("Created At", "ninja-drive"), value: "created_at" },
+    { name: __("Updated At", "ninja-drive"), value: "updated_at" },
     { name: __("Type", "ninja-drive"), value: "type" },
 ];
 
@@ -62,7 +62,8 @@ export const MODULE_LIST_HEADERS: {
         | "status"
         | "widget"
         | "location"
-        | "created_at";
+        | "created_at"
+        | "action";
     title: string;
 }[] = [
     { key: "checkbox", title: "" },
@@ -73,13 +74,15 @@ export const MODULE_LIST_HEADERS: {
     { key: "widget", title: __("Shortcode:", "ninja-drive") },
     { key: "location", title: __("Location:", "ninja-drive") },
     { key: "created_at", title: __("Created At:", "ninja-drive") },
+    { key: "action", title: __("Action:", "ninja-drive") },
 ];
 
 export const MODULE_MENUS: {
-    key: "source" | "filter" | "advanced" | "notifications" | "permissions";
+    key: "source" | "configuration" | "style" | "notifications" | "permissions";
     title: string;
     icon: string;
     excluded?: ModuleKey[];
+    statusProps?: StatusProps;
 }[] = [
     {
         key: "source",
@@ -87,14 +90,13 @@ export const MODULE_MENUS: {
         icon: "database_search",
     },
     {
-        key: "filter",
-        title: __("Filter", "ninja-drive"),
+        key: "configuration",
+        title: __("Configuration", "ninja-drive"),
         icon: "filter_alt",
-        excluded: ["media-player"],
     },
     {
-        key: "advanced",
-        title: __("Advanced", "ninja-drive"),
+        key: "style",
+        title: __("Style", "ninja-drive"),
         icon: "category_search",
     },
 ];
@@ -110,44 +112,44 @@ export const getModuleMenuItems = (type: ModuleKey) => {
 export const THEME_BUTTONS: {
     key: "light" | "dark";
     title: string;
-    startIcon: string;
+    icon: string;
 }[] = [
     {
         key: "light",
         title: __("Light Mode", "ninja-drive"),
-        startIcon: "light_mode",
+        icon: "light_mode",
     },
     {
         key: "dark",
         title: __("Dark Mode", "ninja-drive"),
-        startIcon: "dark_mode",
+        icon: "dark_mode",
     },
 ];
 
 export const FILE_LOADING_TYPE_BUTTONS: {
     key: "load_more" | "infinite_scroll" | "pagination";
     title: string;
-    startIcon: string;
+    icon: string;
 }[] = [
     {
         key: "load_more",
         title: __("Load More", "ninja-drive"),
-        startIcon: "autorenew",
+        icon: "autorenew",
     },
     {
         key: "infinite_scroll",
         title: __("Infinite Scroll", "ninja-drive"),
-        startIcon: "swap_vert",
+        icon: "swap_vert",
     },
     {
         key: "pagination",
         title: __("Pagination", "ninja-drive"),
-        startIcon: "page_control",
+        icon: "page_control",
     },
 ];
 
 export const ADVANCED_SORT_BY_BUTTONS: {
-    key: "name" | "size" | "createdAt" | "updatedAt";
+    key: "name" | "size" | "created_at" | "updated_at";
     title: string;
     startIcon: string;
 }[] = [
@@ -162,12 +164,12 @@ export const ADVANCED_SORT_BY_BUTTONS: {
         startIcon: "60fps_select",
     },
     {
-        key: "createdAt",
+        key: "created_at",
         title: __("Created At", "ninja-drive"),
         startIcon: "alarm",
     },
     {
-        key: "updatedAt",
+        key: "updated_at",
         title: __("Updated At", "ninja-drive"),
         startIcon: "edit_calendar",
     },

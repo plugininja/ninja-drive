@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "@wordpress/element";
+import { widgetApi } from "~/store/api/widgetApi";
+import { useAppDispatch } from "~/store/hooks";
 import { toBoolean } from "../utils/functions";
+import { File } from "~/types/file.types";
 import { __ } from "@wordpress/i18n";
 import plupload from "plupload";
-
-import { File } from "~/types/file.types";
 import {
     fileApi,
     useLazyUploadedFileQuery,
     useUploadUrlMutation,
 } from "~/store/api/fileApi";
-import { useAppDispatch } from "~/store/hooks";
-import { widgetApi } from "~/store/api/widgetApi";
 
 export interface IRawFile {
     id: string;
@@ -34,7 +33,7 @@ export interface UploaderData {
     enableRootUpload?: boolean;
     maxFileSize?: number;
     minFileSize?: number;
-    maxFiles?: number;
+    max_files?: number;
     enableFolderUpload?: boolean;
     showUploadConfirmation?: boolean;
     uploadConfirmationMessage?: string;
@@ -45,7 +44,7 @@ export interface UploaderData {
     activeFolder?: string;
     isFormUploader?: boolean;
     isPro?: boolean;
-    widgetId?: string;
+    widget_id?: string;
     uploadedFilesKeys?: string[];
     selectedFolder?: string;
 }
@@ -57,7 +56,7 @@ const useFileUploader = (
     const {
         maxFileSize = 300,
         minFileSize = 0,
-        maxFiles = 10000,
+        max_files = 10000,
         enableFolderUpload = false,
         showUploadConfirmation = false,
         initUploadedFiles = [],
@@ -68,7 +67,7 @@ const useFileUploader = (
         allowExceptExtensions = "",
         activeFolder = "",
         onFileUpload = () => {},
-        widgetId = "",
+        widget_id = "",
         onUploadComplete = () => {},
         selectedFolder = "",
     } = data;
@@ -86,10 +85,10 @@ const useFileUploader = (
     const submitButtonTextRef = useRef(null);
     const submitButtonRef = useRef<any>(null);
     const browseFilesId = useRef(
-        `browse-files-${data.widgetId}-${crypto.randomUUID()}`,
+        `browse-files-${data.widget_id}-${crypto.randomUUID()}`,
     );
     const browseFolderId = useRef(
-        `browse-folder-${data.widgetId}-${crypto.randomUUID()}`,
+        `browse-folder-${data.widget_id}-${crypto.randomUUID()}`,
     );
 
     useEffect(() => {
@@ -175,25 +174,26 @@ const useFileUploader = (
             const parentFolder =
                 up.getOption("activeFolder") || activeFolderRef.current;
 
-            const post_id = widgetId
+            const post_id = widget_id
                 ? Number(
                       document
-                          .getElementById(`pnpnd-widget-${widgetId}`)
+                          .getElementById(`pnpnd-widget-${widget_id}`)
                           ?.getAttribute("data-post_id") || "",
                   ) || undefined
                 : undefined;
 
-            const queueIndex = uploaderRef.current.files.findIndex(
+            const queue_index = uploaderRef.current.files.findIndex(
                 (f: IRawFile) => f.id === nextFile.id,
             );
 
             const response = await getResumeUploadUrl({
-                folderKey: parentFolder,
-                widgetId,
+                folder_key:
+                    parentFolder === "my-drive" ? "/" : parentFolder || "",
+                widget_id,
                 name: nextFile.name,
                 size: nextFile.size,
                 type: nextFile.type,
-                queueIndex,
+                queue_index: queue_index,
                 post_id,
             }).unwrap();
 
@@ -203,7 +203,10 @@ const useFileUploader = (
 
             up.setOption("url", url);
             up.setOption("uploadId", uploadId);
-            up.setOption("folderKey", parentFolder || "");
+            up.setOption(
+                "folder_key",
+                parentFolder === "my-drive" ? "/" : parentFolder,
+            );
 
             up.start();
         } catch (err) {
@@ -217,11 +220,11 @@ const useFileUploader = (
             browse_button: browseFilesId.current,
             drop_element: containerRef.current,
             multipart: false,
-            multi_selection: widgetId
+            multi_selection: widget_id
                 ? toBoolean(data?.allowMultipleUpload || false)
                 : true,
             filters: {
-                max_files: maxFiles,
+                max_files: max_files,
                 file_ext: toBoolean(allowAllExtensions)
                     ? allowExceptExtensions.replace(/ /g, "")
                     : allowExtensions.replace(/ /g, ""),
@@ -276,14 +279,13 @@ const useFileUploader = (
 
                     if (response) {
                         const uploadId = up.getOption("uploadId");
-                        const folderKey = up.getOption("folderKey");
-
+                        const folder_key = up.getOption("folder_key");
                         uploadNextFile();
                         getUploadedFile({
-                            fileId: response.id,
-                            uploadId,
-                            folderKey: folderKey,
-                            widgetId,
+                            file_id: response.id,
+                            upload_id: uploadId,
+                            folder_key: folder_key,
+                            widget_id,
                         })
                             .unwrap()
                             .then((res) => {
@@ -302,20 +304,24 @@ const useFileUploader = (
                                 onFileUpload(res.data);
                                 const parentFolder =
                                     up.getOption("activeFolder");
-                                if (widgetId) {
-                                    const folderKey =
+                                if (widget_id) {
+                                    const folder_key =
                                         parentFolder || activeFolderRef.current;
 
                                     dispatch(
                                         widgetApi.util.updateQueryData(
                                             "getModuleFiles",
                                             {
-                                                fileKey:
-                                                    folderKey === selectedFolder
+                                                file_key:
+                                                    folder_key ===
+                                                    selectedFolder
                                                         ? "/"
-                                                        : folderKey,
-                                                id: widgetId,
-                                                search: null,
+                                                        : folder_key,
+                                                id: widget_id,
+                                                search:
+                                                    folder_key === "/"
+                                                        ? null
+                                                        : "",
                                             },
                                             (draft) => {
                                                 if (!res.data || !draft.data) {
@@ -340,7 +346,7 @@ const useFileUploader = (
                                         fileApi.util.updateQueryData(
                                             "getFiles",
                                             {
-                                                fileKey:
+                                                file_key:
                                                     parentFolder ||
                                                     activeFolderRef.current,
                                             },
@@ -361,7 +367,12 @@ const useFileUploader = (
                 },
 
                 UploadComplete: (up: any) => {
-                    up.setOption("activeFolder", activeFolderRef.current || "");
+                    up.setOption(
+                        "activeFolder",
+                        activeFolderRef.current === "my-drive"
+                            ? "/"
+                            : activeFolderRef.current,
+                    );
                     setIsUploadComplete(true);
                 },
                 Error: (_up: any, err: any) => {
@@ -389,10 +400,7 @@ const useFileUploader = (
                             errorMessage = `${__(
                                 "You can not upload more than",
                                 "ninja-drive",
-                            )} ${maxFiles} ${__(
-                                "files",
-                                "ninja-drive",
-                            )}`;
+                            )} ${max_files} ${__("files", "ninja-drive")}`;
                             break;
                         default:
                             errorMessage = err.error;
@@ -486,16 +494,10 @@ const useFileUploader = (
                                 : submitButtonRef.current.text();
                         submitButtonRef.current.is("input")
                             ? submitButtonRef.current.val(
-                                  __(
-                                      "Uploading Files...",
-                                      "ninja-drive",
-                                  ),
+                                  __("Uploading Files...", "ninja-drive"),
                               )
                             : submitButtonRef.current.text(
-                                  __(
-                                      "Uploading Files...",
-                                      "ninja-drive",
-                                  ),
+                                  __("Uploading Files...", "ninja-drive"),
                               );
                         startUpload();
                     };

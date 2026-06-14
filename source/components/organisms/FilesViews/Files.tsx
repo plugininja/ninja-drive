@@ -1,20 +1,20 @@
-import { useContextMenu } from "~/components/molecules/ContextMenu";
-import { FilesViewsProps, useFilesContext } from "./FilesViews";
 import { formatFileSize, isFolder, isShortcut } from "~/utils/file";
+import { useContextMenu } from "~/components/molecules/ContextMenu";
 import SkeletonLoader from "~/components/molecules/SkeletonLoader";
-import { useEffect, useRef } from "@wordpress/element";
-import { useDragSelect } from "~/hooks/useDragSelect";
-import NoFoundIcon from "~/assets/icons/NoFoundIcon";
+import { FilesViewsProps, useFilesContext } from "./FilesViews";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
 import EmptyState from "~/components/molecules/EmptyState";
 import GridStack from "~/components/molecules/GridStack";
+import { useEffect, useRef } from "@wordpress/element";
+import { useDragSelect } from "~/hooks/useDragSelect";
+import { noFoundIconSvg } from "~/utils/icons";
 import Checkbox from "~/components/atoms/Checkbox";
-import { timeAgo } from "~/utils/utils";
-import { __ } from "@wordpress/i18n";
-import Text from "~/components/atoms/Text";
 import Card from "~/components/molecules/Card";
 import Icon from "~/components/atoms/Icon";
+import Text from "~/components/atoms/Text";
+import { timeAgo } from "~/utils/functions";
+import { __ } from "@wordpress/i18n";
 import Thumbnail from "./Thumbnail";
 import clsx from "clsx";
 
@@ -28,14 +28,16 @@ const Files = ({
         marginTop: 20,
     },
     emptyStateInner,
+    notFoundTitle = __("No files found", "ninja-drive"),
 }: {
     style?: React.CSSProperties;
     emptyStateInner?: React.ReactNode;
+    notFoundTitle?: string;
 }) => {
     const filesProps = useFilesContext();
     const {
         files,
-        selectedFiles,
+        selected_files,
         activeFile,
         isFileSelecting,
         layout,
@@ -45,7 +47,7 @@ const Files = ({
         openFolder,
         activeFolder,
         addSuggestedFile,
-        listViewTableHead,
+        list_view_table_head,
     } = filesProps;
 
     const selectContainerRef = useRef<HTMLDivElement | null>(null);
@@ -58,7 +60,7 @@ const Files = ({
     useEffect(() => {
         if (selectedItems.length > 0 && isFileSelecting) {
             const newFiles = files.filter((file) =>
-                selectedItems.includes(file.fileKey),
+                selectedItems.includes(file.file_key),
             );
             setSelectedFiles(newFiles);
         }
@@ -66,10 +68,7 @@ const Files = ({
 
     if ((!files || files.length === 0) && !filesStatus.loading) {
         return (
-            <EmptyState
-                icon={<NoFoundIcon />}
-                title={__("No files found", "ninja-drive")}
-            >
+            <EmptyState icon={<img src={noFoundIconSvg} alt="" style={{ width: "200px", height: "200px" }} />} title={notFoundTitle}>
                 {emptyStateInner}
             </EmptyState>
         );
@@ -94,7 +93,7 @@ export default Files;
 
 const ListView = ({
     files,
-    selectedFiles,
+    selected_files,
     activeFile,
     isFileSelecting,
     onFileClick,
@@ -102,7 +101,7 @@ const ListView = ({
     filesStatus,
     setSelectedFiles,
     addSuggestedFile,
-    listViewTableHead = {
+    list_view_table_head = {
         name: __("NAME", "ninja-drive"),
         size: __("SIZE", "ninja-drive"),
         type: __("TYPE", "ninja-drive"),
@@ -125,7 +124,7 @@ const ListView = ({
         </>
     );
 
-    const isAllSelected = selectedFiles.length === files.length;
+    const isAllSelected = selected_files.length === files.length;
 
     return (
         <BlockStack className="pnpnd-file-list">
@@ -163,7 +162,7 @@ const ListView = ({
                     textTransform="none"
                     className="pnpnd-file-list__header-col pnpnd-file-list__header-col--name"
                 >
-                    {listViewTableHead.name}
+                    {list_view_table_head.name}
                 </Text>
 
                 <Text
@@ -174,7 +173,7 @@ const ListView = ({
                     align="center"
                     className="pnpnd-file-list__header-col pnpnd-file-list__header-col--size"
                 >
-                    {listViewTableHead.size}
+                    {list_view_table_head.size}
                 </Text>
 
                 <Text
@@ -185,7 +184,7 @@ const ListView = ({
                     align="center"
                     className="pnpnd-file-list__header-col pnpnd-file-list__header-col--type"
                 >
-                    {listViewTableHead.type}
+                    {list_view_table_head.type}
                 </Text>
 
                 <Text
@@ -196,7 +195,7 @@ const ListView = ({
                     align="center"
                     className="pnpnd-file-list__header-col pnpnd-file-list__header-col--date"
                 >
-                    {listViewTableHead.updated}
+                    {list_view_table_head.updated}
                 </Text>
 
                 <Text
@@ -207,7 +206,7 @@ const ListView = ({
                     align="center"
                     className="pnpnd-file-list__header-col pnpnd-file-list__header-col--actions"
                 >
-                    {listViewTableHead.action}
+                    {list_view_table_head.action}
                 </Text>
             </InlineStack>
 
@@ -215,29 +214,29 @@ const ListView = ({
 
             {!filesStatus.loading &&
                 files.map((file) => {
-                    const { extension, size, updatedAt, mimeType } = file;
+                    const { extension, size, updated_at, mime_type } = file;
                     const isSelected =
-                        selectedFiles.some((f) => f.fileKey === file.fileKey) ||
-                        activeFile?.fileKey === file.fileKey;
-                    const _isFolder = isFolder(mimeType || "");
+                        selected_files.some(
+                            (f) => f.file_key === file.file_key,
+                        ) || activeFile?.file_key === file.file_key;
+                    const _isFolder = isFolder(mime_type || "");
 
                     return (
                         <InlineStack
-                            key={file.fileKey}
+                            key={file.file_key}
                             align="between"
                             blockAlign="center"
                             gap={10}
                             className={clsx(
                                 "pnpnd-file-list__item",
-                                isSelected &&
-                                    "pnpnd-file-list__item--selected",
+                                isSelected && "pnpnd-file-list__item--selected",
                             )}
                             padding="12px 16px"
-                            data-key={file.fileKey}
+                            data-key={file.file_key}
                             onClick={() => {
                                 onFileClick(file);
                                 addSuggestedFile &&
-                                    addSuggestedFile?.(file?.fileKey);
+                                    addSuggestedFile?.(file?.file_key);
                             }}
                             onDoubleClick={() => onFileDoubleClick(file)}
                             onContextMenu={(e) => {
@@ -281,7 +280,7 @@ const ListView = ({
                                 </InlineStack>
 
                                 <Text size="sm" wrap={false}>
-                                    {file?.additionalData?.baseName ||
+                                    {file?.additional_data?.base_name ||
                                         file?.name}
                                 </Text>
                             </InlineStack>
@@ -323,7 +322,7 @@ const ListView = ({
                                 className="pnpnd-file-list__date"
                                 align="center"
                             >
-                                {timeAgo(updatedAt || "")}
+                                {timeAgo(updated_at || "")}
                             </Text>
 
                             <InlineStack
@@ -356,7 +355,7 @@ const ListView = ({
 
 const GridView = ({
     files,
-    selectedFiles,
+    selected_files,
     activeFile,
     isFileSelecting,
     onFileClick,
@@ -386,30 +385,30 @@ const GridView = ({
             {!filesStatus.loading &&
                 files.map((file) => {
                     const isSelected =
-                        selectedFiles.some((f) => f.fileKey === file.fileKey) ||
-                        activeFile?.fileKey === file.fileKey;
-                    const _isFolder = isFolder(file.mimeType || "");
+                        selected_files.some(
+                            (f) => f.file_key === file.file_key,
+                        ) || activeFile?.file_key === file.file_key;
+                    const _isFolder = isFolder(file.mime_type || "");
                     const _isShortcut = isShortcut(file.extension || "");
 
                     return (
                         <Card
-                            key={file.fileKey}
+                            key={file.file_key}
                             padding={10}
                             background="white"
                             rounded="md"
                             flex
                             direction="col"
                             gap={7}
-                            data-key={file.fileKey}
+                            data-key={file.file_key}
                             className={clsx(
                                 "pnpnd-file-grid__item",
-                                isSelected &&
-                                    "pnpnd-file-grid__item--selected",
+                                isSelected && "pnpnd-file-grid__item--selected",
                             )}
                             onClick={() => {
                                 onFileClick(file);
                                 addSuggestedFile &&
-                                    addSuggestedFile?.(file?.fileKey);
+                                    addSuggestedFile?.(file?.file_key);
                             }}
                             onDoubleClick={() => onFileDoubleClick(file)}
                             onContextMenu={(e) => {
@@ -439,7 +438,7 @@ const GridView = ({
                                         size="sm"
                                         className="pnpnd-file-grid__name"
                                     >
-                                        {file?.additionalData?.baseName ||
+                                        {file?.additional_data?.base_name ||
                                             file?.name}
                                     </Text>
 

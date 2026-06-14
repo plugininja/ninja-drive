@@ -1,15 +1,15 @@
 import { ModuleConfig, ModuleKey } from "../types/widget.types";
+import EmptyState from "~/components/molecules/EmptyState";
 import PreviewEmbedDocuments from "./embed-documents";
+import { noFoundIconSvg } from "~/utils/icons";
 import PreviewFileBrowser from "./file-browser";
 import PreviewGallery from "./gallery";
-import EmptyState from "~/components/molecules/EmptyState";
-import NoFoundIcon from "~/assets/icons/NoFoundIcon";
 import { __ } from "@wordpress/i18n";
 
 const componentMap: Record<ModuleKey, React.FC<{ data: ModuleConfig }>> = {
-    "file-browser": PreviewFileBrowser,
+    file_browser: PreviewFileBrowser,
     gallery: PreviewGallery,
-    "embed-documents": PreviewEmbedDocuments,
+    embed_documents: PreviewEmbedDocuments,
 };
 
 const RenderShortcode = ({ data }: { data: ModuleConfig }) => {
@@ -21,7 +21,7 @@ const RenderShortcode = ({ data }: { data: ModuleConfig }) => {
         <SelectedComponent data={data} />
     ) : (
         <EmptyState
-            icon={<NoFoundIcon />}
+            icon={<img src={noFoundIconSvg} alt="" style={{ width: "200px", height: "200px" }} />}
             title={__("No files found", "ninja-drive")}
         />
     );

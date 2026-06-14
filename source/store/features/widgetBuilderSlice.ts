@@ -1,27 +1,27 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { File } from "~/types/file.types";
 import {
-    MBAdvanced,
     MBFilter,
     MBIState,
     MBNotifications,
     MBPermissions,
+    MBStyle,
     ModuleConfig,
 } from "../../types/widget.types";
 
 const initialState: MBIState = {
-    editData: null,
-    defaultData: null,
-    isEdited: false,
+    edit_data: null,
+    default_data: null,
+    is_edited: false,
 };
 
-export const shortcodeSlice = createSlice({
+export const widgetBuilderSlice = createSlice({
     name: "widgetBuilder",
     initialState,
     reducers: {
         widgetInit: (state, action: PayloadAction<ModuleConfig>) => {
-            state.editData = action.payload;
-            state.defaultData = action.payload;
+            state.edit_data = action.payload;
+            state.default_data = action.payload;
         },
 
         updateEditData: (
@@ -31,10 +31,24 @@ export const shortcodeSlice = createSlice({
                 value: ModuleConfig[keyof ModuleConfig];
             }>,
         ) => {
-            if (!state.editData) return;
+            if (!state.edit_data) return;
 
-            state.editData = {
-                ...state.editData,
+            state.edit_data = {
+                ...state.edit_data,
+                [action.payload.key]: action.payload.value,
+            };
+        },
+
+        updateConfiguration: (
+            state,
+            action: PayloadAction<{
+                key: keyof ModuleConfig["data"]["configuration"];
+                value: ModuleConfig["data"]["configuration"][keyof ModuleConfig["data"]["configuration"]];
+            }>,
+        ) => {
+            if (!state.edit_data) return;
+            state.edit_data.data.configuration = {
+                ...state.edit_data.data.configuration,
                 [action.payload.key]: action.payload.value,
             };
         },
@@ -46,25 +60,24 @@ export const shortcodeSlice = createSlice({
                 value: MBFilter[keyof MBFilter];
             }>,
         ) => {
-            if (!state.editData) return;
+            if (!state.edit_data) return;
 
-            state.editData.data.filter = {
-                ...state.editData.data.filter,
+            state.edit_data.data.configuration.filter = {
+                ...state.edit_data.data.configuration.filter,
                 [action.payload.key]: action.payload.value,
             };
         },
 
-        updateAdvanced: (
+        updateStyle: (
             state,
             action: PayloadAction<{
-                key: keyof MBAdvanced;
-                value: MBAdvanced[keyof MBAdvanced];
+                key: keyof MBStyle;
+                value: MBStyle[keyof MBStyle];
             }>,
         ) => {
-            if (!state.editData) return;
-
-            state.editData.data.advanced = {
-                ...state.editData.data.advanced,
+            if (!state.edit_data) return;
+            state.edit_data.data.style = {
+                ...state.edit_data.data.style,
                 [action.payload.key]: action.payload.value,
             };
         },
@@ -76,9 +89,9 @@ export const shortcodeSlice = createSlice({
                 value: MBNotifications[keyof MBNotifications];
             }>,
         ) => {
-            if (!state.editData) return;
-            state.editData.data.notifications = {
-                ...state.editData.data.notifications,
+            if (!state.edit_data) return;
+            state.edit_data.data.notifications = {
+                ...state.edit_data.data.notifications,
                 [action.payload.key]: action.payload.value,
             };
         },
@@ -90,91 +103,95 @@ export const shortcodeSlice = createSlice({
                 value: MBPermissions[keyof MBPermissions];
             }>,
         ) => {
-            if (!state.editData) return;
-            state.editData.data.permissions = {
-                ...state.editData.data.permissions,
+            if (!state.edit_data) return;
+            state.edit_data.data.permissions = {
+                ...state.edit_data.data.permissions,
                 [action.payload.key]: action.payload.value,
             };
         },
 
         selectFileKeys: (state, action: PayloadAction<File[]>) => {
-            if (!state.editData) return;
-            const fileKeys = action.payload.map((file) => {
+            if (!state.edit_data) return;
+            const file_keys = action.payload.map((file) => {
                 const isExistingFile =
-                    state.editData?.data.source.fileKeys.find(
-                        (f) => f.fileKey === file.fileKey,
+                    state.edit_data?.data.source.file_keys.find(
+                        (f) => f.file_key === file.file_key,
                     );
                 if (isExistingFile) return isExistingFile;
                 return {
-                    fileKey: file.fileKey,
-                    thumbnailKey: "",
+                    file_key: file.file_key,
+                    thumbnail_key: "",
                 };
             });
-            state.editData.data.source.fileKeys = fileKeys;
-            state.editData.data.source.selectedFiles = action.payload;
+            state.edit_data.data.source.file_keys = file_keys;
+            state.edit_data.data.source.selected_files = action.payload;
         },
 
         selectThumbnail: (
             state,
-            action: PayloadAction<{ fileKey: string; thumbnail: File }>,
+            action: PayloadAction<{ file_key: string; thumbnail: File }>,
         ) => {
-            if (!state.editData) return;
-            const fileKeys = state.editData.data.source.fileKeys.map((file) => {
-                if (file.fileKey === action.payload.fileKey)
-                    file.thumbnailKey = action.payload.thumbnail.fileKey;
-                return file;
-            });
-            state.editData.data.source.fileKeys = fileKeys;
+            if (!state.edit_data) return;
+            const file_keys = state.edit_data.data.source.file_keys.map(
+                (file) => {
+                    if (file.file_key === action.payload.file_key)
+                        file.thumbnail_key = action.payload.thumbnail.file_key;
+                    return file;
+                },
+            );
+            state.edit_data.data.source.file_keys = file_keys;
             const updatedSelectedFiles =
-                state.editData.data.source.selectedFiles?.map((file) => {
-                    if (file.fileKey === action.payload.fileKey)
-                        file.thumbnailData = {
+                state.edit_data.data.source.selected_files?.map((file) => {
+                    if (file.file_key === action.payload.file_key)
+                        file.thumbnail_data = {
                             name: action.payload.thumbnail.name,
-                            fileKey: action.payload.thumbnail.fileKey,
+                            file_key: action.payload.thumbnail.file_key,
                             extension:
                                 action.payload.thumbnail.extension || "webp",
-                            basename:
-                                action.payload.thumbnail.additionalData
-                                    ?.baseName || "",
+                            base_name:
+                                action.payload.thumbnail.additional_data
+                                    ?.base_name || "",
                             thumbnail: action.payload.thumbnail.thumbnail,
                         };
                     return file;
                 });
-            state.editData.data.source.selectedFiles = updatedSelectedFiles;
+            state.edit_data.data.source.selected_files = updatedSelectedFiles;
         },
 
         removeThumbnail: (
             state,
-            action: PayloadAction<{ fileKey: string }>,
+            action: PayloadAction<{ file_key: string }>,
         ) => {
-            if (!state.editData) return;
-            const fileKeys = state.editData.data.source.fileKeys.map((file) => {
-                if (file.fileKey === action.payload.fileKey)
-                    file.thumbnailKey = "";
-                return file;
-            });
-            state.editData.data.source.fileKeys = fileKeys;
+            if (!state.edit_data) return;
+            const file_keys = state.edit_data.data.source.file_keys.map(
+                (file) => {
+                    if (file.file_key === action.payload.file_key)
+                        file.thumbnail_key = "";
+                    return file;
+                },
+            );
+            state.edit_data.data.source.file_keys = file_keys;
             const updatedSelectedFiles =
-                state.editData.data.source.selectedFiles?.map((file) => {
-                    if (file.fileKey === action.payload.fileKey)
-                        file.thumbnailData = {
+                state.edit_data.data.source.selected_files?.map((file) => {
+                    if (file.file_key === action.payload.file_key)
+                        file.thumbnail_data = {
                             name: "",
-                            fileKey: "",
+                            file_key: "",
                             extension: "",
-                            basename: "",
+                            base_name: "",
                             thumbnail: "",
                         };
                     return file;
                 });
-            state.editData.data.source.selectedFiles = updatedSelectedFiles;
+            state.edit_data.data.source.selected_files = updatedSelectedFiles;
         },
 
         discardChanges: (state) => {
-            state.editData = state.defaultData;
+            state.edit_data = state.default_data;
         },
 
         setIsEdited: (state, action: PayloadAction<boolean>) => {
-            state.isEdited = action.payload;
+            state.is_edited = action.payload;
         },
     },
 });
@@ -182,15 +199,16 @@ export const shortcodeSlice = createSlice({
 export const {
     updateEditData,
     widgetInit,
+    updateConfiguration,
     updateFilter,
+    updateStyle,
     updatePermissions,
-    updateAdvanced,
     updateNotification,
     setIsEdited,
     discardChanges,
     selectThumbnail,
     removeThumbnail,
     selectFileKeys,
-} = shortcodeSlice.actions;
+} = widgetBuilderSlice.actions;
 
-export default shortcodeSlice.reducer;
+export default widgetBuilderSlice.reducer;

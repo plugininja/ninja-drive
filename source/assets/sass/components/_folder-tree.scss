@@ -35,7 +35,7 @@
             position: relative;
             border-radius: $rounded-sm;
             cursor: pointer;
-            border: 1px solid $white;
+            border: 1px solid transparent;
 
             &--open {
                 background-color: $primary-extralight;

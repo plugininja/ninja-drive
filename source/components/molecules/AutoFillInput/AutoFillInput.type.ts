@@ -12,6 +12,8 @@ export interface AutoFillIInputOptionsCard {
     title?: React.ReactNode;
     background?: BackgroundColor;
     options: AutoFillIInputOption[];
+    checkbox?: boolean;
+    flex?: boolean;
     disabled?: boolean;
 }
 

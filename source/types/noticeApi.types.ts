@@ -2,16 +2,16 @@ import { TNotification } from "~/components/organisms/Notifications/Notification
 
 export interface GetNoticesResponse {
     notices: TNotification[];
-    unreadCount: number;
+    unread_count: number;
     total: number;
-    hasMore: boolean;
-    currentPage: number;
-    nextPage?: number;
+    has_more: boolean;
+    current_page: number;
+    next_page?: number;
 }
 
 export interface GetNoticeRequest {
     page?: number;
-    perPage?: number;
+    per_page?: number;
     status?: "read" | "unread" | "all";
     type?: "info" | "warning" | "error" | "success";
 }

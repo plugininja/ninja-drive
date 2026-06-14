@@ -1,14 +1,14 @@
-import { __ } from "@wordpress/i18n";
 import { selectSettings } from "~/store/features/settingSlice";
-import useSaveSettings from "~/hooks/useSaveSettings";
 import ButtonGroup from "~/components/molecules/ButtonGroup";
-import { useAppSelector } from "~/store/hooks";
 import GridStack from "~/components/molecules/GridStack";
-import useDevice from "~/hooks/useDevice";
+import useSaveSettings from "~/hooks/useSaveSettings";
 import Card from "~/components/molecules/Card";
+import { useAppSelector } from "~/store/hooks";
+import useDevice from "~/hooks/useDevice";
+import OAuthSetup from "./OAuthSetup";
+import { __ } from "@wordpress/i18n";
 import Form from "./Form";
 import Auto from "./Auto";
-import OAuthSetup from "./OAuthSetup";
 
 const Content = () => {
     const { data } = useAppSelector(selectSettings);
@@ -17,7 +17,7 @@ const Content = () => {
 
     const device = useDevice();
 
-    const connectionType = data?.accounts?.connectionType || "automatic";
+    const connection_type = data?.accounts?.connection_type || "automatic";
 
     return (
         <Card
@@ -29,10 +29,10 @@ const Content = () => {
         >
             <ButtonGroup
                 buttons={CONNECTION_TYPE_BUTTONS}
-                selectedKey={connectionType}
+                selectedKey={connection_type}
                 onChange={(value) =>
                     saveAccounts(
-                        "connectionType",
+                        "connection_type",
                         value as "automatic" | "manual",
                     )
                 }
@@ -47,7 +47,7 @@ const Content = () => {
                 }}
                 className="border border-solid border-secondary rounded-lg"
             >
-                {connectionType === "automatic" ? <Auto /> : <Form login />}
+                {connection_type === "automatic" ? <Auto /> : <Form login />}
 
                 <Card
                     padding={20}

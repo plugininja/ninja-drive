@@ -1,17 +1,17 @@
-import { SearchBoxResultProps } from "./SearchBox.type";
-import { formatFileSize } from "~/utils/functions";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
+import { SearchBoxResultProps } from "./SearchBox.type";
 import { useGallery } from "~/hooks/useGallery";
-import { isFolder } from "~/utils/file";
-import { __ } from "@wordpress/i18n";
 import Card from "~/components/molecules/Card";
+import { formatFileSize } from "~/utils/file";
 import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import { isFolder } from "~/utils/file";
+import { __ } from "@wordpress/i18n";
 
 const Result = ({
     files,
-    totalCount,
+    total_count,
     queryArgs,
     loading,
     openFolder,
@@ -52,7 +52,7 @@ const Result = ({
             {files && files.length > 0 && !loading && queryArgs?.search && (
                 <Text as="p" size="sm">
                     {__("Showing", "ninja-drive")} {files.length}{" "}
-                    {__("files of", "ninja-drive")} {totalCount}
+                    {__("files of", "ninja-drive")} {total_count}
                 </Text>
             )}
 
@@ -61,12 +61,12 @@ const Result = ({
                     files &&
                     queryArgs?.search &&
                     files?.map((file) => {
-                        const _isFolder = isFolder(file.mimeType);
+                        const _isFolder = isFolder(file.mime_type);
 
                         let thumbnail = _isFolder
                             ? PNPNDHelper.getUrl(
                                   "thumbnail",
-                                  file.fileKey,
+                                  file.file_key,
                                   file.name,
                                   undefined,
                                   "lg",
@@ -74,7 +74,7 @@ const Result = ({
                               )
                             : PNPNDHelper.getUrl(
                                   "thumbnail",
-                                  file.fileKey,
+                                  file.file_key,
                                   file.name,
                                   undefined,
                                   "md",
@@ -83,7 +83,7 @@ const Result = ({
 
                         return (
                             <Card
-                                key={file.fileKey}
+                                key={file.file_key}
                                 padding={10}
                                 background="white"
                                 borderStyle="none"
@@ -94,9 +94,9 @@ const Result = ({
                                 className="pn-search-box__item"
                                 onClick={() => {
                                     if (isFolder(file?.extension || "")) {
-                                        openFolder?.(file?.fileKey!);
+                                        openFolder?.(file?.file_key!);
                                     } else {
-                                        viewFile(file?.fileKey!);
+                                        viewFile(file?.file_key!);
                                     }
                                 }}
                             >
@@ -154,12 +154,8 @@ const Result = ({
                                 setIsCompact?.(true);
                             }}
                         >
-                            {__("View", "ninja-drive")}{" "}
-                            {totalCount}{" "}
-                            {__(
-                                "files in File Browser",
-                                "ninja-drive",
-                            )}
+                            {__("View", "ninja-drive")} {total_count}{" "}
+                            {__("files in File Browser", "ninja-drive")}
                             <Icon
                                 name="arrow_forward"
                                 style={{

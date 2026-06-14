@@ -16,43 +16,60 @@ declare global {
     const pnpndMedia: any;
     const jQuery: any;
     const pnpnd: {
-        restUrl: string;
-        isPlain: boolean;
+        rest_url: string;
+        asset_url: string;
+        is_plain: boolean;
         nonce: string;
-        ajaxUrl: string;
+        ajax_url: string;
         version: string;
         accounts: {
             [key: string]: ActiveAccount;
         };
-        defaultSettings: SettingData;
+        default_settings: SettingData;
         settings: SettingsData;
-        isPro: "1" | "0";
-        assetUrl: string;
-        widgetData: ModuleConfig;
-        extensionGroups: ExtensionGroups;
-        currentUser: {
+        is_pro: "1" | "0";
+        asset_url: string;
+        widget_data: ModuleConfig;
+        extension_groups: ExtensionGroups;
+        current_user: {
             id: number;
             name: string;
+            username: string;
             roles: string[];
             can: {
-                manageFileBrowser: boolean;
-                manageMediaLibrary: boolean;
-                manageModuleBuilder: boolean;
-                manageSettings: boolean;
-                hasFullAccess: boolean;
+                files_view: boolean;
+                files_upload: boolean;
+                files_download: boolean;
+                files_preview: boolean;
+                files_rename: boolean;
+                files_delete: boolean;
+                files_copy: boolean;
+                files_move: boolean;
+                files_share: boolean;
+                folders_view: boolean;
+                folders_create: boolean;
+                accounts_connect: boolean;
+                accounts_manage: boolean;
+                settings_view: boolean;
+                settings_manage: boolean;
+                widgets_manage: boolean;
+                users_view: boolean;
+                users_manage: boolean;
+                has_full_access: boolean;
             };
         };
-        siteUrl: string;
-        adminPageUrl: string;
-        upgradeUrl: string;
-        widgetList: ModuleList[];
-        userAccess:
+        site_url: string;
+        admin_page_url: string;
+        upgrade_url: string;
+        widget_list: ModuleList[];
+        user_access:
             | "1"
             | {
                   folders: string[];
                   pages: ("file_browser" | "settings" | "widget_builder")[];
               };
         pagenow: string;
+        onboarding: boolean;
     };
     interface Window {
         pnpndRenderModules: () => void;
@@ -66,9 +83,9 @@ declare global {
         openModuleBuilder: (props: ModuleBuilderProps) => void;
         getUrl: (
             action: "preview" | "thumbnail" | "download" | "attachment",
-            fileKey: string,
-            fileName: string,
-            widgetId?: string,
+            file_key: string,
+            file_name: string,
+            widget_id?: string,
             size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl",
             extension?: string | null,
         ) => string;

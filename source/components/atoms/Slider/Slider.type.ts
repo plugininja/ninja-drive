@@ -22,5 +22,6 @@ export interface SliderProps {
     unitPlaceholder?: string;
     trackDisabled?: boolean;
     disabled?: boolean;
+    onlyInput?: boolean;
     onChange: (value: number, unit?: string) => void;
 }

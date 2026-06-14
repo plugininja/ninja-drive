@@ -1,8 +1,8 @@
 import { MenuProvider } from "~/components/molecules/ContextMenu";
 import { createContext, useContext } from "@wordpress/element";
+import BlockStack from "~/components/molecules/BlockStack";
 import { TBreadcrumb, TLayout } from "~/types/ui";
 import FileContextMenu from "./FileContextMenu";
-import BlockStack from "~/components/molecules/BlockStack";
 import { Order, OrderBy } from "~/types/Types";
 import { File } from "~/types/file.types";
 import BreadCrumbs from "./BreadCrumbs";
@@ -23,23 +23,23 @@ export interface FilesViewsProps {
     activeFile?: File;
     setActiveFile?: (file: File | undefined) => void;
     files: File[];
-    selectedFiles: File[];
+    selected_files: File[];
     setSelectedFiles: (files: File | File[]) => void;
     filesStatus: {
         loading: boolean;
         loadingMore: boolean;
-        hasMore: boolean;
+        has_more: boolean;
     };
     openFolder: (key: string) => void;
     showUploader: boolean;
     setShowUploader: React.Dispatch<React.SetStateAction<boolean>>;
     onFileClick: (file: File) => void;
     onFileDoubleClick: (file: File) => void;
-    sorting: { order: Order; orderBy: OrderBy };
-    setSorting: (sorting: { order: Order; orderBy: OrderBy }) => void;
-    addSuggestedFile?: (fileKey: string) => void;
-    widgetId?: string;
-    listViewTableHead?: {
+    sorting: { order: Order; order_by: OrderBy };
+    setSorting: (sorting: { order: Order; order_by: OrderBy }) => void;
+    addSuggestedFile?: (file_key: string) => void;
+    widget_id?: string;
+    list_view_table_head?: {
         name: string;
         size: string;
         type: string;

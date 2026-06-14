@@ -1,0 +1,292 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-popover {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    overflow: visible;
+
+    .pnpnd-popover-dot {
+        background: $primary;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        position: relative;
+        z-index: 2;
+        cursor: pointer;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: hsl(from var(--pnpnd-primary) h s l / 50%);
+            animation: pnpnd-pulse 1.8s infinite;
+        }
+    }
+
+    .pnpnd-popover-content {
+        min-width: 300px;
+        position: absolute;
+        padding: 15px;
+        border-radius: 10px;
+        background: $black;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        z-index: 99;
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s ease,
+            transform 0.25s ease;
+
+        &.pnpnd-popover-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: inherit;
+        }
+    }
+
+    &.top-left {
+        .pnpnd-popover-content {
+            bottom: calc(100% + 18px);
+            left: -18px;
+            transform: translateY(10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateY(0);
+            }
+        }
+    }
+
+    &.top-center {
+        .pnpnd-popover-content {
+            bottom: calc(100% + 18px);
+            left: 50%;
+            transform: translate(-50%, 10px);
+
+            &.pnpnd-popover-visible {
+                transform: translate(-50%, 0);
+            }
+        }
+    }
+
+    &.top-right {
+        .pnpnd-popover-content {
+            bottom: calc(100% + 18px);
+            right: 0;
+            transform: translateY(10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateY(0);
+            }
+        }
+    }
+
+    &.right-top {
+        .pnpnd-popover-content {
+            left: calc(100% + 18px);
+            top: 0;
+            transform: translateX(-10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateX(0);
+            }
+        }
+    }
+
+    &.right-center {
+        .pnpnd-popover-content {
+            left: calc(100% + 18px);
+            top: 50%;
+            transform: translateY(-50%) translateX(-10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateY(-50%) translateX(0);
+            }
+        }
+    }
+
+    &.right-bottom {
+        .pnpnd-popover-content {
+            left: calc(100% + 18px);
+            bottom: 0;
+            transform: translateX(-10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateX(0);
+            }
+        }
+    }
+
+    &.bottom-left {
+        .pnpnd-popover-content {
+            top: calc(100% + 18px);
+            left: -18px;
+            transform: translateY(-10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateY(0);
+            }
+        }
+    }
+
+    &.bottom-center {
+        .pnpnd-popover-content {
+            top: calc(100% + 18px);
+            left: 50%;
+            transform: translate(-50%, -10px);
+
+            &.pnpnd-popover-visible {
+                transform: translate(-50%, 0);
+            }
+        }
+    }
+
+    &.bottom-right {
+        .pnpnd-popover-content {
+            top: calc(100% + 18px);
+            right: -18px;
+            transform: translateY(-10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateY(0);
+            }
+        }
+    }
+
+    &.left-top {
+        .pnpnd-popover-content {
+            right: calc(100% + 18px);
+            top: 0;
+            transform: translateX(10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateX(0);
+            }
+        }
+    }
+
+    &.left-center {
+        .pnpnd-popover-content {
+            right: calc(100% + 18px);
+            top: 50%;
+            transform: translateY(-50%) translateX(10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateY(-50%) translateX(0);
+            }
+        }
+    }
+
+    &.left-bottom {
+        .pnpnd-popover-content {
+            right: calc(100% + 18px);
+            bottom: 0;
+            transform: translateX(10px);
+
+            &.pnpnd-popover-visible {
+                transform: translateX(0);
+            }
+        }
+    }
+}
+
+.pnpnd-arrow-top-left::after {
+    top: -6px;
+    left: 20px;
+    transform: rotate(45deg);
+}
+
+.pnpnd-arrow-top-center::after {
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.pnpnd-arrow-top-right::after {
+    top: -6px;
+    right: 20px;
+    transform: rotate(45deg);
+}
+
+.pnpnd-arrow-bottom-left::after {
+    bottom: -6px;
+    left: 20px;
+    transform: rotate(45deg);
+}
+
+.pnpnd-arrow-bottom-center::after {
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.pnpnd-arrow-bottom-right::after {
+    bottom: -6px;
+    right: 20px;
+    transform: rotate(45deg);
+}
+
+.pnpnd-arrow-left-top::after {
+    left: -6px;
+    top: 20px;
+    transform: rotate(45deg);
+}
+
+.pnpnd-arrow-left-center::after {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.pnpnd-arrow-left-bottom::after {
+    left: -6px;
+    bottom: 20px;
+    transform: rotate(45deg);
+}
+
+.pnpnd-arrow-right-top::after {
+    right: -6px;
+    top: 20px;
+    transform: rotate(45deg);
+}
+
+.pnpnd-arrow-right-center::after {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.pnpnd-arrow-right-bottom::after {
+    right: -6px;
+    bottom: 20px;
+    transform: rotate(45deg);
+}
+
+@keyframes pnpnd-pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+
+    70% {
+        transform: scale(2);
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

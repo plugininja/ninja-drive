@@ -8,7 +8,7 @@ const Divider = ({
     border,
     borderWidth = 1,
     borderStyle = "solid",
-    color = "primary-light",
+    color = "gray-200",
     margin,
     marginTop,
     marginBottom,

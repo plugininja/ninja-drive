@@ -1,31 +1,31 @@
 export type File<T = string> = {
     id?: string;
-    fileKey: T;
+    file_key: T;
     name: string;
     icon: string;
     description?: string;
-    mimeType: string;
-    parentId?: string;
-    accountId?: string;
-    previewLink?: string;
+    mime_type: string;
+    parent_id?: string;
+    account_id?: string;
+    preview_link?: string;
     size: number;
     thumbnail: string;
     extension: string | null;
-    isDir: boolean;
-    isShared: boolean;
-    isStarred: boolean;
-    updatedAt: string;
-    createdAt: string;
+    is_dir: boolean;
+    is_shared: boolean;
+    is_starred: boolean;
+    updated_at: string;
+    created_at: string;
     media?: MediaDetails;
     permissions?: Permissions;
-    additionalData?: {
-        baseName?: string;
-        lastEdited?: string;
+    additional_data?: {
+        base_name?: string;
+        last_edited?: string;
     };
-    thumbnailData?: {
-        fileKey: string;
+    thumbnail_data?: {
+        file_key: string;
         name: string;
-        basename: string;
+        base_name: string;
         extension: string;
         thumbnail: string;
     };
@@ -51,7 +51,8 @@ export type FileTypes =
 
 export type FolderTree = {
     name: string;
-    fileKey: string;
+    file_key: string;
     children?: FolderTree[];
     parent?: string;
+    icon: string;
 };

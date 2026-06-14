@@ -1,5 +1,5 @@
-import { useGetModuleQuery } from "~/store/api/widgetApi";
 import { useCustomAlert } from "~/components/molecules/Alert";
+import { useGetModuleQuery } from "~/store/api/widgetApi";
 import RenderShortcode from "~/frontend/RenderShortcode";
 import { ModuleConfig } from "~/types/widget.types";
 import Loading from "~/components/atoms/Loading";
@@ -18,7 +18,7 @@ export function ModulePreviewContent({
 }: ModulePreviewContentProps) {
     const { data: widgetData, isLoading } = useGetModuleQuery({
         id: data.id,
-        isAdmin: true,
+        is_admin: true,
     });
 
     if (isLoading) {

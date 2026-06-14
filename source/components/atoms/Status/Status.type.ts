@@ -24,12 +24,13 @@ export interface StatusProps {
     size?: Size;
     widthFull?: boolean;
     ignore?: boolean;
+    overlay?: boolean;
     children?: React.ReactNode;
 }
 
 export type StatusConfig = {
-    key: "pro" | "comingsoon" | "hot" | "new" | "beta";
-    variant: "pro" | "warning" | "error" | "new" | "light";
+    key: "badge-pro" | "comingsoon" | "hot" | "badge-new" | "beta";
+    variant: "badge-pro" | "warning" | "error" | "badge-new" | "secondary";
     title: string;
     icon: string;
     iconColor: TextColor;

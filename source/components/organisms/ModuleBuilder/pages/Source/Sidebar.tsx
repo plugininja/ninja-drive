@@ -1,10 +1,10 @@
+import FolderTree from "~/components/organisms/FolderTree";
 import { MenuKey, Order, OrderBy } from "~/types/Types";
 import { STORAGE_KEYS } from "~/constants/storageKeys";
 import { FILES_MENUS } from "~/constants/fileBrowser";
-import { useParams } from "react-router-dom";
 import Sidebar from "~/components/molecules/Sidebar";
+import { useParams } from "react-router-dom";
 import { FontSize } from "~/types/styles";
-import FolderTree from "~/components/organisms/FolderTree";
 
 const FileSidebar = ({
     style,
@@ -12,7 +12,7 @@ const FileSidebar = ({
     border = true,
     openFolder,
     activeFolder,
-    sorting = { order: "ASC", orderBy: "name" },
+    sorting = { order: "ASC", order_by: "name" },
     loading,
 }: {
     style?: React.CSSProperties;
@@ -21,7 +21,7 @@ const FileSidebar = ({
     activeFolder: string;
     sorting?: {
         order: Order;
-        orderBy: OrderBy;
+        order_by: OrderBy;
     };
     loading: boolean;
     openFolder: (menuKey: string) => void;
@@ -57,7 +57,7 @@ const FileSidebar = ({
                         ...FILES_MENUS.map((menu) => ({
                             key: menu?.key,
                             title: menu?.title,
-                            svgIcon: menu?.icon,
+                            iconUrl: menu?.icon,
                             onClick: () => openFolder(menu?.key),
                         })),
                     ]}

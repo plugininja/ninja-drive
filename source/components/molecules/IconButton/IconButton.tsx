@@ -1,13 +1,12 @@
-import { __ } from "@wordpress/i18n";
 import { IconButtonProps } from "./IconButton.type";
 import { TextColor } from "~/types/styles";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 
 const IconButton = ({
     name,
     iconUrl,
-    svgIcon: SvgIcon,
     id,
     style,
     className = "",
@@ -20,7 +19,7 @@ const IconButton = ({
     fontWeight = "medium",
     rounded = "sm",
     border = true,
-    borderColor = "transparent",
+    borderColor = "white",
     borderStyle = "solid",
     full = false,
     visible = true,
@@ -96,7 +95,7 @@ const IconButton = ({
                   }}
               />
           )) ??
-          (SvgIcon && <SvgIcon />);
+          null;
 
     const commonProps = {
         id,

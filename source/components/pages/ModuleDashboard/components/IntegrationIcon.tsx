@@ -1,23 +1,59 @@
-import ContactForm7Icon from "~/assets/icons/ContactForm7Icon";
-import { ElementorIcon } from "~/assets/icons/ElementorIcon";
-import FluentFormsIcon from "~/assets/icons/FluentFormsIcon";
-import FormidableFormsIcon from "~/assets/icons/FormidableFormsIcon";
-import GutenBergIcon from "~/assets/icons/GutenBergIcon";
-import NinjaFormsIcon from "~/assets/icons/NinjaFormsIcon";
-import WPFormsIcon from "~/assets/icons/WPFormsIcon";
+import {
+    classicEditorIcon,
+    contactForm7Icon,
+    eddIcon,
+    elementorFormIcon,
+    elementorIcon,
+    fluentFormsIcon,
+    formidableFormsIcon,
+    gravityFormsIcon,
+    gutenBergIcon,
+    masterStudyLmsIcon,
+    mediaLibraryIcon,
+    ninjaFormsIcon,
+    tutorLmsIcon,
+    wooCommerceIcon,
+    wpFormsIcon,
+} from "~/utils/icons";
 import Card from "~/components/molecules/Card";
+
+const iconMap: Record<string, string> = {
+    media_library: mediaLibraryIcon,
+    classic_editor: classicEditorIcon,
+    gutenberg: gutenBergIcon,
+    elementor: elementorIcon,
+    woocommerce: wooCommerceIcon,
+    easy_digital_downloads: eddIcon,
+    tutor_lms: tutorLmsIcon,
+    elementor_form_upload: elementorFormIcon,
+    contact_form_7: contactForm7Icon,
+    wp_forms: wpFormsIcon,
+    ninja_forms: ninjaFormsIcon,
+    fluent_forms: fluentFormsIcon,
+    gravity_form: gravityFormsIcon,
+    formidable_forms: formidableFormsIcon,
+    master_study_lms: masterStudyLmsIcon,
+};
 
 const IntegrationIcon = ({
     id,
 }: {
     id:
-        | "elementor"
+        | "media_library"
+        | "classic_editor"
         | "gutenberg"
-        | "contactForm7"
-        | "wpforms"
-        | "ninjaForms"
-        | "fluentForms"
-        | "formidableForms";
+        | "elementor"
+        | "woocommerce"
+        | "easy_digital_downloads"
+        | "tutor_lms"
+        | "elementor_form_upload"
+        | "contact_form_7"
+        | "wp_forms"
+        | "ninja_forms"
+        | "fluent_forms"
+        | "gravity_form"
+        | "formidable_forms"
+        | "master_study_lms";
 }) => {
     return (
         <Card
@@ -32,13 +68,11 @@ const IntegrationIcon = ({
             }}
             className="pnpnd-integration-icon"
         >
-            {id === "elementor" && <ElementorIcon />}
-            {id === "gutenberg" && <GutenBergIcon />}
-            {id === "contactForm7" && <ContactForm7Icon />}
-            {id === "wpforms" && <WPFormsIcon />}
-            {id === "ninjaForms" && <NinjaFormsIcon />}
-            {id === "fluentForms" && <FluentFormsIcon />}
-            {id === "formidableForms" && <FormidableFormsIcon />}
+            <img
+                src={iconMap[id]}
+                alt={id}
+                style={{ width: "14px", height: "14px" }}
+            />
         </Card>
     );
 };

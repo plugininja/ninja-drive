@@ -1,14 +1,14 @@
-import { __ } from "@wordpress/i18n";
-import { QueryArgs } from "~/types/widget.types";
 import { SORT_BY } from "~/components/organisms/FilesViews/Header";
 import IconButton from "~/components/molecules/IconButton";
 import BlockStack from "~/components/molecules/BlockStack";
 import SelectBox from "~/components/molecules/SelectBox";
 import Dropdown from "~/components/molecules/Dropdown";
-import { OrderBy } from "~/types/Types";
-import Text from "~/components/atoms/Text";
+import { QueryArgs } from "~/types/widget.types";
 import Card from "~/components/molecules/Card";
+import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import { OrderBy } from "~/types/Types";
+import { __ } from "@wordpress/i18n";
 
 const Actions = ({
     queryArgs,
@@ -52,11 +52,11 @@ const Actions = ({
                         <SelectBox
                             size="small"
                             options={SORT_BY}
-                            value={[queryArgs?.orderBy]}
+                            value={[queryArgs?.order_by]}
                             onChange={(value) =>
                                 setQueryArgs({
                                     ...queryArgs,
-                                    orderBy: value[0] as OrderBy,
+                                    order_by: value[0] as OrderBy,
                                     page: 1,
                                 })
                             }
@@ -129,7 +129,7 @@ const Actions = ({
                                     align="center"
                                     blockAlign="center"
                                     background={
-                                        Number(queryArgs.perPage) ===
+                                        Number(queryArgs.per_page) ===
                                         option?.count
                                             ? "primary"
                                             : "white"
@@ -141,7 +141,7 @@ const Actions = ({
                                     onClick={() =>
                                         setQueryArgs({
                                             ...queryArgs,
-                                            perPage: option?.count,
+                                            per_page: option?.count,
                                             page: 1,
                                         })
                                     }
@@ -149,9 +149,9 @@ const Actions = ({
                                     <Text
                                         size="sm"
                                         color={
-                                            Number(queryArgs.perPage) ===
+                                            Number(queryArgs.per_page) ===
                                             option?.count
-                                                ? white
+                                                ? "white"
                                                 : "black"
                                         }
                                     >

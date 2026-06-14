@@ -1,78 +1,61 @@
-import { UserAccessState } from "~/types/states";
+import { UserAccessState } from "~/types/userAccess";
 import { createSlice } from "@reduxjs/toolkit";
-import { UserAccess } from "~/types/settings";
 import { TRootState } from "../store";
 
 const initialState: UserAccessState = {
-    userAccessList: [],
-    userAccessListDraft: [],
+    edit_data: null,
+    default_data: null,
+    roles: [],
+    users: [],
+    queryArgs: {
+        base: "all",
+        search: "",
+        order_by: "created_at",
+        status: "all",
+        order: "desc",
+        page: 1,
+        per_page: 10,
+    },
+    is_edited: false,
 };
 
 export const userAccessSlice = createSlice({
-    name: "userAccess",
+    name: "user_access",
     initialState,
     reducers: {
         userAccessInit: (state, action) => {
-            state.userAccessList = (action.payload as UserAccess[]).map(
-                (item: UserAccess) => ({ ...item }),
-            );
-            state.userAccessListDraft = (action.payload as UserAccess[]).map(
-                (item: UserAccess) => ({ ...item }),
-            );
-        },
-
-        addNewUserAccess: (state, action) => {
-            state.userAccessList.push({ ...action.payload });
+            state.edit_data = action.payload.edit_data;
+            state.default_data = action.payload.default_data;
+            state.roles = action.payload.roles || [];
+            state.users = action.payload.users || [];
         },
 
         updateUserAccess: (state, action) => {
-            const { id, changes } = action.payload;
+            if (!state.edit_data) return;
 
-            const index = state.userAccessList.findIndex((a) => a.id === id);
-
-            if (index !== -1) {
-                state.userAccessList[index] = {
-                    ...state.userAccessList[index],
-                    ...changes,
-                };
-            }
+            state.edit_data = {
+                ...state.edit_data,
+                ...action.payload,
+            };
         },
 
-        updateUserAccessDraft: (state, action) => {
-            const updatedAccess = action.payload;
-
-            const index = state.userAccessListDraft.findIndex(
-                (access) => access.id === updatedAccess.id,
-            );
-
-            if (index !== -1) {
-                state.userAccessListDraft[index] = { ...updatedAccess };
-            } else {
-                state.userAccessListDraft.push({ ...updatedAccess });
-            }
+        setQueryArgs: (state, action) => {
+            state.queryArgs = {
+                ...state.queryArgs,
+                ...action.payload,
+            };
         },
 
-        deleteUserAccess: (state, action) => {
-            state.userAccessList = state.userAccessList.filter(
-                (access) => access.id !== action.payload,
-            );
-
-            state.userAccessListDraft = state.userAccessListDraft.filter(
-                (access) => access.id !== action.payload,
-            );
+        setIsEdited: (state, action) => {
+            state.is_edited = action.payload;
         },
     },
 });
 
-export const {
-    userAccessInit,
-    addNewUserAccess,
-    updateUserAccess,
-    updateUserAccessDraft,
-    deleteUserAccess,
-} = userAccessSlice.actions;
+export const { userAccessInit, updateUserAccess, setQueryArgs, setIsEdited } =
+    userAccessSlice.actions;
 
-export const selectUserAccess = (state: TRootState) => state.userAccess;
+export const selectUserAccess = (state: TRootState) => state.user_access;
 
 const userAccessReducer = userAccessSlice.reducer;
 

@@ -1,7 +1,6 @@
-import * as WPElement from "@wordpress/element";
-
 import { CustomAlertProvider } from "~/components/molecules/Alert/Alert.tsx";
 import { ModuleBuilderBridge } from "./index.tsx";
+import * as WPElement from "@wordpress/element";
 
 function render() {
     const container = document.createElement("div");

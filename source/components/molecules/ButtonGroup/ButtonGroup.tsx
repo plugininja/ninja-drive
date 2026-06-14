@@ -1,8 +1,8 @@
 import { ButtonVariant } from "~/components/atoms/Button/Button.type";
-import { __ } from "@wordpress/i18n";
-import clsx from "clsx";
+import { ButtonGroupProps } from "./ButtonGroup.type";
 import Button from "~/components/atoms/Button";
 import Card from "~/components/molecules/Card";
+import { __ } from "@wordpress/i18n";
 
 const ButtonGroup = (props: ButtonGroupProps) => {
     const {

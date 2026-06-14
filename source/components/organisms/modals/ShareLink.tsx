@@ -5,12 +5,13 @@ import InlineStack from "~/components/molecules/InlineStack";
 import IconButton from "~/components/molecules/IconButton";
 import BlockStack from "~/components/molecules/BlockStack";
 import Switcher from "~/components/atoms/Switcher";
-import { File } from "~/types/file.types";
 import Card from "~/components/molecules/Card";
 import Status from "~/components/atoms/Status";
 import Button from "~/components/atoms/Button";
-import { __ } from "@wordpress/i18n";
+import Icon from "~/components/atoms/Icon";
 import Text from "~/components/atoms/Text";
+import { File } from "~/types/file.types";
+import { __ } from "@wordpress/i18n";
 import {
     SelectControl,
     __experimentalInputControl as InputControl,
@@ -19,13 +20,12 @@ import {
     Button as ButtonV2,
     __experimentalTruncate as Truncate,
 } from "@wordpress/components";
-import Icon from "~/components/atoms/Icon";
 
 interface ShareLinkContentProps {
     file: File;
-    onConfirm: (fileKey: string) => Promise<void>;
+    onConfirm: (file_key: string) => Promise<void>;
     onCancel: () => void;
-    widgetId?: string;
+    widget_id?: string;
 }
 
 const validityOptions: { value: string; label: string }[] = [
@@ -45,7 +45,7 @@ export function ShareLinkContent({
     file,
     onConfirm,
     onCancel,
-    widgetId,
+    widget_id,
 }: ShareLinkContentProps) {
     const [isEncrypted, setIsEncrypted] = useState(false);
     const [link, setLink] = useState("");
@@ -77,7 +77,7 @@ export function ShareLinkContent({
         customValidity,
         isEncrypted,
         pwd,
-        file?.fileKey,
+        file?.file_key,
         resetMutation,
     ]);
 
@@ -114,7 +114,10 @@ export function ShareLinkContent({
             showAlert({
                 toast: true,
                 type: "error",
-                text: __("Please fix errors before generating the link.", "ninja-drive"),
+                text: __(
+                    "Please fix errors before generating the link.",
+                    "ninja-drive",
+                ),
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -123,17 +126,17 @@ export function ShareLinkContent({
         }
 
         const config: ShareLinkRequest = {
-            fileKey: file?.fileKey || "",
+            file_key: file?.file_key || "",
             password: isEncrypted ? pwd : undefined,
         };
 
         if (validity !== "0") {
-            config.expireIn =
+            config.expire_in =
                 validity === "custom" ? customValidity.toString() : validity;
         }
 
-        if (widgetId) {
-            config.widgetId = widgetId;
+        if (widget_id) {
+            config.widget_id = widget_id;
         }
 
         try {
@@ -312,11 +315,11 @@ export function useShareLink() {
     const openShareLink = ({
         file,
         onConfirm,
-        widgetId,
+        widget_id,
     }: {
         file: File;
-        widgetId?: string;
-        onConfirm: (fileKey: string) => Promise<void>;
+        widget_id?: string;
+        onConfirm: (file_key: string) => Promise<void>;
     }) => {
         showAlert({
             id: "share-link-modal",
@@ -330,12 +333,12 @@ export function useShareLink() {
             html: (
                 <ShareLinkContent
                     file={file}
-                    widgetId={widgetId}
+                    widget_id={widget_id}
                     onCancel={() => {
                         closeAlert("share-link-modal");
                     }}
-                    onConfirm={async (fileKey) => {
-                        await onConfirm(fileKey);
+                    onConfirm={async (file_key) => {
+                        await onConfirm(file_key);
 
                         showAlert({
                             toast: true,

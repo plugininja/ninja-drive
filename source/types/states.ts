@@ -1,47 +1,42 @@
-import { SettingsData, UserAccess } from "./settings";
+import { SettingsData } from "./settings";
 import { File } from "./file.types";
 import { Account } from "./Types";
 
 export interface AuthState {
-    loginAccounts: Account[] | null;
-    activeAccount: Account | null;
+    login_accounts: Account[] | null;
+    active_account: Account | null;
     loading: boolean;
 }
 
 export interface SettingState {
     data: SettingsData | null;
     draft?: SettingsData | null;
-    defaultData?: SettingsData | null;
-    isDirty?: boolean;
-}
-
-export interface UserAccessState {
-    userAccessList: UserAccess[];
-    userAccessListDraft: UserAccess[];
+    default_data?: SettingsData | null;
+    is_dirty?: boolean;
 }
 
 export interface FileBrowserState {
-    isFileSelecting: boolean;
-    suggestedFiles: File[];
-    folderView: "grid" | "list";
-    activeFile: File | null;
-    isUploading: boolean;
+    is_file_selecting: boolean;
+    suggested_files: File[];
+    folder_view: "grid" | "list";
+    active_file: File | null;
+    is_uploading: boolean;
 }
 
 export interface MediaLibraryState {
     folders: File[];
-    activeFolder: File | null;
-    selectedFolders: File[];
-    createFolder: boolean;
-    renameFolder: string | null;
-    bulkSelect: boolean;
+    active_folder: File | null;
+    selected_folders: File[];
+    create_folder: boolean;
+    rename_folder: string | null;
+    bulk_select: boolean;
     loading: boolean;
-    moveLoading: {
-        folderKey: string | null;
+    move_loading: {
+        folder_key: string | null;
         loading: boolean;
     };
-    queryArgs: {
-        orderBy: "name" | "size" | "createdAt" | "updatedAt";
+    query_args: {
+        order_by: "name" | "size" | "created_at" | "updated_at";
         order: "ASC" | "DESC";
     };
 }

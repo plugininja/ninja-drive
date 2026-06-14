@@ -1,44 +1,50 @@
 import InlineStack from "~/components/molecules/InlineStack";
 import IconButton from "~/components/molecules/IconButton";
-import { useFilesContext } from "./FilesViews";
 import Dropdown from "~/components/molecules/Dropdown";
-import { memo } from "@wordpress/element";
 import Button from "~/components/atoms/Button";
+import { useFilesContext } from "./FilesViews";
+import { toBoolean } from "~/utils/functions";
 import Icon from "~/components/atoms/Icon";
 import Text from "~/components/atoms/Text";
-import { toBoolean } from "~/utils/functions";
+import { memo } from "@wordpress/element";
 
 const MAX_ITEMS = 5;
 const FIRST_ITEMS = 1;
 const LAST_ITEMS = 3;
 
 const BreadCrumbs = memo(() => {
-    const { breadcrumbs, activeFolder, openFolder } = useFilesContext();
-    const hasFullAccess = pnpnd?.currentUser?.can?.hasFullAccess || false;
+    const { breadcrumbs, openFolder } = useFilesContext();
+    const hasFullAccess = pnpnd?.current_user?.can?.has_full_access || false;
 
     let filteredBreadcrumbs = breadcrumbs;
 
-    if (toBoolean(pnpnd.isPro) && !hasFullAccess) {
+    if (toBoolean(pnpnd.is_pro) && !hasFullAccess) {
         filteredBreadcrumbs = breadcrumbs.filter(
-            (crumb) => crumb.fileKey !== "home",
+            (crumb) => crumb.file_key !== "home",
         );
     }
+
     return (
-        <InlineStack>
+        <InlineStack wrap={false}>
             {filteredBreadcrumbs?.slice(0, FIRST_ITEMS).map((crumb, index) => (
-                <InlineStack key={index}>
+                <InlineStack key={index} wrap={false}>
                     <Button
+                        color="primary"
                         size="small"
-                        startIcon={"home"}
+                        startIcon="home"
                         textTransform="none"
-                        onClick={() => {
-                            openFolder(crumb.fileKey);
+                        startIconColor="primary"
+                        style={{
+                            whiteSpace: "nowrap",
                         }}
-                        color="black"
+                        onClick={() => {
+                            openFolder(crumb.file_key);
+                        }}
                     >
                         {crumb.name}
                     </Button>
-                    <Icon name="chevron_right" fontSize="xl" />
+
+                    <Icon name="chevron_right" color="primary" fontSize="xl" />
                 </InlineStack>
             ))}
 
@@ -46,9 +52,12 @@ const BreadCrumbs = memo(() => {
                 <Dropdown>
                     <Dropdown.Trigger>
                         <IconButton
-                            variant="outlined"
-                            size="small"
+                            variant="white"
+                            size="extrasmall"
                             name="more_horiz"
+                            color="primary"
+                            border
+                            borderColor="gray-200"
                         />
                     </Dropdown.Trigger>
 
@@ -59,7 +68,7 @@ const BreadCrumbs = memo(() => {
                                 <Dropdown.MenuItem
                                     key={index}
                                     onClick={() => {
-                                        openFolder(crumb.fileKey);
+                                        openFolder(crumb.file_key);
                                     }}
                                 >
                                     <InlineStack
@@ -71,6 +80,7 @@ const BreadCrumbs = memo(() => {
                                             name="chevron_right"
                                             fontSize="xl"
                                         />
+
                                         <Text wrap={false}>{crumb.name}</Text>
                                     </InlineStack>
                                 </Dropdown.MenuItem>
@@ -86,8 +96,9 @@ const BreadCrumbs = memo(() => {
                         : FIRST_ITEMS,
                 )
                 .map((crumb, index) => (
-                    <InlineStack key={index}>
+                    <InlineStack key={index} wrap={false}>
                         <Button
+                            title={crumb.name}
                             variant={
                                 filteredBreadcrumbs.length > MAX_ITEMS
                                     ? index === LAST_ITEMS - 1
@@ -100,15 +111,26 @@ const BreadCrumbs = memo(() => {
                                     ? "outlined"
                                     : "default"
                             }
+                            color="primary"
                             size="small"
                             startIcon="folder_open"
                             textTransform="none"
+                            startIconColor="primary"
                             onClick={() => {
-                                openFolder(crumb.fileKey);
+                                openFolder(crumb.file_key);
                             }}
-                            color="black"
                         >
-                            {crumb.name}
+                            <Text
+                                size="sm"
+                                wrap={false}
+                                ellipsis
+                                style={{
+                                    maxWidth: "100px",
+                                    minWidth: 0,
+                                }}
+                            >
+                                {crumb.name}
+                            </Text>
                         </Button>
 
                         {index !==
@@ -117,7 +139,11 @@ const BreadCrumbs = memo(() => {
                                 : filteredBreadcrumbs.length -
                                   FIRST_ITEMS -
                                   1) && (
-                            <Icon name="chevron_right" fontSize="xl" />
+                            <Icon
+                                name="chevron_right"
+                                color="primary"
+                                fontSize="xl"
+                            />
                         )}
                     </InlineStack>
                 ))}

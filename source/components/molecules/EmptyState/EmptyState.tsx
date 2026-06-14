@@ -1,6 +1,6 @@
-import { EmptyStateProps } from "./EmptyState.type";
 import Description from "~/components/molecules/Description";
 import BlockStack from "~/components/molecules/BlockStack";
+import { EmptyStateProps } from "./EmptyState.type";
 import Text from "~/components/atoms/Text";
 
 const EmptyState = ({
@@ -24,7 +24,7 @@ const EmptyState = ({
             {icon && icon}
 
             {title && (
-                <Text size="xl" weight="extrabold">
+                <Text size="xl" weight="medium">
                     {title}
                 </Text>
             )}

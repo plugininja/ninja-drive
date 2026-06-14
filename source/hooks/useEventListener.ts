@@ -107,10 +107,10 @@ export const useEventListener = <
     eventName: K,
     handler: (
         event: EventType<T, K & string>,
-        delegateTarget?: Element
+        delegateTarget?: Element,
     ) => void,
     element?: T | null,
-    options?: UseEventListenerOptions | boolean
+    options?: UseEventListenerOptions | boolean,
 ) => {
     const savedHandler = useRef<typeof handler>(handler);
 
@@ -133,12 +133,12 @@ export const useEventListener = <
                 if (delegateTarget) {
                     savedHandler.current(
                         event as EventType<T, K & string>,
-                        delegateTarget
+                        delegateTarget,
                     );
                 }
             }
         },
-        [options]
+        [options],
     );
 
     useEffect(() => {
@@ -161,7 +161,7 @@ export const useEventListener = <
             targetElement.removeEventListener(
                 eventName,
                 eventListener,
-                eventOptions
+                eventOptions,
             );
         };
     }, [eventName, element, eventListener, options]);

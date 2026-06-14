@@ -1,9 +1,9 @@
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
-import { useGetAccountsQuery } from "~/store/api/authApi";
 import BlockStack from "~/components/molecules/BlockStack";
-import { useEffect } from "@wordpress/element";
+import { useGetAccountsQuery } from "~/store/api/authApi";
 import Loading from "~/components/atoms/Loading";
+import { useEffect } from "@wordpress/element";
 import {
     logOut,
     selectAuth,
@@ -22,12 +22,32 @@ const PAGE_ROUTE_MAP: Record<
 const AuthRoute = ({
     children,
     skipAuthGuard = false,
+    skipPermissionGuard = false,
 }: {
     children: React.ReactNode;
     skipAuthGuard?: boolean;
+    skipPermissionGuard?: boolean;
 }) => {
-    const { data: accountsData, isLoading, isError } = useGetAccountsQuery({});
-    const { loginAccounts, activeAccount: reduxActiveAccount } =
+    const isAdmin = pnpnd?.current_user?.roles?.includes("administrator");
+
+    const shouldSkipFetch =
+        !skipPermissionGuard &&
+        !isAdmin &&
+        !pnpnd?.current_user?.can?.has_full_access &&
+        !pnpnd?.current_user?.can?.accounts_connect &&
+        !pnpnd?.current_user?.can?.accounts_manage;
+
+    const {
+        data: accountsData,
+        isLoading,
+        isError,
+    } = useGetAccountsQuery(
+        {},
+        {
+            skip: shouldSkipFetch,
+        },
+    );
+    const { login_accounts, active_account: reduxActiveAccount } =
         useAppSelector(selectAuth);
 
     const accounts = accountsData?.data;
@@ -39,6 +59,10 @@ const AuthRoute = ({
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = location.pathname;
+
+    if (shouldSkipFetch) {
+        return children;
+    }
 
     useEffect(() => {
         if (isLoading) return;
@@ -89,8 +113,8 @@ const AuthRoute = ({
             return;
         }
 
-        if (pnpnd.userAccess !== "1") {
-            const { pages = [] } = pnpnd?.userAccess || {};
+        if (pnpnd.user_access !== "1") {
+            const { pages = [] } = pnpnd?.user_access || {};
 
             const hasAccess = pages.some(
                 (page) => PAGE_ROUTE_MAP[page]?.(currentPath),
@@ -113,8 +137,8 @@ const AuthRoute = ({
     if (
         !skipAuthGuard &&
         !reduxActiveAccount &&
-        loginAccounts?.length &&
-        loginAccounts?.length > 0
+        login_accounts?.length &&
+        login_accounts?.length > 0
     ) {
         return <Navigate to="/settings/accounts" replace />;
     }

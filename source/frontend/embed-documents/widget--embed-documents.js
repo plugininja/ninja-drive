@@ -7,9 +7,9 @@ function renderShortcode(element) {
     if (shortcodeId) {
         const data = window[shortcodeId];
 
-        if (data.type !== "embed-documents") {
+        if (data.type !== "embed_documents") {
             console.error(
-                `Element with ID ${shortcodeId} is not a File List shortcode.`
+                `Element with ID ${shortcodeId} is not a File List shortcode.`,
             );
             return;
         }
@@ -27,7 +27,7 @@ function renderShortcode(element) {
 }
 
 export const checkAndRenderElements = () => {
-    const elements = document.querySelectorAll(".pnpnd-embed-documents");
+    const elements = document.querySelectorAll(".pnpnd-embed_documents");
     if (elements.length === 0) {
         return;
     }

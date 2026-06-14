@@ -1,4 +1,4 @@
-import { ALign, InlineAlign } from "~/types/styles";
+import { Align, InlineAlign } from "~/types/styles";
 
 type ElementType = keyof JSX.IntrinsicElements;
 
@@ -11,7 +11,7 @@ export type BlockStackProps<T extends ElementType = "div"> = {
     padding?: string | number;
     paddingTop?: string | number;
     as?: "div" | "span" | "ul" | "ol" | "li" | "fieldset";
-    align?: ALign;
+    align?: Align;
     inlineAlign?: InlineAlign;
     gap?: string | number;
     reverseOrder?: boolean;

@@ -1,28 +1,29 @@
+import EmptyState from "~/components/molecules/EmptyState";
+import { useModuleFiles } from "~/hooks/useModuleFiles";
+import { noFoundIconSvg } from "~/utils/icons";
 import { ModuleConfig } from "~/types/widget.types";
 import EmbedDocuments from "./EmbedDocuments";
-import { useModuleFiles } from "~/hooks/useModuleFiles";
 import ModuleBottom from "../ModuleBottom";
-import EmptyState from "~/components/molecules/EmptyState";
-import NoFoundIcon from "~/assets/icons/NoFoundIcon";
 import { __ } from "@wordpress/i18n";
 
 const EmbedDocumentsWrapper = ({ data }: { data: ModuleConfig }) => {
     const {
         files,
-        hasMore,
+        has_more,
         loadingMore,
         loadMore,
-        totalPages,
+        total_pages,
         loading,
         loadMoreRef,
         queryArgs,
     } = useModuleFiles(data);
 
-    const { loadingType } = data?.data?.advanced.files || {};
+    const { loading_type } = data?.data?.style?.files || {};
+
     if (!files.length && !loading)
         return (
             <EmptyState
-                icon={<NoFoundIcon />}
+                icon={<img src={noFoundIconSvg} alt="" style={{ width: "200px", height: "200px" }} />}
                 title={__("No files found", "ninja-drive")}
             />
         );
@@ -32,11 +33,11 @@ const EmbedDocumentsWrapper = ({ data }: { data: ModuleConfig }) => {
             <EmbedDocuments data={data} files={files} />
 
             <ModuleBottom
-                fileLoadingType={loadingType}
-                hasMore={hasMore}
+                fileLoadingType={loading_type}
+                has_more={has_more}
                 loadMore={loadMore}
-                totalPages={totalPages}
-                currentPage={queryArgs?.page || 1}
+                total_pages={total_pages}
+                current_page={queryArgs?.page || 1}
                 isLoading={loading || loadingMore}
                 loadMoreFileRef={loadMoreRef}
             />

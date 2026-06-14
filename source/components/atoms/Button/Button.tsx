@@ -1,9 +1,9 @@
-import { useCallback, useMemo } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import { FontSize, FontWeight, TextColor } from "~/types/styles";
-import { ButtonProps, ButtonStatusProps } from "./Button.type";
+import { useCallback, useMemo } from "@wordpress/element";
 import Status from "~/components/atoms/Status";
+import { ButtonProps } from "./Button.type";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 
 const ICON_COLORS: Record<string, TextColor> = {
@@ -68,6 +68,7 @@ const Button = ({
         color && `text-${color}`,
         `text-${textTransform}`,
         full && "w-full",
+        !color && "not-own-color",
         disabled && "pn-button--disabled",
         className,
     );
@@ -178,6 +179,7 @@ const Button = ({
     );
 
     const { default: showDefaultStatus, ...statusRest } = statusProps ?? {};
+
     const status = useMemo(
         () =>
             showDefaultStatus
@@ -248,4 +250,5 @@ const Button = ({
 };
 
 export { Button };
+
 export default Button;

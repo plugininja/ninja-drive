@@ -1,36 +1,36 @@
 import { FILE_CONTEXT_MENU_LISTS } from "~/components/organisms/FilesViews/FileContextMenu";
+import FilesViews from "~/components/organisms/FilesViews/FilesViews";
+import Uploader from "~/components/organisms/Uploader/Uploader";
+import BlockStack from "~/components/molecules/BlockStack";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { useEffect, useState } from "@wordpress/element";
 import { useModuleFiles } from "~/hooks/useModuleFiles";
 import { useFileActions } from "~/hooks/useFileActions";
-import { File } from "~/types/file.types";
-import FilesViews from "~/components/organisms/FilesViews/FilesViews";
 import { ModuleConfig } from "~/types/widget.types";
 import { checkPermission } from "~/utils/widget";
-import BlockStack from "~/components/molecules/BlockStack";
+import Divider from "~/components/atoms/Divider";
 import { useGallery } from "~/hooks/useGallery";
+import Card from "~/components/molecules/Card";
 import { Topbar } from "./components/Topbar";
 import ModuleBottom from "../ModuleBottom";
+import { File } from "~/types/file.types";
 import { isFolder } from "~/utils/file";
 import { TLayout } from "~/types/ui";
-import Card from "~/components/molecules/Card";
-import Divider from "~/components/atoms/Divider";
-import Uploader from "~/components/organisms/Uploader/Uploader";
 
 const FileBrowser = ({ data }: { data: ModuleConfig }) => {
     const [showUploader, setShowUploader] = useState(false);
     const [activeFile, setActiveFile] = useState<File | null>(null);
     const [isFileSelecting, setIsFileSelecting] = useState<boolean>(false);
     const [layout, setLayout] = useState<TLayout>(
-        data?.data?.advanced?.fileBrowser?.folderView || "grid",
+        data?.data?.style?.file_browser?.folder_view || "grid",
     );
     const [savedFolder, setSavedFolder] = useLocalStorage(
         `pnpnd-active-folder-file-browser-${data?.id}`,
         "/",
     );
 
-    const { advanced } = data?.data;
-    const { loadingType } = data?.data?.advanced?.files || {};
+    const { style } = data?.data;
+    const { loading_type } = data?.data?.style?.files || {};
     const {
         preview,
         rename: renamePermission,
@@ -39,7 +39,10 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
         move,
         share: sharePermission,
         delete: deletePermission,
+        upload,
     } = data?.data?.permissions || {};
+    const { max_files, max_size, min_size } =
+        data?.data?.configuration?.filter?.upload || {};
 
     const {
         files,
@@ -47,17 +50,17 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
         openFolder,
         loading,
         loadMoreRef,
-        hasMore,
+        has_more,
         loadingMore,
         refresh,
         queryArgs,
         setQueryArgs,
         loadMore,
-        totalPages,
+        total_pages,
         isError,
     } = useModuleFiles(data, savedFolder);
 
-    const { activeFolder, order, orderBy } = queryArgs;
+    const { active_folder, order, order_by } = queryArgs;
 
     const enablePreview = checkPermission("preview", preview!);
 
@@ -65,8 +68,8 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
         permissions: {
             download: checkPermission("download", downloadPermission!),
         },
-        securePlayBack: advanced?.mediaPlayer?.secureVideoPlayback,
-        showThumbnails: preview?.previewThumbnail,
+        securePlayBack: data.data.configuration.advanced.secure_video_playback,
+        showThumbnails: preview?.preview_thumbnail,
     });
 
     const {
@@ -81,9 +84,9 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
     } = useFileActions();
 
     useEffect(() => {
-        if (queryArgs?.activeFolder !== savedFolder)
-            setSavedFolder(queryArgs?.activeFolder);
-    }, [queryArgs?.activeFolder]);
+        if (queryArgs?.active_folder !== savedFolder)
+            setSavedFolder(queryArgs?.active_folder);
+    }, [queryArgs?.active_folder]);
 
     useEffect(() => {
         if (isError) {
@@ -98,9 +101,9 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
 
     let filteredFileContextMenuList = FILE_CONTEXT_MENU_LISTS?.filter(
         (menu) => {
-            if (menu.id === "preview")
-                return checkPermission("preview", preview!) 
-;
+            if (menu.id === "preview") {
+                return checkPermission("preview", preview!);
+            }
             if (menu.id === "open") return false;
             if (menu.id === "view-details") return false;
             if (menu.id === "share")
@@ -121,7 +124,7 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
 
     filteredFileContextMenuList = filteredFileContextMenuList?.map((menu) => {
         if (menu?.id === "download") {
-            if (!downloadPermission?.folderDownload) {
+            if (!downloadPermission?.folder_download) {
                 return {
                     ...menu,
                     fileOnly: true,
@@ -141,11 +144,11 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
     ) => {
         switch (actionId) {
             case "preview":
-                if (enablePreview && preview?.popOut) {
+                if (enablePreview && preview?.pop_out) {
                     openGoogleDrive(file, data?.id);
                     return;
                 }
-                enablePreview && preview?.inline && viewFile(file?.fileKey);
+                enablePreview && preview?.inline && viewFile(file?.file_key);
                 break;
             case "open":
                 openGoogleDrive(file, data?.id);
@@ -159,25 +162,25 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
             case "copy":
                 copyFile({
                     file,
-                    widgetId: data?.id,
-                    activeFolderKey: activeFolder || "",
+                    widget_id: data?.id,
+                    active_folder_key: active_folder || "",
                     breadcrumbs,
                 });
                 break;
             case "move":
                 moveFile({
                     file,
-                    widgetId: data?.id,
-                    activeFolderKey: activeFolder || "",
+                    widget_id: data?.id,
+                    active_folder_key: active_folder || "",
                     breadcrumbs,
                 });
                 break;
             case "rename":
-                rename(file, activeFolder, data?.id);
+                rename(file, active_folder, data?.id);
                 break;
             case "delete":
-                const fileKeys = [file?.fileKey];
-                deleteFile(fileKeys, activeFolder, data?.id);
+                const file_keys = [file?.file_key];
+                deleteFile(file_keys, active_folder, data?.id);
                 break;
             default:
                 break;
@@ -191,25 +194,25 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
         }
 
         if (isFolder(file?.extension || "")) {
-            openFolder(file?.fileKey);
+            openFolder(file?.file_key);
         } else {
-            if (enablePreview && preview?.popOut) {
+            if (enablePreview && preview?.pop_out) {
                 openGoogleDrive(file, data?.id);
                 return;
             }
-            enablePreview && preview?.inline && viewFile(file?.fileKey);
+            enablePreview && preview?.inline && viewFile(file?.file_key);
         }
     };
 
     const handleDoubleClick = (file: File) => {
         if (isFolder(file?.extension || "")) {
-            openFolder(file?.fileKey);
+            openFolder(file?.file_key);
         } else {
-            if (enablePreview && preview?.popOut) {
+            if (enablePreview && preview?.pop_out) {
                 openGoogleDrive(file, data?.id);
                 return;
             }
-            enablePreview && preview?.inline && viewFile(file?.fileKey);
+            enablePreview && preview?.inline && viewFile(file?.file_key);
         }
     };
 
@@ -219,14 +222,15 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
             borderStyle="dashed"
             shadow
             data={{
-                minFileSize: 0,
-                maxFileSize: pnpnd?.isPro !== "1" ? 5 : 0,
-                activeFolder: activeFolder,
+                widget_id: data?.id,
+                maxFileSize: Number(max_size) || 0,
+                minFileSize: Number(min_size) || 0,
+                max_files: Number(max_files) || 0,
+                activeFolder: active_folder,
                 onFileUpload: () => {},
                 setIsUploading: setShowUploader,
                 uploadImmediately: true,
-                enableFolderUpload: true,
-                widgetId: data?.id,
+                enableFolderUpload: upload?.folder_upload,
             }}
             onClose={() => setShowUploader(false)}
         />
@@ -237,7 +241,7 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
         const updated = breadcrumbs.slice(0, -1);
         const prevFolder = updated[updated.length - 1];
 
-        openFolder(prevFolder.fileKey);
+        openFolder(prevFolder.file_key);
     };
 
     return (
@@ -250,20 +254,20 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
                 layout={layout}
                 setLayout={setLayout}
                 files={files}
-                activeFolder={activeFolder}
+                activeFolder={active_folder}
                 breadcrumbs={breadcrumbs}
                 openFolder={openFolder}
                 activeFile={activeFile || undefined}
                 setActiveFile={setActiveFile as any}
-                selectedFiles={[]}
+                selected_files={[]}
                 setSelectedFiles={handleSelectFile}
-                filesStatus={{ loading, loadingMore, hasMore }}
+                filesStatus={{ loading, loadingMore, has_more }}
                 showUploader={showUploader}
                 setShowUploader={setShowUploader}
-                sorting={{ order, orderBy }}
+                sorting={{ order, order_by }}
                 setSorting={(value) => setQueryArgs({ ...queryArgs, ...value })}
-                widgetId={data.id}
-                listViewTableHead={advanced.fileBrowser?.listViewTableHead}
+                widget_id={data.id}
+                list_view_table_head={style.file_browser?.list_view_table_head}
             >
                 <Card
                     padding={0}
@@ -309,11 +313,11 @@ const FileBrowser = ({ data }: { data: ModuleConfig }) => {
                     />
 
                     <ModuleBottom
-                        fileLoadingType={loadingType}
-                        hasMore={hasMore}
+                        fileLoadingType={loading_type}
+                        has_more={has_more}
                         loadMore={loadMore}
-                        totalPages={totalPages}
-                        currentPage={queryArgs?.page || 1}
+                        total_pages={total_pages}
+                        current_page={queryArgs?.page || 1}
                         isLoading={loading || loadingMore}
                         loadMoreFileRef={loadMoreRef}
                     />

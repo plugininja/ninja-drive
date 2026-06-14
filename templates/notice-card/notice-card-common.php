@@ -47,10 +47,10 @@ if (! empty($args)) :
 							<?php if ($pnpnd_pb_url) : ?>
 								<a href="<?php echo esc_url($pnpnd_pb_url); ?>"
 									target="<?php echo esc_attr($pnpnd_pb_target); ?>"
-									class="pnpnd-notice-card-btn pn-button pn-button--primary pn-button--small rounded-sm pnpnd-btn--<?php echo esc_attr($pnpnd_card_status); ?> <?php echo esc_attr($pnpnd_pb_class); ?>">
+									class="pnpnd-notice-card-btn pn-button pn-button--primary pn-button--small rounded-sm pn-button--<?php echo esc_attr($pnpnd_card_status); ?> <?php echo esc_attr($pnpnd_pb_class); ?>">
 								<?php else : ?>
 									<button type="button"
-										class="pnpnd-notice-card-btn pn-button pn-button--primary pn-button--small rounded-sm pnpnd-btn--<?php echo esc_attr($pnpnd_card_status); ?> <?php echo esc_attr($pnpnd_pb_class); ?>">
+										class="pnpnd-notice-card-btn pn-button pn-button--primary pn-button--small rounded-sm pn-button--<?php echo esc_attr($pnpnd_card_status); ?> <?php echo esc_attr($pnpnd_pb_class); ?> not-own-color">
 									<?php endif; ?>
 
 									<span class="pnpnd-icon text-md"><?php echo esc_html($pnpnd_pb_icon); ?></span>
@@ -66,10 +66,9 @@ if (! empty($args)) :
 							<?php if ($pnpnd_sb_url) : ?>
 								<a href="<?php echo esc_url($pnpnd_sb_url); ?>"
 									target="<?php echo esc_attr($pnpnd_sb_target); ?>"
-									class="pnpnd-notice-card-btn pnpnd-btn pnpnd-btn--rounded-sm pnpnd-btn--<?php echo esc_attr($pnpnd_card_status); ?> <?php echo esc_attr($pnpnd_sb_class); ?>">
+									class="pnpnd-notice-card-btn pnpnd-btn pnpnd-btn--rounded-sm pnpnd-btn--<?php echo esc_attr($pnpnd_card_status); ?> <?php echo esc_attr($pnpnd_sb_class); ?> not-own-color">
 								<?php else : ?>
-									<button type="button"
-										class="pnpnd-notice-card-btn pnpnd-btn pnpnd-btn--rounded-sm pnpnd-btn--<?php echo esc_attr($pnpnd_card_status); ?> <?php echo esc_attr($pnpnd_sb_class); ?>">
+									<button type="button" class="pnpnd-notice-card-btn pnpnd-btn pnpnd-btn--rounded-sm pnpnd-btn--<?php echo esc_attr($pnpnd_card_status); ?> <?php echo esc_attr($pnpnd_sb_class); ?> not-own-color">
 									<?php endif; ?>
 
 									<span class="pnpnd-icon text-md"><?php echo esc_html($pnpnd_sb_icon); ?></span>

@@ -4,6 +4,7 @@ import mediaLibraryReducer from "./features/mediaLibrarySlice";
 import ManageFileReducer from "./features/manageFileSlice";
 import userAccessReducer from "./features/userAccessSlice";
 import widgetBuilder from "./features/widgetBuilderSlice";
+import fileSelectorReducer from "./features/fileSelector";
 import settingsReducer from "./features/settingSlice";
 import authReducer from "./features/authSlice";
 import { baseApi } from "./api/baseApi";
@@ -11,12 +12,13 @@ import { baseApi } from "./api/baseApi";
 const rootReducer = combineReducers({
     [baseApi.reducerPath]: baseApi.reducer,
     auth: authReducer,
-    manageFiles: ManageFileReducer,
+    manage_files: ManageFileReducer,
     settings: settingsReducer,
-    userAccess: userAccessReducer,
-    mediaLibrary: mediaLibraryReducer,
-    widgetBuilder: widgetBuilder,
+    user_access: userAccessReducer,
+    media_library: mediaLibraryReducer,
+    widget_builder: widgetBuilder,
     notifications: notificationsReducer,
+    file_selector: fileSelectorReducer,
 });
 
 export const store = configureStore({

@@ -1,21 +1,23 @@
-import { __ } from "@wordpress/i18n";
 import IconButton from "~/components/molecules/IconButton";
 import { ModuleConfig } from "../types/widget.types";
 import Tooltip from "~/components/atoms/Tooltip";
 import { useEffect } from "@wordpress/element";
 import { CSS_VAR } from "~/types/tokens";
+import { __ } from "@wordpress/i18n";
 
 const FrontendContainer = ({
     children,
     data,
+    setWidgetData,
 }: {
     children: React.ReactNode;
     data: ModuleConfig;
+    setWidgetData: React.Dispatch<React.SetStateAction<ModuleConfig>>;
 }) => {
-    const theme = data?.data?.advanced?.theme ?? "system";
+    const theme = data?.data?.style?.theme ?? "system";
 
     useEffect(() => {
-        const color = pnpnd.settings?.appearance?.primaryColor ?? "#0061fe";
+        const color = pnpnd.settings?.appearance?.primary_color ?? "#0061fe";
 
         const root = document.documentElement;
 
@@ -30,8 +32,8 @@ const FrontendContainer = ({
 
     return (
         <>
-            {!!pnpnd.currentUser &&
-                pnpnd.currentUser?.can?.manageModuleBuilder &&
+            {!!pnpnd.current_user &&
+                pnpnd.current_user?.can?.widgets_manage &&
                 !isEditor && (
                     <div className="pnpnd-widget__edit">
                         <Tooltip
@@ -45,7 +47,7 @@ const FrontendContainer = ({
                                 size="small"
                                 rounded="md"
                                 name="edit"
-                                href={`${pnpnd.adminPageUrl}#/widget-builder/${data?.id}/source/my-drive`}
+                                href={`${pnpnd.admin_page_url}#/widget-builder/${data?.id}/source/my-drive`}
                                 target="_blank"
                             />
                         </Tooltip>

@@ -1,0 +1,46 @@
+@use "../utilities/variable" as *;
+
+.pn-stepper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        &-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        &-circle {
+            flex-shrink: 0;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            border: 1.5px solid $gray-200;
+            background-color: $gray-50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            transition:
+                background-color 0.4s ease,
+                border-color 0.4s ease;
+
+            &--active {
+                background-color: $primary;
+                border-color: $primary;
+            }
+
+            &--completed {
+                background-color: $primary;
+                border-color: $primary;
+            }
+        }
+    }
+}

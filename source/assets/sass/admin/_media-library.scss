@@ -1,6 +1,7 @@
 @use "../utilities/variable" as *;
 
-.pnpnd-top-level-wrapper {
+html:has(.pnpnd-top-level-wrapper),
+body:has(.pnpnd-top-level-wrapper) {
     .upload-php #pnpnd-media-library-sidebar-wrapper {
         margin-left: -20px;
     }
@@ -38,7 +39,7 @@
 
     #pnpnd-media-library-sidebar-wrapper {
         position: fixed;
-        z-index: 9999;
+        z-index: 999;
 
         .pnpnd-media-library-sidebar {
             position: relative;
@@ -232,5 +233,11 @@
         &--uploading {
             max-height: 600px;
         }
+    }
+}
+
+body:has(.pnpnd-media-library-sidebar--site-editor) {
+    .pnpnd-media-folder-filter {
+        display: none;
     }
 }

@@ -15,5 +15,6 @@ export interface CheckboxProps {
     readonly?: boolean;
     visible?: boolean;
     disabled?: boolean;
+    isPro?: boolean;
     onChange?: (checked: boolean) => void;
 }

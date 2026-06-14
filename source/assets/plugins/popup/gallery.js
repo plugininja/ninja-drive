@@ -626,7 +626,8 @@ class PNGallery {
 
             const thumbnailLoader = document.createElement("div");
             thumbnailLoader.className = "pngallery-thumbnail-loader";
-            thumbnailLoader.innerHTML = "<div class=\"pngallery-thumbnail-spinner\"></div>";
+            thumbnailLoader.innerHTML =
+                '<div class="pngallery-thumbnail-spinner"></div>';
 
             const thumbnailImg = document.createElement("img");
             thumbnailImg.className = "pngallery-thumbnail-img";

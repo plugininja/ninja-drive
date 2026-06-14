@@ -1,4 +1,4 @@
-import { ALign, BlockAlign, BorderRadius } from "~/types/styles";
+import { Align, BlockAlign, BorderRadius } from "~/types/styles";
 import { LooseLiteral } from "~/types/utility-types";
 
 type GridColumns = LooseLiteral<number | "auto-fit" | "auto-fill">;
@@ -24,7 +24,7 @@ export interface GridStackProps {
     max?: string;
     gap?: number | string;
     rounded?: BorderRadius;
-    align?: ALign;
+    align?: Align;
     blockAlign?: BlockAlign;
     templateAreas?: string[];
 }

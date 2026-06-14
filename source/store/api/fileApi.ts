@@ -1,19 +1,17 @@
 import { Order, OrderBy, ServerResponse } from "~/types/Types";
+import { DEFAULT_CONFIG } from "../../types/fileApi.types";
 import { getHomeDirFilesRes } from "../../utils/file";
 import { File } from "~/types/file.types";
 import { TBreadcrumb } from "~/types/ui";
-import { baseApi } from "./baseApi";
-import {
-    DEFAULT_CONFIG
-} from "../../types/fileApi.types";
 import { widgetApi } from "./widgetApi";
+import { baseApi } from "./baseApi";
 
 type TGetFolderRequest = {
-    fileKey: string;
+    file_key: string;
     page?: number;
-    perPage?: number;
+    per_page?: number;
     from?: "cache" | "server";
-    orderBy?: OrderBy;
+    order_by?: OrderBy;
     order?: Order;
     search?: string;
     types?: string;
@@ -21,70 +19,70 @@ type TGetFolderRequest = {
 
 type TGetFolderResponse = {
     files: File[];
-    currentPage: number;
-    hasMore: boolean;
-    totalPages: number;
-    totalFiles?: number;
+    current_page: number;
+    has_more: boolean;
+    total_pages: number;
+    total_files?: number;
     breadcrumbs: TBreadcrumb[];
-    isNewFolder?: boolean;
+    is_new_folder?: boolean;
 };
 
 type FilesResponse = ServerResponse<TGetFolderResponse>;
 
 type TCreateFolderRequest = {
-    fileKey: string;
+    file_key: string;
     name: string;
-    widgetId?: string;
+    widget_id?: string;
 };
 
 type TRenameRequest = {
-    fileKey: string;
+    file_key: string;
     name: string;
-    parentKey?: string;
-    widgetId?: string;
+    parent_key?: string;
+    widget_id?: string;
 };
 
 type TDeleteRequest = {
-    fileKeys: string[];
-    parentKey: string;
-    widgetId?: string;
+    file_keys: string[];
+    parent_key: string;
+    widget_id?: string;
 };
 
 export interface ShareLinkRequest {
-    fileKey: string;
+    file_key: string;
     password?: string;
-    expireIn?: string;
-    widgetId?: string;
+    expire_in?: string;
+    widget_id?: string;
 }
 
 export interface DownloadLinkRequest {
-    fileKey: string;
+    file_key: string;
     password?: string;
-    expireIn?: string;
+    expire_in?: string;
     limit?: number;
-    widgetId?: string;
-    exportFormat?: string;
+    widget_id?: string;
+    export_format?: string;
 }
 export interface TMoveRequest {
-    fileKeys: string[];
-    destination: string;
-    currentFolderKey: string;
-    widgetId?: string;
+    file_keys: string[];
+    destination?: string;
+    current_folder_key: string;
+    widget_id?: string;
 }
 export interface TCopyRequest {
-    fileKeys: string[];
-    destination: string;
-    currentFolderKey: string;
-    widgetId?: string;
+    file_keys: string[];
+    destination?: string;
+    current_folder_key: string;
+    widget_id?: string;
 }
 export interface TUploadUrlRequest {
     name: string;
     type: string;
-    folderKey: string;
-    widgetId?: string;
+    folder_key: string;
+    widget_id?: string;
     description?: string;
     page_secret?: string;
-    queueIndex?: number;
+    queue_index?: number;
     extension?: string;
     size?: number;
     post_id?: number;
@@ -95,11 +93,11 @@ export const fileApi = baseApi.injectEndpoints({
         getFiles: builder.query<FilesResponse, TGetFolderRequest>({
             async queryFn(request, _api, _extra, fetchWithBQ) {
                 const {
-                    fileKey,
-                    orderBy,
+                    file_key,
+                    order_by,
                     order,
                     page = 1,
-                    perPage = DEFAULT_CONFIG.PER_PAGE_LIMIT,
+                    per_page = DEFAULT_CONFIG.PER_PAGE_LIMIT,
                     search,
                     types,
                     from,
@@ -108,16 +106,16 @@ export const fileApi = baseApi.injectEndpoints({
                 try {
                     let response: FilesResponse;
 
-                    if (fileKey === "home") {
+                    if (file_key === "home") {
                         response = await getHomeDirFilesRes();
                     } else {
                         const result = await fetchWithBQ({
-                            url: `folder/${fileKey}`,
+                            url: `folder/${file_key}`,
                             params: {
-                                orderBy,
+                                order_by,
                                 order,
                                 page,
-                                perPage,
+                                per_page,
                                 search,
                                 types,
                                 from,
@@ -132,7 +130,7 @@ export const fileApi = baseApi.injectEndpoints({
 
                         if (response.data?.breadcrumbs) {
                             response.data.breadcrumbs = [
-                                { fileKey: "home", name: "Home" },
+                                { file_key: "home", name: "Home" },
                                 ...response.data.breadcrumbs,
                             ];
                         }
@@ -167,8 +165,8 @@ export const fileApi = baseApi.injectEndpoints({
             },
 
             serializeQueryArgs: ({ queryArgs }) => {
-                const { fileKey, search } = queryArgs;
-                return search ? `${fileKey}-search-${search}` : fileKey;
+                const { file_key, search } = queryArgs;
+                return search ? `${file_key}-search-${search}` : file_key;
             },
 
             merge(currentCache, newResponse, { arg }) {
@@ -180,10 +178,10 @@ export const fileApi = baseApi.injectEndpoints({
                     currentCache.data.files.push(...newResponse.data.files);
                 }
 
-                currentCache.data.hasMore = newResponse.data.hasMore;
-                currentCache.data.totalFiles = newResponse.data.totalFiles;
-                currentCache.data.totalPages = newResponse.data.totalPages;
-                currentCache.data.currentPage = newResponse.data.currentPage;
+                currentCache.data.has_more = newResponse.data.has_more;
+                currentCache.data.total_files = newResponse.data.total_files;
+                currentCache.data.total_pages = newResponse.data.total_pages;
+                currentCache.data.current_page = newResponse.data.current_page;
                 currentCache.data.breadcrumbs = newResponse.data.breadcrumbs;
             },
 
@@ -191,36 +189,36 @@ export const fileApi = baseApi.injectEndpoints({
                 if (!previousArg || !currentArg) return true;
                 return Boolean(
                     currentArg.page !== previousArg.page ||
-                        currentArg.fileKey !== previousArg.fileKey ||
+                        currentArg.file_key !== previousArg.file_key ||
                         currentArg.order !== previousArg.order ||
-                        currentArg.orderBy !== previousArg.orderBy ||
+                        currentArg.order_by !== previousArg.order_by ||
                         currentArg.from !== previousArg.from ||
                         currentArg.search !== previousArg.search ||
                         currentArg.types !== previousArg.types,
                 );
             },
 
-            providesTags: (_res, _err, { fileKey }) => [
-                { type: "Folder", id: fileKey },
+            providesTags: (_res, _err, { file_key }) => [
+                { type: "Folder", id: file_key },
             ],
         }),
 
-        getFile: builder.query<ServerResponse<File>, { fileKey: string }>({
-            query: ({ fileKey }) => ({
-                url: `file/${fileKey}`,
+        getFile: builder.query<ServerResponse<File>, { file_key: string }>({
+            query: ({ file_key }) => ({
+                url: `file/${file_key}`,
             }),
-            providesTags: (_res, _err, { fileKey }) => [
-                { type: "File", id: fileKey },
+            providesTags: (_res, _err, { file_key }) => [
+                { type: "File", id: file_key },
             ],
         }),
 
         getFilesByKeys: builder.query<
             ServerResponse<{ files: File[] }>,
-            { fileKeys: string[] }
+            { file_keys: string[] }
         >({
-            query: ({ fileKeys }) => ({
+            query: ({ file_keys }) => ({
                 url: "file/by-keys",
-                params: { fileKeys: fileKeys.join(",") },
+                params: { file_keys: file_keys.join(",") },
             }),
         }),
 
@@ -228,13 +226,13 @@ export const fileApi = baseApi.injectEndpoints({
             ServerResponse<File>,
             TCreateFolderRequest
         >({
-            query: ({ fileKey, name, widgetId }) => {
+            query: ({ file_key, name, widget_id }) => {
                 const body: TCreateFolderRequest = {
-                    fileKey,
+                    file_key,
                     name,
                 };
-                if (widgetId) {
-                    body.widgetId = widgetId;
+                if (widget_id) {
+                    body.widget_id = widget_id;
                 }
                 return {
                     url: "/folder/create",
@@ -246,16 +244,16 @@ export const fileApi = baseApi.injectEndpoints({
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    if (arg.widgetId) {
+                    if (arg.widget_id) {
                         const folderKey =
-                            arg.fileKey === "my-drive" ? "/" : arg.fileKey;
+                            arg.file_key === "my-drive" ? "/" : arg.file_key;
 
                         dispatch(
                             widgetApi.util.updateQueryData(
                                 "getModuleFiles",
                                 {
-                                    fileKey: folderKey,
-                                    id: arg.widgetId,
+                                    file_key: folderKey,
+                                    id: arg.widget_id,
                                     search: folderKey === "/" ? null : "",
                                 },
                                 (draft) => {
@@ -272,7 +270,7 @@ export const fileApi = baseApi.injectEndpoints({
                             fileApi.util.updateQueryData(
                                 "getFiles",
                                 {
-                                    fileKey: arg.fileKey,
+                                    file_key: arg.file_key,
                                 },
                                 (draft) => {
                                     const newFile = data.data;
@@ -289,12 +287,12 @@ export const fileApi = baseApi.injectEndpoints({
         }),
 
         deleteFiles: builder.mutation<ServerResponse<null>, TDeleteRequest>({
-            query: ({ fileKeys, widgetId }) => {
+            query: ({ file_keys, widget_id }) => {
                 const body: any = {
-                    fileKeys,
+                    file_keys,
                 };
-                if (widgetId) {
-                    body.widgetId = widgetId;
+                if (widget_id) {
+                    body.widget_id = widget_id;
                 }
                 return {
                     url: "/file",
@@ -307,18 +305,18 @@ export const fileApi = baseApi.injectEndpoints({
                 try {
                     await queryFulfilled;
 
-                    if (!arg.widgetId) {
+                    if (!arg.widget_id) {
                         dispatch(
                             fileApi.util.updateQueryData(
                                 "getFiles",
-                                { fileKey: arg.parentKey },
+                                { file_key: arg.parent_key },
                                 (draft) => {
                                     if (!draft?.data?.files) return;
 
                                     draft.data.files = draft.data.files.filter(
                                         (file) =>
-                                            !arg.fileKeys.includes(
-                                                file.fileKey,
+                                            !arg.file_keys.includes(
+                                                file.file_key,
                                             ),
                                     );
                                 },
@@ -329,17 +327,17 @@ export const fileApi = baseApi.injectEndpoints({
                             widgetApi.util.updateQueryData(
                                 "getModuleFiles",
                                 {
-                                    fileKey: arg.parentKey || "home",
-                                    id: arg.widgetId,
-                                    search: arg.parentKey === "/" ? null : "",
+                                    file_key: arg.parent_key || "home",
+                                    id: arg.widget_id,
+                                    search: arg.parent_key === "/" ? null : "",
                                 },
                                 (draft) => {
                                     if (!draft.data) return;
                                     draft.data.widget.data.source.files =
                                         draft?.data?.widget.data.source.files.filter(
                                             (file) =>
-                                                !arg.fileKeys.includes(
-                                                    file.fileKey,
+                                                !arg.file_keys.includes(
+                                                    file.file_key,
                                                 ),
                                         );
                                 },
@@ -347,11 +345,11 @@ export const fileApi = baseApi.injectEndpoints({
                         );
                     }
 
-                    arg.fileKeys.forEach((fileKey) => {
+                    arg.file_keys.forEach((file_key) => {
                         dispatch(
                             fileApi.util.updateQueryData(
                                 "getFiles",
-                                { fileKey },
+                                { file_key },
                                 (draft) => {
                                     if (!draft?.data) return;
 
@@ -369,10 +367,10 @@ export const fileApi = baseApi.injectEndpoints({
         }),
 
         renameFile: builder.mutation<ServerResponse<File>, TRenameRequest>({
-            query: ({ fileKey, name, widgetId }) => {
-                const params: TRenameRequest = { fileKey, name };
-                if (widgetId) {
-                    params.widgetId = widgetId;
+            query: ({ file_key, name, widget_id }) => {
+                const params: TRenameRequest = { file_key, name };
+                if (widget_id) {
+                    params.widget_id = widget_id;
                 }
                 return {
                     url: "/file/rename",
@@ -384,11 +382,11 @@ export const fileApi = baseApi.injectEndpoints({
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    if (!arg.widgetId) {
+                    if (!arg.widget_id) {
                         dispatch(
                             fileApi.util.updateQueryData(
                                 "getFiles",
-                                { fileKey: arg.parentKey || "home" },
+                                { file_key: arg.parent_key || "home" },
                                 (draft) => {
                                     if (!draft?.data?.files) return;
 
@@ -396,7 +394,7 @@ export const fileApi = baseApi.injectEndpoints({
                                     if (!renamedFile) return;
 
                                     const index = draft.data.files.findIndex(
-                                        (f) => f.fileKey === arg.fileKey,
+                                        (f) => f.file_key === arg.file_key,
                                     );
 
                                     if (index === -1) return;
@@ -409,7 +407,7 @@ export const fileApi = baseApi.injectEndpoints({
                         dispatch(
                             fileApi.util.updateQueryData(
                                 "getFiles",
-                                { fileKey: arg.fileKey },
+                                { file_key: arg.file_key },
                                 (draft) => {
                                     if (!draft?.data?.breadcrumbs) return;
                                     const renamedFile = data?.data;
@@ -417,7 +415,7 @@ export const fileApi = baseApi.injectEndpoints({
 
                                     draft.data.breadcrumbs =
                                         draft.data.breadcrumbs.map((b) =>
-                                            b.fileKey === arg.fileKey
+                                            b.file_key === arg.file_key
                                                 ? {
                                                       ...b,
                                                       name: renamedFile.name,
@@ -428,31 +426,27 @@ export const fileApi = baseApi.injectEndpoints({
                             ),
                         );
                     } else {
+                        const parentKey = arg.parent_key || "/";
                         dispatch(
                             widgetApi.util.updateQueryData(
                                 "getModuleFiles",
                                 {
-                                    fileKey: arg.parentKey || "home",
-                                    id: arg.widgetId,
-                                    search: arg.parentKey === "/" ? null : "",
+                                    file_key: parentKey,
+                                    id: arg.widget_id,
+                                    search: parentKey === "/" ? null : "",
                                 },
                                 (draft) => {
-                                    if (
-                                        !draft?.data?.widget.data.source
-                                            .files
-                                    )
+                                    if (!draft?.data?.widget.data.source.files)
                                         return;
                                     const renamedFile = data?.data;
-
                                     if (!renamedFile) return;
                                     const index =
                                         draft.data.widget.data.source.files.findIndex(
-                                            (f) => f.fileKey === arg.fileKey,
+                                            (f) => f.file_key === arg.file_key,
                                         );
                                     if (index === -1) return;
-                                    draft.data.widget.data.source.files[
-                                        index
-                                    ] = renamedFile;
+                                    draft.data.widget.data.source.files[index] =
+                                        renamedFile;
                                 },
                             ),
                         );
@@ -466,13 +460,13 @@ export const fileApi = baseApi.injectEndpoints({
         }),
 
         shareLink: builder.mutation<ServerResponse<string>, ShareLinkRequest>({
-            query: ({ fileKey, password, expireIn, widgetId }) => {
-                const params: any = { fileKey, password, expireIn };
-                if (widgetId) {
-                    params.widgetId = widgetId;
+            query: ({ file_key, password, expire_in, widget_id }) => {
+                const params: any = { file_key, password, expire_in };
+                if (widget_id) {
+                    params.widget_id = widget_id;
                 }
                 return {
-                    url: `/file/share/${fileKey}`,
+                    url: `/file/share/${file_key}`,
                     params,
                 };
             },
@@ -483,25 +477,25 @@ export const fileApi = baseApi.injectEndpoints({
             DownloadLinkRequest
         >({
             query: ({
-                fileKey,
+                file_key,
                 password,
-                expireIn,
-                widgetId,
+                expire_in,
+                widget_id,
                 limit,
-                exportFormat,
+                export_format,
             }) => {
                 const params: any = {
-                    fileKey,
+                    file_key,
                     password,
-                    expireIn,
+                    expire_in,
                     limit,
-                    exportFormat,
+                    export_format,
                 };
-                if (widgetId) {
-                    params.widgetId = widgetId;
+                if (widget_id) {
+                    params.widget_id = widget_id;
                 }
                 return {
-                    url: `/file/download/${fileKey}`,
+                    url: `/file/download/${file_key}`,
                     params,
                 };
             },
@@ -509,19 +503,19 @@ export const fileApi = baseApi.injectEndpoints({
 
         move: builder.mutation<ServerResponse<null>, TMoveRequest>({
             query: ({
-                fileKeys,
+                file_keys,
                 destination,
-                widgetId,
-                currentFolderKey,
+                widget_id,
+                current_folder_key,
             }) => {
-                const body: TMoveRequest = {
-                    fileKeys,
-                    destination,
-                    currentFolderKey,
+                const body: TMoveRequest & { destination_key?: string } = {
+                    file_keys,
+                    destination_key: destination,
+                    current_folder_key,
                 };
 
-                if (widgetId) {
-                    body.widgetId = widgetId;
+                if (widget_id) {
+                    body.widget_id = widget_id;
                 }
 
                 return {
@@ -534,18 +528,18 @@ export const fileApi = baseApi.injectEndpoints({
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     await queryFulfilled;
-                    if (!arg.widgetId) {
+                    if (!arg.widget_id) {
                         dispatch(
                             fileApi.util.updateQueryData(
                                 "getFiles",
-                                { fileKey: arg.currentFolderKey },
+                                { file_key: arg.current_folder_key },
                                 (draft) => {
                                     if (!draft?.data?.files) return;
 
                                     draft.data.files = draft.data.files.filter(
                                         (file) =>
-                                            !arg.fileKeys.includes(
-                                                file.fileKey,
+                                            !arg.file_keys.includes(
+                                                file.file_key,
                                             ),
                                     );
                                 },
@@ -556,25 +550,22 @@ export const fileApi = baseApi.injectEndpoints({
                             widgetApi.util.updateQueryData(
                                 "getModuleFiles",
                                 {
-                                    fileKey: arg.currentFolderKey,
-                                    id: arg.widgetId,
+                                    file_key: arg.current_folder_key,
+                                    id: arg.widget_id,
                                     search:
-                                        arg.currentFolderKey === "/"
+                                        arg.current_folder_key === "/"
                                             ? null
                                             : "",
                                 },
                                 (draft) => {
-                                    if (
-                                        !draft?.data?.widget.data.source
-                                            .files
-                                    )
+                                    if (!draft?.data?.widget.data.source.files)
                                         return;
 
                                     draft.data.widget.data.source.files =
                                         draft?.data?.widget.data.source.files.filter(
                                             (file) =>
-                                                !arg.fileKeys.includes(
-                                                    file.fileKey,
+                                                !arg.file_keys.includes(
+                                                    file.file_key,
                                                 ),
                                         );
                                 },
@@ -589,18 +580,18 @@ export const fileApi = baseApi.injectEndpoints({
 
         copy: builder.mutation<ServerResponse<null>, TCopyRequest>({
             query: ({
-                fileKeys,
+                file_keys,
                 destination,
-                widgetId,
-                currentFolderKey,
+                widget_id,
+                current_folder_key,
             }) => {
-                const body: TCopyRequest = {
-                    fileKeys,
-                    destination,
-                    currentFolderKey,
+                const body: TCopyRequest & { destination_key?: string } = {
+                    file_keys,
+                    destination_key: destination,
+                    current_folder_key,
                 };
-                if (widgetId) {
-                    body.widgetId = widgetId;
+                if (widget_id) {
+                    body.widget_id = widget_id;
                 }
                 return {
                     url: "/file/copy",
@@ -622,7 +613,7 @@ export const fileApi = baseApi.injectEndpoints({
                     //             if (!draft?.data?.files) return;
 
                     //             draft.data.files = draft.data.files.filter(
-                    //                 (file) => !arg.fileKeys.includes(file.fileKey)
+                    //                 (file) => !arg.file_keys.includes(file.file_key)
                     //             );
                     //         }
                     //     )
@@ -636,20 +627,20 @@ export const fileApi = baseApi.injectEndpoints({
         getFolderTree: builder.query<
             ServerResponse<{ files: File[] }>,
             {
-                fileKey: string;
-                widgetId?: string;
+                file_key: string;
+                widget_id?: string;
                 order?: Order;
-                orderBy?: OrderBy;
+                order_by?: OrderBy;
             }
         >({
-            query: ({ fileKey, widgetId, order, orderBy }) => {
+            query: ({ file_key, widget_id, order, order_by }) => {
                 const params: Record<string, string> = {
-                    fileKey,
+                    file_key,
                 };
 
-                if (widgetId) params.widgetId = widgetId;
+                if (widget_id) params.widget_id = widget_id;
                 if (order) params.order = order;
-                if (orderBy) params.orderBy = orderBy;
+                if (order_by) params.order_by = order_by;
 
                 return { url: "folder/tree", params };
             },
@@ -661,29 +652,29 @@ export const fileApi = baseApi.injectEndpoints({
             TUploadUrlRequest
         >({
             query: ({
-                folderKey,
-                widgetId,
+                folder_key,
+                widget_id,
                 type,
                 description,
                 extension,
                 page_secret,
-                queueIndex,
+                queue_index,
                 size,
                 name,
                 post_id,
             }) => {
                 const params: TUploadUrlRequest = {
-                    folderKey,
+                    folder_key,
                     type,
                     description,
                     extension,
                     page_secret,
-                    queueIndex,
+                    queue_index,
                     size,
                     name,
                 };
-                if (widgetId) {
-                    params.widgetId = widgetId;
+                if (widget_id) {
+                    params.widget_id = widget_id;
                 }
 
                 if (post_id) {
@@ -700,30 +691,26 @@ export const fileApi = baseApi.injectEndpoints({
         uploadedFile: builder.query<
             ServerResponse<File>,
             {
-                fileId: string;
-                uploadId: string;
-                folderKey: string;
-                widgetId?: string;
+                file_id: string;
+                upload_id: string;
+                folder_key: string;
+                widget_id?: string;
             }
         >({
             query: (args) => ({
                 url: "file/upload",
-                params: {
-                    ...args,
-                    folderKey:
-                        args.folderKey === "/" ? "my-drive" : args.folderKey,
-                },
+                params: args,
             }),
         }),
 
         openInGoogleDrive: builder.mutation<
             ServerResponse<string>,
-            { fileKey: string; widgetId?: string }
+            { file_key: string; widget_id?: string }
         >({
-            query: ({ fileKey, widgetId }) => ({
-                url: `file/open-in-drive/${fileKey}`,
+            query: ({ file_key, widget_id }) => ({
+                url: `file/open-in-drive/${file_key}`,
                 method: "GET",
-                params: widgetId ? { widgetId } : undefined,
+                params: widget_id ? { widget_id } : undefined,
             }),
         }),
     }),

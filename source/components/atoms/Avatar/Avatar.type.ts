@@ -1,4 +1,4 @@
-import { BackgroundColor, BorderRadius } from "../../types/styles";
+import { BackgroundColor, BorderRadius } from "~/types/styles";
 
 export interface AvatarProps {
     id?: string;

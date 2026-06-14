@@ -7,7 +7,7 @@ type Dependencies = React.DependencyList;
 export default function useDebounce(
     effect: DebounceEffect,
     dependencies: Dependencies,
-    delay: number
+    delay: number,
 ): void {
     const callback = useCallback(effect, dependencies);
 

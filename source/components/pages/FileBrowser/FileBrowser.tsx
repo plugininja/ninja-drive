@@ -1,33 +1,34 @@
+import FilesViews from "~/components/organisms/FilesViews/FilesViews";
+import FileInfo from "~/components/organisms/FilesViews/FileInfo";
+import Uploader from "~/components/organisms/Uploader/Uploader";
+import { useSyncAccountMutation } from "~/store/api/authApi";
+import MainLayout from "~/components/templates/MainLayout";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "@wordpress/element";
+import { selectAuth } from "~/store/features/authSlice";
 import { useFileActions } from "~/hooks/useFileActions";
 import { checkSelectionFiles } from "~/utils/helpers";
-import FilesViews from "~/components/organisms/FilesViews/FilesViews";
 import FileSidebar from "./components/FileSidebar";
 import { MENU_KEYS, MenuKey } from "~/types/Types";
-import MainLayout from "~/components/templates/MainLayout";
 import FileTopbar from "./components/FileTopbar";
-import FileInfo from "~/components/organisms/FilesViews/FileInfo";
 import { useGallery } from "~/hooks/useGallery";
-import Uploader from "~/components/organisms/Uploader/Uploader";
+import { useAppSelector } from "~/store/hooks";
 import { useFiles } from "~/hooks/useFiles";
 import { File } from "~/types/file.types";
 import { isFolder } from "~/utils/file";
 import { TLayout } from "~/types/ui";
-import { useSyncAccountMutation } from "~/store/api/authApi";
-import { useAppSelector } from "~/store/hooks";
-import { selectAuth } from "~/store/features/authSlice";
 
 const FileBrowser: React.FC = () => {
     const [showUploader, setShowUploader] = useState(false);
     const [isFileSelecting, setIsFileSelecting] = useState<boolean>(false);
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [selected_files, setSelectedFiles] = useState<File[]>([]);
     const [layout, setLayout] = useLocalStorage<TLayout>(
         "pnpnd-layout-file-browser",
         "grid",
     );
-    const { activeAccount } = useAppSelector(selectAuth);
+
+    const { active_account } = useAppSelector(selectAuth);
 
     const [syncAccount] = useSyncAccountMutation();
 
@@ -48,7 +49,7 @@ const FileBrowser: React.FC = () => {
         openFolder,
         loading,
         loadMoreRef,
-        hasMore,
+        has_more,
         loadingMore,
         refresh,
         isError,
@@ -59,7 +60,7 @@ const FileBrowser: React.FC = () => {
         removeSuggestedFile,
     } = useFiles(savedFolder || "home");
 
-    const { activeFolder, order, orderBy } = queryArgs;
+    const { active_folder, order, order_by } = queryArgs;
 
     const { viewFile } = useGallery(files);
 
@@ -79,18 +80,18 @@ const FileBrowser: React.FC = () => {
     } = useFileActions();
 
     useEffect(() => {
-        if (activeFolder !== savedFolder) setSavedFolder(activeFolder);
+        if (active_folder !== savedFolder) setSavedFolder(active_folder);
 
-        if (activeFolder && MENU_KEYS.includes(activeFolder as MenuKey)) {
-            navigate(`/file-browser/${activeFolder}`);
+        if (active_folder && MENU_KEYS.includes(active_folder as MenuKey)) {
+            navigate(`/file-browser/${active_folder}`);
         }
-    }, [activeFolder]);
+    }, [active_folder]);
 
     useEffect(() => {
         if (
             menuKey &&
             breadcrumbs.length &&
-            !breadcrumbs.some((b) => b.fileKey === menuKey)
+            !breadcrumbs.some((b) => b.file_key === menuKey)
         ) {
             openFolder(menuKey);
         }
@@ -108,7 +109,7 @@ const FileBrowser: React.FC = () => {
     const handleSelectFile = (newSelectedFiles: File | File[]) => {
         const _newSelectedFiles = checkSelectionFiles(
             newSelectedFiles,
-            selectedFiles,
+            selected_files,
         );
         setSelectedFiles(_newSelectedFiles);
     };
@@ -124,17 +125,17 @@ const FileBrowser: React.FC = () => {
         }
 
         if (isFolder(file.extension || "")) {
-            openFolder(file.fileKey);
+            openFolder(file.file_key);
         } else {
-            viewFile(file.fileKey);
+            viewFile(file.file_key);
         }
     };
 
     const handleDoubleClick = (file: File) => {
         if (isFolder(file.extension || "")) {
-            openFolder(file.fileKey);
+            openFolder(file.file_key);
         } else {
-            viewFile(file.fileKey);
+            viewFile(file.file_key);
         }
     };
 
@@ -145,7 +146,7 @@ const FileBrowser: React.FC = () => {
     ) => {
         switch (actionId) {
             case "preview":
-                viewFile(file.fileKey);
+                viewFile(file.file_key);
                 break;
             case "open":
                 openGoogleDrive(file);
@@ -163,37 +164,39 @@ const FileBrowser: React.FC = () => {
                 downloadLinkOpen(file);
                 break;
             case "copy":
-                copy({ file, activeFolderKey: activeFolder, breadcrumbs });
+                copy({ file, active_folder_key: active_folder, breadcrumbs });
                 break;
             case "move":
-                move({ file, activeFolderKey: activeFolder, breadcrumbs });
+                move({ file, active_folder_key: active_folder, breadcrumbs });
                 break;
             case "rename":
-                rename(file, activeFolder);
+                rename(file, active_folder);
                 break;
             case "hide":
-                removeSuggestedFile(file.fileKey);
+                removeSuggestedFile(file.file_key);
                 break;
             case "delete":
-                const fileKeys =
-                    isFileSelecting && selectedFiles.length > 0
-                        ? selectedFiles.map((file) => file.fileKey)
-                        : [file.fileKey];
-                deleteFile(fileKeys, activeFolder);
+                const file_keys =
+                    isFileSelecting && selected_files.length > 0
+                        ? selected_files.map((file) => file.file_key)
+                        : [file.file_key];
+                deleteFile(file_keys, active_folder);
                 break;
             default:
                 break;
         }
     };
+
     const handleUploadComplete = async () => {
         try {
             await syncAccount({
-                accountKey: activeAccount?.accountKey || "",
+                account_key: active_account?.account_key || "",
             }).unwrap();
         } catch (error) {
             console.error(error);
         }
     };
+
     const uploader = (
         <Uploader
             background="white"
@@ -201,8 +204,8 @@ const FileBrowser: React.FC = () => {
             shadow
             data={{
                 minFileSize: 0,
-                maxFileSize: pnpnd.isPro !== "1" ? 5 : 0,
-                activeFolder: activeFolder,
+                maxFileSize: pnpnd.is_pro !== "1" ? 5 : 0,
+                activeFolder: active_folder,
                 onFileUpload: () => {},
                 setIsUploading: setShowUploader,
                 uploadImmediately: true,
@@ -217,15 +220,15 @@ const FileBrowser: React.FC = () => {
         <MainLayout className="pnpnd-file-browser-container">
             <FileSidebar
                 openFolder={openFolder}
-                activeFolder={queryArgs.activeFolder}
+                activeFolder={queryArgs.active_folder}
                 loading={loading}
-                sorting={{ order, orderBy }}
+                sorting={{ order, order_by }}
             />
 
             <MainLayout.ContentWrapper>
                 <FileTopbar
                     refresh={refresh}
-                    activeFolder={activeFolder}
+                    activeFolder={active_folder}
                     queryArgs={queryArgs}
                     expandSearch={setQueryArgs}
                     openFolder={openFolder}
@@ -250,17 +253,17 @@ const FileBrowser: React.FC = () => {
                         layout={layout}
                         setLayout={setLayout}
                         files={files}
-                        activeFolder={activeFolder}
+                        activeFolder={active_folder}
                         breadcrumbs={breadcrumbs}
                         openFolder={openFolder}
                         activeFile={activeFile}
                         setActiveFile={viewDetails}
-                        selectedFiles={selectedFiles}
+                        selected_files={selected_files}
                         setSelectedFiles={handleSelectFile}
-                        filesStatus={{ loading, loadingMore, hasMore }}
+                        filesStatus={{ loading, loadingMore, has_more }}
                         showUploader={showUploader}
                         setShowUploader={setShowUploader}
-                        sorting={{ order, orderBy }}
+                        sorting={{ order, order_by }}
                         setSorting={(value) =>
                             setQueryArgs({ ...queryArgs, ...value })
                         }
@@ -282,7 +285,7 @@ const FileBrowser: React.FC = () => {
                             onMenuClick={handleContextMenuClick}
                         />
 
-                        {hasMore && (
+                        {has_more && (
                             <div
                                 ref={loadMoreRef}
                                 style={{ height: "20px", marginTop: "-20px" }}
@@ -290,15 +293,15 @@ const FileBrowser: React.FC = () => {
                         )}
                     </FilesViews>
 
-                    {activeFile && (
-                        <FileInfo
-                            activeFile={activeFile}
-                            onClose={() => viewDetails(undefined)}
-                        />
-                    )}
-
                     {showUploader && uploader}
                 </MainLayout.Content>
+
+                {activeFile && (
+                    <FileInfo
+                        activeFile={activeFile}
+                        onClose={() => viewDetails(undefined)}
+                    />
+                )}
             </MainLayout.ContentWrapper>
         </MainLayout>
     );

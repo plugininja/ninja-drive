@@ -81,6 +81,8 @@
 
     .pnpnd-file-selector-modal,
     .pnpnd-widget-builder-modal {
+        overflow: hidden;
+
         padding: 0 !important;
         .pn-sidebar {
             height: 100%;

@@ -1,15 +1,17 @@
+import { getDocumentExportTypes, isExportDocument } from "~/utils/file";
 import { useEffect, useMemo, useState } from "@wordpress/element";
 import { useCustomAlert } from "~/components/molecules/Alert";
 import InlineStack from "~/components/molecules/InlineStack";
 import IconButton from "~/components/molecules/IconButton";
 import BlockStack from "~/components/molecules/BlockStack";
 import Switcher from "~/components/atoms/Switcher";
-import { File } from "~/types/file.types";
 import Card from "~/components/molecules/Card";
 import Status from "~/components/atoms/Status";
 import Button from "~/components/atoms/Button";
-import { __ } from "@wordpress/i18n";
 import Text from "~/components/atoms/Text";
+import Icon from "~/components/atoms/Icon";
+import { File } from "~/types/file.types";
+import { __ } from "@wordpress/i18n";
 import {
     SelectControl,
     __experimentalInputControl as InputControl,
@@ -22,14 +24,12 @@ import {
     DownloadLinkRequest,
     useDownloadLinkMutation,
 } from "~/store/api/fileApi";
-import Icon from "~/components/atoms/Icon";
-import { getDocumentExportTypes, isExportDocument } from "~/utils/file";
 
 interface DownloadLinkContentProps {
     file: File;
-    onConfirm: (fileKey: string) => Promise<void>;
+    onConfirm: (file_key: string) => Promise<void>;
     onCancel: () => void;
-    widgetId?: string;
+    widget_id?: string;
 }
 
 const validityOptions: { value: string; label: string }[] = [
@@ -49,7 +49,7 @@ export function DownloadLinkContent({
     file,
     onConfirm,
     onCancel,
-    widgetId,
+    widget_id,
 }: DownloadLinkContentProps) {
     const [isEncrypted, setIsEncrypted] = useState(false);
     const [link, setLink] = useState("");
@@ -83,7 +83,7 @@ export function DownloadLinkContent({
         customValidity,
         isEncrypted,
         pwd,
-        file?.fileKey,
+        file?.file_key,
         resetMutation,
     ]);
 
@@ -120,7 +120,10 @@ export function DownloadLinkContent({
             showAlert({
                 toast: true,
                 type: "error",
-                text: __("Please fix errors before generating the link.", "ninja-drive"),
+                text: __(
+                    "Please fix errors before generating the link.",
+                    "ninja-drive",
+                ),
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -129,19 +132,19 @@ export function DownloadLinkContent({
         }
 
         const config: DownloadLinkRequest = {
-            fileKey: file?.fileKey || "",
+            file_key: file?.file_key || "",
             password: isEncrypted ? pwd : undefined,
             limit,
-            exportFormat: exportFormat,
+            export_format: exportFormat,
         };
 
         if (validity !== "0") {
-            config.expireIn =
+            config.expire_in =
                 validity === "custom" ? customValidity.toString() : validity;
         }
 
-        // if (widgetId) {
-        //     config.widgetId = widgetId;
+        // if (widget_id) {
+        //     config.widget_id = widget_id;
         // }
 
         try {
@@ -341,11 +344,11 @@ export function useDownloadLink() {
     const openDownloadLink = ({
         file,
         onConfirm,
-        widgetId,
+        widget_id,
     }: {
         file: File;
-        widgetId?: string;
-        onConfirm: (fileKey: string) => Promise<void>;
+        widget_id?: string;
+        onConfirm: (file_key: string) => Promise<void>;
     }) => {
         showAlert({
             id: "download-link-modal",
@@ -359,12 +362,12 @@ export function useDownloadLink() {
             html: (
                 <DownloadLinkContent
                     file={file}
-                    widgetId={widgetId}
+                    widget_id={widget_id}
                     onCancel={() => {
                         closeAlert("download-link-modal");
                     }}
-                    onConfirm={async (fileKey) => {
-                        await onConfirm(fileKey);
+                    onConfirm={async (file_key) => {
+                        await onConfirm(file_key);
 
                         showAlert({
                             toast: true,

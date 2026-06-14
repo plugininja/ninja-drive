@@ -1,32 +1,32 @@
 import { Account, ServerResponse } from "~/types/Types";
-import { baseApi } from "./baseApi";
 import { TRootState } from "../store";
+import { baseApi } from "./baseApi";
 
 type AccountsResponse = ServerResponse<Account[]>;
 
 export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAccounts: builder.query<AccountsResponse, { accountKey?: string }>({
-            async queryFn({ accountKey = "all" }, api, _extra, fetchWithBQ) {
+        getAccounts: builder.query<AccountsResponse, { account_key?: string }>({
+            async queryFn({ account_key = "all" }, api, _extra, fetchWithBQ) {
                 const state = api.getState() as TRootState;
-                const existingAccounts = state.auth.loginAccounts;
+                const existing_accounts = state.auth.login_accounts;
 
-                if (!existingAccounts) {
-                    const localData = pnpnd.accounts;
+                if (!existing_accounts) {
+                    const local_data = pnpnd.accounts;
 
-                    if (localData) {
+                    if (local_data) {
                         return {
                             data: {
                                 message: "success",
                                 success: true,
-                                data: localData,
+                                data: local_data,
                             } as AccountsResponse,
                         };
                     }
                 }
 
                 const result = await fetchWithBQ({
-                    url: `account/${accountKey}`,
+                    url: `account/${account_key}`,
                 });
 
                 if (result.error) {
@@ -44,23 +44,23 @@ export const authApi = baseApi.injectEndpoints({
         getAuthUrl: builder.query<
             ServerResponse<string>,
             {
-                accountKey: string;
-                connectionType?: "automatic" | "manual";
-                appKey?: string;
-                appSecret?: string;
+                account_key: string;
+                connection_type?: "automatic" | "manual";
+                app_key?: string;
+                app_secret?: string;
             }
         >({
-            query: ({ accountKey, appKey, appSecret, connectionType }) => {
-                const params: Record<string, string> = { accountKey };
+            query: ({ account_key, app_key, app_secret, connection_type }) => {
+                const params: Record<string, string> = { account_key };
 
-                if (appKey) {
-                    params.appKey = appKey;
+                if (app_key) {
+                    params.app_key = app_key;
                 }
-                if (appSecret) {
-                    params.appSecret = appSecret;
+                if (app_secret) {
+                    params.app_secret = app_secret;
                 }
-                if (connectionType) {
-                    params.connectionType = connectionType;
+                if (connection_type) {
+                    params.connection_type = connection_type;
                 }
 
                 return {
@@ -72,20 +72,20 @@ export const authApi = baseApi.injectEndpoints({
         }),
 
         switchAccount: builder.mutation<ServerResponse<void>, string>({
-            query: (accountKey) => {
+            query: (account_key) => {
                 return {
                     url: "account/switch",
                     method: "POST",
-                    body: { accountKey },
+                    body: { account_key },
                 };
             },
-            invalidatesTags: ["Auth", "Folder"],
+            invalidatesTags: ["Auth", "Folder", "Folder_Tree"],
         }),
 
         deleteAccount: builder.mutation<ServerResponse<void>, string>({
-            query: (accountKey) => {
+            query: (account_key) => {
                 return {
-                    url: `account/${accountKey}`,
+                    url: `account/${account_key}`,
                     method: "DELETE",
                 };
             },
@@ -93,7 +93,9 @@ export const authApi = baseApi.injectEndpoints({
         }),
 
         getUserRoles: builder.query<
-            ServerResponse<{ roles: { roleKey: string; roleName: string }[] }>,
+            ServerResponse<{
+                roles: { role_key: string; role_name: string }[];
+            }>,
             void
         >({
             query: () => {
@@ -105,16 +107,16 @@ export const authApi = baseApi.injectEndpoints({
         }),
 
         getUserList: builder.query<
-            ServerResponse<{ users: { ID: number; user_login: string }[] }>,
+            ServerResponse<{ users: { id: number; user_login: string }[] }>,
             {
-                hideCurrentUser?: boolean;
+                hide_current_user?: boolean;
             }
         >({
-            query: ({ hideCurrentUser }) => {
+            query: ({ hide_current_user }) => {
                 return {
                     url: "user/list",
                     method: "GET",
-                    params: { hideCurrentUser: hideCurrentUser },
+                    params: { hide_current_user: hide_current_user },
                 };
             },
         }),
@@ -122,14 +124,14 @@ export const authApi = baseApi.injectEndpoints({
         syncAccount: builder.mutation<
             ServerResponse<null>,
             {
-                accountKey: string;
+                account_key: string;
             }
         >({
-            query: ({ accountKey }) => {
+            query: ({ account_key }) => {
                 return {
                     url: "account/sync",
                     method: "POST",
-                    params: { accountKey },
+                    params: { account_key },
                 };
             },
 
@@ -138,13 +140,13 @@ export const authApi = baseApi.injectEndpoints({
 
         syncAccountStatus: builder.query<
             ServerResponse<{ syncing: boolean }>,
-            { accountKey: string }
+            { account_key: string }
         >({
-            query: ({ accountKey }) => {
+            query: ({ account_key }) => {
                 return {
                     url: "account/sync",
                     method: "GET",
-                    params: { accountKey },
+                    params: { account_key },
                 };
             },
         }),

@@ -1,8 +1,9 @@
-import { __, sprintf } from "@wordpress/i18n";
+import { setActiveAccount, setLoginAccounts } from "~/store/features/authSlice";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { openAuthWindow, toBoolean } from "~/utils/functions";
 import { useCustomAlert } from "~/components/molecules/Alert";
 import { settingsApi } from "~/store/api/settingsApi";
+import { __, sprintf } from "@wordpress/i18n";
 import { Account } from "~/types/Types";
 import {
     useDeleteAccountMutation,
@@ -10,10 +11,9 @@ import {
     useSwitchAccountMutation,
     useSyncAccountMutation,
 } from "~/store/api/authApi";
-import { setActiveAccount, setLoginAccounts } from "~/store/features/authSlice";
 
 export default function useAuth() {
-    const { activeAccount, loginAccounts } = useAppSelector(
+    const { active_account, login_accounts } = useAppSelector(
         (state) => state.auth,
     );
 
@@ -31,17 +31,20 @@ export default function useAuth() {
         useDeleteAccountMutation();
 
     const handleAddNewAccount = async (
-        accountKey: string = "",
-        appKey?: string,
-        appSecret?: string,
+        account_key: string = "",
+        app_key?: string,
+        app_secret?: string,
         isLost: boolean = false,
-        connectionType?: "automatic" | "manual",
+        connection_type?: "automatic" | "manual",
     ) => {
         if (isLost) {
             showAlert({
                 type: "question",
                 title: __("Re authenticate", "ninja-drive"),
-                text: __("Are you sure you want to re authenticate this account?", "ninja-drive"),
+                text: __(
+                    "Are you sure you want to re authenticate this account?",
+                    "ninja-drive",
+                ),
                 showConfirmButton: true,
                 confirmButtonText: __("Re authenticate", "ninja-drive"),
                 showCancelButton: true,
@@ -50,8 +53,8 @@ export default function useAuth() {
                 onConfirm: async () => {
                     try {
                         const res = await getAuthUrl({
-                            accountKey,
-                            connectionType: connectionType,
+                            account_key,
+                            connection_type: connection_type,
                         }).unwrap();
 
                         dispatch(
@@ -63,7 +66,10 @@ export default function useAuth() {
                             type: "success",
                             text:
                                 res?.message ||
-                                __("Account re authenticated successfully.", "ninja-drive"),
+                                __(
+                                    "Account re authenticated successfully.",
+                                    "ninja-drive",
+                                ),
                             timer: 3000,
                             timerProgressBar: true,
                             showConfirmButton: false,
@@ -74,7 +80,10 @@ export default function useAuth() {
                             type: "error",
                             text:
                                 error?.data?.message ||
-                                __("Failed to re authenticate account.", "ninja-drive"),
+                                __(
+                                    "Failed to re authenticate account.",
+                                    "ninja-drive",
+                                ),
                             timer: 3000,
                             timerProgressBar: true,
                             showConfirmButton: false,
@@ -88,10 +97,10 @@ export default function useAuth() {
 
         try {
             getAuthUrl({
-                accountKey,
-                appKey,
-                appSecret,
-                connectionType: connectionType,
+                account_key,
+                app_key,
+                app_secret,
+                connection_type: connection_type,
             })
                 .unwrap()
                 .then((res) => {
@@ -106,31 +115,35 @@ export default function useAuth() {
         showAlert({
             type: "question",
             title: __("Switch", "ninja-drive"),
-            text: __("Are you sure you want to switch to this account?", "ninja-drive"),
+            text: __(
+                "Are you sure you want to switch to this account?",
+                "ninja-drive",
+            ),
             showConfirmButton: true,
             confirmButtonText: __("Switch", "ninja-drive"),
             showCancelButton: true,
             icon: "question",
             width: "450px",
             onConfirm: async () => {
-                if (!account?.accountKey) {
+                if (!account?.account_key) {
                     console.error("Account not found");
                     return;
                 }
                 if (account.lost) {
-                    handleAddNewAccount(account.accountKey);
+                    handleAddNewAccount(account.account_key);
                     return;
                 }
                 try {
                     const result = await switchAccount(
-                        account.accountKey,
+                        account.account_key,
                     ).unwrap();
 
                     showAlert({
                         toast: true,
                         type: "success",
                         text:
-                            result?.message || __("Account switched successfully.", "ninja-drive"),
+                            result?.message ||
+                            __("Account switched successfully.", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -140,7 +153,8 @@ export default function useAuth() {
                         toast: true,
                         type: "error",
                         text:
-                            error?.data?.message || __("Failed to switch account.", "ninja-drive"),
+                            error?.data?.message ||
+                            __("Failed to switch account.", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -150,11 +164,14 @@ export default function useAuth() {
         });
     };
 
-    const handleSyncAccount = async (accountKey: string) => {
+    const handleSyncAccount = async (account_key: string) => {
         showAlert({
             type: "info",
             title: __("Sync", "ninja-drive"),
-            text: __("Do you want to sync this account along with all its cached files?", "ninja-drive"),
+            text: __(
+                "Do you want to sync this account along with all its cached files?",
+                "ninja-drive",
+            ),
             showConfirmButton: true,
             confirmButtonText: __("Sync", "ninja-drive"),
             showCancelButton: true,
@@ -163,11 +180,11 @@ export default function useAuth() {
             onConfirm: async () => {
                 try {
                     const result = await syncAccount({
-                        accountKey,
+                        account_key,
                     }).unwrap();
 
                     const event = new CustomEvent("SYNC_ACCOUNT_START", {
-                        detail: { accountKey },
+                        detail: { account_key },
                     });
 
                     window.dispatchEvent(event);
@@ -175,7 +192,9 @@ export default function useAuth() {
                     showAlert({
                         toast: true,
                         type: "success",
-                        text: result?.message || __("Account synced successfully.", "ninja-drive"),
+                        text:
+                            result?.message ||
+                            __("Account synced successfully.", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -184,7 +203,9 @@ export default function useAuth() {
                     showAlert({
                         toast: true,
                         type: "error",
-                        text: error?.data?.message || __("Failed to sync account.", "ninja-drive"),
+                        text:
+                            error?.data?.message ||
+                            __("Failed to sync account.", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -197,8 +218,11 @@ export default function useAuth() {
     const handleAccountRemove = async (account: Account) => {
         showAlert({
             type: "error",
-            title: __("Remove", "ninja-drive"),
-            text: __("Are you sure you want to remove this account?", "ninja-drive"),
+            title: __("Account remove", "ninja-drive"),
+            text: __(
+                `Are you sure you want to remove "${account?.name}" account?`,
+                "ninja-drive",
+            ),
             showConfirmButton: true,
             confirmButtonText: __("Remove", "ninja-drive"),
             showCancelButton: true,
@@ -207,15 +231,21 @@ export default function useAuth() {
             onConfirm: async () => {
                 try {
                     const result = await removeAccount(
-                        account?.accountKey!,
+                        account?.account_key!,
                     ).unwrap();
 
-                    dispatch(settingsApi.util.invalidateTags(["Auth"]));
+                    dispatch(
+                        settingsApi.util.invalidateTags([
+                            "Auth",
+                            "Folder",
+                            "Folder_Tree",
+                        ]),
+                    );
 
                     const isActiveAccount =
-                        activeAccount?.accountKey === account?.accountKey;
+                        active_account?.account_key === account?.account_key;
 
-                    const isLastAccount = loginAccounts?.length === 1;
+                    const isLastAccount = login_accounts?.length === 1;
 
                     if (isActiveAccount) {
                         dispatch(setActiveAccount(null as any));
@@ -229,7 +259,8 @@ export default function useAuth() {
                         toast: true,
                         type: "success",
                         text:
-                            result?.message || __("Account removed successfully.", "ninja-drive"),
+                            result?.message ||
+                            __("Account removed successfully.", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -239,7 +270,8 @@ export default function useAuth() {
                         toast: true,
                         type: "error",
                         text:
-                            error?.data?.message || __("Failed to remove account.", "ninja-drive"),
+                            error?.data?.message ||
+                            __("Failed to remove account.", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -250,8 +282,8 @@ export default function useAuth() {
     };
 
     return {
-        activeAccount,
-        loginAccounts,
+        active_account,
+        login_accounts,
         handleAddNewAccount,
         handleAccountSwitch,
         handleSyncAccount,

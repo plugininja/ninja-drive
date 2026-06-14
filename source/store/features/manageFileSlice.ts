@@ -1,5 +1,6 @@
-import { Breadcrumb, File, Order, OrderBy } from "../../types/Types";
+import { Breadcrumb, Order, OrderBy } from "../../types/Types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { File } from "~/types/file.types";
 
 interface IOpenFolder {
     activeFolder: File;
@@ -9,14 +10,14 @@ interface IOpenFolder {
 
 export interface ManageFileState {
     files: File[];
-    selectedFiles: File[];
+    selected_files: File[];
     breadcrumbs: Breadcrumb[];
     activeFolder: File | null;
     isFileSelecting?: boolean;
     fileLoading: boolean;
-    hasMore: boolean;
+    has_more: boolean;
     order: Order;
-    orderBy: OrderBy;
+    order_by: OrderBy;
     page: number;
     multiSelect?: boolean;
     availableTypes?: (
@@ -33,12 +34,12 @@ const initialState: ManageFileState = {
     breadcrumbs: [],
     activeFolder: null,
     files: [],
-    selectedFiles: [],
+    selected_files: [],
     isFileSelecting: false,
     fileLoading: true,
-    hasMore: true,
+    has_more: true,
     order: "ASC",
-    orderBy: "name",
+    order_by: "name",
     page: 2,
     multiSelect: true,
     availableTypes: ["all"],
@@ -58,7 +59,7 @@ export const manageFileSlice = createSlice({
 
         prependFiles: (
             state,
-            action: PayloadAction<{ files: File[]; slice?: number }>
+            action: PayloadAction<{ files: File[]; slice?: number }>,
         ) => {
             const { files, slice = 0 } = action.payload;
             state.files = [...files, ...state.files.slice(slice)];
@@ -66,7 +67,7 @@ export const manageFileSlice = createSlice({
 
         appendFiles: (
             state,
-            action: PayloadAction<{ files: File[]; slice?: number }>
+            action: PayloadAction<{ files: File[]; slice?: number }>,
         ) => {
             const { files, slice = 0 } = action.payload;
             state.files = [...state.files.slice(slice), ...files];
@@ -92,7 +93,7 @@ export const manageFileSlice = createSlice({
         },
 
         setHasMore: (state, action: PayloadAction<boolean>) => {
-            state.hasMore = action.payload;
+            state.has_more = action.payload;
         },
 
         setOrder: (state, action: PayloadAction<Order>) => {
@@ -100,7 +101,7 @@ export const manageFileSlice = createSlice({
         },
 
         setOrderBy: (state, action: PayloadAction<OrderBy>) => {
-            state.orderBy = action.payload;
+            state.order_by = action.payload;
         },
 
         setPage: (state, action: PayloadAction<number>) => {
@@ -110,40 +111,40 @@ export const manageFileSlice = createSlice({
         selectFile: (state, action: PayloadAction<string | string[]>) => {
             if (action.payload instanceof Array) {
                 const files = state.files.filter((file) =>
-                    action.payload.includes(file.key)
+                    action.payload.includes(file.file_key),
                 );
-                const fromSelected = state.selectedFiles.filter((file) =>
-                    action.payload.includes(file.key)
+                const fromSelected = state.selected_files.filter((file) =>
+                    action.payload.includes(file.file_key),
                 );
                 const allFiles = [...fromSelected, ...files];
 
                 const uniqueFileMap = new Map<string, (typeof allFiles)[0]>();
                 allFiles.forEach((file) => {
-                    uniqueFileMap.set(file.key, file);
+                    uniqueFileMap.set(file.file_key, file);
                 });
 
-                state.selectedFiles = Array.from(uniqueFileMap.values());
+                state.selected_files = Array.from(uniqueFileMap.values());
             } else {
                 if (
-                    state.selectedFiles.find(
-                        (file) => file.key === action.payload
+                    state.selected_files.find(
+                        (file) => file.file_key === action.payload,
                     )
                 ) {
-                    state.selectedFiles = state.selectedFiles.filter(
-                        (file) => file.key !== action.payload
+                    state.selected_files = state.selected_files.filter(
+                        (file) => file.file_key !== action.payload,
                     );
                 } else {
                     const file = state.files.find(
-                        (file) => file.key === action.payload
+                        (file) => file.file_key === action.payload,
                     );
                     if (!file) return;
-                    state.selectedFiles.push(file);
+                    state.selected_files.push(file);
                 }
             }
         },
 
         setSelectedFiles: (state, action: PayloadAction<File[]>) => {
-            state.selectedFiles = action.payload;
+            state.selected_files = action.payload;
         },
     },
 });

@@ -59,13 +59,12 @@ import "../../frontend/renderModules.tsx";
 
         insertWithBestMethod(files) {
             files.forEach((file) => {
-
                 const fileUrl = window.PNPNDHelper.getUrl(
                     "thumbnail",
-                    file.fileKey,
+                    file.file_key,
                     file.name,
                     null,
-                    "2xl",
+                    "5xl",
                     file.extension,
                 );
 
@@ -142,7 +141,7 @@ import "../../frontend/renderModules.tsx";
             key,
             name,
             shortcodeId = null,
-            size = "xl",
+            size = "5xl",
             extension = "jpg",
         ) {
             if (!action || !key || !name || !extension) {
@@ -179,44 +178,84 @@ import "../../frontend/renderModules.tsx";
 
             const namePart = size ? `${name}-${size}` : name;
 
-            const allowDotExtension =
-                pnpnd.settings?.advanced?.allowDotExtension ?? true;
+            const allow_dot_extension =
+                pnpnd.settings?.advanced?.allow_dot_extension ?? true;
 
-            if (!allowDotExtension) {
+            if (!allow_dot_extension) {
                 return `${baseUrl}/pnpnd/${actionPart}/${key}/${namePart}/${extension}/`;
             }
 
-            let url;
-            if (shortcodeId) {
-                url = `${baseUrl}/pnpnd/${actionPart}/${key}/${namePart}/${extension}/`;
-            } else {
-                url = `${baseUrl}/pnpnd/${actionPart}/${key}/${namePart}/${extension}/`;
-            }
-
-            return url;
+            return `${baseUrl}/pnpnd/${actionPart}/${key}/${namePart}.${extension}/`;
         }
 
         static openUpgradePopUp() {
-            const closeModal = () => {
-                upgradePopUp.remove();
-            };
-
-            const upgradePopUp = window.toast.show({
-                theme: "light",
-                width: "550px",
-                variant: "modal",
-                component: (
-                    // <UpgradePopUp
-                    //     closeModal={closeModal}
-                    //     upgradeUrl={pnpnd.upgradeUrl}
-                    // />
-                    <div>Upgrade</div>
-                ),
-            });
+            const upgradeUrl =
+                PNPNDHelper.upgradeUrl ||
+                window.pnpnd?.upgrade_url ||
+                "https://plugininja.com/google-drive-pricing";
+            window.open(upgradeUrl, "_blank", "noopener,noreferrer");
         }
     }
 
-    // Initialize the class
-    new PNPNDMediaInserter("#pnpnd-media-button");
+    // Set the upgrade URL from PHP-localized data so integrations.js can read it.
+    PNPNDHelper.upgradeUrl =
+        window.pnpnd?.upgrade_url ||
+        "https://plugininja.com/google-drive-pricing";
+
+    // Expose helpers globally so integrations.js can use them.
     window.PNPNDHelper = PNPNDHelper;
+    window.PNPNDMediaInserter = PNPNDMediaInserter;
+
+    /**
+     * Review Banner
+     *
+     * Handles dismiss / snooze actions for the admin review notice.
+     * Nonce is injected by PHP via wp_add_inline_script into window.pnpnd.reviewBannerNonce.
+     */
+    class PNPNDReviewBanner {
+        constructor() {
+            this.banner = document.getElementById("pnpnd-review-banner");
+            if (!this.banner) return;
+
+            this.init();
+        }
+
+        init() {
+            this.banner.addEventListener("click", (e) => this.handleClick(e));
+        }
+
+        handleClick(e) {
+            const el = e.target.closest("[data-pnpnd-action]");
+            if (!el) return;
+
+            const action = el.getAttribute("data-pnpnd-action");
+            if (action !== "dismiss" && action !== "snooze") return;
+
+            // Prevent default only for hash links and buttons — not the real review URL.
+            const href = el.getAttribute("href");
+            if (!href || href === "#") {
+                e.preventDefault();
+            }
+
+            this.banner.style.display = "none";
+            this.sendRequest(action);
+        }
+
+        sendRequest(action) {
+            const nonce = window.pnpnd?.reviewBannerNonce || "";
+            if (!nonce) return;
+
+            wp.ajax
+                .post("pnpnd_review_" + action, { review_nonce: nonce })
+                .fail(() => {
+                    window.pnpnd?.debug &&
+                        console.log("[PNPND] Review banner request failed.");
+                });
+        }
+    }
+
+    // Boot on DOM ready.
+    $(document).ready(() => {
+        new PNPNDReviewBanner();
+    });
 })(jQuery);

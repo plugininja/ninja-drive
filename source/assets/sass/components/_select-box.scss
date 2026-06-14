@@ -43,7 +43,6 @@
         align-items: center;
         gap: var(--pnpnd-space-2);
         width: 100%;
-        background: $white;
         cursor: pointer;
         transition: all 0.2s ease;
         z-index: 1;
@@ -60,10 +59,10 @@
             flex-wrap: wrap;
             gap: 6px;
             font-size: 14px;
-            color: $black;
+            color: $gray-700;
 
             .pn-select-placeholder {
-                color: $gray-800;
+                color: $gray-700;
             }
 
             .pn-select-tag {
@@ -73,8 +72,8 @@
                 padding: var(--pnpnd-space-1);
                 border-radius: 2px;
                 font-size: 13px;
-                border: 1px solid $primary-light;
-                background: $primary-extralight;
+                border: 1px solid $gray-200;
+                background: $white;
 
                 &--warning {
                     background: $warning-50;

@@ -1,47 +1,47 @@
-import { __ } from "@wordpress/i18n";
 import SelectedFileList from "../ModuleBuilder/pages/Source/SelectedFileList";
+import MainLayout from "~/components/templates/MainLayout/MainLayout";
+import { useEffect, useRef, useState } from "@wordpress/element";
+import InlineStack from "~/components/molecules/InlineStack";
+import IconButton from "~/components/molecules/IconButton";
+import { selectAuth } from "~/store/features/authSlice";
+import { useFileActions } from "~/hooks/useFileActions";
+import Accounts from "~/components/molecules/Accounts";
+import { checkSelectionFiles } from "~/utils/helpers";
+import { FILES_MENUS } from "~/constants/fileBrowser";
+import Sidebar from "~/components/molecules/Sidebar";
+import { File, FileTypes } from "~/types/file.types";
+import Topbar from "~/components/molecules/Topbar";
+import FilesViews from "../FilesViews/FilesViews";
+import { useGallery } from "~/hooks/useGallery";
+import { MemoryRouter } from "react-router-dom";
+import SearchBox from "../SearchBox/SearchBox";
+import Button from "~/components/atoms/Button";
+import { useAppSelector } from "~/store/hooks";
+import { toBoolean } from "~/utils/functions";
+import Uploader from "../Uploader/Uploader";
+import { useFiles } from "~/hooks/useFiles";
+import MainRoute from "~/Routes/MainRoute";
+import Icon from "~/components/atoms/Icon";
+import AuthRoute from "~/Routes/AuthRoute";
+import { FontSize } from "~/types/styles";
+import { isFolder } from "~/utils/file";
+import { Provider } from "react-redux";
+import { store } from "~/store/store";
+import { TLayout } from "~/types/ui";
+import { __ } from "@wordpress/i18n";
+import Login from "../Login/Login";
+import clsx from "clsx";
 import {
     CustomAlertProvider,
     useCustomAlert,
 } from "~/components/molecules/Alert";
-import { useFileActions } from "~/hooks/useFileActions";
-import { checkSelectionFiles } from "~/utils/helpers";
-import { FILES_MENUS } from "~/constants/fileBrowser";
-import { File, FileTypes } from "~/types/file.types";
-import Accounts from "~/components/molecules/Accounts";
-import FilesViews from "../FilesViews/FilesViews";
-import InlineStack from "~/components/molecules/InlineStack";
-import { useGallery } from "~/hooks/useGallery";
-import SearchBox from "../SearchBox/SearchBox";
-import { useState } from "@wordpress/element";
-import MainLayout from "~/components/templates/MainLayout/MainLayout";
-import Uploader from "../Uploader/Uploader";
-import { useFiles } from "~/hooks/useFiles";
-import Sidebar from "~/components/molecules/Sidebar";
-import { FontSize } from "~/types/styles";
-import { isFolder } from "~/utils/file";
-import Topbar from "~/components/molecules/Topbar";
-import Button from "~/components/atoms/Button";
-import { TLayout } from "~/types/ui";
-import Icon from "~/components/atoms/Icon";
-import clsx from "clsx";
-import { useAppSelector } from "~/store/hooks";
-import { selectAuth } from "~/store/features/authSlice";
-import Login from "../Login/Login";
-import IconButton from "~/components/molecules/IconButton";
-import { toBoolean } from "~/utils/functions";
-import { MemoryRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "~/store/store";
-import MainRoute from "~/Routes/MainRoute";
-import AuthRoute from "~/Routes/AuthRoute";
 
 export type FileSelectorContentProps = {
     fileTypes?: FileTypes[];
     prevSelectedFiles?: File[];
     onClose?: () => void;
     onConfirm?: (
-        files: { fileKey: string; name: string; extension: string }[],
+        files: { file_key: string; name: string; extension: string }[],
     ) => void;
 };
 
@@ -51,10 +51,10 @@ export function FileSelectorContent({
     prevSelectedFiles,
     onClose,
 }: FileSelectorContentProps) {
-    const { activeAccount } = useAppSelector(selectAuth);
+    const { active_account } = useAppSelector(selectAuth);
     const [showUploader, setShowUploader] = useState(false);
     const [activeFile, setActiveFile] = useState<File | undefined>(undefined);
-    const [selectedFiles, setSelectedFiles] = useState<File[]>(
+    const [selected_files, setSelectedFiles] = useState<File[]>(
         prevSelectedFiles || [],
     );
     const [layout, setLayout] = useState<TLayout>("grid");
@@ -65,7 +65,7 @@ export function FileSelectorContent({
         openFolder,
         loading,
         loadMoreRef,
-        hasMore,
+        has_more,
         loadingMore,
         refresh,
         isError,
@@ -73,9 +73,30 @@ export function FileSelectorContent({
         setQueryArgs,
     } = useFiles("my-drive", false, fileTypes);
 
+    const initialized = useRef(false);
+
+    useEffect(() => {
+        if (
+            initialized.current ||
+            !files?.length ||
+            !prevSelectedFiles?.length
+        ) {
+            return;
+        }
+
+        const mergedSelectedFiles = prevSelectedFiles.map(
+            (prevFile) =>
+                files.find((file) => file.file_key === prevFile.file_key) ||
+                prevFile,
+        );
+
+        setSelectedFiles(mergedSelectedFiles);
+        initialized.current = true;
+    }, [files, prevSelectedFiles]);
+
     const { createFolder } = useFileActions();
 
-    const { activeFolder, order, orderBy } = queryArgs;
+    const { active_folder, order, order_by } = queryArgs;
 
     const { viewFile } = useGallery(files);
 
@@ -98,22 +119,22 @@ export function FileSelectorContent({
         }
         const _newSelectedFiles = checkSelectionFiles(
             newSelectedFiles,
-            selectedFiles,
+            selected_files,
         );
         setSelectedFiles(_newSelectedFiles);
     };
 
     const handleDoubleClick = (file: File) => {
         if (isFolder(file.extension || "")) {
-            openFolder(file.fileKey);
+            openFolder(file.file_key);
         } else {
-            viewFile(file.fileKey);
+            viewFile(file.file_key);
         }
     };
 
     const search = (
         <SearchBox
-            activeFolder={activeFolder}
+            activeFolder={active_folder}
             isCompact
             fileType={false}
             queryArgs={queryArgs}
@@ -142,8 +163,8 @@ export function FileSelectorContent({
             shadow
             data={{
                 minFileSize: 0,
-                maxFileSize: pnpnd.isPro !== "1" ? 5 : 0,
-                activeFolder: activeFolder,
+                maxFileSize: pnpnd.is_pro !== "1" ? 5 : 0,
+                activeFolder: active_folder,
                 onFileUpload: () => {},
                 setIsUploading: setShowUploader,
                 uploadImmediately: true,
@@ -154,7 +175,13 @@ export function FileSelectorContent({
     );
 
     const rightContents = [refreshButton, profile];
-    if (toBoolean(pnpnd.isPro) && !pnpnd?.currentUser?.can?.hasFullAccess) {
+
+    if (
+        toBoolean(pnpnd.is_pro) &&
+        !pnpnd?.current_user?.can?.has_full_access &&
+        !pnpnd?.current_user?.can?.accounts_connect &&
+        !pnpnd?.current_user?.can?.accounts_manage
+    ) {
         rightContents.pop();
     }
 
@@ -169,19 +196,25 @@ export function FileSelectorContent({
                                 size="extrasmall"
                                 name="close"
                                 style={{
+                                    background: "var(--pnpnd-white)",
                                     position: "absolute",
-                                    top: "20px",
-                                    right: "20px",
+                                    top: "-30px",
+                                    right: "-30px",
                                     zIndex: 99999,
                                 }}
                                 onClick={onClose}
                             />
 
-                            {activeAccount === null ? (
+                            {active_account === null ? (
                                 <Login />
                             ) : (
                                 <>
-                                    <MainLayout>
+                                    <MainLayout
+                                        style={{
+                                            borderRadius: "12px",
+                                            overflow: "hidden",
+                                        }}
+                                    >
                                         <Sidebar
                                             localStorageKey={
                                                 "pnpnd-file-selector"
@@ -193,9 +226,9 @@ export function FileSelectorContent({
                                         >
                                             <Sidebar.Menu>
                                                 <Sidebar.DropdownItem
-                                                    activeKey={activeFolder}
+                                                    activeKey={active_folder}
                                                     childrenItems={[
-                                                        ...(activeFolder ===
+                                                        ...(active_folder ===
                                                         "home"
                                                             ? [
                                                                   {
@@ -220,7 +253,7 @@ export function FileSelectorContent({
                                                             (menu) => ({
                                                                 key: menu.key,
                                                                 title: menu.title,
-                                                                svgIcon:
+                                                                iconUrl:
                                                                     menu.icon,
                                                                 onClick: () =>
                                                                     openFolder(
@@ -251,6 +284,7 @@ export function FileSelectorContent({
                                                     display: "flex",
                                                     alignItems: "flex-start",
                                                     gap: "20px",
+                                                    padding: "20px",
                                                 }}
                                             >
                                                 <FilesViews
@@ -265,15 +299,15 @@ export function FileSelectorContent({
                                                     layout={layout}
                                                     setLayout={setLayout}
                                                     files={files}
-                                                    activeFolder={activeFolder}
+                                                    activeFolder={active_folder}
                                                     breadcrumbs={breadcrumbs}
                                                     openFolder={openFolder}
                                                     activeFile={activeFile}
                                                     setActiveFile={
                                                         setActiveFile
                                                     }
-                                                    selectedFiles={
-                                                        selectedFiles
+                                                    selected_files={
+                                                        selected_files
                                                     }
                                                     setSelectedFiles={
                                                         handleSelectFile
@@ -281,13 +315,16 @@ export function FileSelectorContent({
                                                     filesStatus={{
                                                         loading,
                                                         loadingMore,
-                                                        hasMore,
+                                                        has_more,
                                                     }}
                                                     showUploader={showUploader}
                                                     setShowUploader={
                                                         setShowUploader
                                                     }
-                                                    sorting={{ order, orderBy }}
+                                                    sorting={{
+                                                        order,
+                                                        order_by,
+                                                    }}
                                                     setSorting={(value) =>
                                                         setQueryArgs({
                                                             ...queryArgs,
@@ -316,11 +353,11 @@ export function FileSelectorContent({
                                                         style={{
                                                             marginTop: "20px",
                                                             paddingBottom:
-                                                                "80px",
+                                                                "190px",
                                                         }}
                                                     />
 
-                                                    {hasMore && (
+                                                    {has_more && (
                                                         <div
                                                             ref={loadMoreRef}
                                                             style={{
@@ -335,12 +372,15 @@ export function FileSelectorContent({
                                                 </FilesViews>
 
                                                 <SelectedFileList
-                                                    selectedFiles={
-                                                        selectedFiles
+                                                    selected_files={
+                                                        selected_files
                                                     }
                                                     setSelectedFiles={
                                                         setSelectedFiles
                                                     }
+                                                    style={{
+                                                        marginBottom: "170px",
+                                                    }}
                                                 />
                                             </MainLayout.Content>
                                         </MainLayout.ContentWrapper>
@@ -363,8 +403,8 @@ export function FileSelectorContent({
                                             className="pn-alert-button pn-alert-confirm-button info"
                                             onClick={() => {
                                                 onConfirm?.(
-                                                    selectedFiles.map((f) => ({
-                                                        fileKey: f.fileKey,
+                                                    selected_files.map((f) => ({
+                                                        file_key: f.file_key,
                                                         name: f.name,
                                                         extension:
                                                             f.extension || "",

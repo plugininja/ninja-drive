@@ -13,6 +13,19 @@
         &--border {
             border: 1px solid $primary-light;
         }
+
+        &--toggle {
+            position: absolute;
+            top: 85px;
+            right: -20px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover .pn-sidebar--toggle {
+            opacity: 1;
+        }
     }
 
     .pn-sidebar__resizer {
@@ -32,13 +45,10 @@
 
     .pn-sidebar__header {
         position: relative;
-        margin-bottom: 30px;
+        height: 60px !important;
 
-        .pnpnd-logo {
-            .pnpnd-logo-path {
-                fill: $primary;
-            }
-
+        .pnpnd-logo,
+        .pnpnd-logo-icon {
             position: absolute;
             top: 0px;
             left: 0;
@@ -135,36 +145,6 @@
         transition: opacity 0.3s ease 0.3s;
     }
 
-    .pn-sidebar__bottom-help-center {
-        cursor: pointer;
-        padding: 6px 12px;
-        .pn-icon {
-            color: $black;
-        }
-        &-title {
-            color: $black !important;
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-
-    .pn-sidebar__bottom-upgrade-pro {
-        background-color: transparent;
-        cursor: pointer;
-        padding: 6px 12px;
-        .pn-icon {
-            color: $primary;
-        }
-
-        &-title {
-            color: $primary !important;
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-
     .pn-sidebar__fade {
         opacity: 0;
         visibility: hidden;
@@ -182,11 +162,9 @@
     }
 
     .pn-sidebar--collapsed {
-        .pn-sidebar__header {
-            &--toggle {
-                span {
-                    transform: rotateY(180deg);
-                }
+        .pn-sidebar--toggle {
+            span {
+                transform: rotateY(180deg);
             }
         }
 

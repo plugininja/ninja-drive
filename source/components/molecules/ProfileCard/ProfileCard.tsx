@@ -1,17 +1,20 @@
-import { formatFileSize, getUsedStorage, toBoolean } from "~/utils/functions";
-import { __, sprintf } from "@wordpress/i18n";
-import { useState } from "@wordpress/element";
-import { googleIcon } from "~/assets/icons";
-import ProgressBar from "~/components/atoms/ProgressBar";
+import { getUsedStorage, toBoolean } from "~/utils/functions";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
-import useAuth from "~/hooks/useAuth";
+import ProgressBar from "~/components/atoms/ProgressBar";
 import Divider from "~/components/atoms/Divider";
+import Card from "~/components/molecules/Card";
 import Button from "~/components/atoms/Button";
 import Avatar from "~/components/atoms/Avatar";
+import { formatFileSize } from "~/utils/file";
+import { __, sprintf } from "@wordpress/i18n";
+import { useState } from "@wordpress/element";
+import { googleIcon } from "~/utils/icons";
+import Icon from "~/components/atoms/Icon";
 import Text from "~/components/atoms/Text";
-import Card from "~/components/molecules/Card";
+import useAuth from "~/hooks/useAuth";
+import clsx from "clsx";
 import {
     ProfileCardFullInfoProps,
     ProfileCardInfoProps,
@@ -27,7 +30,7 @@ const ProfileCard = ({
     title,
     addAccount,
     small = false,
-    connectionType,
+    connection_type,
 }: ProfileCardProps) => {
     const { handleAddNewAccount } = useAuth();
 
@@ -45,75 +48,78 @@ const ProfileCard = ({
             )}
 
             {accounts?.map((account) => {
-                const { id: accountId, accountKey } = account || {};
+                const { id: account_id, account_key } = account || {};
 
                 return (
-                    <BlockStack key={accountId ?? accountKey}>
+                    <BlockStack key={account_id ?? account_key}>
                         {fullInfo ? (
                             <ProfileCard.FullInfo
                                 account={account}
-                                connectionType={connectionType}
+                                connection_type={connection_type}
                             />
                         ) : (
                             <ProfileCard.Info
                                 account={account}
-                                connectionType={connectionType}
+                                connection_type={connection_type}
                             />
                         )}
                     </BlockStack>
                 );
             })}
 
-            {addAccount && (!accounts?.length || toBoolean(pnpnd.isPro)) && (
-                <BlockStack align="center" inlineAlign="center">
-                    <Card
-                        padding={10}
-                        background="primary-extralight"
-                        flex
-                        align="center"
-                        blockAlign="center"
-                        gap={small ? 7 : 10}
-                        style={{
-                            height: small ? "40px" : "50px",
-                            cursor: "pointer",
-                            width: "fit-content",
-                            borderRadius: small ? "8px" : "10px",
-                        }}
-                        onClick={() =>
-                            handleAddNewAccount(
-                                "",
-                                "",
-                                "",
-                                false,
-                                connectionType,
-                            )
-                        }
-                    >
-                        <img
-                            src={googleIcon}
-                            alt={__("Google Icon", "ninja-drive")}
+            {pnpnd?.current_user?.can?.accounts_connect &&
+                addAccount &&
+                (!accounts?.length || toBoolean(pnpnd.is_pro)) && (
+                    <BlockStack align="center" inlineAlign="center">
+                        <Card
+                            padding={10}
+                            background="gray-50"
+                            border="gray-200"
+                            flex
+                            align="center"
+                            blockAlign="center"
+                            gap={small ? 7 : 10}
                             style={{
-                                width: small ? "20px" : "30px",
-                                height: small ? "20px" : "30px",
+                                height: small ? "40px" : "50px",
+                                cursor: "pointer",
+                                width: "fit-content",
+                                borderRadius: small ? "8px" : "10px",
                             }}
-                        />
+                            onClick={() =>
+                                handleAddNewAccount(
+                                    "",
+                                    "",
+                                    "",
+                                    false,
+                                    connection_type,
+                                )
+                            }
+                        >
+                            <img
+                                src={googleIcon}
+                                alt={__("Google Icon", "ninja-drive")}
+                                style={{
+                                    width: small ? "20px" : "30px",
+                                    height: small ? "20px" : "30px",
+                                }}
+                            />
 
-                        <Text size={small ? "sm" : "md"}>
-                            {__("Sign in with Google", "ninja-drive")}
-                        </Text>
-                    </Card>
-                </BlockStack>
-            )}
+                            <Text size={small ? "sm" : "md"}>
+                                {__("Sign in with Google", "ninja-drive")}
+                            </Text>
+                        </Card>
+                    </BlockStack>
+                )}
         </BlockStack>
     );
 };
 
 ProfileCard.FullInfo = ({
     account,
-    connectionType,
+    connection_type,
 }: ProfileCardFullInfoProps) => {
     const [currentAccount, setCurrentAccount] = useState("");
-    const { name, email, photo, storage, active, lost, user, accountKey } =
+    const { name, email, photo, storage, active, lost, user, account_key } =
         account || {};
     const {
         handleAddNewAccount,
@@ -127,127 +133,102 @@ ProfileCard.FullInfo = ({
     } = useAuth();
 
     const switchEnabled =
-        pnpnd?.currentUser?.can?.hasFullAccess && toBoolean(pnpnd.isPro);
+        pnpnd?.current_user?.can?.has_full_access && toBoolean(pnpnd.is_pro);
 
     return (
-        <Card background={active ? "primary-light" : "primary-light"}>
+        <Card
+            background="gray-50"
+            className={clsx(
+                active && "pn-profile-card--active",
+                lost && "pn-profile-card--lost",
+            )}
+        >
             <InlineStack align="between" gap={10}>
-                <InlineStack gap={10}>
-                    <Avatar
-                        src={photo}
-                        alt={name}
-                        width="50px"
-                        height="50px"
-                        rounded="sm"
-                    />
+                <InlineStack gap={30}>
+                    <InlineStack gap={10}>
+                        <Avatar
+                            src={photo}
+                            alt={name}
+                            width="50px"
+                            height="50px"
+                            rounded="full"
+                        />
 
-                    <BlockStack gap={5}>
-                        <Text size="sm" weight="semibold">
-                            {name}
-                        </Text>
+                        <BlockStack gap={5}>
+                            <Text color="gray-700" size="sm" weight="semibold">
+                                {name}
+                            </Text>
 
-                        <BlockStack gap={10}>
                             <Text color="gray-500" size="sm">
                                 {email}
                             </Text>
+                        </BlockStack>
+                    </InlineStack>
 
-                            <ProgressBar
-                                progress={getUsedStorage(
-                                    Number(storage?.limit),
-                                    Number(storage?.usage),
-                                )}
+                    <Divider
+                        variant="vertical"
+                        height="60px"
+                        color="gray-300"
+                    />
+
+                    <BlockStack gap={7}>
+                        <InlineStack gap={10}>
+                            <Icon
+                                name="cloud"
+                                color="gray-600"
+                                fontSize="lg"
+                                fontWeight="medium"
                             />
 
-                            <Text size="xs" weight="semibold">
-                                {sprintf(
-                                    __("%1$s of %2$s %3$s%% used", "ninja-drive"),
-                                    formatFileSize(Number(storage?.usage)),
-                                    formatFileSize(Number(storage?.limit)),
-                                    getUsedStorage(
-                                        Number(storage?.limit),
-                                        Number(storage?.usage),
-                                    ).toFixed(2),
-                                )}
+                            <Text color="gray-600" size="sm" weight="medium">
+                                Storage
                             </Text>
-                        </BlockStack>
+                        </InlineStack>
+
+                        <ProgressBar
+                            progress={getUsedStorage(
+                                Number(storage?.limit),
+                                Number(storage?.usage),
+                            )}
+                        />
+
+                        <Text color="gray-600" size="xs">
+                            {sprintf(
+                                __("%1$s of %2$s %3$s%% used", "ninja-drive"),
+                                formatFileSize(Number(storage?.usage)),
+                                formatFileSize(Number(storage?.limit)),
+                                getUsedStorage(
+                                    Number(storage?.limit),
+                                    Number(storage?.usage),
+                                ).toFixed(2),
+                            )}
+                        </Text>
                     </BlockStack>
                 </InlineStack>
 
-                <InlineStack gap={10}>
-                    <Button
-                        variant="secondary"
-                        size="small"
-                        startIcon="sync"
-                        onClick={() => handleSyncAccount(accountKey)}
-                        loading={
-                            currentAccount === account?.accountKey &&
-                            isSyncingAccount
-                        }
-                    >
-                        {__("Sync", "ninja-drive")}
-                    </Button>
-
-                    <Button
-                        variant="error"
-                        size="small"
-                        startIcon="person_remove"
-                        onClick={async () => {
-                            setCurrentAccount(account?.accountKey);
-                            try {
-                                await handleAccountRemove(account);
-                            } catch (err) {
-                                console.error(err);
-                            } finally {
-                                setCurrentAccount("");
-                            }
-                        }}
-                        loading={
-                            currentAccount === account?.accountKey &&
-                            isRemovingAccount
-                        }
-                    >
-                        {__("Remove", "ninja-drive")}
-                    </Button>
-
-                    {switchEnabled && !active && !lost ? (
+                {pnpnd?.current_user?.can?.accounts_manage && (
+                    <InlineStack gap={10}>
                         <Button
-                            variant="warning"
+                            variant="secondary"
                             size="small"
-                            startIcon="autorenew"
-                            onClick={async () => {
-                                setCurrentAccount(account?.accountKey);
-                                try {
-                                    await handleAccountSwitch(account);
-                                } catch (err) {
-                                    console.error(err);
-                                } finally {
-                                    setCurrentAccount("");
-                                }
-                            }}
+                            startIcon="sync"
+                            onClick={() => handleSyncAccount(account_key)}
                             loading={
-                                currentAccount === account?.accountKey
-                                    ? isSwitchingAccount
-                                    : false
+                                currentAccount === account?.account_key &&
+                                isSyncingAccount
                             }
                         >
-                            {__("Activate It", "ninja-drive")}
+                            {__("Sync", "ninja-drive")}
                         </Button>
-                    ) : lost ? (
+
                         <Button
                             variant="error"
                             size="small"
-                            startIcon="no_accounts"
+                            startIcon="person_remove"
                             onClick={async () => {
-                                if (!lost) return;
-                                setCurrentAccount(account?.accountKey);
+                                setCurrentAccount(account?.account_key);
                                 try {
-                                    await handleAddNewAccount(
-                                        account.accountKey,
-                                        "",
-                                        "",
-                                        true,
-                                        connectionType,
-                                    );
+                                    await handleAccountRemove(account);
                                 } catch (err) {
                                     console.error(err);
                                 } finally {
@@ -255,36 +236,91 @@ ProfileCard.FullInfo = ({
                                 }
                             }}
                             loading={
-                                currentAccount === account?.accountKey
-                                    ? isGettingAuthUrl
-                                    : false
+                                currentAccount === account?.account_key &&
+                                isRemovingAccount
                             }
                         >
-                            {__("Re authenticate", "ninja-drive")}
+                            {__("Remove", "ninja-drive")}
                         </Button>
-                    ) : active ? (
-                        <Button
-                            variant="primary"
-                            size="small"
-                            startIcon="check"
-                        >
-                            {__("Active", "ninja-drive")}
-                        </Button>
-                    ) : null}
-                </InlineStack>
+
+                        {switchEnabled && !active && !lost ? (
+                            <Button
+                                variant="warning"
+                                size="small"
+                                startIcon="autorenew"
+                                onClick={async () => {
+                                    setCurrentAccount(account?.account_key);
+                                    try {
+                                        await handleAccountSwitch(account);
+                                    } catch (err) {
+                                        console.error(err);
+                                    } finally {
+                                        setCurrentAccount("");
+                                    }
+                                }}
+                                loading={
+                                    currentAccount === account?.account_key
+                                        ? isSwitchingAccount
+                                        : false
+                                }
+                            >
+                                {__("Activate It", "ninja-drive")}
+                            </Button>
+                        ) : lost ? (
+                            <Button
+                                variant="error"
+                                size="small"
+                                startIcon="no_accounts"
+                                onClick={async () => {
+                                    if (!lost) return;
+                                    setCurrentAccount(account?.account_key);
+                                    try {
+                                        await handleAddNewAccount(
+                                            account.account_key,
+                                            "",
+                                            "",
+                                            true,
+                                            connection_type,
+                                        );
+                                    } catch (err) {
+                                        console.error(err);
+                                    } finally {
+                                        setCurrentAccount("");
+                                    }
+                                }}
+                                loading={
+                                    currentAccount === account?.account_key
+                                        ? isGettingAuthUrl
+                                        : false
+                                }
+                            >
+                                {__("Re authenticate", "ninja-drive")}
+                            </Button>
+                        ) : active ? (
+                            <Button
+                                variant="primary"
+                                size="small"
+                                startIcon="check"
+                            >
+                                {__("Active", "ninja-drive")}
+                            </Button>
+                        ) : null}
+                    </InlineStack>
+                )}
             </InlineStack>
 
             <Divider marginTop={15} marginBottom={15} />
 
             <InlineStack gap={10}>
                 <InlineStack gap={5}>
-                    <Text size="sm" weight="semibold">
+                    <Text color="gray-700" size="sm" weight="medium">
                         {__("Account added by:", "ninja-drive")}
                     </Text>
 
                     <Button
-                        variant="secondary"
+                        variant="outlined"
                         size="extrasmall"
+                        color="primary"
                         textTransform="lowercase"
                     >
                         {user?.name ?? __("Unknown", "ninja-drive")}
@@ -292,13 +328,14 @@ ProfileCard.FullInfo = ({
                 </InlineStack>
 
                 <InlineStack gap={5}>
-                    <Text size="sm" weight="semibold">
+                    <Text color="gray-700" size="sm" weight="medium">
                         {__("Email:", "ninja-drive")}
                     </Text>
 
                     <Button
-                        variant="secondary"
+                        variant="outlined"
                         size="extrasmall"
+                        color="primary"
                         textTransform="lowercase"
                     >
                         {user?.email ?? __("Unknown", "ninja-drive")}
@@ -306,17 +343,22 @@ ProfileCard.FullInfo = ({
                 </InlineStack>
 
                 <InlineStack gap={5}>
-                    <Text size="sm" weight="semibold">
+                    <Text color="gray-700" size="sm" weight="medium">
                         {__("Status:", "ninja-drive")}
                     </Text>
 
                     <Button
                         variant={
-                            lost ? "error" : active ? "secondary" : "warning"
+                            lost ? "error" : active ? "outlined" : "warning"
                         }
                         size="extrasmall"
+                        color={lost ? "error" : active ? "primary" : "warning"}
                     >
-                        {lost ? __("Lost", "ninja-drive") : active ? __("Active", "ninja-drive") : __("Inactive", "ninja-drive")}
+                        {lost
+                            ? __("Lost", "ninja-drive")
+                            : active
+                            ? __("Active", "ninja-drive")
+                            : __("Inactive", "ninja-drive")}
                     </Button>
                 </InlineStack>
             </InlineStack>
@@ -324,18 +366,20 @@ ProfileCard.FullInfo = ({
     );
 };
 
-ProfileCard.Info = ({ account, connectionType }: ProfileCardInfoProps) => {
+ProfileCard.Info = ({ account, connection_type }: ProfileCardInfoProps) => {
     const [currentAccount, setCurrentAccount] = useState("");
     const { name, email, photo, active, lost } = account || {};
     const {
         handleAddNewAccount,
         handleAccountSwitch,
+        handleAccountRemove,
         isGettingAuthUrl,
         isSwitchingAccount,
+        isRemovingAccount,
     } = useAuth();
 
     const switchEnabled =
-        pnpnd?.currentUser?.can?.hasFullAccess && toBoolean(pnpnd.isPro);
+        pnpnd?.current_user?.can?.has_full_access && toBoolean(pnpnd.is_pro);
 
     return (
         <Card
@@ -365,68 +409,97 @@ ProfileCard.Info = ({ account, connectionType }: ProfileCardInfoProps) => {
                 </Text>
             </BlockStack>
 
-            {switchEnabled && !active && !lost ? (
-                <IconButton
-                    variant="warning"
-                    size="microsmall"
-                    name="autorenew"
-                    fontSize="lg"
+            {pnpnd?.current_user?.can?.accounts_manage && (
+                <InlineStack
+                    gap={5}
+                    wrap={false}
                     className="pn-profile-card-status__info"
-                    onClick={async () => {
-                        setCurrentAccount(account?.accountKey);
-                        try {
-                            await handleAccountSwitch(account);
-                        } catch (err) {
-                            console.error(err);
-                        } finally {
-                            setCurrentAccount("");
+                >
+                    {switchEnabled && !active && !lost ? (
+                        <IconButton
+                            variant="warning"
+                            size="microsmall"
+                            name="autorenew"
+                            borderColor="warning-50"
+                            fontSize="lg"
+                            onClick={async () => {
+                                setCurrentAccount(account?.account_key);
+                                try {
+                                    await handleAccountSwitch(account);
+                                } catch (err) {
+                                    console.error(err);
+                                } finally {
+                                    setCurrentAccount("");
+                                }
+                            }}
+                            loading={
+                                currentAccount === account?.account_key
+                                    ? isSwitchingAccount
+                                    : false
+                            }
+                        />
+                    ) : lost ? (
+                        <IconButton
+                            variant="error"
+                            size="microsmall"
+                            name="no_accounts"
+                            fontSize="lg"
+                            borderColor="error-50"
+                            onClick={async () => {
+                                if (active && !lost) return;
+                                setCurrentAccount(account?.account_key);
+                                try {
+                                    await handleAddNewAccount(
+                                        account.account_key,
+                                        "",
+                                        "",
+                                        true,
+                                        connection_type,
+                                    );
+                                } catch (err) {
+                                    console.error(err);
+                                } finally {
+                                    setCurrentAccount("");
+                                }
+                            }}
+                            loading={
+                                currentAccount === account?.account_key
+                                    ? isGettingAuthUrl
+                                    : false
+                            }
+                        />
+                    ) : active ? (
+                        <IconButton
+                            variant="primary"
+                            size="microsmall"
+                            name="check"
+                            fontSize="lg"
+                        />
+                    ) : null}
+
+                    <IconButton
+                        variant="error"
+                        size="microsmall"
+                        name="person_remove"
+                        fontSize="lg"
+                        borderColor="error-50"
+                        onClick={async () => {
+                            setCurrentAccount(account?.account_key);
+                            try {
+                                await handleAccountRemove(account);
+                            } catch (err) {
+                                console.error(err);
+                            } finally {
+                                setCurrentAccount("");
+                            }
+                        }}
+                        loading={
+                            currentAccount === account?.account_key &&
+                            isRemovingAccount
                         }
-                    }}
-                    loading={
-                        currentAccount === account?.accountKey
-                            ? isSwitchingAccount
-                            : false
-                    }
-                />
-            ) : lost ? (
-                <IconButton
-                    variant="error"
-                    size="microsmall"
-                    name="no_accounts"
-                    fontSize="lg"
-                    className="pn-profile-card-status__info"
-                    onClick={async () => {
-                        if (active && !lost) return;
-                        setCurrentAccount(account?.accountKey);
-                        try {
-                            await handleAddNewAccount(
-                                account.accountKey,
-                                "",
-                                "",
-                                true,
-                                connectionType,
-                            );
-                        } catch (err) {
-                            console.error(err);
-                        } finally {
-                            setCurrentAccount("");
-                        }
-                    }}
-                    loading={
-                        currentAccount === account?.accountKey
-                            ? isGettingAuthUrl
-                            : false
-                    }
-                />
-            ) : active ? (
-                <IconButton
-                    variant="primary"
-                    size="microsmall"
-                    name="check"
-                    fontSize="lg"
-                    className="pn-profile-card-status__info"
-                />
-            ) : null}
+                    />
+                </InlineStack>
+            )}
         </Card>
     );
 };

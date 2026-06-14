@@ -5,40 +5,40 @@ import { __ } from "@wordpress/i18n";
 
 const ModuleBottom = ({
     fileLoadingType,
-    hasMore,
+    has_more,
     loadMore,
-    totalPages,
-    currentPage,
+    total_pages,
+    current_page,
     isLoading,
     loadMoreFileRef,
 }: {
     fileLoadingType: "load_more" | "infinite_scroll" | "pagination";
-    hasMore: boolean;
+    has_more: boolean;
     loadMore: (pageOverride?: number) => void;
-    totalPages: number;
-    currentPage: number;
+    total_pages: number;
+    current_page: number;
     isLoading: boolean;
     loadMoreFileRef: React.RefObject<HTMLDivElement>;
 }) => {
     const isLessMore =
         fileLoadingType === "load_more" &&
-        !hasMore &&
+        !has_more &&
         !isLoading &&
-        currentPage > 1;
+        current_page > 1;
 
     return (
         <div className="pnpnd-top-level-wrapper">
-            {fileLoadingType === "infinite_scroll" && hasMore && !isLoading && (
-                <div ref={loadMoreFileRef}></div>
-            )}
+            {fileLoadingType === "infinite_scroll" &&
+                has_more &&
+                !isLoading && <div ref={loadMoreFileRef}></div>}
 
-            {fileLoadingType === "load_more" && hasMore && (
+            {fileLoadingType === "load_more" && has_more && (
                 <InlineStack
                     align="center"
                     blockAlign="center"
                     margin={"10px 0px 5px 0px"}
                 >
-                    {hasMore && (
+                    {has_more && (
                         <Button
                             variant="primary"
                             startIcon="sync"
@@ -62,11 +62,11 @@ const ModuleBottom = ({
                 </InlineStack>
             )}
 
-            {fileLoadingType === "pagination" && totalPages > 1 && (
+            {fileLoadingType === "pagination" && total_pages > 1 && (
                 <Pagination
                     variant="small"
-                    totalPages={totalPages}
-                    currentPage={currentPage}
+                    total_pages={total_pages}
+                    current_page={current_page}
                     onPageChange={(p) => loadMore(p)}
                 />
             )}

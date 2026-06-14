@@ -1,29 +1,29 @@
 import InlineStack from "~/components/molecules/InlineStack";
 import IconButton from "~/components/molecules/IconButton";
-import { useState } from "@wordpress/element";
 import Dropdown from "~/components/molecules/Dropdown";
-import Button from "~/components/atoms/Button";
-import { __ } from "@wordpress/i18n";
-import Icon from "~/components/atoms/Icon";
 import Card from "~/components/molecules/Card";
+import Button from "~/components/atoms/Button";
+import { useState } from "@wordpress/element";
+import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import type { FC } from "react";
 
 type PaginationProps = {
     variant?: "small" | "large";
-    currentPage: number;
-    totalPages: number;
+    current_page: number;
+    total_pages: number;
     onPageChange: (page: number) => void;
     className?: string;
 };
 
 const Pagination: FC<PaginationProps> = ({
     variant = "large",
-    currentPage,
-    totalPages,
+    current_page,
+    total_pages,
     onPageChange,
     className = "",
 }) => {
-    if (totalPages <= 1) return null;
+    if (total_pages <= 1) return null;
 
     const DOTS = "...";
 
@@ -62,10 +62,10 @@ const Pagination: FC<PaginationProps> = ({
         return range;
     };
 
-    const range = getPaginationRange(currentPage, totalPages);
+    const range = getPaginationRange(current_page, total_pages);
 
     const hiddenPages = Array.from(
-        { length: totalPages },
+        { length: total_pages },
         (_, i) => i + 1,
     ).filter((p) => !range.includes(p));
 
@@ -79,8 +79,8 @@ const Pagination: FC<PaginationProps> = ({
             {variant === "large" ? (
                 <Button
                     variant="secondary"
-                    disabled={currentPage === 1}
-                    onClick={() => onPageChange(currentPage - 1)}
+                    disabled={current_page === 1}
+                    onClick={() => onPageChange(current_page - 1)}
                 >
                     {__("Prev", "ninja-drive")}
                 </Button>
@@ -89,8 +89,8 @@ const Pagination: FC<PaginationProps> = ({
                     variant="secondary"
                     size="small"
                     name="chevron_backward"
-                    disabled={currentPage === 1}
-                    onClick={() => onPageChange(currentPage - 1)}
+                    disabled={current_page === 1}
+                    onClick={() => onPageChange(current_page - 1)}
                 />
             )}
 
@@ -126,13 +126,13 @@ const Pagination: FC<PaginationProps> = ({
                                     align="center"
                                     blockAlign="center"
                                     background={
-                                        p === currentPage
+                                        p === current_page
                                             ? "primary"
                                             : "secondary"
                                     }
                                     style={{ cursor: "pointer" }}
                                     className={
-                                        p === currentPage
+                                        p === current_page
                                             ? "text-white"
                                             : "text-black"
                                     }
@@ -149,7 +149,9 @@ const Pagination: FC<PaginationProps> = ({
                 ) : (
                     <Button
                         key={page}
-                        variant={page === currentPage ? "primary" : "secondary"}
+                        variant={
+                            page === current_page ? "primary" : "secondary"
+                        }
                         size={variant === "small" ? "small" : "medium"}
                         onClick={() => onPageChange(Number(page))}
                     >
@@ -161,8 +163,8 @@ const Pagination: FC<PaginationProps> = ({
             {variant === "large" ? (
                 <Button
                     variant="secondary"
-                    disabled={currentPage === totalPages}
-                    onClick={() => onPageChange(currentPage + 1)}
+                    disabled={current_page === total_pages}
+                    onClick={() => onPageChange(current_page + 1)}
                 >
                     {__("Next", "ninja-drive")}
                 </Button>
@@ -171,8 +173,8 @@ const Pagination: FC<PaginationProps> = ({
                     variant="secondary"
                     size="small"
                     name="chevron_forward"
-                    disabled={currentPage === totalPages}
-                    onClick={() => onPageChange(currentPage + 1)}
+                    disabled={current_page === total_pages}
+                    onClick={() => onPageChange(current_page + 1)}
                 />
             )}
         </InlineStack>

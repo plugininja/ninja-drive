@@ -22,7 +22,7 @@
             }
 
             .pnpnd-icon {
-                font-family: "pnpnd-icon" !important;
+                // font-family: "pnpnd-icon" !important;
                 font-size: 0;
                 line-height: 0;
 
@@ -31,7 +31,7 @@
                     line-height: 1;
                 }
 
-                &.pnpnd-file-browser {
+                &.pnpnd-folder {
                     &::before {
                         content: "folder";
                     }
@@ -43,7 +43,13 @@
                     }
                 }
 
-                &.pnpnd-file-list {
+                &.pnpnd-crown {
+                    &::before {
+                        content: "eicon-upgrade-crown";
+                    }
+                }
+
+                &.pnpnd-editor-list-ul {
                     &::before {
                         content: "event_list";
                     }
@@ -100,6 +106,11 @@
             &-buttons {
                 .pnpnd-notice-card-btn {
                     text-decoration: none;
+
+                    .pnpnd-icon {
+                        font-size: 16px;
+                        font-family: "pnpnd-icon" !important;
+                    }
                 }
             }
         }

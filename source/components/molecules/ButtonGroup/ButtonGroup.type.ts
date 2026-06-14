@@ -1,4 +1,7 @@
-import { ButtonStatusProps, ButtonVariant } from "~/components/atoms/Button/Button.type";
+import {
+    ButtonStatusProps,
+    ButtonVariant,
+} from "~/components/atoms/Button/Button.type";
 import {
     BackgroundColor,
     BorderColor,

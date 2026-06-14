@@ -7,6 +7,7 @@ export interface AccordionProps {
     title?: React.ReactNode;
     rounded?: BorderRadius;
     defaultOpen?: boolean;
+    arrow?: boolean;
     disabled?: boolean;
     single?: boolean;
     children?: React.ReactNode;

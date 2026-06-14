@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useCallback, useState } from "@wordpress/element";
 import { useEventListener } from "./useEventListener";
 import type { Dispatch, SetStateAction } from "react";
-import { useCallback, useState } from "@wordpress/element";
 
 /**
  * Configuration options for the useLocalStorage hook.

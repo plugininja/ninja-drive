@@ -1,13 +1,13 @@
+import { cloneElement, isValidElement } from "@wordpress/element";
 import { NotificationItemProps } from "./Notifications.type";
-import { formatDateToMonDayYear } from "~/utils/functions";
 import InlineStack from "~/components/molecules/InlineStack";
+import { formatDateToMonDayYear } from "~/utils/functions";
 import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
+import Card from "~/components/molecules/Card";
 import Icon from "~/components/atoms/Icon";
 import Text from "~/components/atoms/Text";
-import Card from "~/components/molecules/Card";
 import clsx from "clsx";
-import { cloneElement, isValidElement } from "@wordpress/element";
 
 const Item = ({
     notification,
@@ -15,7 +15,7 @@ const Item = ({
     update,
     delete: deleteNotification,
 }: NotificationItemProps) => {
-    const { title, description, createdAt, htmlContent, type, status } =
+    const { title, description, created_at, htmlContent, type, status } =
         notification;
 
     const iconName =
@@ -48,8 +48,10 @@ const Item = ({
         >
             <Card
                 padding={3}
-                background={`${type}extralight`}
-                border={`${type}light`}
+                background={
+                    type === "success" ? "primary-extralight" : `${type}-50`
+                }
+                border={type === "success" ? "primary-light" : `${type}-100`}
                 flex
                 align="center"
                 blockAlign="center"
@@ -60,7 +62,10 @@ const Item = ({
                     flexShrink: 0,
                 }}
             >
-                <Icon name={iconName} color={type} />
+                <Icon
+                    name={iconName}
+                    color={type === "success" ? "primary" : type}
+                />
             </Card>
 
             <BlockStack
@@ -77,7 +82,7 @@ const Item = ({
 
                     <InlineStack gap={10} wrap={false}>
                         <Text size="xs" weight="medium">
-                            {formatDateToMonDayYear(createdAt)}
+                            {formatDateToMonDayYear(created_at)}
                         </Text>
 
                         {status === "unread" && (

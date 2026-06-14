@@ -5,14 +5,14 @@ import { FileTypes } from "~/types/file.types";
 import { Order, OrderBy } from "~/types/Types";
 
 export type TQueryArgs = {
-    activeFolder: string;
+    active_folder: string;
     page: number;
-    perPage: number;
+    per_page: number;
     order: Order;
-    orderBy: OrderBy;
+    order_by: OrderBy;
     search?: string | null;
-    searchScope: "folder" | "global";
-    searchLocation: "server" | "cache";
+    search_scope: "folder" | "global";
+    search_location: "server" | "cache";
     types: FileTypes[];
 };
 
@@ -28,14 +28,14 @@ export const useFiles = (
         [],
     );
     const [queryArgs, setQueryArgs] = useState<TQueryArgs>({
-        activeFolder: savedFolder,
+        active_folder: savedFolder,
         page: 1,
-        perPage: PER_PAGE_LIMIT,
+        per_page: PER_PAGE_LIMIT,
         order: "ASC",
-        orderBy: "name",
+        order_by: "name",
         search: null,
-        searchScope: "folder",
-        searchLocation: "cache",
+        search_scope: "folder",
+        search_location: "cache",
         types: defaultTypes,
     });
 
@@ -45,12 +45,12 @@ export const useFiles = (
 
     const { data, isFetching, isLoading, isError } = useGetFilesQuery(
         {
-            fileKey: queryArgs.activeFolder,
+            file_key: queryArgs.active_folder,
             page: queryArgs.page,
-            perPage: queryArgs.perPage,
-            orderBy: queryArgs.orderBy,
+            per_page: queryArgs.per_page,
+            order_by: queryArgs.order_by,
             order: queryArgs.order,
-            from: queryArgs.searchLocation,
+            from: queryArgs.search_location,
             search: queryArgs.search ?? "",
             types: queryArgs.types.join(","),
         },
@@ -58,18 +58,18 @@ export const useFiles = (
     );
 
     const files = data?.data?.files ?? [];
-    const hasMore = data?.data?.hasMore ?? false;
+    const has_more = data?.data?.has_more ?? false;
     const breadcrumbs = data?.data?.breadcrumbs ?? [];
-    const totalCount = data?.data?.totalFiles ?? 0;
+    const total_count = data?.data?.total_files ?? 0;
 
     useEffect(() => {
-        if (!isFetching && queryArgs.searchLocation === "server") {
+        if (!isFetching && queryArgs.search_location === "server") {
             setQueryArgs((prev) => ({
                 ...prev,
-                searchLocation: "cache",
+                search_location: "cache",
             }));
         }
-    }, [isFetching, queryArgs.searchLocation]);
+    }, [isFetching, queryArgs.search_location]);
 
     useEffect(() => {
         const target = loadMoreRef.current;
@@ -81,7 +81,7 @@ export const useFiles = (
             ([entry]) => {
                 if (
                     entry.isIntersecting &&
-                    hasMore &&
+                    has_more &&
                     !isFetching &&
                     !isFetchingNextPage.current
                 ) {
@@ -100,7 +100,7 @@ export const useFiles = (
         observerRef.current.observe(target);
 
         return () => observerRef.current?.disconnect();
-    }, [hasMore, isFetching, skip]);
+    }, [has_more, isFetching, skip]);
 
     useEffect(() => {
         if (!isFetching) {
@@ -108,12 +108,12 @@ export const useFiles = (
         }
     }, [isFetching]);
 
-    const openFolder = (fileKey: string) => {
-        if (fileKey === queryArgs.activeFolder) return;
+    const openFolder = (file_key: string) => {
+        if (file_key === queryArgs.active_folder) return;
 
         setQueryArgs((prev) => ({
             ...prev,
-            activeFolder: fileKey,
+            active_folder: file_key,
             page: 1,
         }));
     };
@@ -122,36 +122,36 @@ export const useFiles = (
         setQueryArgs((prev) => ({
             ...prev,
             page: 1,
-            searchLocation: "server",
+            search_location: "server",
         }));
     };
 
     const suggestedFilesList = files?.filter(
-        (file) => suggestedFiles?.includes(file?.fileKey),
+        (file) => suggestedFiles?.includes(file?.file_key),
     );
 
-    const addSuggestedFile = (fileKey: string) => {
-        const alreadySuggested = suggestedFiles?.includes(fileKey);
+    const addSuggestedFile = (file_key: string) => {
+        const alreadySuggested = suggestedFiles?.includes(file_key);
 
         if (!alreadySuggested) {
-            setSuggestedFiles?.([fileKey, ...(suggestedFiles || [])]);
+            setSuggestedFiles?.([file_key, ...(suggestedFiles || [])]);
         }
     };
 
-    const removeSuggestedFile = (fileKey: string) => {
+    const removeSuggestedFile = (file_key: string) => {
         const updatedSuggestedFiles = suggestedFiles?.filter(
-            (key) => key !== fileKey,
+            (key) => key !== file_key,
         );
 
         setSuggestedFiles?.(updatedSuggestedFiles);
     };
 
-    const showScrollFade = hasMore && files.length > 0;
+    const showScrollFade = has_more && files.length > 0;
 
     return {
         files,
         breadcrumbs,
-        totalCount,
+        total_count,
 
         loading: (isLoading || isFetching) && queryArgs.page === 1,
         loadingMore: (isLoading || isFetching) && queryArgs.page > 1,
@@ -164,7 +164,7 @@ export const useFiles = (
         refresh,
 
         loadMoreRef,
-        hasMore,
+        has_more,
         showScrollFade,
 
         suggestedFiles: suggestedFilesList,

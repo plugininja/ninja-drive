@@ -1,17 +1,17 @@
+import { GetNoticesResponse } from "~/types/noticeApi.types";
 import { ServerResponse } from "~/types/Types";
 import { baseApi } from "./baseApi";
-import { GetNoticesResponse } from "~/types/noticeApi.types";
 
 export const notificationApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getNotifications: builder.query<
             ServerResponse<GetNoticesResponse>,
-            { page: number; perPage: number }
+            { page: number; per_page: number }
         >({
-            query: ({ page, perPage }) => {
+            query: ({ page, per_page }) => {
                 return {
                     url: "notice",
-                    params: { page, perPage },
+                    params: { page, per_page },
                 };
             },
 
@@ -20,14 +20,14 @@ export const notificationApi = baseApi.injectEndpoints({
             merge: (currentCache, newData) => {
                 if (!currentCache.data || !newData.data) return;
 
-                if (newData.data.currentPage === 1) {
+                if (newData.data.current_page === 1) {
                     currentCache.data = newData.data;
                     return;
                 }
 
                 currentCache.data.notices.push(...newData.data.notices);
-                currentCache.data.hasMore = newData.data.hasMore;
-                currentCache.data.currentPage = newData.data.currentPage;
+                currentCache.data.has_more = newData.data.has_more;
+                currentCache.data.current_page = newData.data.current_page;
             },
 
             forceRefetch({ currentArg, previousArg }) {
@@ -62,7 +62,7 @@ export const notificationApi = baseApi.injectEndpoints({
                                 draft.data?.notices.forEach((notification) => {
                                     notification.status = "read";
                                 });
-                                draft.data!.unreadCount = 0;
+                                draft.data!.unread_count = 0;
                             },
                         ),
                     );
@@ -100,7 +100,7 @@ export const notificationApi = baseApi.injectEndpoints({
                                     notification.status === "read"
                                 ) {
                                     notification.status = "read";
-                                    draft.data!.unreadCount -= 1;
+                                    draft.data!.unread_count -= 1;
                                 }
                             },
                         ),
@@ -164,7 +164,7 @@ export const notificationApi = baseApi.injectEndpoints({
                                     notification.status === "unread"
                                 ) {
                                     draft.data!.total -= 1;
-                                    draft.data!.unreadCount -= 1;
+                                    draft.data!.unread_count -= 1;
                                 }
                                 if (
                                     notification &&

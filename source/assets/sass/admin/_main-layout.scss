@@ -27,23 +27,19 @@
     height: 100%;
 
     &-bg {
-        background-color: $primary-extralight;
+        background-color: $gray-50;
     }
 
     &-content-wrapper {
         width: 100%;
         height: 100%;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        scrollbar-width: none;
-        scroll-behavior: smooth;
         position: relative;
     }
 
     &-content {
         flex-grow: 1;
         height: calc(100vh - 110px);
-        padding: var(--pnpnd-space-5) !important;
+        padding: var(--pnpnd-space-5);
         overflow-y: auto;
         overflow-x: hidden;
         scroll-behavior: smooth;

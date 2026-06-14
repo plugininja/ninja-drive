@@ -57,14 +57,51 @@
 
                 &--left {
                     left: 0;
-                    background: linear-gradient(to right, $primary-extralight, transparent);
+                    background: linear-gradient(
+                        to right,
+                        $primary-extralight,
+                        transparent
+                    );
                 }
 
                 &--right {
                     right: 0;
-                    background: linear-gradient(to left, $primary-extralight, transparent);
+                    background: linear-gradient(
+                        to left,
+                        $primary-extralight,
+                        transparent
+                    );
                 }
             }
+        }
+    }
+
+    .pn-file-info-overlay {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999998;
+    }
+
+    .pn-file-info {
+        position: fixed;
+        top: 32px;
+        right: 0;
+        max-width: 400px;
+        width: 400px;
+        height: calc(100vh - 32px);
+        z-index: 999999;
+        overflow-y: auto;
+        transform: translateX(100%);
+        animation: pn-slide-in 0.3s ease forwards;
+    }
+
+    @keyframes pn-slide-in {
+        to {
+            transform: translateX(0);
         }
     }
 }

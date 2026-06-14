@@ -1,8 +1,11 @@
+import { BorderRadius } from "~/types/styles";
+
 export type NoteProps = {
     id?: string;
     style?: React.CSSProperties;
     className?: string;
     type?: "info" | "warning" | "error";
+    rounded?: BorderRadius;
     children?: React.ReactNode;
 };
 

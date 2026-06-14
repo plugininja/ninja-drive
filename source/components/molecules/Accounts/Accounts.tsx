@@ -1,29 +1,37 @@
-import { __ } from "@wordpress/i18n";
-import { selectAuth } from "~/store/features/authSlice";
-import { useAppSelector } from "~/store/hooks";
-import { TextColor } from "~/types/styles";
 import ProfileCard from "~/components/molecules/ProfileCard";
+import { selectAuth } from "~/store/features/authSlice";
 import Dropdown from "~/components/molecules/Dropdown";
+import { useAppSelector } from "~/store/hooks";
 import Avatar from "~/components/atoms/Avatar";
 import Card from "~/components/molecules/Card";
+import { TextColor } from "~/types/styles";
+import { __ } from "@wordpress/i18n";
 
 const Accounts = ({
     position = { left: "auto", right: "0" },
     arrowColor = "black",
-    mediaLibrary = false,
+    media_library = false,
 }: {
     position?: { left: string; right: string };
     arrowColor?: TextColor;
-    mediaLibrary?: boolean;
+    media_library?: boolean;
 }) => {
-    const { loginAccounts, activeAccount } = useAppSelector(selectAuth);
+    const { login_accounts, active_account } = useAppSelector(selectAuth);
 
-    const { name, photo } = activeAccount || {};
+    const { name, photo } = active_account || {};
+
+    if (
+        !pnpnd?.current_user?.can?.has_full_access &&
+        !pnpnd?.current_user?.can?.accounts_connect &&
+        !pnpnd?.current_user?.can?.accounts_manage
+    ) {
+        return null;
+    }
 
     return (
         <Dropdown>
             <Dropdown.Trigger>
-                {mediaLibrary ? (
+                {media_library ? (
                     <div className="flex-center">
                         <Avatar
                             src={photo || ""}
@@ -73,7 +81,7 @@ const Accounts = ({
                 }}
             >
                 <ProfileCard
-                    accounts={loginAccounts || []}
+                    accounts={login_accounts || []}
                     fullInfo={false}
                     title={__("My Accounts", "ninja-drive")}
                     addAccount

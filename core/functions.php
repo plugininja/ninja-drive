@@ -1,7 +1,7 @@
 <?php
 
 use Pnpnd\ND\Utils\Helpers;
-use Pnpnd\ND\Utils\MimeTypeManager;
+use Pnpnd\ND\Utils\Mimetype_Manager;
 use Pnpnd\ND\Widget;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
@@ -12,8 +12,8 @@ defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
  * @param string $key The key of the account to retrieve.
  * @return \Pnpnd\ND\App\Account|WP_Error
  */
-function pnpndGetAccountByKey( $key ) {
-	$account = \Pnpnd\ND\App\Accounts::getInstance()->getAccountByKey( $key );
+function pnpnd_get_account_by_key( $key ) {
+	$account = \Pnpnd\ND\App\Accounts::get_instance()->get_account_by_key( $key );
 
 	return $account;
 }
@@ -24,8 +24,8 @@ function pnpndGetAccountByKey( $key ) {
  * @param string $key The key of the file to retrieve.
  * @return array|WP_Error The file data if found, or null if not found.
  */
-function pnpndGetFileByKey( $key ) {
-	$file = \Pnpnd\ND\Models\Files::getInstance()->getFileByKey( $key, 'array' );
+function pnpnd_get_file_by_key( $key ) {
+	$file = \Pnpnd\ND\Models\Files::get_instance()->get_file_by_key( $key, 'array' );
 
 	return $file;
 }
@@ -37,8 +37,8 @@ function pnpndGetFileByKey( $key ) {
  *
  * @return array|WP_Error An array of file IDs if found, or null if not found.
  */
-function pnpndGetFileIdsByKeys( array $keys ) {
-	return \Pnpnd\ND\Models\Files::getInstance()->getFileAttributesByKeys( $keys );
+function pnpnd_get_file_ids_by_keys( array $keys ) {
+	return \Pnpnd\ND\Models\Files::get_instance()->get_file_attributes_by_keys( $keys );
 }
 
 /**
@@ -58,8 +58,8 @@ function pnpndGetFileIdsByKeys( array $keys ) {
  *                        ['id' => 'def456', 'name' => 'File B']
  *                        ]
  */
-function pnpndGetFileAttributesByKeys( array $keys, array $attributes ) {
-	return \Pnpnd\ND\Models\Files::getInstance()->getFileAttributesByKeys( $keys, $attributes );
+function pnpnd_get_file_attributes_by_keys( array $keys, array $attributes ) {
+	return \Pnpnd\ND\Models\Files::get_instance()->get_file_attributes_by_keys( $keys, $attributes );
 }
 
 /**
@@ -78,7 +78,7 @@ function pnpndGetFileAttributesByKeys( array $keys, array $attributes ) {
  *
  * @return array An array of file extensions if found, or an empty array if not found.
  */
-function pnpndGetExtensionGroups( $keys = null ): array {
+function pnpnd_get_extension_groups( $keys = null ): array {
 	if ( is_string( $keys ) ) {
 		$keys = array( $keys );
 	}
@@ -94,7 +94,7 @@ function pnpndGetExtensionGroups( $keys = null ): array {
 		'binary_executable' => array( 'exe', 'dll', 'iso', 'bin', 'apk', 'msi' ),
 	);
 
-	$downloadable = array_filter( array_merge( ...array_values( $groups ) ), fn ( $ext ) => ! in_array( $ext, MimeTypeManager::NON_DOWNLOADABLE_TYPES, true ) );
+	$downloadable = array_filter( array_merge( ...array_values( $groups ) ), fn ( $ext ) => ! in_array( $ext, MimeType_Manager::NON_DOWNLOADABLE_TYPES, true ) );
 
 	$groups['downloadable'] = array_values( $downloadable );
 
@@ -116,15 +116,15 @@ function pnpndGetExtensionGroups( $keys = null ): array {
 /**
  * Retrieves the file extension associated with a given MIME type.
  *
- * @param string $mimeType The MIME type to retrieve the extension for.
+ * @param string $mime_type The MIME type to retrieve the extension for.
  *
  * @return string The file extension associated with the given MIME type,
  *                or 'unknown' if no extension can be determined.
  */
-function pnpndGetExtensionByMimeType( string $mimeType ) {
-	$map = pnpndGetMimeTypeMap( 'mime2ext' );
+function pnpnd_get_extension_by_mimetype( string $mime_type ) {
+	$map = pnpnd_get_mimetype_map( 'mime2ext' );
 
-	return $map[ $mimeType ] ?? 'unknown';
+	return $map[ $mime_type ] ?? 'unknown';
 }
 
 /**
@@ -135,8 +135,8 @@ function pnpndGetExtensionByMimeType( string $mimeType ) {
  * @return string The MIME type associated with the given extension,
  *                or 'application/octet-stream' if no association can be determined.
  */
-function pnpndGetMimeTypeByExtension( string $extension ) {
-	$map = pnpndGetMimeTypeMap( 'ext2mime' );
+function pnpnd_get_mimetype_by_extension( string $extension ) {
+	$map = pnpnd_get_mimetype_map( 'ext2mime' );
 
 	return $map[ $extension ] ?? 'application/octet-stream';
 }
@@ -148,13 +148,13 @@ function pnpndGetMimeTypeByExtension( string $extension ) {
  *
  * @return array The array of MIME types associated with the given set of file types.
  */
-function pnpndGetMimeTypesByGroup( array $types ) {
-	$extensions = pnpndGetExtensionGroups( $types );
-	$map        = pnpndGetMimeTypeMap( 'ext2mime' );
+function pnpnd_get_mimetypes_by_group( array $types ) {
+	$extensions = pnpnd_get_extension_groups( $types );
+	$map        = pnpnd_get_mimetype_map( 'ext2mime' );
 
-	$mimeTypes = array_filter( array_map( fn ( $ext ) => $map[ $ext ] ?? null, $extensions ) );
+	$mimetypes = array_filter( array_map( fn ( $ext ) => $map[ $ext ] ?? null, $extensions ) );
 
-	return array_values( array_unique( $mimeTypes ) );
+	return array_values( array_unique( $mimetypes ) );
 }
 
 /**
@@ -170,8 +170,8 @@ function pnpndGetMimeTypesByGroup( array $types ) {
  *
  * @return array The MIME type mapping array.
  */
-function pnpndGetMimeTypeMap( string $type = 'mime2ext' ) {
-	static $mimeMap = array(
+function pnpnd_get_mimetype_map( string $type = 'mime2ext' ) {
+	static $mime_map = array(
 		'application/vnd.google-apps.folder'        => 'folder',
 		'application/vnd.google-apps.spreadsheet'   => 'spreadsheet',
 		'application/vnd.google-apps.document'      => 'document',
@@ -217,171 +217,206 @@ function pnpndGetMimeTypeMap( string $type = 'mime2ext' ) {
 		'video/x-msvideo'                           => 'avi',
 	);
 
-	return $type === 'ext2mime' ? array_flip( $mimeMap ) : $mimeMap;
+	return 'ext2mime' === $type ? array_flip( $mime_map ) : $mime_map;
 }
 
-function pnpndGetDefaultSettings(): array {
+function pnpnd_get_default_settings(): array {
 	$settings = array(
-		'accounts'                      => array(
-			'connectionType'  => 'manual',
-			'appClientId'     => '',
-			'appClientSecret' => '',
-			'redirectUri'     => PNPND_REDIRECT_URI,
+		'accounts'                          => array(
+			'connection_type'   => 'manual',
+			'app_client_id'     => '',
+			'app_client_secret' => '',
+			'redirect_uri'      => PNPND_REDIRECT_URI,
 		),
-		'advanced'                      => array(
-			'allowDotExtension'     => false,
-			'deleteDataOnUninstall' => false,
+		'advanced'                          => array(
+			'allow_dot_extension'      => false,
+			'redirection'              => true,
+			'delete_data_on_uninstall' => false,
+			'redirection'              => false,
 		),
-		'appearance'                    => array(
-			'preloader'    => 1,
-			'primaryColor' => '#1F6CFA',
-			'customCSS'    => '',
+		'appearance'                        => array(
+			'preloader' => 1,
 		),
-		'integrations'                  => array(
-			'activeIntegrations' => array(
-				'classicEditor',
+		'integrations'                      => array(
+			'active_integrations' => array(
+				'contact_form_7',
 				'gutenberg',
 				'elementor',
 			),
-			'mediaLibrary'       => array(
-				'folders'         => array(),
-				'redirection'     => true,
-				'deleteCloudFile' => false,
-				'mlHoverPreview'  => false,
-			),
 		),
-		'tools'                         => array(
-			'autoSave' => false,
+		'tools'                             => array(
+			'auto_save' => false,
 		),
 
-		'createFolderOnRegistration'    => false,
-		'privateFolderInAdminDashboard' => false,
-		'excludeIncludeFolder'          => false,
-		'isEditing'                     => false,
-		'draft'                         => null,
-		'menu'                          => 'Accounts',
+		'create_folder_on_registration'     => false,
+		'private_folder_in_admin_dashboard' => false,
+		'exclude_include_folder'            => false,
+		'is_editing'                        => false,
+		'draft'                             => null,
+		'menu'                              => 'Accounts',
 	);
 
 	return $settings;
 }
 
-function pnpndGetWidgetDefaultData( string $type ): array {
-	if ( ! in_array( $type, Widget::getWidgetsList(), true ) ) {
+/**
+ * Applies add/remove overrides to an array section.
+ *
+ * Supports PNPND_UNSET sentinel inside 'add' for deep removal.
+ *
+ * @param array $section   The base section array.
+ * @param array $overrides Keys: 'add' (deep-merged) and/or 'remove' (explicit unset list).
+ * @return array
+ */
+function pnpnd_apply_section_overrides( array $section, array $overrides ): array {
+	if ( ! empty( $overrides['add'] ) ) {
+		$section = pnpnd_deep_merge_with_unset( $section, $overrides['add'] );
+	}
+
+	if ( ! empty( $overrides['remove'] ) ) {
+		foreach ( $overrides['remove'] as $key ) {
+			unset( $section[ $key ] );
+		}
+	}
+
+	return $section;
+}
+
+/**
+ * Build default widget data for a given widget type.
+ *
+ * Each widget definition declares an 'overrides' key with per-section
+ * add/remove directives. Sections: advanced, filter, style, permissions,
+ * notifications. The permissions and notifications sections additionally
+ * support a 'select' key (list of keys to include) and 'override' key
+ * (per-key default replacements for permissions).
+ *
+ * @param string $type Widget type slug.
+ * @return array Default widget data, or empty array for unknown types.
+ */
+function pnpnd_build_widget_data( string $type ): array {
+	if ( ! in_array( $type, Widget::get_widgets_list(), true ) ) {
 		return array();
 	}
 
-	$data = array(
-		'id'          => 'new',
-		'status'      => 'active',
-		'integration' => null,
-		'data'        => array(
-			'source'      => array(
-				'fileKeys'      => array(),
-				'selectedFiles' => array(),
-			),
-			'filter'      => array(
-				'extension' => array(
-					'include' => array(),
-					// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
-					'exclude' => array(),
-					'all'     => false,
-				),
-				'name'      => array(
-					'include' => '',
-					// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
-					'exclude' => '',
-					'all'     => false,
-					'applyTo' => array(
-						'files'   => true,
-						'folders' => true,
-					),
-				),
-			),
-			'advanced'    => array(),
-			'permissions' => array(
-				'passwordProtect' => array(
-					'enable'   => false,
-					'password' => '',
-				),
-				'displayFor'      => array(
-					'whoCanViewWidget'        => 'everyone',
-					'loggedInUserType'        => 'users',
-					'displayFor'              => array(),
-					'showAccessDeniedMessage' => true,
-					'accessDeniedMessage'     => 'You do not have access to this widget.',
-				),
-			),
-		),
+	// --- Shared base structures ---
+
+	$base_source = array(
+		'file_keys'      => array(),
+		'files'          => array(),
+		'breadcrumbs'    => array(),
+		'selected_files' => array(),
+		'current_page'   => 1,
+		'has_more'       => false,
+		'total_count'    => 0,
+		'total_pages'    => 1,
+		'next_page'      => null,
+		'per_page'       => 20,
 	);
 
-	$advancedDefaults = array(
-		'width'               => array(
-			'value' => 100,
-			'unit'  => '%',
-		),
-		'height'              => array(
-			'value' => 100,
-			'unit'  => 'auto',
-		),
-		'theme'               => 'light',
-		'borderBoxVisibility' => false,
-		'files'               => array(
-			'loadingType' => 'load_more',
-			'perPage'     => 20,
-		),
-		'autoFetch'           => array(
+	$base_advanced = array(
+		'auto_fetch'            => array(
 			'status'   => false,
 			'interval' => 60,
 		),
-		'sort'                => array(
-			'orderBy' => 'name',
-			'order'   => 'ASC',
+		'sort'                  => array(
+			'order_by' => 'name',
+			'order'    => 'ASC',
+		),
+		'secure_video_playback' => false,
+	);
+
+	$base_security = array(
+		'password_protect' => array(
+			'enable'   => false,
+			'password' => '',
+		),
+		'display_for'      => array(
+			'who_can_view_module'        => 'everyone',
+			'logged_in_user_type'        => 'users',
+			'display_for'                => array(),
+			'show_access_denied_message' => true,
+			'access_denied_message'      => 'You do not have access to this widget.',
 		),
 	);
 
-	$permissionBase = array(
-		'userAccess'       => 'everyone',
-		'loggedInUserType' => 'users',
-		'displayFor'       => array(),
+	$base_filter = array(
+		'extension' => array(
+			'include' => array(),
+			'all'     => false,
+			'ignore'  => array(),
+		),
+		'name'      => array(
+			'include'  => '',
+			'ignore'   => '',
+			'all'      => false,
+			'apply_to' => array(
+				'files'   => true,
+				'folders' => true,
+			),
+		),
 	);
 
-	$permissions = array(
-		'newFolder' => $permissionBase + array( 'enable' => false ),
-		'upload'    => $permissionBase + array(
-			'enable'       => false,
-			'folderUpload' => false,
+	$base_style = array(
+		'width'                 => array(
+			'value' => 100,
+			'unit'  => '%',
 		),
-		'preview'   => $permissionBase + array(
-			'enable'           => false,
-			'inline'           => true,
-			'popOut'           => false,
-			'previewThumbnail' => true,
+		'height'                => array(
+			'value' => 100,
+			'unit'  => 'auto',
 		),
-		'rename'    => $permissionBase + array( 'enable' => false ),
-		'download'  => $permissionBase + array(
-			'enable'           => false,
-			'folderDownload'   => false,
-			'multipleDownload' => false,
+		'theme'                 => 'light',
+		'border_box_visibility' => false,
+		'files'                 => array(
+			'loading_type' => 'load_more',
+			'per_page'     => 20,
 		),
-		'copy'      => $permissionBase + array( 'enable' => false ),
-		'move'      => $permissionBase + array( 'enable' => false ),
-		'share'     => $permissionBase + array( 'enable' => false ),
-		'search'    => $permissionBase + array(
-			'enable'         => false,
-			'searchLocation' => array(
+	);
+
+	$permission_base = array(
+		'user_access'         => 'everyone',
+		'logged_in_user_type' => 'users',
+		'display_for'         => array(),
+	);
+
+	$all_permissions = array(
+		'new_folder' => $permission_base + array( 'enable' => false ),
+		'upload'     => $permission_base + array(
+			'enable'        => false,
+			'folder_upload' => false,
+		),
+		'preview'    => $permission_base + array(
+			'enable'            => false,
+			'inline'            => true,
+			'pop_out'           => false,
+			'preview_thumbnail' => true,
+		),
+		'rename'     => $permission_base + array( 'enable' => false ),
+		'download'   => $permission_base + array(
+			'enable'            => false,
+			'folder_download'   => false,
+			'multiple_download' => false,
+		),
+		'copy'       => $permission_base + array( 'enable' => false ),
+		'move'       => $permission_base + array( 'enable' => false ),
+		'share'      => $permission_base + array( 'enable' => false ),
+		'search'     => $permission_base + array(
+			'enable'          => false,
+			'search_location' => array(
 				'cache'  => true,
 				'server' => true,
 			),
-			'searchScope'    => array(
+			'search_scope'    => array(
 				'current' => true,
 				'global'  => true,
 			),
 		),
-		'delete'    => $permissionBase + array( 'enable' => false ),
+		'delete'     => $permission_base + array( 'enable' => false ),
 	);
 
-	$permissionList = array(
-		'newFolder',
+	$notification_action_keys = array(
+		'new_folder',
 		'upload',
 		'preview',
 		'rename',
@@ -389,39 +424,35 @@ function pnpndGetWidgetDefaultData( string $type ): array {
 		'copy',
 		'move',
 		'share',
-		'viewShareLink',
+		'view_share_link',
 		'delete',
 	);
 
-	$notifications = array(
-		'enable'          => array(),
-		'emailRecipients' => '',
-		'skipCurrentUser' => false,
+	$all_notifications = array_merge(
+		array(
+			'enable'            => array(),
+			'email_recipients'  => '',
+			'skip_current_user' => false,
+		),
+		array_fill_keys( $notification_action_keys, false )
 	);
 
-	foreach ( $permissionList as $action ) {
-		$notifications[ $action ] = false;
-	}
+	$upload_filter = null;
 
-	$uploadFilter = array(
-		'maxSize'  => 0,
-		'minSize'  => 0,
-		'maxFiles' => 0,
-	);
-
+	// --- Widget definitions ---
 	$widgets = array(
-		'file-browser'    => array(
-			'title'             => 'File Browser',
-			'advancedKey'       => 'fileBrowser',
-			'fileBrowser'       => array(
-				'folderView'        => 'grid',
-				'headerOptions'     => array(
-					'breadcrumb' => false,
-					'refresh'    => false,
-					'sorting'    => false,
-					'rootUpload' => false,
+		'file_browser'    => array(
+			'title'        => 'File Browser',
+			'style_key'    => 'file_browser',
+			'file_browser' => array(
+				'folder_view'          => 'grid',
+				'header_options'       => array(
+					'breadcrumb'  => false,
+					'refresh'     => false,
+					'sorting'     => false,
+					'root_upload' => false,
 				),
-				'listViewTableHead' => array(
+				'list_view_table_head' => array(
 					'enable'  => false,
 					'name'    => 'Name',
 					'type'    => 'Type',
@@ -429,136 +460,147 @@ function pnpndGetWidgetDefaultData( string $type ): array {
 					'updated' => 'Updated',
 					'action'  => 'Action',
 				),
-
 			),
-			'filters'           => array( 'upload' ),
-			'permissions'       => array(
-				'newFolder',
-				'upload',
-				'preview',
-				'rename',
-				'download',
-				'copy',
-				'move',
-				'delete',
-				'search',
-				'share',
-			),
-			'notifications'     => array_keys( $notifications ),
-			'advancedOverrides' => array(
-				'borderBoxVisibility' => false,
+			'overrides'    => array(
+				'filter'        => $upload_filter ? array( 'add' => array( 'upload' => $upload_filter ) ) : array(),
+				'permissions'   => array(
+					'select' => array( 'new_folder', 'upload', 'preview', 'rename', 'download', 'copy', 'move', 'delete', 'search', 'share' ),
+				),
+				'notifications' => array(
+					'select' => array_keys( $all_notifications ),
+				),
 			),
 		),
 
 		'gallery'         => array(
-			'title'         => 'Gallery',
-			'advancedKey'   => 'gallery',
-			'gallery'       => array(
-				'layout'                    => 'grid',
-				'columnsDevice'             => 'desktop',
-				'columns'                   => array(
+			'title'     => 'Gallery',
+			'style_key' => 'gallery',
+			'gallery'   => array(
+				'layout'                      => 'grid',
+				'columns_device'              => 'desktop',
+				'columns'                     => array(
 					'desktop' => 4,
 					'laptop'  => 3,
 					'tablet'  => 2,
 					'mobile'  => 1,
 				),
-				'thumbnailSpacing'          => array(
+				'thumbnail_spacing'           => array(
 					'value' => 1,
 					'unit'  => 'rem',
 				),
-				'thumbnailRadius'           => array(
+				'thumbnail_radius'            => array(
 					'value' => 1,
 					'unit'  => 'rem',
 				),
-				'thumbnailQuality'          => 'thumbnail',
-				'showOverlay'               => false,
-				'overlayDisplayNumber'      => true,
-				'overlayDisplayTitle'       => true,
-				'overlayDisplayDescription' => true,
+				'thumbnail_quality'           => 'large',
+				'show_overlay'                => false,
+				'overlay_display_number'      => true,
+				'overlay_display_title'       => true,
+				'overlay_display_description' => true,
 			),
-			'permissions'   => array( 'download', 'preview' ),
-			'notifications' => array( 'download', 'preview' ),
+			'overrides' => array(
+				'advanced'      => array(
+					'remove' => array( 'secure_video_playback' ),
+				),
+				'permissions'   => array( 'select' => array( 'download', 'preview' ) ),
+				'notifications' => array( 'select' => array( 'download', 'preview' ) ),
+			),
 		),
 
-		'embed-documents' => array(
-			'title'             => 'Embed Documents',
-			'advancedKey'       => 'embedDocuments',
-			'embedDocuments'    => array(
-				'showFileName' => false,
-				'width'        => array(
+		'embed_documents' => array(
+			'title'           => 'Embed Documents',
+			'style_key'       => 'embed_documents',
+			'embed_documents' => array(
+				'show_file_name' => false,
+				'width'          => array(
 					'value' => 100,
 					'unit'  => '%',
 				),
-				'height'       => array(
+				'height'         => array(
 					'value' => 600,
 					'unit'  => 'px',
 				),
-				'allowPopOut'  => true,
+				'allow_pop_out'  => true,
 			),
-			'advancedOverrides' => array(
-				'files' => array(
-					'perPage' => 2,
+			'overrides'       => array(
+				'advanced' => array(
+					'remove' => array( 'secure_video_playback' ),
+				),
+				'style'    => array(
+					'add' => array(
+						'files' => array( 'per_page' => 2 ),
+					),
 				),
 			),
 		),
 	);
+
+	if ( ! in_array( $type, array( 'file_browser', 'gallery', 'embed_documents' ), true ) ) {
+		return array();
+	}
 
 	if ( ! isset( $widgets[ $type ] ) ) {
 		return array();
 	}
 
-	$widget = $widgets[ $type ];
+	$widget_def = $widgets[ $type ];
+	$overrides  = $widget_def['overrides'] ?? array();
 
-	$data['type']  = $type;
-	$data['title'] = $widget['title'];
+	// --- Apply per-section overrides ---
 
-	if ( ! empty( $widget['filters'] ) ) {
-		foreach ( $widget['filters'] as $filter ) {
-			$data['data']['filter'][ $filter ] = $uploadFilter;
-		}
+	$advanced = pnpnd_apply_section_overrides( $base_advanced, $overrides['advanced'] ?? array() );
+	$filter   = pnpnd_apply_section_overrides( $base_filter, $overrides['filter'] ?? array() );
+	$style    = pnpnd_apply_section_overrides( $base_style, $overrides['style'] ?? array() );
+
+	// --- Build permissions: apply per-key overrides, then select ---
+
+	$perm_overrides  = $overrides['permissions'] ?? array();
+	$all_permissions = pnpnd_apply_section_overrides( $all_permissions, array( 'add' => $perm_overrides['override'] ?? array() ) );
+	$permissions     = array_intersect_key( $all_permissions, array_flip( $perm_overrides['select'] ?? array() ) );
+
+	// --- Build notifications: select from pool ---
+
+	$notifications = array_intersect_key( $all_notifications, array_flip( $overrides['notifications']['select'] ?? array() ) );
+
+	// --- Embed type-specific config into style ---
+
+	$style_key = $widget_def['style_key'] ?? null;
+	if ( $style_key && isset( $widget_def[ $style_key ] ) ) {
+		$style[ $style_key ] = $widget_def[ $style_key ];
 	}
 
-	if ( ! empty( $widget['overridePermissions'] ) ) {
-		foreach ( $widget['overridePermissions'] as $permKey => $permValues ) {
-			if ( isset( $permissions[ $permKey ] ) ) {
-				$permissions[ $permKey ] = $permValues;
-			}
-		}
-	}
+	// --- Assemble configuration and apply section-level removes ---
 
-	if ( ! empty( $widget['permissions'] ) ) {
-		foreach ( $widget['permissions'] as $perm ) {
-			$data['data']['permissions'][ $perm ] = $permissions[ $perm ];
-		}
-	}
-
-	if ( ! empty( $widget['notifications'] ) ) {
-		foreach ( $widget['notifications'] as $notify ) {
-			$data['data']['notifications'][ $notify ] = $notifications[ $notify ];
-		}
-	}
-
-	$advanced = $advancedDefaults;
-
-	if ( ! empty( $widget['excludeAdvanced'] ) ) {
-		foreach ( $widget['excludeAdvanced'] as $advKey ) {
-			unset( $advanced[ $advKey ] );
-		}
-	}
-
-	if ( ! empty( $widget['advancedOverrides'] ) ) {
-		$advanced = pnpndDeepMergeWithUnset(
-			$advanced,
-			$widget['advancedOverrides']
-		);
-	}
-
-	$data['data']['advanced'] = array_merge(
-		$advanced,
-		$widget['advancedKey'] && isset( $widget[ $widget['advancedKey'] ] ) ? array( $widget['advancedKey'] => $widget[ $widget['advancedKey'] ] ) : array()
+	$configuration = pnpnd_apply_section_overrides(
+		array(
+			'advanced' => $advanced,
+			'security' => $base_security,
+			'filter'   => $filter,
+		),
+		$overrides['configuration'] ?? array()
 	);
 
-	return $data;
+	return array(
+		'id'          => 'new',
+		'status'      => 'active',
+		'type'        => $type,
+		'title'       => $widget_def['title'],
+		'integration' => null,
+		'data'        => array(
+			'source'        => $base_source,
+			'configuration' => $configuration,
+			'style'         => $style,
+			'permissions'   => $permissions,
+			'notifications' => $notifications,
+		),
+	);
+}
+
+/**
+ * @deprecated Use pnpnd_build_widget_data() instead.
+ */
+function pnpnd_get_widget_default_data( string $type ): array {
+	return pnpnd_build_widget_data( $type );
 }
 
 /**
@@ -569,16 +611,16 @@ function pnpndGetWidgetDefaultData( string $type ): array {
  *
  * @return array The merged array.
  */
-function pnpndDeepMergeWithUnset( array $base, array $override ): array {
+function pnpnd_deep_merge_with_unset( array $base, array $override ): array {
 	foreach ( $override as $key => $value ) {
 
-		if ( $value === PNPND_UNSET ) {
+		if ( PNPND_UNSET === $value ) {
 			unset( $base[ $key ] );
 			continue;
 		}
 
 		if ( is_array( $value ) && isset( $base[ $key ] ) && is_array( $base[ $key ] ) ) {
-			$base[ $key ] = pnpndDeepMergeWithUnset( $base[ $key ], $value );
+			$base[ $key ] = pnpnd_deep_merge_with_unset( $base[ $key ], $value );
 			continue;
 		}
 
@@ -595,94 +637,112 @@ function pnpndDeepMergeWithUnset( array $base, array $override ): array {
  *
  * @return array The schema for the widget types.
  */
-function pnpndGetWidgetTypesSchema( $key = null ) {
-	$defaultSchema = array(
+function pnpnd_get_widget_types_schema( $key = null ) {
+	$default_schema = array(
 		'id'          => 'integer',
 		'title'       => 'string',
 		'status'      => 'string',
 		'type'        => 'string',
 		'integration' => 'string|null',
-		'createdAt'   => 'string',
+		'created_at'  => 'string',
 		'data'        => array(
 			'source'        => array(
-				'fileKeys'      => 'array',
-				'hasMore'       => 'boolean',
-				'totalCount'    => 'integer',
-				'currentPage'   => 'integer',
-				'perPage'       => 'integer',
-				'nextPage'      => 'integer|null',
-				'totalPages'    => 'integer',
-				'privateFolder' => 'boolean',
+				'file_keys'      => 'array',
+				'has_more'       => 'boolean',
+				'total_count'    => 'integer',
+				'current_page'   => 'integer',
+				'per_page'       => 'integer',
+				'next_page'      => 'integer|null',
+				'total_pages'    => 'integer',
+				'private_folder' => 'boolean',
 			),
-			'filter'        => 'array',
+			'configuration' => 'array',
 			'notifications' => 'array',
 			'permissions'   => 'array',
 		),
 	);
 
 	if ( current_user_can( 'manage_options' ) ) {
-		$defaultSchema['locations'] = 'array';
+		$default_schema['data']['source']['selected_files'] = 'array';
+		$default_schema['locations']                        = 'array';
 	}
 
-	$defaultAdvanced = array(
-		'width'               => 'array',
-		'height'              => 'array',
-		'theme'               => 'string',
-		'files'               => 'array',
-		'borderBoxVisibility' => 'boolean',
-		'autoFetch'           => 'array',
-		'sort'                => 'array',
+	$default_style = array(
+		'width'                 => 'array',
+		'height'                => 'array',
+		'theme'                 => 'string',
+		'files'                 => 'array',
+		'border_box_visibility' => 'boolean',
+		'auto_fetch'            => 'array',
+		'sort'                  => 'array',
 	);
 
-	$gallery = $defaultSchema;
+	$file_browser = $default_schema;
+
+	$file_browser['data']['source']['breadcrumbs[]'] = array(
+		'file_key' => 'string',
+		'name'     => 'string',
+	);
+
+	$file_browser['data']['source']['files[]'] = array(
+		'file_key'        => 'string',
+		'name'            => 'string',
+		'icon'            => 'string',
+		'extension'       => 'string',
+		'mime_type'       => 'string',
+		'count'           => 'string',
+		'size'            => 'integer',
+		'updated_at'      => 'string',
+		'additional_data' => array(
+			'base_name'   => 'string',
+			'last_edited' => 'string',
+		),
+		'save_as'         => 'array',
+		'export_links'    => 'array',
+	);
+
+	$file_browser['data']['style'] = $default_style;
+
+	$file_browser['data']['style']['file_browser'] = 'array';
+
+	$gallery = $default_schema;
 
 	$gallery['data']['source']['files[]'] = array(
-		'fileKey'     => 'string',
+		'file_key'    => 'string',
 		'name'        => 'string',
 		'description' => 'string',
-		'baseName'    => 'string',
+		'base_name'   => 'string',
 		'extension'   => 'string',
-		'mimeType'    => 'string',
+		'mime_type'   => 'string',
 		'size'        => 'integer',
-		'updatedAt'   => 'string',
+		'updated_at'  => 'string',
 	);
 
-	$gallery['data']['advanced'] = $defaultAdvanced;
+	$gallery['data']['style'] = $default_style;
 
-	$gallery['data']['advanced']['gallery'] = 'array';
+	$gallery['data']['style']['gallery'] = 'array';
 
-	$fileBrowser = $defaultSchema;
+	$embed_documents = $default_schema;
 
-	$fileBrowser['data']['source']['breadcrumbs[]'] = array(
-		'fileKey' => 'string',
-		'name'    => 'string',
+	$embed_documents['data']['source']['files[]'] = array(
+		'file_key'    => 'string',
+		'name'        => 'string',
+		'description' => 'string',
+		'base_name'   => 'string',
+		'extension'   => 'string',
+		'mime_type'   => 'string',
+		'size'        => 'integer',
+		'updated_at'  => 'string',
 	);
 
-	$fileBrowser['data']['source']['files[]'] = array(
-		'fileKey'        => 'string',
-		'name'           => 'string',
-		'icon'           => 'string',
-		'extension'      => 'string',
-		'mimeType'       => 'string',
-		'count'          => 'string',
-		'size'           => 'integer',
-		'updatedAt'      => 'string',
-		'additionalData' => array(
-			'baseName'   => 'string',
-			'lastEdited' => 'string',
-		),
-		'saveAs'         => 'array',
-		'exportLinks'    => 'array',
+	$embed_documents['data']['style'] = $default_style;
 
-	);
-
-	$fileBrowser['data']['advanced'] = $defaultAdvanced;
-
-	$fileBrowser['data']['advanced']['fileBrowser'] = 'array';
+	$embed_documents['data']['style']['embed_documents'] = 'array';
 
 	$schema = array(
-		'gallery'      => $gallery,
-		'file-browser' => $fileBrowser,
+		'file_browser'    => $file_browser,
+		'gallery'         => $gallery,
+		'embed_documents' => $embed_documents,
 	);
 
 	if ( ! empty( $key ) ) {
@@ -696,11 +756,11 @@ function pnpndGetWidgetTypesSchema( $key = null ) {
 	return $schema;
 }
 
-function pnpndGetTablesDefinitions( $key = null ) {
+function pnpnd_get_tables_definitions( $key = null ) {
 	global $wpdb;
 
-	$charsetCollate = $wpdb->get_charset_collate();
-	$prefix         = $wpdb->prefix;
+	$charset_collate = $wpdb->get_charset_collate();
+	$prefix          = $wpdb->prefix;
 
 	$tables = array(
 		'widgets'  => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_widgets` (
@@ -711,92 +771,94 @@ function pnpndGetTablesDefinitions( $key = null ) {
                 `status` VARCHAR(10) DEFAULT 'active',
                 `data` LONGTEXT DEFAULT NULL,
                 `locations` LONGTEXT DEFAULT NULL,
-                `createdAt` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-                `updatedAt` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                `created_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                `updated_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
                 PRIMARY KEY (`id`)
-            ) $charsetCollate;",
+            ) $charset_collate;",
 
 		'files'    => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_files` (
                 `id` VARCHAR(120) NOT NULL,
-                `fileKey` VARCHAR(120) NOT NULL,
+                `file_key` VARCHAR(120) NOT NULL,
                 `name` TEXT DEFAULT NULL,
                 `description` LONGTEXT DEFAULT NULL,
-                `parentId` VARCHAR(120) DEFAULT NULL,
-                `accountId` VARCHAR(120) NOT NULL,
+                `parent_id` VARCHAR(120) DEFAULT NULL,
+                `account_id` VARCHAR(120) NOT NULL,
                 `size` BIGINT UNSIGNED DEFAULT NULL,
-                `mimeType` VARCHAR(255) NOT NULL,
+                `mime_type` VARCHAR(255) NOT NULL,
                 `extension` VARCHAR(60) DEFAULT NULL,
                 `icon` VARCHAR(255) DEFAULT NULL,
                 `thumbnail` VARCHAR(255) DEFAULT NULL,
-                `additionalData` LONGTEXT DEFAULT NULL,
-                `metaData` LONGTEXT DEFAULT NULL,
-                `isDir` TINYINT(1) DEFAULT 0,
-                `isStarred` TINYINT(1) DEFAULT 0,
-                `isShared` TINYINT(1) DEFAULT 0,
+                `additional_data` LONGTEXT DEFAULT NULL,
+                `meta_data` LONGTEXT DEFAULT NULL,
+                `is_dir` TINYINT(1) DEFAULT 0,
+                `is_starred` TINYINT(1) DEFAULT 0,
+                `is_shared` TINYINT(1) DEFAULT 0,
                 `media` LONGTEXT DEFAULT NULL,
                 `permissions` LONGTEXT DEFAULT NULL,
-                `createdAt` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-                `updatedAt` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-                PRIMARY KEY (`fileKey`)
-            ) $charsetCollate;",
+                `created_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                `updated_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                PRIMARY KEY (`file_key`),
+                KEY idx_id (id),
+                KEY idx_account_ext_parent (account_id, extension, parent_id)
+            ) $charset_collate;",
 
 		'accounts' => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_accounts` (
                 `id` VARCHAR(120) NOT NULL,
-                `accountKey` TEXT NOT NULL,
+                `account_key` TEXT NOT NULL,
                 `name` TEXT NOT NULL,
                 `email` TEXT NOT NULL,
                 `photo` TEXT NOT NULL,
                 `storage` TEXT NOT NULL,
                 `lost` TINYINT(1) DEFAULT 1,
-                `rootId` TEXT NOT NULL,
-                `userId` INT NOT NULL,
+                `root_id` TEXT NOT NULL,
+                `user_id` INT NOT NULL,
                 `active` TINYINT(1) DEFAULT 0,
                 `tokens` LONGTEXT NOT NULL,
-                `createdAt` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-                `updatedAt` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                `created_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                `updated_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
                 PRIMARY KEY (`id`),
-                UNIQUE KEY `unique_key` (`accountKey`(191))
-            ) $charsetCollate;",
+                UNIQUE KEY `unique_key` (`account_key`(191))
+            ) $charset_collate;",
 
-		'logs'     => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_logs` (
+		'notices'  => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_notices` (
                 `id` INT AUTO_INCREMENT,
-                `widgetId` INT DEFAULT NULL,
-                `userId` INT DEFAULT NULL,
-                `fileKey` TEXT DEFAULT NULL,
-                `fileName` TEXT DEFAULT NULL,
+                `widget_id` INT DEFAULT NULL,
+                `user_id` INT DEFAULT NULL,
+                `file_key` TEXT DEFAULT NULL,
+                `file_name` TEXT DEFAULT NULL,
                 `page` TEXT DEFAULT NULL,
                 `data` LONGTEXT DEFAULT NULL,
                 `type` TEXT NOT NULL,
                 `title` TEXT NOT NULL,
                 `status` TEXT NOT NULL,
                 `description` TEXT DEFAULT NULL,
-                `createdAt` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-                `updatedAt` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-                PRIMARY KEY (`id`) 
-            ) $charsetCollate;",
+                `created_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                `updated_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                PRIMARY KEY (`id`)
+            ) $charset_collate;",
 	);
 
-	if ( $key !== null && isset( $tables[ $key ] ) ) {
+	if ( null !== $key && isset( $tables[ $key ] ) ) {
 		return $tables[ $key ];
 	}
 
 	return array_values( $tables );
 }
 
-function pnpndGetAllowedWidgetExtensions( string $type ) {
-	$gallery     = array( 'image' );
-	$mediaPlayer = array( 'audio', 'video' );
+function pnpnd_get_allowed_widget_extensions( string $type ) {
+	$gallery      = array( 'image' );
+	$media_player = array( 'audio', 'video' );
 
-	$typeGroups = array(
-		'gallery'         => pnpndGetExtensionGroups( $gallery ),
-		'all'             => pnpndGetExtensionGroups( 'all' ),
-		'embed-documents' => pnpndGetExtensionGroups( 'document' ),
+	$type_groups = array(
+		'gallery'         => pnpnd_get_extension_groups( $gallery ),
+		'all'             => pnpnd_get_extension_groups( 'all' ),
+		'embed-documents' => pnpnd_get_extension_groups( 'document' ),
 	);
 
-	return $typeGroups[ $type ] ?? $typeGroups['all'];
+	return $type_groups[ $type ] ?? $type_groups['all'];
 }
 
-function pnpndGetTemplate( $slug, $args = array(), $name = null ) {
+function pnpnd_get_template( $slug, $args = array(), $name = null ) {
 	$template = locate_template( "{$slug}-{$name}.php" );
 
 	if ( ! $template ) {
@@ -811,8 +873,8 @@ function pnpndGetTemplate( $slug, $args = array(), $name = null ) {
 	}
 }
 
-function pnpndGenerateKey( string $fileId, string $accountId ): string {
-	return md5( "{$fileId}-{$accountId}" );
+function pnpnd_generate_key( string $file_id, string $account_id ): string {
+	return md5( "{$file_id}-{$account_id}" );
 }
 
 /**
@@ -828,7 +890,7 @@ function pnpndGenerateKey( string $fileId, string $accountId ): string {
  * @return string The corresponding Google Drive thumbnail size string.
  *                Returns an empty string for 'full' or invalid inputs.
  */
-function pnpndSizeToString( $size ) {
+function pnpnd_size_to_string( $size ) {
 	$map = array(
 		'xs'  => 'w32-h32-c-nu',
 		'sm'  => 'w64-h64-c-nu',
@@ -855,8 +917,8 @@ function pnpndSizeToString( $size ) {
 	return '';
 }
 
-function pnpndTitleToUrlSlug( string $filename ): string {
-	if ( $filename === '' ) {
+function pnpnd_title_to_url_slug( string $filename ): string {
+	if ( '' === $filename ) {
 		return 'unknown-file';
 	}
 
@@ -892,7 +954,7 @@ function pnpndTitleToUrlSlug( string $filename ): string {
  *
  * @return string Sanitized attachment URL.
  */
-function pnpndGetUrl( $action, $key, $name = 'unknown', $size = 'lg', $ext = 'webp', $referer = null ) {
+function pnpnd_get_url( $action, $key, $name = 'unknown', $size = 'lg', $ext = 'webp', $referer = null ) {
 	if ( empty( $key ) ) {
 		return '';
 	}
@@ -907,20 +969,20 @@ function pnpndGetUrl( $action, $key, $name = 'unknown', $size = 'lg', $ext = 'we
 	}
 
 	$action  = sanitize_key( $action );
-	$referer = $referer !== null ? $referer : null;
+	$referer = null !== $referer ? $referer : null;
 	$key     = sanitize_key( $key );
-	$name    = pnpndTitleToUrlSlug( $name );
+	$name    = pnpnd_title_to_url_slug( $name );
 	$size    = strtolower( sanitize_text_field( $size ?? '' ) );
 
-	$allowSizes = array_keys( pnpndGetAvailableThumbnailSizes() );
+	$allow_sizes = array_keys( pnpnd_get_available_thumbnail_sizes() );
 
-	$allowed_sizes = apply_filters( 'pnpnd_allowed_sizes', $allowSizes );
+	$allowed_sizes = apply_filters( 'pnpnd_allowed_sizes', $allow_sizes );
 
 	if ( ! in_array( $size, $allowed_sizes, true ) ) {
 		$size = null;
 	}
 
-	if ( $referer !== null ) {
+	if ( null !== $referer ) {
 		$action .= "-{$referer}";
 	}
 
@@ -930,20 +992,20 @@ function pnpndGetUrl( $action, $key, $name = 'unknown', $size = 'lg', $ext = 'we
 
 	$ext = empty( $ext ) ? 'webp' : strtolower( sanitize_text_field( $ext ) );
 
-	$allowDotExtension = Helpers::getSetting( 'advanced.allowDotExtension', false );
+	$allow_dot_extension = Helpers::get_setting( 'advanced.allow_dot_extension', false );
 
-	if ( $allowDotExtension ) {
+	if ( $allow_dot_extension ) {
 		return home_url( sprintf( '/pnpnd/%s/%s/%s.%s/', $action, $key, $name, $ext ) );
 	} else {
 		return home_url( sprintf( '/pnpnd/%s/%s/%s/%s/', $action, $key, $name, $ext ) );
 	}
 }
 
-function pnpndGetWidgets() {
+function pnpnd_get_widgets() {
 
 	$widgets = array(
 		array(
-			'id'          => 'file-browser',
+			'id'          => 'file_browser',
 			'title'       => 'File Browser',
 			'description' => 'Allow users to browse selected Google Drive files and folders directly on your site.',
 			'icon'        => 'folder',
@@ -961,7 +1023,7 @@ function pnpndGetWidgets() {
 			),
 		),
 		array(
-			'id'          => 'embed-documents',
+			'id'          => 'embed_documents',
 			'title'       => 'Embed Documents',
 			'description' => 'Easily embed Google Docs, Sheets, and Slides into your website securely.',
 			'icon'        => 'text_compare',
@@ -974,7 +1036,7 @@ function pnpndGetWidgets() {
 	return $widgets;
 }
 
-function pnpndGetAvailableThumbnailSizes() {
+function pnpnd_get_available_thumbnail_sizes() {
 	return array(
 		'xs'  => '32x32',
 		'sm'  => '64x64',
@@ -987,3 +1049,18 @@ function pnpndGetAvailableThumbnailSizes() {
 		'5xl' => '', // original
 	);
 }
+
+/**
+ * Add a notice/notification.
+ *
+ * @param string $type        Notice type. Use Notice::TYPE_ERROR, Notice::TYPE_SUCCESS, etc.
+ * @param string $title       Notice title.
+ * @param string $description Notice description.
+ * @param array  $extra       Additional data (file_key, file_name, page, widget_id, etc.).
+ *
+ * @return int|\WP_Error
+ */
+function pnpnd_notify( string $type, string $title, string $description = '', array $extra = array() ) {
+	return \Pnpnd\ND\Notice::get_instance()->add( $type, $title, $description, $extra );
+}
+

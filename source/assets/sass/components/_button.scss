@@ -70,7 +70,6 @@ $button-sizes: (
         }
 
         &.pn-button--default {
-            // color: $black;
             background-color: transparent;
             &:hover {
                 background-color: var(--pnpnd-light);
@@ -81,8 +80,10 @@ $button-sizes: (
         }
 
         &.pn-button--primary {
-            color: white;
             background-color: $primary;
+            &.not-own-color {
+                color: white;
+            }
             .pn-icon {
                 color: currentColor;
             }
@@ -95,8 +96,11 @@ $button-sizes: (
         }
 
         &.pn-button--secondary {
-            color: $black;
             background-color: $secondary;
+            border: 1px solid $secondary;
+            &.not-own-color {
+                color: $black;
+            }
             &:hover {
                 background-color: $primary-light;
             }
@@ -106,9 +110,11 @@ $button-sizes: (
         }
 
         &.pn-button--outlined {
-            color: $black;
             background-color: $white;
             border: 1px solid $primary-light;
+            &.not-own-color {
+                color: $black;
+            }
             &:hover {
                 background-color: $primary-extralight;
             }
@@ -120,6 +126,7 @@ $button-sizes: (
         &.pn-button--warning {
             color: $warning;
             background-color: hsl(from $warning h s l / 15%);
+            border: 1px solid $warning-100;
             &:hover {
                 background-color: $warning-100;
             }
@@ -131,6 +138,7 @@ $button-sizes: (
         &.pn-button--error {
             color: $error;
             background-color: hsl(from $error h s l / 15%);
+            border: 1px solid $error-100;
             &:hover {
                 background-color: $error-100;
             }
@@ -165,6 +173,24 @@ $button-sizes: (
                 height: 1px;
                 background-color: currentColor;
             }
+        }
+
+        &.pn-button--gray {
+            color: $gray-800;
+            background-color: $gray-50;
+            border: 1px solid $gray-200;
+            &:hover {
+                background-color: $gray-100;
+            }
+            &:focus {
+                background-color: $gray-100;
+            }
+        }
+
+        &.pn-button--white {
+            color: $gray-800;
+            background-color: $white;
+            border: 1px solid $white;
         }
 
         &.pn-button--disabled {

@@ -14,6 +14,7 @@ const Tooltip: React.FC<TooltipProps> = ({
     openStyle = "fade",
     trigger = "hover",
     width = "auto",
+    maxWidth,
     wrap = "wrap",
     background = "gray-800",
     color = "white",
@@ -114,6 +115,7 @@ const Tooltip: React.FC<TooltipProps> = ({
                 style={
                     {
                         "--pn-tooltip-width": width,
+                        "--pn-tooltip-max-width": maxWidth,
                         "--pn-tooltip-arrow-size": `${arrowSize}px`,
                         "--pn-tooltip-arrow-color": `var(--pnpnd-${background})`,
                     } as React.CSSProperties

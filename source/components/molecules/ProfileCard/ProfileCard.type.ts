@@ -10,15 +10,15 @@ export interface ProfileCardProps {
     title?: string;
     addAccount?: boolean;
     small?: boolean;
-    connectionType?: "automatic" | "manual";
+    connection_type?: "automatic" | "manual";
 }
 
 export interface ProfileCardFullInfoProps {
     account: Account;
-    connectionType?: "automatic" | "manual";
+    connection_type?: "automatic" | "manual";
 }
 
 export interface ProfileCardInfoProps {
     account: Account;
-    connectionType?: "automatic" | "manual";
+    connection_type?: "automatic" | "manual";
 }

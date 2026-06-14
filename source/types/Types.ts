@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from "@wordpress/element";
 
 export type Account = {
-    accountKey: string;
+    account_key: string;
     id: string;
     name: string;
     email: string;
@@ -23,21 +23,21 @@ export type Account = {
 };
 
 export type Breadcrumb = {
-    fileKey: string;
+    file_key: string;
     name: string;
 };
 
 export type Permissions = {
-    canAdd: boolean;
-    canChangeCopyRequiresWriterPermission: boolean;
-    canDelete: boolean;
-    canDownload: boolean;
-    canMove: boolean;
-    canPreview: boolean;
-    canRename: boolean;
-    canShare: boolean;
-    canTrash: boolean;
-    copyRequiresWriterPermission: boolean;
+    can_add: boolean;
+    can_change_copy_requires_writer_permission: boolean;
+    can_delete: boolean;
+    can_download: boolean;
+    can_move: boolean;
+    can_preview: boolean;
+    can_rename: boolean;
+    can_share: boolean;
+    can_trash: boolean;
+    copy_requires_writer_permission: boolean;
     users: {
         [key: string]: {
             type: "user" | "owner";
@@ -54,7 +54,7 @@ export type Thumbnails = {
     full: string;
 };
 
-export type OrderBy = "name" | "createdAt" | "updatedAt" | "size";
+export type OrderBy = "name" | "created_at" | "updated_at" | "size";
 
 export type Order = "ASC" | "DESC";
 

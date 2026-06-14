@@ -1,0 +1,47 @@
+.pnpnd-embed-scale {
+    animation-name: pnpnd-embed-scale;
+}
+
+.pnpnd-embed-slide-left {
+    animation-name: pnpnd-embed-slide-left;
+}
+
+.pnpnd-embed-slide-right {
+    animation-name: pnpnd-embed-slide-right;
+}
+
+@keyframes pnpnd-embed-scale {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pnpnd-embed-slide-left {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pnpnd-embed-slide-right {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

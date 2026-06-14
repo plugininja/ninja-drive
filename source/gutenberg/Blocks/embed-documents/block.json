@@ -23,10 +23,13 @@
         },
         "type": {
             "type": "string",
-            "default": "embed-documents"
+            "default": "embed_documents"
         }
     },
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
-    "style": ["file:../../../../assets/css/admin.css", "file:../../../../assets/css/common.css"]
+    "style": [
+        "file:../../../../assets/css/admin.css",
+        "file:../../../../assets/css/common.css"
+    ]
 }

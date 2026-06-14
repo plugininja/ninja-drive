@@ -1,8 +1,8 @@
-import { __, sprintf } from "@wordpress/i18n";
 import { HOME_DIR_FILES } from "~/constants/fileBrowser";
 import { ExtensionGroups } from "../types/Types";
 import { saveAsList } from "~/constants/files";
 import { File } from "~/types/file.types";
+import { __ } from "@wordpress/i18n";
 
 export const formatFileSize = (bytes: number) => {
     if (bytes === 0) return __("0 Bytes", "ninja-drive");
@@ -54,9 +54,9 @@ export const isExportDocument = (file: File) => {
 };
 
 export const isAllDocument = (file: File) => {
-    if (!file || !file.mimeType) return false;
+    if (!file || !file.mime_type) return false;
 
-    const mime = file.mimeType;
+    const mime = file.mime_type;
 
     return mime.startsWith("application/") || mime.startsWith("text/");
 };
@@ -65,25 +65,25 @@ export const isShortcut = (extension: string) => {
     return extension === "shortcut";
 };
 
-export const checkFileMenuKey = (menuKey: string) =>
-    HOME_DIR_FILES.find((m) => m.fileKey === menuKey);
+export const checkFileMenuKey = (menu_key: string) =>
+    HOME_DIR_FILES.find((m) => m.file_key === menu_key);
 
 export const getDocumentExportTypes = (
     file: File,
 ): { label: string; extension: string }[] => {
     if (!isExportDocument(file)) return [];
 
-    const fileType = file.extension?.toLowerCase();
+    const file_type = file.extension?.toLowerCase();
 
     if (
-        fileType === "document" ||
-        fileType === "presentation" ||
-        fileType === "spreadsheet" ||
-        fileType === "drawing" ||
-        fileType === "site" ||
-        fileType === "script"
+        file_type === "document" ||
+        file_type === "presentation" ||
+        file_type === "spreadsheet" ||
+        file_type === "drawing" ||
+        file_type === "site" ||
+        file_type === "script"
     ) {
-        return saveAsList[fileType];
+        return saveAsList[file_type];
     }
 
     return [];
@@ -91,12 +91,12 @@ export const getDocumentExportTypes = (
 
 export const getExtensions = (type: keyof ExtensionGroups): string[] => {
     if (type === "all") {
-        return Object.entries(pnpnd.extensionGroups)
+        return Object.entries(pnpnd.extension_groups)
             .filter(([key]) => key !== "all")
             .flatMap(([, values]) => values);
     }
 
-    return pnpnd.extensionGroups[type];
+    return pnpnd.extension_groups[type];
 };
 
 export const getHomeDirFilesRes = () => {
@@ -104,19 +104,21 @@ export const getHomeDirFilesRes = () => {
         success: true,
         data: {
             files: HOME_DIR_FILES,
-            breadcrumbs: [{ fileKey: "home", name: __("Home", "ninja-drive") }],
-            hasMore: false,
-            nextPage: 1,
-            totalFiles: HOME_DIR_FILES.length,
-            totalPages: 1,
-            currentPage: 1,
+            breadcrumbs: [
+                { file_key: "home", name: __("Home", "ninja-drive") },
+            ],
+            has_more: false,
+            next_page: 1,
+            total_files: HOME_DIR_FILES.length,
+            total_pages: 1,
+            current_page: 1,
         },
         message: "",
     });
 };
 
 export const getFileType = (file: File): string => {
-    const mimeType = file.mimeType?.toLowerCase() || "";
+    const mime_type = file.mime_type?.toLowerCase() || "";
     const extension = file.extension?.toLowerCase() || "";
 
     const googleDocsMimeTypes = [
@@ -142,84 +144,84 @@ export const getFileType = (file: File): string => {
 
     const googleAppsAudio = ["application/vnd.google-apps.audio"];
 
-    if (googleDocsMimeTypes.includes(mimeType)) {
+    if (googleDocsMimeTypes.includes(mime_type)) {
         return "document";
     }
 
-    if (googleSheetsMimeTypes.includes(mimeType)) {
+    if (googleSheetsMimeTypes.includes(mime_type)) {
         return "spreadsheet";
     }
 
-    if (googleSlidesMimeTypes.includes(mimeType)) {
+    if (googleSlidesMimeTypes.includes(mime_type)) {
+        return "presentation";
+    }
+
+    if (googleFormsMimeTypes.includes(mime_type)) {
         return "document";
     }
 
-    if (googleFormsMimeTypes.includes(mimeType)) {
-        return "document";
-    }
-
-    if (googleDrawingsMimeTypes.includes(mimeType)) {
+    if (googleDrawingsMimeTypes.includes(mime_type)) {
         return "image";
     }
 
-    if (googleSitesMimeTypes.includes(mimeType)) {
+    if (googleSitesMimeTypes.includes(mime_type)) {
         return "document";
     }
 
-    if (googleAppsFolder.includes(mimeType)) {
+    if (googleAppsFolder.includes(mime_type)) {
         return "folder";
     }
 
-    if (googleAppsShortcut.includes(mimeType)) {
+    if (googleAppsShortcut.includes(mime_type)) {
         return "shortcut";
     }
 
-    if (googleAppsAudio.includes(mimeType)) {
+    if (googleAppsAudio.includes(mime_type)) {
         return "audio";
     }
 
-    if (mimeType.startsWith("image/")) {
+    if (mime_type.startsWith("image/")) {
         return "image";
     }
 
-    if (mimeType.startsWith("video/")) {
+    if (mime_type.startsWith("video/")) {
         return "video";
     }
 
-    if (mimeType.startsWith("audio/")) {
+    if (mime_type.startsWith("audio/")) {
         return "audio";
     }
 
-    if (mimeType === "application/pdf") {
+    if (mime_type === "application/pdf") {
         return "document";
     }
 
     if (
-        mimeType.includes("word") ||
-        mimeType.includes("officedocument.wordprocessing")
+        mime_type.includes("word") ||
+        mime_type.includes("officedocument.wordprocessing")
     ) {
         return "document";
     }
 
     if (
-        mimeType.includes("excel") ||
-        mimeType.includes("officedocument.spreadsheet")
+        mime_type.includes("excel") ||
+        mime_type.includes("officedocument.spreadsheet")
     ) {
         return "spreadsheet";
     }
 
     if (
-        mimeType.includes("powerpoint") ||
-        mimeType.includes("officedocument.presentation")
+        mime_type.includes("powerpoint") ||
+        mime_type.includes("officedocument.presentation")
     ) {
         return "document";
     }
 
     if (
-        mimeType.includes("zip") ||
-        mimeType.includes("rar") ||
-        mimeType.includes("tar") ||
-        mimeType.includes("compressed")
+        mime_type.includes("zip") ||
+        mime_type.includes("rar") ||
+        mime_type.includes("tar") ||
+        mime_type.includes("compressed")
     ) {
         return "archive";
     }
@@ -259,7 +261,7 @@ export const getFileType = (file: File): string => {
         return "code";
     }
 
-    if (mimeType.startsWith("text/")) {
+    if (mime_type.startsWith("text/")) {
         return "document";
     }
 

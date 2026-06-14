@@ -30,17 +30,17 @@ const Shortcode = ({ id }: { id: string }) => {
     }
 
     if (isError) {
-        return <div>{ __( "Error loading widget.", "ninja-drive" ) }</div>;
+        return <div>{__("Error loading widget.", "ninja-drive")}</div>;
     }
-    
+
     return (
         <div
+            pnpnd-theme-status={data.data.widget.data.style.theme}
             className={clsx(
                 "pnpnd-top-level-wrapper",
                 "pnpnd-widget",
                 `pnpnd-${data.data.widget.type}`,
             )}
-            pnpnd-theme-status={data.data.widget.data.advanced.theme}
         >
             <RenderShortcode data={data.data?.widget} />
         </div>

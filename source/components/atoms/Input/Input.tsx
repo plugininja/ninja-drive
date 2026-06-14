@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from "@wordpress/element";
+import Icon from "~/components/atoms/Icon";
 import { InputProps } from "./Input.type";
 import { __ } from "@wordpress/i18n";
-import Icon from "~/components/atoms/Icon";
 import clsx from "clsx";
 
 const sizeClasses = {
@@ -16,6 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     const {
         id,
         name,
+        background = "white",
         style,
         inputStyle,
         className = "",
@@ -31,12 +32,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         required = false,
         spellCheck = false,
         color = "primary-light",
+        inputTextColor = "black",
         size = "medium",
         borderStyle = "solid",
         rounded = "sm",
         fullWidth = true,
         customWidth,
         label,
+        labelColor = "black",
         labelFontSize = "md",
         labelFontWeight = "medium",
         helperText,
@@ -88,9 +91,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         className,
     );
 
+    const inputClasses = clsx(`text-${inputTextColor}`, inputClassName);
+
     const inputGroupClass = clsx(
         "pn-input__group",
         sizeClasses[size],
+        `bg-${background}`,
         `rounded-${rounded}`,
         "border",
         error ? "border-error" : `border-${color}`,
@@ -108,7 +114,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
                     className={clsx(
                         `text-${labelFontSize}`,
                         `font-${labelFontWeight}`,
-                        "text-black",
+                        `text-${labelColor}`,
                     )}
                 >
                     {label}
@@ -144,7 +150,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
                     aria-describedby={error ? `${id}-error` : undefined}
                     tabIndex={tabIndex}
                     style={inputStyle}
-                    className={inputClassName}
+                    className={inputClasses}
                     onClick={(e) => {
                         if (preventDefault) e.preventDefault();
                         if (stopPropagation) e.stopPropagation();

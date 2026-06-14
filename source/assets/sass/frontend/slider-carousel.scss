@@ -1,91 +1,89 @@
 @use "../utilities/variable" as *;
 
 .pnpnd-top-level-wrapper {
-    .pnpnd-slider-carousel {
-        .swiper {
-            width: 100%;
-            height: 100%;
+    .swiper {
+        width: 100%;
+        height: 100%;
 
+        .swiper-slide {
+            border-radius: var(--item-border-radius);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .pnpnd-slide-caption {
+                font-size: 14px;
+                text-align: center;
+                line-height: 1.4;
+                position: absolute;
+                bottom: 40%;
+                opacity: 0;
+                transition: all 200ms linear;
+                width: 90%;
+                color: #fff;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .pnpnd-slide-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.45);
+                opacity: 0;
+                transition: all 200ms linear;
+            }
+
+            &:hover {
+                .pnpnd-slide-overlay {
+                    opacity: 1;
+                }
+
+                .pnpnd-slide-caption {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .pnpnd-swiper {
+        &--centered {
             .swiper-slide {
-                border-radius: var(--item-border-radius);
-                overflow: hidden;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                transition: all 200ms linear;
+                transform: scale(0.8);
 
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-
-                .pn-slide-caption {
-                    font-size: 14px;
-                    text-align: center;
-                    line-height: 1.4;
-                    position: absolute;
-                    bottom: 40%;
-                    opacity: 0;
-                    transition: all 200ms linear;
-                    width: 90%;
-                    color: #fff;
-                    font-size: 16px;
-                    font-weight: 500;
-                }
-
-                .pn-slide-overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.45);
-                    opacity: 0;
-                    transition: all 200ms linear;
-                }
-
-                &:hover {
-                    .pn-slide-overlay {
-                        opacity: 1;
-                    }
-
-                    .pn-slide-caption {
-                        opacity: 1;
-                    }
+                &.swiper-slide-active {
+                    transform: scale(1);
                 }
             }
         }
+    }
 
-        .pnpnd-swiper {
-            &--centered {
-                .swiper-slide {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: all 200ms linear;
-                    transform: scale(0.8);
+    .pnpnd-swiper-effect {
+        &--cards {
+            width: 240px;
+            height: 320px;
 
-                    &.swiper-slide-active {
-                        transform: scale(1);
-                    }
-                }
-            }
-        }
-
-        .pnpnd-swiper-effect {
-            &--cards {
-                width: 240px;
-                height: 320px;
-
-                .swiper-slide {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 18px;
-                    font-size: 22px;
-                    font-weight: bold;
-                    color: #fff;
-                }
+            .swiper-slide {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 18px;
+                font-size: 22px;
+                font-weight: bold;
+                color: #fff;
             }
         }
     }
@@ -99,7 +97,7 @@
         color: $primary;
     }
 
-    .pn-img-wrapper {
+    .pnpnd-img-wrapper {
         width: 100%;
         height: 100%;
 
@@ -112,7 +110,7 @@
         }
     }
 
-    .pn-skeleton {
+    .pnpnd-skeleton {
         height: 100%;
         width: 100%;
         position: absolute !important;
@@ -141,7 +139,7 @@
         }
     }
 
-    .pn-img-wrapper:not(.pnpnd-img-loading) .pn-skeleton {
+    .pnpnd-img-wrapper:not(.pnpnd-img-loading) .pnpnd-skeleton {
         display: none;
     }
 

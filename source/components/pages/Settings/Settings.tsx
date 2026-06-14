@@ -1,39 +1,38 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { selectSettings } from "~/store/features/settingSlice";
-import { STORAGE_KEYS } from "~/constants/storageKeys";
-import { SETTING_MENUS } from "~/constants/settings";
-import MainLayout from "~/components/templates/MainLayout";
 import InlineStack from "~/components/molecules/InlineStack";
-import Integrations from "./pages/Integrations";
 import IconButton from "~/components/molecules/IconButton";
-import { useAppSelector } from "~/store/hooks";
+import MainLayout from "~/components/templates/MainLayout";
+import { SETTING_MENUS } from "~/constants/settings";
 import Topbar from "~/components/molecules/Topbar";
+import Menus from "~/components/molecules/Menus";
+import Integrations from "./pages/Integrations";
+import Button from "~/components/atoms/Button";
+import { useAppSelector } from "~/store/hooks";
 import { useEffect } from "@wordpress/element";
 import useSettings from "~/hooks/useSettings";
+import Input from "~/components/atoms/Input";
 import Appearance from "./pages/Appearance";
-import Sidebar from "~/components/molecules/Sidebar";
+import Icon from "~/components/atoms/Icon";
+import Logo from "~/components/atoms/Logo";
+import Text from "~/components/atoms/Text";
 import Advanced from "./pages/Advanced";
 import Accounts from "./pages/Accounts";
-import Button from "~/components/atoms/Button";
 import { __ } from "@wordpress/i18n";
-import Text from "~/components/atoms/Text";
 import Tools from "./pages/Tools";
-import Card from "~/components/molecules/Card";
-import Storage from "~/components/molecules/Storage";
-import { selectAuth } from "~/store/features/authSlice";
 
 const Settings = () => {
-    const { data, isDirty } = useAppSelector(selectSettings);
-    const { activeAccount } = useAppSelector(selectAuth);
+    const { data, is_dirty } = useAppSelector(selectSettings);
 
     const { menuKey } = useParams();
+
     const navigate = useNavigate();
 
     const { saveSettings, isSaving } = useSettings();
 
     useEffect(() => {
-        if (isDirty && data?.tools?.autoSave) saveSettings();
-    }, [isDirty]);
+        if (is_dirty && data?.tools?.auto_save) saveSettings();
+    }, [is_dirty]);
 
     const validMenuKeys = SETTING_MENUS.map((menu) => menu.key);
 
@@ -50,16 +49,33 @@ const Settings = () => {
         navigate(`/settings/${key}`);
     };
 
+    const logo = <Logo />;
+
+    const search = (
+        <Input
+            value={""}
+            placeholder={__("Search settings…", "ninja-drive")}
+            color="gray-200"
+            suffix={<Icon name="search" color="gray-700" fontSize="lg" />}
+            style={{
+                minWidth: "210px",
+            }}
+        />
+    );
+
     const topbarTitle = (
         <InlineStack gap={10}>
             <IconButton
-                variant="secondary"
+                variant="outlined"
                 rounded="md"
-                color="primary"
+                color="gray-700"
+                style={{
+                    backgroundColor: "var(--pnpnd-gray-50)",
+                }}
                 name={SETTING_MENUS.find((menu) => menu.key === menuKey)?.icon}
             />
 
-            <Text weight="medium">
+            <Text color="gray-700" weight="medium">
                 {SETTING_MENUS.find((menu) => menu.key === menuKey)?.title}
             </Text>
         </InlineStack>
@@ -69,7 +85,7 @@ const Settings = () => {
         <Button
             variant="primary"
             startIcon="check"
-            disabled={!isDirty || isSaving}
+            disabled={!is_dirty || isSaving}
             loading={isSaving}
             onClick={() => {
                 saveSettings();
@@ -83,8 +99,8 @@ const Settings = () => {
         const pageComponents: Record<string, JSX.Element> = {
             accounts: <Accounts />,
             advanced: <Advanced />,
-            appearance: <Appearance />,
             integrations: <Integrations />,
+            appearance: <Appearance />,
             tools: <Tools />,
         };
 
@@ -93,50 +109,39 @@ const Settings = () => {
 
     return (
         <MainLayout>
-            <Sidebar localStorageKey={STORAGE_KEYS.settingsSidebar}>
-                <Sidebar.Menu>
-                    {SETTING_MENUS.map((menu) => (
-                        <Sidebar.Item
-                            key={menu?.key}
-                            title={menu?.title}
-                            icon={menu?.icon}
-                            active={menu?.key === menuKey}
-                            statusProps={menu?.statusProps}
-                            onClick={() => handleMenuClick(menu?.key)}
-                            border={
-                                menu?.key === menuKey
-                                    ? "primary-extralight"
-                                    : "white"
-                            }
-                            borderStyle={"solid"}
-                            rounded="md"
-                            iconRounded="md"
-                            iconButtonVariant="outlined"
-                        />
-                    ))}
-                </Sidebar.Menu>
-
-                <Sidebar.Bottom>
-                    <Card
-                        padding={12}
-                        background="white"
-                        border="primary-extralight"
-                        borderStyle="solid"
-                    >
-                        <Storage
-                            total={Number(activeAccount?.storage?.limit)}
-                            used={Number(activeAccount?.storage?.usage)}
-                        />
-                    </Card>
-
-                    <Sidebar.HelpCenter />
-                </Sidebar.Bottom>
-            </Sidebar>
-
             <MainLayout.ContentWrapper>
-                <Topbar leftContents={[topbarTitle]} rightContents={[save]} />
+                <Topbar
+                    leftContents={[logo]}
+                    rightContents={[search]}
+                    wrap={false}
+                    leftContentsClassName=""
+                    zIndex={99999}
+                >
+                    <Menus
+                        menus={SETTING_MENUS}
+                        active={menuKey}
+                        onMenuClick={(key) =>
+                            handleMenuClick(
+                                key as (typeof SETTING_MENUS)[number]["key"],
+                            )
+                        }
+                    />
+                </Topbar>
 
-                <MainLayout.Content>{renderPage()}</MainLayout.Content>
+                <Topbar
+                    padding={15}
+                    top="81px"
+                    leftContents={[topbarTitle]}
+                    rightContents={[save]}
+                />
+
+                <MainLayout.Content
+                    style={{
+                        paddingBottom: "95px",
+                    }}
+                >
+                    {renderPage()}
+                </MainLayout.Content>
             </MainLayout.ContentWrapper>
         </MainLayout>
     );

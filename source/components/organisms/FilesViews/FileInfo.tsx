@@ -1,18 +1,21 @@
+import SkeletonLoader from "~/components/molecules/SkeletonLoader";
 import { useCustomAlert } from "~/components/molecules/Alert";
-import { formatFileSize } from "~/utils/functions";
-import { MENU_KEYS, MenuKey } from "~/types/Types";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
+import { MENU_KEYS, MenuKey } from "~/types/Types";
+import { createPortal } from "@wordpress/element";
+import Divider from "~/components/atoms/Divider";
+import Card from "~/components/molecules/Card";
+import Avatar from "~/components/atoms/Avatar";
+import { formatFileSize } from "~/utils/file";
+import Input from "~/components/atoms/Input";
+import Text from "~/components/atoms/Text";
+import Icon from "~/components/atoms/Icon";
 import { File } from "~/types/file.types";
 import { isFolder } from "~/utils/file";
-import Avatar from "~/components/atoms/Avatar";
-import Input from "~/components/atoms/Input";
 import { __ } from "@wordpress/i18n";
-import Card from "~/components/molecules/Card";
-import Icon from "~/components/atoms/Icon";
-import Text from "~/components/atoms/Text";
-import SkeletonLoader from "~/components/molecules/SkeletonLoader";
+import clsx from "clsx";
 
 const FileInfo = ({
     activeFile,
@@ -27,12 +30,12 @@ const FileInfo = ({
         name,
         icon,
         extension,
-        mimeType,
-        fileKey,
-        accountId,
+        mime_type,
+        file_key,
+        account_id,
         size,
-        createdAt,
-        updatedAt,
+        created_at,
+        updated_at,
     } = activeFile || {};
 
     const folder = isFolder(extension || "");
@@ -52,11 +55,11 @@ const FileInfo = ({
         },
         {
             type: __("File Key:", "ninja-drive"),
-            value: fileKey || "",
+            value: file_key || "",
         },
         {
             type: __("Account ID:", "ninja-drive"),
-            value: accountId || "",
+            value: account_id || "",
         },
         {
             type: folder
@@ -66,26 +69,26 @@ const FileInfo = ({
         },
         {
             type: __("Created:", "ninja-drive"),
-            value: createdAt || "",
+            value: created_at || "",
         },
         {
             type: __("Updated:", "ninja-drive"),
-            value: updatedAt || "",
+            value: updated_at || "",
         },
     ];
 
-    const _isFolder = isFolder(mimeType);
+    const _isFolder = isFolder(mime_type);
 
     let thumbnail = PNPNDHelper.getUrl(
         "thumbnail",
-        fileKey,
+        file_key,
         name,
         undefined,
         "2xl",
         extension,
     );
 
-    thumbnail = MENU_KEYS.includes(fileKey as MenuKey) ? icon : thumbnail;
+    thumbnail = MENU_KEYS.includes(file_key as MenuKey) ? icon : thumbnail;
 
     const handleCopyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
@@ -100,104 +103,123 @@ const FileInfo = ({
         });
     };
 
-    return (
-        <Card
-            background="white"
-            style={{
-                flex: "0 0 400px",
-                maxWidth: "400px",
-                position: "sticky",
-                top: "0",
-                zIndex: 99,
-                height: "100%",
-            }}
-        >
-            <InlineStack align="between" gap={10}>
-                <InlineStack gap={10}>
-                    <Icon name="info" />
+    return createPortal(
+        <div className="pnpnd-top-level-wrapper">
+            <div className="pn-file-info-overlay" />
 
-                    <Text weight="medium">{__("Info", "ninja-drive")}</Text>
-                </InlineStack>
+            <Card
+                background="white"
+                rounded="none"
+                className={clsx("pn-file-info", {
+                    "pn-file-info--active": !!activeFile,
+                })}
+            >
+                <InlineStack align="between" gap={10}>
+                    <InlineStack gap={10}>
+                        <Icon name="info" />
 
-                <IconButton
-                    variant="error"
-                    size="extrasmall"
-                    name="close"
-                    onClick={onClose}
-                />
-            </InlineStack>
-
-            <Avatar
-                useKey
-                src={thumbnail}
-                alt={name}
-                width="100%"
-                height="200px"
-                rounded="md"
-                objectFit={_isFolder ? "contain" : "cover"}
-                style={{
-                    margin: "20px 0",
-                }}
-                showSpinner
-                customSpinner={<SkeletonLoader width="100%" height="100%" />}
-                className="border border-solid border-light rounded-md"
-            />
-
-            <Text weight="medium">
-                {__("Properties", "ninja-drive")}
-            </Text>
-
-            <BlockStack gap={7} style={{ margin: "10px 0 20px 0" }}>
-                {FILE_DETAILS.map(({ type, value }) => (
-                    <InlineStack key={type} gap={10} wrap={false}>
-                        <Text
-                            size="sm"
-                            style={{
-                                width: "100px",
-                            }}
-                        >
-                            {type}
-                        </Text>
-
-                        <Text
-                            size="sm"
-                            wrap={false}
-                            ellipsis
-                            style={{
-                                cursor:
-                                    type === "File Key:" ||
-                                    type === "Account ID:"
-                                        ? "pointer"
-                                        : "default",
-                            }}
-                            className="flex-1"
-                            onClick={() => {
-                                if (
-                                    type === "File Key:" ||
-                                    type === "Account ID:"
-                                ) {
-                                    handleCopyToClipboard(String(value));
-                                }
-                            }}
-                        >
-                            {value}
+                        <Text color="gray-800" weight="medium">
+                            {__("Info", "ninja-drive")}
                         </Text>
                     </InlineStack>
-                ))}
-            </BlockStack>
 
-            <Text weight="medium">
-                {__("Description", "ninja-drive")}
-            </Text>
+                    <IconButton
+                        variant="error"
+                        size="extrasmall"
+                        name="close"
+                        style={{
+                            borderRadius: "7px",
+                        }}
+                        onClick={onClose}
+                    />
+                </InlineStack>
 
-            <Input
-                size="small"
-                style={{
-                    marginTop: "10px",
-                }}
-                value={""}
-            />
-        </Card>
+                <Divider width="100%" height="1px" marginTop={10} />
+
+                <Avatar
+                    useKey
+                    src={thumbnail}
+                    alt={name}
+                    width="100%"
+                    height="200px"
+                    rounded="md"
+                    objectFit={_isFolder ? "contain" : "cover"}
+                    style={{
+                        margin: "15px 0 20px 0",
+                    }}
+                    showSpinner
+                    customSpinner={
+                        <SkeletonLoader width="100%" height="100%" />
+                    }
+                    className="border border-solid border-primary-light rounded-md"
+                />
+
+                <Text color="gray-700" weight="medium">
+                    {__("Properties", "ninja-drive")}
+                </Text>
+
+                <BlockStack gap={7} style={{ margin: "10px 0 20px 0" }}>
+                    {FILE_DETAILS.map(({ type, value }) => (
+                        <InlineStack
+                            key={type}
+                            gap={10}
+                            wrap={false}
+                            blockAlign="start"
+                        >
+                            <Text
+                                color="gray-600"
+                                size="sm"
+                                style={{
+                                    width: "100px",
+                                }}
+                            >
+                                {type}
+                            </Text>
+
+                            <Text
+                                color="gray-500"
+                                size="sm"
+                                wrap={type === "Name:" ? true : false}
+                                ellipsis={type === "Name:" ? false : true}
+                                style={{
+                                    cursor:
+                                        type === "File Key:" ||
+                                        type === "Account ID:"
+                                            ? "pointer"
+                                            : "default",
+                                }}
+                                className="flex-1"
+                                onClick={() => {
+                                    if (
+                                        type === "File Key:" ||
+                                        type === "Account ID:"
+                                    ) {
+                                        handleCopyToClipboard(String(value));
+                                    }
+                                }}
+                            >
+                                {value}
+                            </Text>
+                        </InlineStack>
+                    ))}
+                </BlockStack>
+
+                <Text color="gray-700" weight="medium">
+                    {__("Description", "ninja-drive")}
+                </Text>
+
+                <Input
+                    size="small"
+                    background="gray-50"
+                    color="gray-200"
+                    style={{
+                        marginTop: "10px",
+                    }}
+                    value={""}
+                />
+            </Card>
+        </div>,
+        document.body,
     );
 };
 

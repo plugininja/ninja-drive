@@ -1,14 +1,16 @@
-import FilesViews, { useFilesContext } from "~/components/organisms/FilesViews/FilesViews";
+import SearchBox from "~/components/organisms/SearchBox/SearchBox";
 import { ModuleConfig, QueryArgs } from "~/types/widget.types";
 import InlineStack from "~/components/molecules/InlineStack";
-import { checkPermission } from "~/utils/widget";
-import SearchBox from "~/components/organisms/SearchBox/SearchBox";
 import IconButton from "~/components/molecules/IconButton";
+import { checkPermission } from "~/utils/widget";
 import Tooltip from "~/components/atoms/Tooltip";
-import Actions from "./Actions";
-import { TBreadcrumb } from "~/types/ui";
 import Button from "~/components/atoms/Button";
+import { TBreadcrumb } from "~/types/ui";
 import { __ } from "@wordpress/i18n";
+import Actions from "./Actions";
+import FilesViews, {
+    useFilesContext,
+} from "~/components/organisms/FilesViews/FilesViews";
 
 export const Topbar = ({
     data,
@@ -29,42 +31,38 @@ export const Topbar = ({
     loadingMore: boolean;
     layout: string;
     setLayout: any;
-    createFolder: (activeFolderKey: string, widgetId?: string) => void;
+    createFolder: (activeFolderKey: string, widget_id?: string) => void;
     queryArgs: QueryArgs;
     setQueryArgs: React.Dispatch<React.SetStateAction<QueryArgs>>;
     breadcrumbs: TBreadcrumb[];
     goPrevious: () => void;
 }) => {
     const { activeFolder, showUploader, setShowUploader } = useFilesContext();
-    const { advanced } = data.data;
-    const { upload, newFolder, search } = data?.data?.permissions || {};
+    const { style } = data.data;
+    const { upload, new_folder, search } = data?.data?.permissions || {};
 
-    const isRootUploadEnabled = advanced.fileBrowser?.headerOptions.rootUpload;
+    const isRootUploadEnabled = style.file_browser?.header_options.root_upload;
 
     return (
         <InlineStack align={"between"} padding={10} gap={10}>
-            {advanced?.["fileBrowser"]?.headerOptions.breadcrumb
-? (
+            {style?.["file_browser"]?.header_options.breadcrumb &&
+            pnpnd?.is_pro ? (
                 <FilesViews.Breadcrumbs />
             ) : (
                 <Button
-                    disabled={loading || loadingMore || breadcrumbs.length <= 1}
                     variant="outlined"
+                    startIcon="arrow_left_alt"
                     onClick={goPrevious}
+                    disabled={loading || loadingMore || breadcrumbs.length <= 1}
                 >
                     {__("Previous", "ninja-drive")}
                 </Button>
             )}
 
-            <InlineStack
-                gap={10}
-                wrap={false}
-                style={{ width: "50%" }}
-                align="end"
-            >
+            <InlineStack gap={10} wrap={false} align="end">
                 {checkPermission("search", search!) && (
                     <SearchBox
-                        isCompact
+                        isSuperCompact
                         activeFolder={activeFolder}
                         queryArgs={queryArgs}
                         setQueryArgs={setQueryArgs}
@@ -90,14 +88,17 @@ export const Topbar = ({
                             }
                             title={
                                 activeFolder === "" && !isRootUploadEnabled
-                                    ? __("Upload is disabled for root folder", "ninja-drive")
+                                    ? __(
+                                          "Upload is disabled for root folder",
+                                          "ninja-drive",
+                                      )
                                     : ""
                             }
                         />
                     </Tooltip>
                 )}
 
-                {checkPermission("newFolder", newFolder!) && (
+                {checkPermission("new_folder", new_folder!) && (
                     <Tooltip
                         title={__("New Folder", "ninja-drive")}
                         wrap="no-wrap"
@@ -116,33 +117,22 @@ export const Topbar = ({
                             }
                             title={
                                 activeFolder === "" && !isRootUploadEnabled
-                                    ? __("Create folder is disabled for root folder", "ninja-drive")
+                                    ? __(
+                                          "Create folder is disabled for root folder",
+                                          "ninja-drive",
+                                      )
                                     : ""
                             }
                         />
                     </Tooltip>
                 )}
 
-                {advanced.fileBrowser?.headerOptions.refresh
-&& (
-                        <Tooltip
-                            title={loading ? __("Refreshing...", "ninja-drive") : __("Refresh", "ninja-drive")}
-                            wrap="no-wrap"
-                            placement="top"
-                            arrow
-                        >
-                            <IconButton
-                                variant="outlined"
-                                size="small"
-                                name="refresh"
-                                onClick={refresh}
-                                disabled={loading}
-                            />
-                        </Tooltip>
-                    )}
-
                 <Tooltip
-                    title={layout === "list" ? __("Grid View", "ninja-drive") : __("List View", "ninja-drive")}
+                    title={
+                        layout === "list"
+                            ? __("Grid View", "ninja-drive")
+                            : __("List View", "ninja-drive")
+                    }
                     wrap="no-wrap"
                     placement="top"
                     arrow
@@ -157,13 +147,6 @@ export const Topbar = ({
                     />
                 </Tooltip>
 
-                {advanced.fileBrowser?.headerOptions.sorting
-&& (
-                        <Actions
-                            queryArgs={queryArgs}
-                            setQueryArgs={setQueryArgs}
-                        />
-                    )}
             </InlineStack>
         </InlineStack>
     );

@@ -1,14 +1,15 @@
-import { __, sprintf } from "@wordpress/i18n";
 import { MODULE_LISTS, SORT_BY_OPTIONS } from "~/constants/widget";
 import { useDeleteModuleMutation } from "~/store/api/widgetApi";
-import { ModuleConfig } from "~/types/widget.types";
 import { useCustomAlert } from "~/components/molecules/Alert";
 import InlineStack from "~/components/molecules/InlineStack";
-import { useState } from "@wordpress/element";
 import SelectBox from "~/components/molecules/SelectBox";
-import useDebounce from "~/hooks/useDebounce";
+import { ModuleConfig } from "~/types/widget.types";
 import Button from "~/components/atoms/Button";
+import { useState } from "@wordpress/element";
+import useDebounce from "~/hooks/useDebounce";
+import { __, sprintf } from "@wordpress/i18n";
 import Input from "~/components/atoms/Input";
+import Icon from "~/components/atoms/Icon";
 import Text from "~/components/atoms/Text";
 import { TQueryArgs } from "../Dashboard";
 
@@ -47,7 +48,10 @@ const ModuleTopbar = ({
             type: "error",
             title: __("Delete", "ninja-drive"),
             text: sprintf(
-                __("Are you sure want to delete %d selected widgets?", "ninja-drive"),
+                __(
+                    "Are you sure want to delete %d selected widgets?",
+                    "ninja-drive",
+                ),
                 selectedModules.length,
             ),
             showCancelButton: true,
@@ -70,7 +74,10 @@ const ModuleTopbar = ({
                         type: "success",
                         text:
                             result?.message ||
-                            __("All selected widgets have been deleted!", "ninja-drive"),
+                            __(
+                                "All selected widgets have been deleted!",
+                                "ninja-drive",
+                            ),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -81,7 +88,10 @@ const ModuleTopbar = ({
                         type: "error",
                         text:
                             error?.data?.message ||
-                            __("Failed to delete selected widgets!", "ninja-drive"),
+                            __(
+                                "Failed to delete selected widgets!",
+                                "ninja-drive",
+                            ),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -107,7 +117,7 @@ const ModuleTopbar = ({
             <InlineStack gap={5}>
                 <SelectBox
                     prefix={
-                        <Text size="sm" weight="medium">
+                        <Text color="gray-700" size="sm" weight="medium">
                             {__("Filter by:", "ninja-drive")}
                         </Text>
                     }
@@ -128,9 +138,11 @@ const ModuleTopbar = ({
                 {allSelected ? (
                     <>
                         <Button
-                            variant="secondary"
+                            variant="outlined"
                             startIcon="deselect"
                             iconSize="xl"
+                            color="primary"
+                            startIconColor="primary"
                             onClick={() => setSelectedModules([])}
                         >
                             {__("Deselect All", "ninja-drive")}
@@ -147,9 +159,11 @@ const ModuleTopbar = ({
                     </>
                 ) : (
                     <Button
-                        variant="secondary"
+                        variant="outlined"
                         startIcon="select_all"
                         iconSize="xl"
+                        color="primary"
+                        startIconColor="primary"
                         onClick={() => setSelectedModules(widgets)}
                     >
                         {__("Select All", "ninja-drive")}
@@ -163,25 +177,27 @@ const ModuleTopbar = ({
                 <Input
                     type="search"
                     value={searchText}
-                    placeholder={__("Search", "ninja-drive")}
-                    searchIcon
+                    placeholder={__("Search for widgets...", "ninja-drive")}
                     fullWidth={false}
                     customWidth="250px"
+                    suffix={
+                        <Icon name="search" color="gray-700" fontSize="lg" />
+                    }
                     onChange={(val) => setSearchText(val as string)}
                 />
 
                 <SelectBox
                     options={SORT_BY_OPTIONS}
-                    value={[queryArgs.orderBy]}
+                    value={[queryArgs.order_by]}
                     prefix={
-                        <Text size="sm" weight="medium">
+                        <Text color="gray-700" size="sm" weight="medium">
                             {__("Sort by:", "ninja-drive")}
                         </Text>
                     }
                     onChange={(value) =>
                         setQueryArgs((prev) => ({
                             ...prev,
-                            orderBy: value[0] as any,
+                            order_by: value[0] as any,
                         }))
                     }
                 />
@@ -193,6 +209,8 @@ const ModuleTopbar = ({
                             ? "arrow_upward"
                             : "arrow_downward"
                     }
+                    color="primary"
+                    startIconColor="primary"
                     onClick={() =>
                         setQueryArgs((prev) => ({
                             ...prev,
@@ -200,7 +218,9 @@ const ModuleTopbar = ({
                         }))
                     }
                 >
-                    {queryArgs.order === "ASC" ? __("Ascending", "ninja-drive") : __("Descending", "ninja-drive")}
+                    {queryArgs.order === "ASC"
+                        ? __("Ascending", "ninja-drive")
+                        : __("Descending", "ninja-drive")}
                 </Button>
             </InlineStack>
         </InlineStack>

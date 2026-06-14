@@ -9,65 +9,46 @@ export function openAuthWindow(
     width: string = "970",
     height: string = "700",
 ): void {
-    const left = window.screenLeft || window.screenX;
-    const top = window.screenTop || window.screenY;
-    const centerX =
-        left +
-        (window.innerWidth ||
-            document.documentElement.clientWidth ||
-            screen.width) /
-            2 -
-        parseInt(width) / 2;
-    const centerY =
-        top +
-        (window.innerHeight ||
-            document.documentElement.clientHeight ||
-            screen.height) /
-            2 -
-        parseInt(height) / 2;
-
-    // const authWindow = window.open(
-    //     authUrl,
-    //     "newwindow",
-    //     `width=${width},height=${height},left=${centerX},top=${centerY}`
-    // );
     const authWindow = window.open(authUrl, "_blank");
 
     if (authWindow && authWindow.focus) authWindow.focus();
 }
 
-export const validateAppCredentials = (clientID: string, secretKey: string) => {
+export const validateAppCredentials = (
+    client_id: string,
+    secret_key: string,
+) => {
     let valid = true;
 
     const clientIdRegex = /^[0-9]+-[a-zA-Z0-9]+\.apps\.googleusercontent\.com$/;
     const secretKeyRegex = /^GOCSPX-[\w-]{20,}$/;
 
-    if (!clientID.trim()) {
+    if (!client_id.trim()) {
         valid = false;
-    } else if (!clientIdRegex.test(clientID.trim())) {
+    } else if (!clientIdRegex.test(client_id.trim())) {
         valid = false;
     }
 
     if (!valid) return valid;
 
-    if (secretKey?.includes("*")) {
+    if (secret_key?.includes("*")) {
         return true;
     }
 
-    if (!secretKey.trim()) {
+    if (!secret_key.trim()) {
         valid = false;
-    } else if (!secretKeyRegex.test(secretKey.trim())) {
+    } else if (!secretKeyRegex.test(secret_key.trim())) {
         valid = false;
     }
 
     return valid;
 };
 
-export const getFormatDate = (dateString: string): string => {
-    if (!dateString) return "";
+export const getFormatDate = (date_string: string): string => {
+    if (!date_string) return "";
 
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString;
+    const date = new Date(date_string);
+    if (isNaN(date.getTime())) return date_string;
 
     return date.toLocaleDateString("en-US", {
         month: "short",
@@ -163,24 +144,6 @@ export const getUsedStorage = (limit: number, usage: number) => {
     return (usage / limit) * 100;
 };
 
-export const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return __("0 Bytes", "ninja-drive");
-    const k = 1024;
-    const sizes = [
-        __("Bytes", "ninja-drive"),
-        __("KB", "ninja-drive"),
-        __("MB", "ninja-drive"),
-        __("GB", "ninja-drive"),
-        __("TB", "ninja-drive"),
-        __("PB", "ninja-drive"),
-        __("EB", "ninja-drive"),
-        __("ZB", "ninja-drive"),
-        __("YB", "ninja-drive"),
-    ];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-};
-
 export function formatDateToMonDayYear(dateTimeStr: string): string {
     const date = new Date(dateTimeStr);
 
@@ -206,50 +169,15 @@ export function formatDateToMonDayYear(dateTimeStr: string): string {
     return `${month} ${day} ${year}`;
 }
 
-export function objectEqual(obj1: any, obj2: any): boolean {
-    if (obj1 === obj2) return true;
-
-    if (typeof obj1 !== typeof obj2) return false;
-
-    if (obj1 == null || obj2 == null) return obj1 === obj2;
-
-    if (Array.isArray(obj1) && Array.isArray(obj2)) {
-        if (obj1.length !== obj2.length) return false;
-
-        const arr1 = [...obj1];
-        const arr2 = [...obj2];
-
-        return arr1.every((item1) => {
-            const index = arr2.findIndex((item2) => objectEqual(item1, item2));
-            if (index === -1) return false;
-            arr2.splice(index, 1);
-            return true;
-        });
-    }
-
-    if (typeof obj1 === "object" && typeof obj2 === "object") {
-        const keys1 = Object.keys(obj1);
-        const keys2 = Object.keys(obj2);
-
-        if (keys1.length !== keys2.length) return false;
-
-        return keys1.every(
-            (key) => keys2.includes(key) && objectEqual(obj1[key], obj2[key]),
-        );
-    }
-
-    return obj1 === obj2;
-}
-
 export const getDownloadUrl = (file: File, id?: string): string => {
-    if (!file || !file.fileKey || !file.name) {
+    if (!file || !file.file_key || !file.name) {
         console.error("Invalid file object provided to getDownloadUrl:", file);
         return "";
     }
 
     const url = PNPNDHelper.getUrl(
         "download",
-        file?.fileKey,
+        file?.file_key,
         file?.name,
         id,
         undefined,
@@ -258,3 +186,39 @@ export const getDownloadUrl = (file: File, id?: string): string => {
 
     return url;
 };
+
+export function timeAgo(dateString: string): string {
+    const now = Date.now();
+    const past = new Date(dateString).getTime();
+
+    if (isNaN(past)) return __("Invalid date", "ninja-drive");
+
+    const diffInSeconds = Math.floor((now - past) / 1000);
+
+    if (diffInSeconds < 60) {
+        return sprintf(__("%d sec ago", "ninja-drive"), diffInSeconds);
+    }
+
+    const minutes = Math.floor(diffInSeconds / 60);
+    if (minutes < 60) {
+        return sprintf(__("%d min ago", "ninja-drive"), minutes);
+    }
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) {
+        return sprintf(__("%d hour ago", "ninja-drive"), hours);
+    }
+
+    const days = Math.floor(hours / 24);
+    if (days < 30) {
+        return sprintf(__("%d day ago", "ninja-drive"), days);
+    }
+
+    const months = Math.floor(days / 30);
+    if (months < 12) {
+        return sprintf(__("%d month ago", "ninja-drive"), months);
+    }
+
+    const years = Math.floor(days / 365);
+    return sprintf(__("%d year ago", "ninja-drive"), years);
+}

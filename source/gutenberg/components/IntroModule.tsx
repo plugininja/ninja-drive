@@ -1,20 +1,24 @@
-import { __ } from "@wordpress/i18n";
-import { BlockContainerProps } from "./BlockContainer";
 import BlockStack from "~/components/molecules/BlockStack";
-import ShortCodeBlock from "./ShortCodeBlock";
+import { BlockContainerProps } from "./BlockContainer";
 import Card from "~/components/molecules/Card";
 import Button from "~/components/atoms/Button";
-import { store } from "../../store/store";
+import { toBoolean } from "~/utils/functions";
+import ShortCodeBlock from "./ShortCodeBlock";
 import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import { store } from "../../store/store";
 import { Provider } from "react-redux";
+import { __ } from "@wordpress/i18n";
 import Shortcode from "./Shortcode";
+import DOCS from "~/utils/docs";
 
 const IntroModule = ({
+    isPro = false,
     attributes,
     setAttributes,
     openModal,
 }: {
+    isPro?: boolean;
     attributes: BlockContainerProps["attributes"];
     setAttributes: BlockContainerProps["setAttributes"];
     openModal: () => void;
@@ -22,42 +26,44 @@ const IntroModule = ({
     const { id, type } = attributes || {};
 
     const title =
-        type === "file-browser"
+        type === "file_browser"
             ? __("File Browser", "ninja-drive")
-            : type === "media-player"
+            : type === "media_player"
             ? __("Media Player", "ninja-drive")
             : type === "gallery"
             ? __("Gallery", "ninja-drive")
-            : type === "slider-carousel"
+            : type === "slider_carousel"
             ? __("Slider Carousel", "ninja-drive")
-            : type === "embed-documents"
+            : type === "embed_documents"
             ? __("Embed Documents", "ninja-drive")
-            : type === "search-box"
+            : type === "search_box"
             ? __("Search Box", "ninja-drive")
-            : type === "file-list"
+            : type === "file_list"
             ? __("File List", "ninja-drive")
             : type === "widget"
             ? __("Shortcode Widgets", "ninja-drive")
             : __("Widget", "ninja-drive");
 
     const iconName =
-        type === "file-browser"
+        type === "file_browser"
             ? "folder"
-            : type === "media-player"
+            : type === "media_player"
             ? "stock_media"
             : type === "gallery"
             ? "imagesmode"
-            : type === "slider-carousel"
+            : type === "slider_carousel"
             ? "slideshow"
-            : type === "embed-documents"
+            : type === "embed_documents"
             ? "text_compare"
-            : type === "search-box"
+            : type === "search_box"
             ? "feature_search"
-            : type === "file-list"
+            : type === "file_list"
             ? "event_list"
             : type === "widget"
             ? "code"
             : "data_object";
+
+    const isProFeature = isPro && !toBoolean(pnpnd?.is_pro);
 
     return (
         <>
@@ -66,44 +72,91 @@ const IntroModule = ({
                     <Shortcode id={id} />
                 </Provider>
             ) : (
-                <div className="pnpnd-top-level-wrapper">
-                    <Card padding={30}>
-                        <BlockStack
-                            gap={10}
-                            align="center"
-                            inlineAlign="center"
+                <div
+                    className="pnpnd-top-level-wrapper"
+                    style={{ maxWidth: "600px", margin: "0 auto" }}
+                >
+                    <Card
+                        padding={10}
+                        background={
+                            isProFeature ? "warning-50" : "primary-extralight"
+                        }
+                        border={isProFeature ? "warning-100" : "primary-light"}
+                    >
+                        <Card
+                            padding={30}
+                            background="white"
+                            rounded="md"
+                            border="white"
                         >
-                            <Icon
-                                name={iconName}
-                                fontSize="5xl"
-                                color="primary"
-                            />
-
-                            <Text as="h3" size="lg" weight="semibold">
-                                {title}
-                            </Text>
-
-                            <Text as="p" size="sm">
-                                {__("Please configure the widget first to display the content.", "ninja-drive")}
-                            </Text>
-
-                            {type === "widget" ? (
-                                <Provider store={store}>
-                                    <ShortCodeBlock
-                                        attributes={attributes}
-                                        setAttributes={setAttributes}
+                            <BlockStack
+                                gap={10}
+                                align="center"
+                                inlineAlign="center"
+                            >
+                                {isProFeature ? (
+                                    <Icon
+                                        name="crown"
+                                        fontSize="6xl"
+                                        color="warning"
                                     />
-                                </Provider>
-                            ) : (
-                                <Button
-                                    variant="primary"
-                                    size="small"
-                                    onClick={openModal}
-                                >
-                                    {__("Configure", "ninja-drive")}
-                                </Button>
-                            )}
-                        </BlockStack>
+                                ) : (
+                                    <Icon
+                                        name={iconName}
+                                        fontSize="6xl"
+                                        color="primary"
+                                    />
+                                )}
+
+                                <Text as="h3" size="lg" weight="semibold">
+                                    {title}
+                                </Text>
+
+                                <Text as="p" size="sm">
+                                    {isProFeature
+                                        ? __(
+                                              "Please upgrade to the Pro version to access this feature.",
+                                              "ninja-drive",
+                                          )
+                                        : __(
+                                              "Please configure the widget first to display the content.",
+                                              "ninja-drive",
+                                          )}
+                                </Text>
+
+                                {isProFeature ? (
+                                    <Button
+                                        variant="warning"
+                                        size="small"
+                                        startIcon="crown"
+                                        onClick={() =>
+                                            window.open(
+                                                DOCS?.SETTINGS?.pricingPage,
+                                                "_blank",
+                                            )
+                                        }
+                                    >
+                                        {__("Upgrade now", "ninja-drive")}
+                                    </Button>
+                                ) : type === "widget" ? (
+                                    <Provider store={store}>
+                                        <ShortCodeBlock
+                                            attributes={attributes}
+                                            setAttributes={setAttributes}
+                                        />
+                                    </Provider>
+                                ) : (
+                                    <Button
+                                        variant="primary"
+                                        size="small"
+                                        startIcon="settings"
+                                        onClick={openModal}
+                                    >
+                                        {__("Configure", "ninja-drive")}
+                                    </Button>
+                                )}
+                            </BlockStack>
+                        </Card>
                     </Card>
                 </div>
             )}

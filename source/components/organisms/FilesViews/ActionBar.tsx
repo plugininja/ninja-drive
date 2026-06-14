@@ -1,27 +1,35 @@
-import { useEffect, useState } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import InlineStack from "~/components/molecules/InlineStack";
 import IconButton from "~/components/molecules/IconButton";
+import { useEffect, useState } from "@wordpress/element";
+import { useFileActions } from "~/hooks/useFileActions";
+import Dropdown from "~/components/molecules/Dropdown";
 import { useFilesContext } from "./FilesViews";
 import Card from "~/components/molecules/Card";
 import Button from "~/components/atoms/Button";
 import Text from "~/components/atoms/Text";
-import Dropdown from "~/components/molecules/Dropdown";
 import Icon from "~/components/atoms/Icon";
-import { useFileActions } from "~/hooks/useFileActions";
 import { File } from "~/types/file.types";
-import { toBoolean } from "~/utils/functions";
+import { __ } from "@wordpress/i18n";
 
 const ActionBar = ({
     isCompact = false,
+    onlyIcon = false,
     createFolder,
 }: {
     isCompact?: boolean;
+    onlyIcon?: boolean;
     createFolder: (activeFolderKey: string) => void;
 }) => {
-    const { breadcrumbs, activeFolder, setShowUploader, widgetId, openFolder } =
-        useFilesContext();
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
+    const {
+        breadcrumbs,
+        activeFolder,
+        setShowUploader,
+        widget_id,
+        openFolder,
+    } = useFilesContext();
+
     const {
         rename,
         share,
@@ -37,7 +45,6 @@ const ActionBar = ({
                 "shared-drives",
                 "shared",
                 "starred",
-                "my-drive",
                 "/",
             ].includes(activeFolder ?? "")
         ) {
@@ -60,51 +67,67 @@ const ActionBar = ({
 
     const currentBreadcrumb = breadcrumbs[breadcrumbs?.length - 1];
     const parentFolderKey =
-        breadcrumbs[breadcrumbs?.length - 2]?.fileKey ?? activeFolder;
+        breadcrumbs[breadcrumbs?.length - 2]?.file_key ?? activeFolder;
 
     const getCurrentFolderFile = (): File => ({
-        fileKey: currentBreadcrumb?.fileKey ?? activeFolder,
+        file_key: currentBreadcrumb?.file_key ?? activeFolder,
         name: currentBreadcrumb?.name ?? "",
         icon: "folder",
-        mimeType: "application/vnd.google-apps.folder",
+        mime_type: "application/vnd.google-apps.folder",
         size: 0,
         thumbnail: "",
         extension: null,
-        isDir: true,
-        isShared: false,
-        isStarred: false,
-        updatedAt: "",
-        createdAt: "",
-        additionalData: { baseName: currentBreadcrumb?.name ?? "" },
+        is_dir: true,
+        is_shared: false,
+        is_starred: false,
+        updated_at: "",
+        created_at: "",
+        additional_data: { base_name: currentBreadcrumb?.name ?? "" },
     });
 
     if (isCompact) {
         return (
             <InlineStack gap={10}>
                 {BROWSER_ACTIONS?.map(
-                    ({ Key, title, icon, onClick, isDisabled }, index) => (
-                        <Button
-                            key={Key ?? index}
-                            variant="outlined"
-                            size="small"
-                            startIcon={icon}
-                            onClick={onClick}
-                            disabled={isDisabled}
-                        >
-                            {title}
-                        </Button>
-                    ),
+                    ({ Key, title, icon, onClick, isDisabled }, index) => {
+                        if (onlyIcon) {
+                            return (
+                                <IconButton
+                                    key={Key ?? index}
+                                    variant="outlined"
+                                    size="small"
+                                    name={icon}
+                                    onClick={onClick}
+                                    disabled={isDisabled}
+                                />
+                            );
+                        }
+
+                        return (
+                            <Button
+                                key={Key ?? index}
+                                variant="outlined"
+                                size="small"
+                                startIcon={icon}
+                                onClick={onClick}
+                                disabled={isDisabled}
+                            >
+                                {title}
+                            </Button>
+                        );
+                    },
                 )}
             </InlineStack>
         );
     }
 
     return (
-        <InlineStack margin={"0px 0px 20px 0px"} align="between" gap={10}>
+        <InlineStack margin="0px 0px 20px 0px" align="between" gap={10}>
             <InlineStack>
-                <Text size="xl" weight="medium">
+                <Text color="gray-800" size="xl" weight="medium">
                     {currentBreadcrumb?.name}
                 </Text>
+
                 <Dropdown>
                     <Dropdown.Trigger disabled={isDisabled}>
                         <IconButton
@@ -113,9 +136,10 @@ const ActionBar = ({
                             size="small"
                             rounded="sm"
                             name={"settings"}
-                            disabled={isDisabled}
+                            disabled={activeFolder === "my-drive" || isDisabled}
                         />
                     </Dropdown.Trigger>
+
                     <Dropdown.Content
                         position={{ left: 0, top: "115%" }}
                         style={{ minWidth: "200px" }}
@@ -124,28 +148,31 @@ const ActionBar = ({
                             onClick={() =>
                                 openGoogleDrive(
                                     getCurrentFolderFile(),
-                                    widgetId,
+                                    widget_id,
                                 )
                             }
                         >
                             <InlineStack gap={8}>
                                 <Icon name="open_in_new" color="black" />
+
                                 <Text size="sm">
                                     {__("Open in Google Drive", "ninja-drive")}
                                 </Text>
                             </InlineStack>
                         </Dropdown.MenuItem>
+
                         <Dropdown.MenuItem
                             onClick={() =>
                                 rename(
                                     getCurrentFolderFile(),
                                     parentFolderKey,
-                                    widgetId,
+                                    widget_id,
                                 )
                             }
                         >
                             <InlineStack gap={8}>
                                 <Icon name="text_select_start" color="black" />
+
                                 <Text size="sm">
                                     {__("Rename", "ninja-drive")}
                                 </Text>
@@ -154,32 +181,36 @@ const ActionBar = ({
 
                         <Dropdown.MenuItem
                             onClick={() =>
-                                share(getCurrentFolderFile(), widgetId)
+                                share(getCurrentFolderFile(), widget_id)
                             }
                         >
                             <InlineStack gap={8}>
                                 <Icon name="share" color="black" />
+
                                 <Text size="sm">
                                     {__("Share", "ninja-drive")}
                                 </Text>
                             </InlineStack>
                         </Dropdown.MenuItem>
+
                         <Dropdown.MenuSeparator />
+
                         <Dropdown.MenuItem
                             onClick={() =>
                                 handleDelete(
                                     [
-                                        currentBreadcrumb?.fileKey ??
+                                        currentBreadcrumb?.file_key ??
                                             activeFolder,
                                     ],
                                     parentFolderKey,
-                                    widgetId,
+                                    widget_id,
                                     () => openFolder(parentFolderKey),
                                 )
                             }
                         >
                             <InlineStack gap={8}>
                                 <Icon name="delete" color="error" />
+
                                 <Text size="sm" color="error">
                                     {__("Delete", "ninja-drive")}
                                 </Text>
@@ -201,20 +232,23 @@ const ActionBar = ({
                             blockAlign="center"
                             gap={10}
                             background="white"
-                            style={{ cursor: "pointer", flex: "0 0 180px" }}
+                            style={{
+                                cursor: "pointer",
+                                flex: "0 0 180px",
+                                borderRadius: "7px",
+                            }}
                             disabled={isDisabled}
                             onClick={onClick}
-                            rounded="md"
                         >
                             <IconButton
-                                variant="secondary"
+                                variant="light"
                                 color="primary"
                                 size="small"
                                 rounded="sm"
                                 name={icon}
                             />
 
-                            <Text color="black" size="sm">
+                            <Text color="gray-800" size="sm" weight="medium">
                                 {title}
                             </Text>
                         </Card>

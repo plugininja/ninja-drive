@@ -5,20 +5,27 @@ import { baseApi } from "./baseApi";
 
 type GetModulesResponse = {
     widgets: ModuleConfig[];
-    totalPages: number;
+    total_pages: number;
     page: number;
-    hasMore: boolean;
+    has_more: boolean;
     total: number;
 };
 
 type GetModulesRequest = {
-    orderBy?: OrderBy;
+    order_by?: OrderBy;
     order?: Order;
     page?: number;
-    perPage?: number;
+    per_page?: number;
     search?: string;
     type: string;
     status?: string;
+};
+
+type WPPage = {
+    id: number;
+    title: {
+        rendered: string;
+    };
 };
 
 export const widgetApi = baseApi.injectEndpoints({
@@ -28,16 +35,24 @@ export const widgetApi = baseApi.injectEndpoints({
             GetModulesRequest
         >({
             query: ({
-                orderBy,
+                order_by,
                 order,
                 page,
-                perPage,
+                per_page,
                 search,
                 type,
                 status,
             }) => ({
                 url: "widget",
-                params: { orderBy, order, page, perPage, search, type, status },
+                params: {
+                    order_by,
+                    order,
+                    page,
+                    per_page,
+                    search,
+                    type,
+                    status,
+                },
             }),
 
             serializeQueryArgs: ({ endpointName }) => endpointName,
@@ -49,11 +64,11 @@ export const widgetApi = baseApi.injectEndpoints({
             forceRefetch: ({ currentArg, previousArg }) => {
                 return (
                     currentArg?.page !== previousArg?.page ||
-                    currentArg?.perPage !== previousArg?.perPage ||
+                    currentArg?.per_page !== previousArg?.per_page ||
                     currentArg?.search !== previousArg?.search ||
                     currentArg?.type !== previousArg?.type ||
                     currentArg?.order !== previousArg?.order ||
-                    currentArg?.orderBy !== previousArg?.orderBy
+                    currentArg?.order_by !== previousArg?.order_by
                 );
             },
 
@@ -62,11 +77,11 @@ export const widgetApi = baseApi.injectEndpoints({
 
         getModule: builder.query<
             ServerResponse<{ widget: ModuleConfig }>,
-            { id: string; password?: string; isAdmin?: boolean }
+            { id: string; password?: string; is_admin?: boolean }
         >({
-            query: ({ id, password, isAdmin = false }) => ({
+            query: ({ id, password, is_admin = false }) => ({
                 url: `widget/${id}`,
-                params: { password: password, isAdmin },
+                params: { password: password, is_admin },
             }),
 
             serializeQueryArgs: ({ queryArgs }) => queryArgs.id,
@@ -77,35 +92,35 @@ export const widgetApi = baseApi.injectEndpoints({
             ServerResponse<{ widget: ModuleConfig }>,
             {
                 id: string;
-                fileKey?: string;
+                file_key?: string;
                 page?: number;
-                perPage?: number;
+                per_page?: number;
                 from?: "cache" | "server";
-                orderBy?: OrderBy;
+                order_by?: OrderBy;
                 order?: Order;
                 password?: string;
-                searchScope?: "global" | "folder";
+                search_scope?: "global" | "folder";
                 search?: string | null;
-                isPagination?: boolean;
+                is_pagination?: boolean;
                 types?: FileTypes[];
                 isFirstCall?: boolean;
-                isAdmin?: boolean;
+                is_admin?: boolean;
             }
         >({
             async queryFn(args, _api, _extra, fetchWithBQ) {
                 const {
                     id,
-                    fileKey = "",
+                    file_key = "",
                     page = 1,
-                    perPage,
+                    per_page,
                     from,
-                    orderBy,
+                    order_by,
                     order,
                     password,
-                    searchScope,
+                    search_scope,
                     search,
                     isFirstCall = false,
-                    isAdmin = false,
+                    is_admin = false,
                 } = args;
 
                 if (isFirstCall) {
@@ -130,17 +145,17 @@ export const widgetApi = baseApi.injectEndpoints({
                 const result = await fetchWithBQ({
                     url: `widget/${id}`,
                     params: {
-                        fileKey,
+                        file_key,
                         page,
-                        perPage,
+                        per_page,
                         from,
-                        orderBy,
+                        order_by,
                         order,
                         password,
-                        searchScope,
+                        search_scope,
                         search: search || "",
                         types: args.types?.join(",") || "",
-                        isAdmin,
+                        is_admin,
                     },
                 });
 
@@ -153,9 +168,9 @@ export const widgetApi = baseApi.injectEndpoints({
             },
 
             serializeQueryArgs: ({ queryArgs }) => {
-                const { fileKey, id, search } = queryArgs;
+                const { file_key, id, search } = queryArgs;
 
-                return `${id}-fileKey-${fileKey}-${search}`;
+                return `${id}-file_key-${file_key}-${search}`;
             },
 
             merge: (currentCache, newResponse, { arg }) => {
@@ -164,7 +179,7 @@ export const widgetApi = baseApi.injectEndpoints({
                 const currentSrc = currentCache?.data?.widget.data.source;
                 const isFirstPage = arg.page === 1;
 
-                if (isFirstPage || arg?.isPagination) {
+                if (isFirstPage || arg?.is_pagination) {
                     currentCache.data = newResponse.data;
                     return;
                 }
@@ -174,15 +189,15 @@ export const widgetApi = baseApi.injectEndpoints({
                 }
 
                 const newFiles = currentSrc?.files ?? [];
-                const mergedFiles = [...newFiles, ...newSrc.files];
+                const mergedFiles = [...newFiles, ...newSrc?.files];
 
                 if (currentCache.data) {
                     currentCache.data.widget.data.source = {
                         ...currentSrc,
                         files: mergedFiles,
-                        currentPage: newSrc.currentPage,
-                        hasMore: newSrc.hasMore,
-                        totalPages: newSrc.totalPages,
+                        current_page: newSrc.current_page,
+                        has_more: newSrc.has_more,
+                        total_pages: newSrc.total_pages,
                     };
                 } else {
                     currentCache.data = newResponse.data;
@@ -196,11 +211,11 @@ export const widgetApi = baseApi.injectEndpoints({
 
                 return (
                     currentArg?.page !== previousArg.page ||
-                    currentArg?.fileKey !== previousArg.fileKey ||
+                    currentArg?.file_key !== previousArg.file_key ||
                     currentArg?.order !== previousArg.order ||
-                    currentArg?.orderBy !== previousArg.orderBy ||
-                    currentArg?.perPage !== previousArg.perPage ||
-                    currentArg?.searchScope !== previousArg.searchScope ||
+                    currentArg?.order_by !== previousArg.order_by ||
+                    currentArg?.per_page !== previousArg.per_page ||
+                    currentArg?.search_scope !== previousArg.search_scope ||
                     currentArg?.from !== previousArg.from ||
                     currentArg?.search !== previousArg.search
                 );
@@ -208,6 +223,7 @@ export const widgetApi = baseApi.injectEndpoints({
 
             providesTags: (_res, _err, { id }) => [{ type: "Widget", id }],
         }),
+
         addModule: builder.mutation<
             ServerResponse<{ widget: ModuleConfig }>,
             { data: ModuleConfig }
@@ -305,6 +321,50 @@ export const widgetApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: () => ["Modules"],
         }),
+
+        getPages: builder.query<WPPage[], void>({
+            async queryFn(_arg, _api, _extra, fetchWithBQ) {
+                const result = await fetchWithBQ({
+                    url: `${pnpnd.site_url}/wp-json/wp/v2/pages`,
+                });
+
+                if (result.error) {
+                    return { error: result.error };
+                }
+
+                return {
+                    data: result.data as WPPage[],
+                };
+            },
+        }),
+
+        embedWidget: builder.mutation<
+            ServerResponse<{
+                page_url: string;
+            }>,
+            {
+                widget_id: string;
+                page_id?: string;
+                page_name: string;
+            }
+        >({
+            query: ({ widget_id, page_id, page_name }) => ({
+                url: "widget/embed",
+                method: "POST",
+                body: { widget_id, page_id, page_name },
+            }),
+        }),
+
+        widgetOnboarding: builder.mutation<
+            ServerResponse<{ status: boolean }>,
+            { status: boolean }
+        >({
+            query: ({ status }) => ({
+                url: "widget/onboarding",
+                method: "PUT",
+                body: { status },
+            }),
+        }),
     }),
 });
 
@@ -317,4 +377,7 @@ export const {
     useUpdateModuleMutation,
     useDuplicateModuleMutation,
     useDeleteModuleMutation,
+    useGetPagesQuery,
+    useEmbedWidgetMutation,
+    useWidgetOnboardingMutation,
 } = widgetApi;

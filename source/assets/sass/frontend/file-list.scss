@@ -1,5 +1,6 @@
 @use "../utilities/variable" as *;
-.pnpnd-file-list {
+
+.pnpnd-file_list {
     /* Background Colors */
     --bg-page: #0f1117;
     --bg-primary: #161922;
@@ -45,7 +46,7 @@
 }
 
 /* Light Theme */
-.pnpnd-file-list[pnpnd-theme-status="light"] {
+.pnpnd-file_list[pnpnd-theme-status="light"] {
     --bg-page: #f5f7fa;
     --bg-primary: #ffffff;
     --bg-secondary: #f8f9fb;
@@ -64,9 +65,9 @@
         0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.pnpnd-file-list {
+.pnpnd-file_list {
     /* File Icon */
-    .file-icon {
+    .pnpnd-file-icon {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -164,7 +165,7 @@
     }
 
     /* Actions */
-    .file-actions {
+    .pnpnd-file-actions {
         display: flex;
         align-items: center;
         gap: 4px;
@@ -242,7 +243,7 @@
                 visibility: visible;
                 transform: translateY(0) scale(1);
 
-                .file-actions__dropdown-item {
+                .pnpnd-file-actions__dropdown-item {
                     animation: slideIn 200ms ease forwards;
                 }
             }
@@ -310,12 +311,12 @@
     /* ============================================
    TEMPLATE 1: List View
    ============================================ */
-    .file-list {
+    .pnpnd-file-list {
         display: flex;
         flex-direction: column;
         gap: 1px;
         border-radius: 8px;
-        overflow: hidden;
+        // overflow: hidden;
         border: 1px solid var(--border-primary);
 
         &__header {
@@ -380,10 +381,10 @@
             }
 
             &:hover {
-                background: var(--pnpnd-extralight);
+                background: var(--pnpnd-primary-extralight);
             }
 
-            &:hover .file-actions {
+            &:hover .pnpnd-file-actions {
                 opacity: 1;
             }
         }
@@ -443,7 +444,7 @@
     /* ============================================
    TEMPLATE 2: Grid View
    ============================================ */
-    .file-grid {
+    .pnpnd-file-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 16px;
@@ -471,15 +472,15 @@
             position: relative;
 
             &:hover {
-                background: var(--pnpnd-extralight);
+                background: var(--pnpnd-primary-extralight);
                 border-color: var(--border-hover);
                 // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
-                .file-actions {
+                .pnpnd-file-actions {
                     opacity: 1;
                 }
             }
-            &.is-active {
+            &.pnpnd-is-active {
                 z-index: 10;
             }
         }
@@ -527,7 +528,7 @@
     /* ============================================
    TEMPLATE 3: Compact View
    ============================================ */
-    .file-compact {
+    .pnpnd-file-compact {
         display: flex;
         flex-direction: column;
         border-radius: 8px;
@@ -548,9 +549,9 @@
             }
 
             &:hover {
-                background: var(--pnpnd-extralight);
+                background: var(--pnpnd-primary-extralight);
 
-                .file-actions {
+                .pnpnd-file-actions {
                     opacity: 1;
                 }
             }
@@ -603,7 +604,7 @@
     /* ============================================
    TEMPLATE 4: Table View
    ============================================ */
-    .file-table {
+    .pnpnd-file-table {
         &__wrapper {
             overflow-x: auto;
             overflow-y: hidden;
@@ -646,9 +647,9 @@
                     transition: background var(--transition-fast);
 
                     &:hover {
-                        background: var(--pnpnd-extralight);
+                        background: var(--pnpnd-primary-extralight);
 
-                        .file-actions {
+                        .pnpnd-file-actions {
                             opacity: 1;
                         }
                     }
@@ -671,7 +672,7 @@
                         width: 80px;
                         padding-right: 16px;
                     }
-                    .file-actions {
+                    .pnpnd-file-actions {
                         justify-content: start;
                         min-width: auto;
                         width: fit-content;
@@ -720,7 +721,7 @@
     /* ============================================
    TEMPLATE 5: Gallery View
    ============================================ */
-    .file-gallery {
+    .pnpnd-file-gallery {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 12px;
@@ -749,10 +750,10 @@
             max-width: 100%;
 
             &:hover {
-                background: var(--pnpnd-extralight);
+                background: var(--pnpnd-primary-extralight);
                 border-color: var(--border-hover);
 
-                .file-gallery__overlay {
+                .pnpnd-file-gallery__overlay {
                     opacity: 1;
                 }
             }
@@ -831,7 +832,7 @@
     /* ============================================
    TEMPLATE 6: Timeline View
    ============================================ */
-    .file-timeline {
+    .pnpnd-file-timeline {
         display: flex;
         flex-direction: column;
         gap: 24px;
@@ -871,9 +872,9 @@
             }
 
             &:hover {
-                background: var(--pnpnd-extralight);
+                background: var(--pnpnd-primary-extralight);
 
-                .file-actions {
+                .pnpnd-file-actions {
                     opacity: 1;
                 }
             }

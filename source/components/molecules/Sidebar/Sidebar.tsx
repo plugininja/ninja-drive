@@ -1,17 +1,19 @@
-import { useLocalStorage } from "~/hooks/useLocalStorage";
-import { STORAGE_KEYS } from "~/constants/storageKeys";
-import { formatFileSize, toBoolean } from "~/utils/functions";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
-import { __ } from "@wordpress/i18n";
+import { useLocalStorage } from "~/hooks/useLocalStorage";
+import LogoIcon from "~/components/atoms/Logo/LogoIcon";
 import Dropdown from "~/components/molecules/Dropdown";
+import { STORAGE_KEYS } from "~/constants/storageKeys";
 import Tooltip from "~/components/atoms/Tooltip";
-import DOCS from "~/utils/docs";
+import Card from "~/components/molecules/Card";
+import { formatFileSize } from "~/utils/file";
+import { toBoolean } from "~/utils/functions";
 import Logo from "~/components/atoms/Logo";
 import Icon from "~/components/atoms/Icon";
-import Card from "~/components/molecules/Card";
 import Text from "~/components/atoms/Text";
+import { __ } from "@wordpress/i18n";
+import DOCS from "~/utils/docs";
 import clsx from "clsx";
 import {
     createContext,
@@ -96,7 +98,7 @@ const Sidebar = ({
                 id={id}
                 style={{
                     ...style,
-                    width: collapsed ? 98 : width,
+                    width: collapsed ? 92 : width,
                     flexShrink: 0,
                     transition:
                         collapsed || !isResizing ? "width 0.25s ease" : "none",
@@ -110,26 +112,47 @@ const Sidebar = ({
             >
                 <InlineStack
                     align={collapsed ? "center" : "end"}
+                    blockAlign="start"
                     gap={5}
                     className="pn-sidebar__header"
                 >
-                    {!collapsed && (
-                        <a href={"https://plugininja.com/"} target="_blank">
+                    <a href={"https://plugininja.com/"} target="_blank">
+                        {collapsed ? (
+                            <LogoIcon className="pnpnd-logo-icon" />
+                        ) : (
                             <Logo />
-                        </a>
-                    )}
+                        )}
+                    </a>
 
-                    <IconButton
-                        variant={collapsed ? "primary" : "secondary"}
-                        name="keyboard_tab_rtl"
-                        size="small"
-                        color={collapsed ? "white" : "primary"}
-                        fontSize="lg"
-                        rounded="md"
-                        className="pn-sidebar__header--toggle"
-                        onClick={toggle}
-                    />
+                    <Card
+                        padding="4px 8px"
+                        rounded="sm"
+                        border="primary-extralight"
+                        style={{
+                            width: "fit-content",
+                            height: "fit-content",
+                            opacity: collapsed ? 0 : 1,
+                            transition: "opacity 0.25s ease",
+                        }}
+                    >
+                        <Text color="primary" size="sm" weight="medium">
+                            {pnpnd.version}
+                        </Text>
+                    </Card>
                 </InlineStack>
+
+                <IconButton
+                    variant={collapsed ? "primary" : "white"}
+                    name="keyboard_tab_rtl"
+                    size="small"
+                    color={collapsed ? "white" : "primary"}
+                    fontSize="lg"
+                    rounded="md"
+                    border
+                    borderColor="gray-200"
+                    className="pn-sidebar--toggle"
+                    onClick={toggle}
+                />
 
                 {children}
 
@@ -155,7 +178,6 @@ Sidebar.Item = ({
     title,
     icon,
     iconUrl,
-    svgIcon,
     iconSize,
     active = false,
     background = "white",
@@ -207,7 +229,6 @@ Sidebar.Item = ({
                         rounded={iconRounded}
                         name={icon}
                         iconUrl={iconUrl}
-                        svgIcon={svgIcon}
                         fontSize={iconSize}
                         color="primary"
                         borderStyle={iconBorderStyle}
@@ -237,27 +258,30 @@ Sidebar.Item = ({
 Sidebar.DropdownItem = ({
     childrenItems,
     activeKey,
+    disabled = false,
 }: SidebarDropdownItemProps) => {
     const { collapsed } = useSidebar();
     const activeChildren = childrenItems?.filter(
         (item) => item.key === activeKey,
     );
 
-    const accessDisabled =
-        pnpnd?.currentUser?.can?.hasFullAccess && toBoolean(pnpnd.isPro);
+    const accessEnabled =
+        pnpnd?.current_user?.can?.has_full_access && toBoolean(pnpnd.is_pro);
 
     return (
         <Dropdown outSideClick={false}>
             <Dropdown.Trigger
-                openStatus={accessDisabled ? false : collapsed}
-                disabled={accessDisabled}
+                openStatus={
+                    disabled ? false : accessEnabled ? collapsed : false
+                }
+                disabled={!accessEnabled}
             >
                 <Sidebar.Item
                     active
                     title={activeChildren?.[0]?.title || "Menu"}
                     icon={activeChildren?.[0]?.icon}
                     iconUrl={activeChildren?.[0]?.iconUrl}
-                    svgIcon={activeChildren?.[0]?.svgIcon}
+                    iconUrl={activeChildren?.[0]?.iconUrl}
                     iconSize={activeChildren?.[0]?.iconSize}
                     iconBorderStyle="solid"
                     statusProps={activeChildren?.[0]?.statusProps}
@@ -265,10 +289,10 @@ Sidebar.DropdownItem = ({
                     border="primary-extralight"
                     borderStyle="solid"
                     rounded="md"
-                    iconRounded="md"
+                    iconRounded="sm"
                 />
 
-                {!accessDisabled && !collapsed && (
+                {accessEnabled && !collapsed && (
                     <Dropdown.TriggerArrow
                         style={{
                             position: "absolute",
@@ -286,10 +310,15 @@ Sidebar.DropdownItem = ({
                 rounded="md"
                 border
                 shadow={true}
+                position={{
+                    top: "110%",
+                    left: collapsed ? "-10%" : "0",
+                }}
                 style={{
                     width: collapsed ? "50px" : "100%",
                     minWidth: "fit-content",
                     padding: collapsed ? "5px" : "10px",
+                    borderRadius: "10px",
                     display: "flex",
                     flexDirection: "column",
                     gap: "10px",
@@ -300,10 +329,10 @@ Sidebar.DropdownItem = ({
                         key={item.key}
                         active={item.key === activeKey}
                         borderStyle="solid"
-                        size={"large"}
+                        size="large"
                         rounded="md"
                         iconButtonVariant="white"
-                        iconRounded="md"
+                        iconRounded="sm"
                         iconBorderColor="secondary"
                         iconBorderStyle="solid"
                         isDropdown
@@ -442,10 +471,6 @@ Sidebar.Bottom = ({
                         />
                     </Tooltip>
                 )}
-
-                <Text size="sm" weight="medium">
-                    v {pnpnd.version}
-                </Text>
             </BlockStack>
 
             <BlockStack
@@ -453,21 +478,6 @@ Sidebar.Bottom = ({
                 className="pn-sidebar__bottom pn-sidebar__fade"
             >
                 {children}
-
-                <InlineStack
-                    gap={5}
-                    align="between"
-                    wrap={false}
-                    style={{ paddingLeft: "5px", paddingRight: "5px" }}
-                >
-                    <Text size="sm" weight="medium">
-                        {__("Version", "ninja-drive")}
-                    </Text>
-
-                    <Text size="sm" weight="medium">
-                        {pnpnd.version}
-                    </Text>
-                </InlineStack>
             </BlockStack>
         </>
     );
@@ -478,18 +488,18 @@ Sidebar.HelpCenter = () => {
         <InlineStack
             gap={8}
             wrap={false}
-            className="pn-sidebar__bottom-help-center"
+            align="between"
+            style={{
+                cursor: "pointer",
+            }}
             onClick={() =>
                 window.open(DOCS.supportLink, "_blank", "noreferrer")
             }
-            align="between"
         >
             <InlineStack gap={8} wrap={false}>
                 <Icon name="contact_support" fontSize="xl" />
 
-                <Text className="pn-sidebar__bottom-help-center-title">
-                    {__("Help Center", "ninja-drive")}
-                </Text>
+                <Text>{__("Help Center", "ninja-drive")}</Text>
             </InlineStack>
 
             <Icon name="open_in_new" fontSize="lg" />
@@ -497,18 +507,23 @@ Sidebar.HelpCenter = () => {
     );
 };
 
-Sidebar.UpgradePro = () => (
+Sidebar.UpgradePro = ({
+    style,
+    className,
+}: {
+    style?: React.CSSProperties;
+    className?: string;
+}) => (
     <InlineStack
         gap={8}
         wrap={false}
-        className="pn-sidebar__bottom-upgrade-pro"
-        onClick={() => window.open(pnpnd.upgradeUrl, "_blank", "noreferrer")}
+        onClick={() => window.open(pnpnd.upgrade_url, "_blank", "noreferrer")}
+        style={{ ...style, cursor: "pointer" }}
+        className={className}
     >
-        <Icon name="crown" fontSize="xl" />
+        <Icon name="crown" color="primary" fontSize="xl" />
 
-        <Text className="pn-sidebar__bottom-upgrade-pro-title">
-            {__("Upgrade to Pro", "ninja-drive")}
-        </Text>
+        <Text color="primary">{__("Upgrade to Pro", "ninja-drive")}</Text>
     </InlineStack>
 );
 

@@ -1,21 +1,21 @@
-import { AdvancedGallery, ModuleConfig } from "~/types/widget.types";
+import { ModuleConfig, StyleGallery } from "~/types/widget.types";
+import EmptyState from "~/components/molecules/EmptyState";
 import { useFileActions } from "~/hooks/useFileActions";
 import { useModuleFiles } from "~/hooks/useModuleFiles";
-import NoFoundIcon from "~/assets/icons/NoFoundIcon";
+import { noFoundIconSvg } from "~/utils/icons";
 import { checkPermission } from "~/utils/widget";
-import EmptyState from "~/components/molecules/EmptyState";
 import { useGallery } from "~/hooks/useGallery";
+import type { CSSProperties } from "react";
 import ModuleBottom from "../ModuleBottom";
 import { File } from "~/types/file.types";
-import type { CSSProperties } from "react";
 import { __ } from "@wordpress/i18n";
 import Thumbnail from "./Thumbnail";
 import clsx from "clsx";
 
 const getThumbnailUrlByQuality = (
     file: File,
-    quality: AdvancedGallery["thumbnailQuality"],
-    widgetId?: string,
+    quality: StyleGallery["thumbnail_quality"],
+    widget_id?: string,
 ): string => {
     const suffixMap = {
         original: "5xl",
@@ -28,9 +28,9 @@ const getThumbnailUrlByQuality = (
 
     const thumbnail = PNPNDHelper.getUrl(
         "thumbnail",
-        file.fileKey,
+        file.file_key,
         file.name,
-        widgetId,
+        widget_id,
         size,
         file.extension,
     );
@@ -39,10 +39,10 @@ const getThumbnailUrlByQuality = (
 };
 
 const Gallery = ({ data }: { data: ModuleConfig }) => {
-    const gallery = data.data.advanced.gallery;
+    const gallery = data?.data?.style?.gallery;
     const activeView = gallery?.layout || "grid";
     const { desktop, mobile, tablet, laptop } = gallery?.columns || {};
-    const { loadingType } = data?.data?.advanced.files || {};
+    const { loading_type } = data?.data?.style?.files || {};
 
     const { preview, download } = data?.data?.permissions || {};
 
@@ -52,10 +52,10 @@ const Gallery = ({ data }: { data: ModuleConfig }) => {
 
     const {
         files,
-        hasMore,
+        has_more,
         loadingMore,
         loadMore,
-        totalPages,
+        total_pages,
         loading,
         loadMoreRef,
         queryArgs,
@@ -67,13 +67,13 @@ const Gallery = ({ data }: { data: ModuleConfig }) => {
         permissions: {
             download: enableDownload,
         },
-        showThumbnails: preview?.previewThumbnail,
+        showThumbnails: preview?.preview_thumbnail,
     });
 
     if (!files.length && !loading)
         return (
             <EmptyState
-                icon={<NoFoundIcon />}
+                icon={<img src={noFoundIconSvg} alt="" style={{ width: "200px", height: "200px" }} />}
                 title={__("No files found", "ninja-drive")}
             />
         );
@@ -82,8 +82,8 @@ const Gallery = ({ data }: { data: ModuleConfig }) => {
         <>
             <div
                 className={clsx(
-                    `gallery--${activeView}`,
-                    "gallery-transition-enter",
+                    `pnpnd-gallery--${activeView}`,
+                    "pnpnd-gallery-transition-enter",
                 )}
                 style={
                     {
@@ -91,15 +91,15 @@ const Gallery = ({ data }: { data: ModuleConfig }) => {
                         "--laptopColumns": laptop,
                         "--tabletColumns": tablet,
                         "--mobileColumns": mobile,
-                        "--itemGap": `${gallery?.thumbnailSpacing.value}${gallery?.thumbnailSpacing.unit}`,
-                        "--itemRadius": `${gallery?.thumbnailRadius.value}${gallery?.thumbnailRadius.unit}`,
+                        "--itemGap": `${gallery?.thumbnail_spacing.value}${gallery?.thumbnail_spacing.unit}`,
+                        "--itemRadius": `${gallery?.thumbnail_radius.value}${gallery?.thumbnail_radius.unit}`,
                     } as CSSProperties
                 }
             >
                 {files.map((image, index) => (
                     <div
-                        key={image.fileKey}
-                        className="gallery-item"
+                        key={image.file_key}
+                        className="pnpnd-gallery-item"
                         onClick={() => {
                         }}
                         role="button"
@@ -110,13 +110,13 @@ const Gallery = ({ data }: { data: ModuleConfig }) => {
                         onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
-                                if (enablePreview && preview?.popOut) {
+                                if (enablePreview && preview?.pop_out) {
                                     openGoogleDrive(image, data?.id);
                                     return;
                                 }
                                 enablePreview &&
                                     preview?.inline &&
-                                    viewFile(image.fileKey);
+                                    viewFile(image.file_key);
                             }
                         }}
                         style={{ "--i": index } as CSSProperties}
@@ -124,7 +124,7 @@ const Gallery = ({ data }: { data: ModuleConfig }) => {
                         <Thumbnail
                             src={getThumbnailUrlByQuality(
                                 image,
-                                gallery?.thumbnailQuality || "medium",
+                                gallery?.thumbnail_quality || "medium",
                                 data?.id,
                             )}
                             alt={image.name}
@@ -135,11 +135,11 @@ const Gallery = ({ data }: { data: ModuleConfig }) => {
             </div>
 
             <ModuleBottom
-                fileLoadingType={loadingType}
-                hasMore={hasMore}
+                fileLoadingType={loading_type}
+                has_more={has_more}
                 loadMore={loadMore}
-                totalPages={totalPages}
-                currentPage={queryArgs?.page || 1}
+                total_pages={total_pages}
+                current_page={queryArgs?.page || 1}
                 isLoading={loading || loadingMore}
                 loadMoreFileRef={loadMoreRef}
             />

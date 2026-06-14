@@ -1,7 +1,8 @@
 import InlineStack from "~/components/molecules/InlineStack";
 import Text from "~/components/atoms/Text";
-import DOCS from "~/utils/docs";
 import { __ } from "@wordpress/i18n";
+import DOCS from "~/utils/docs";
+
 const Footer = () => {
     return (
         <InlineStack align="center">

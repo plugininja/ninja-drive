@@ -4,8 +4,8 @@ import IconButton from "~/components/molecules/IconButton";
 import BlockStack from "~/components/molecules/BlockStack";
 import Dropdown from "~/components/molecules/Dropdown";
 import Button from "~/components/atoms/Button";
-import { __ } from "@wordpress/i18n";
 import Text from "~/components/atoms/Text";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 
 const Header = ({

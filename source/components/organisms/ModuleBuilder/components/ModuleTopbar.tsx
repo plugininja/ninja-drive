@@ -1,36 +1,59 @@
-import { __ } from "@wordpress/i18n";
+import { useModulePreview } from "~/components/organisms/modals/ModulePreview";
+import { getModuleMenuItems, MODULE_LISTS } from "~/constants/widget";
 import { updateEditData } from "~/store/features/widgetBuilderSlice";
+import { useWidgetOnboardingMutation } from "~/store/api/widgetApi";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { ModuleConfig, ModuleKey } from "~/types/widget.types";
-import { useModulePreview } from "~/components/organisms/modals/ModulePreview";
+import StepContent from "~/components/onboarding/StepContent";
 import { useCustomAlert } from "~/components/molecules/Alert";
-import { TModuleBuilder } from "../ModuleBuilder";
-import { MODULE_LISTS } from "~/constants/widget";
+import InlineStack from "~/components/molecules/InlineStack";
 import IconButton from "~/components/molecules/IconButton";
-import { useNavigate } from "react-router-dom";
+import BlockStack from "~/components/molecules/BlockStack";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEmbedPage } from "../../modals/EmbedPage";
+import { TModuleBuilder } from "../ModuleBuilder";
 import Tooltip from "~/components/atoms/Tooltip";
+import Stepper from "~/components/atoms/Stepper";
+import Divider from "~/components/atoms/Divider";
 import Button from "~/components/atoms/Button";
-import Topbar from "~/components/molecules/Topbar";
+import { toBoolean } from "~/utils/functions";
 import Input from "~/components/atoms/Input";
+import Text from "~/components/atoms/Text";
+import useDevice from "~/hooks/useDevice";
+import { __ } from "@wordpress/i18n";
+import {
+    completeStep,
+    resetSteps,
+    useOnboardingStep,
+} from "~/hooks/useOnboardingStep";
 
 const ModuleTopbar = ({
     style,
     onSave,
     onNext,
+    isFirst,
     isLast,
+    onBack,
     onDismiss,
     loading,
     isPopup,
 }: TModuleBuilder) => {
-    const { editData, isEdited } = useAppSelector(
-        (state) => state?.widgetBuilder,
+    const { edit_data, is_edited } = useAppSelector(
+        (state) => state?.widget_builder,
     );
+    const [widgetOnboarding] = useWidgetOnboardingMutation();
+    const { widget_id, widgetMenu } = useParams();
+    const isLargeScreen = useDevice(1420);
 
     const dispatch = useAppDispatch();
 
     const { showAlert } = useCustomAlert();
 
     const { openPreview } = useModulePreview();
+
+    const { openEmbedPage } = useEmbedPage();
+
+    const { isNextStep, completedSteps } = useOnboardingStep();
 
     const navigate = useNavigate();
 
@@ -40,8 +63,12 @@ const ModuleTopbar = ({
         return icon ? widget[0]?.icon : widget[0]?.title;
     };
 
+    const handleStepClick = (menuId: string) => {
+        navigate(`/widget-builder/${widget_id}/${menuId}`);
+    };
+
     const handleBack = () => {
-        if (isEdited) {
+        if (is_edited) {
             showAlert({
                 title: "Unsaved Changes",
                 text: "You have unsaved changes. Are you sure you want to go back?",
@@ -50,6 +77,10 @@ const ModuleTopbar = ({
                 confirmButtonText: "Back",
                 onConfirm: () => {
                     navigate("/widget-builder");
+
+                    if (toBoolean(pnpnd?.onboarding)) {
+                        handleOnboardingStatus(false);
+                    }
                 },
             });
             return;
@@ -71,62 +102,79 @@ const ModuleTopbar = ({
         });
     };
 
-    const back = (
-        <Button
-            variant="warning"
-            startIcon="arrow_back_ios"
-            onClick={handleBack}
-        >
-            Back
-        </Button>
-    );
+    const getStep = () => {
+        if (widgetMenu === "source") {
+            return completedSteps?.length === 3;
+        } else if (widgetMenu === "configuration") {
+            return isNextStep(3);
+        } else if (widgetMenu === "style") {
+            return isNextStep(4);
+        } else if (widgetMenu === "permissions") {
+            return isNextStep(5);
+        } else if (widgetMenu === "notifications") {
+            return false;
+        }
+    };
 
-    const widget = (
-        <Tooltip
-            title={
-                getItemTypeInfo(editData?.type as ModuleKey) || "File Browser"
+    const handleOnboardingStatus = async (status: boolean) => {
+        if (!toBoolean(pnpnd?.onboarding)) return;
+
+        try {
+            const result = await widgetOnboarding({ status }).unwrap();
+
+            if (result?.data?.status === false) {
+                resetSteps();
+                (window as any).onboarding = "0";
             }
-            wrap="no-wrap"
-            placement="bottom"
-            arrow
+        } catch (error: any) {
+            showAlert({
+                toast: true,
+                type: "error",
+                text: error?.data?.message || "Something went wrong!",
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+            });
+        }
+    };
+
+    const embedPage = edit_data?.id !== "new" && (
+        <div
+            style={{
+                position: "relative",
+            }}
         >
-            <IconButton
-                variant="secondary"
-                name={
-                    getItemTypeInfo(editData?.type as ModuleKey, true) ||
-                    "folder"
-                }
-                color="primary"
-                fontSize="2xl"
-            />
-        </Tooltip>
+            <Button variant="primary" startIcon="code" onClick={openEmbedPage}>
+                {isLargeScreen ? __("Embed Page", "ninja-drive") : ""}
+            </Button>
+
+            {toBoolean(pnpnd?.onboarding) && isNextStep(7) && (
+                <StepContent
+                    style={{
+                        position: "absolute",
+                        top: "120%",
+                        left: 10,
+                    }}
+                    title={__("Embed Page", "ninja-drive")}
+                    description={__(
+                        "Click it to embed the page Click it to embed the page Click it to embed the page.",
+                        "ninja-drive",
+                    )}
+                    position="bottom-right"
+                    arrowPosition="top-right"
+                />
+            )}
+        </div>
     );
 
-    const tile = (
-        <Input
-            value={editData?.title || ""}
-            onChange={(value) =>
-                dispatch(
-                    updateEditData({
-                        key: "title",
-                        value: String(value),
-                    }),
-                )
-            }
-            placeholder="Enter widget name"
-            fullWidth={false}
-            customWidth="210px"
-        />
-    );
-
-    const id = editData?.id !== "new" && (
+    const id = edit_data?.id !== "new" && (
         <Button
             variant="outlined"
             startIcon="content_copy"
             textTransform="none"
-            onClick={() => handleCopy(String(editData?.id))}
+            onClick={() => handleCopy(String(edit_data?.id))}
         >
-            [ninja-drive id="{editData?.id}"]
+            [ninja-drive id="{edit_data?.id}"]
         </Button>
     );
 
@@ -135,9 +183,9 @@ const ModuleTopbar = ({
             variant="warning"
             startIcon="history"
             onClick={onDismiss}
-            disabled={!isEdited}
+            disabled={!is_edited}
         >
-            Discard
+            {__("Discard", "ninja-drive")}
         </Button>
     );
 
@@ -145,59 +193,357 @@ const ModuleTopbar = ({
         <Button
             variant="outlined"
             startIcon="visibility"
-            onClick={() => openPreview({ data: editData as ModuleConfig })}
-            disabled={editData?.id === "new" || loading}
+            onClick={() => openPreview({ data: edit_data as ModuleConfig })}
+            disabled={edit_data?.id === "new" || loading}
         >
-            Preview
+            {__("Preview", "ninja-drive")}
         </Button>
     );
 
-    const save = (editData?.id !== "new" || isLast) && (
-        <Button
-            variant="primary"
-            startIcon="check"
-            onClick={() => onSave("close", editData as ModuleConfig)}
-            loading={loading}
-            disabled={loading || !isEdited}
+    const save = (
+        <div
+            style={{
+                position: "relative",
+            }}
         >
-            Save & Close
-        </Button>
+            <Button
+                variant="primary"
+                startIcon="check"
+                onClick={() => onSave("stay", edit_data as ModuleConfig)}
+                loading={loading}
+                disabled={
+                    loading ||
+                    !is_edited ||
+                    (edit_data?.id === "new" && !isLast)
+                }
+            >
+                {__("Save Changes", "ninja-drive")}
+            </Button>
+
+            {toBoolean(pnpnd?.onboarding) && isNextStep(6) && (
+                <StepContent
+                    style={{
+                        position: "absolute",
+                        top: "120%",
+                        left: 10,
+                    }}
+                    title={__("Save", "ninja-drive")}
+                    description={__(
+                        "Click it to create a new widget Click it to create a new widget Click it to create.",
+                        "ninja-drive",
+                    )}
+                    position="bottom-right"
+                    arrowPosition="top-right"
+                />
+            )}
+        </div>
     );
 
-    const next = editData?.id === "new" && !isLast && (
-        <Button variant="primary" endIcon="arrow_forward_ios" onClick={onNext}>
-            Next
-        </Button>
+    const initialMenuItems = getModuleMenuItems(edit_data?.type as ModuleKey);
+
+    const shouldShowPermission =
+        edit_data?.data?.style?.file_uploader?.upload_preview?.enable;
+
+    const menuItems = initialMenuItems?.filter(
+        (menu) =>
+            edit_data?.type !== "file_uploader" ||
+            menu.key !== "permissions" ||
+            shouldShowPermission,
     );
 
-    const closeBtn = (
-        <Button variant="error" startIcon="close" onClick={onDismiss}>
-            Close
-        </Button>
+    const currentMenuIndex = menuItems?.findIndex(
+        (menu) => menu?.key === widgetMenu,
     );
 
-    const leftContents = [widget, tile];
-
-    if (!isPopup) leftContents?.unshift(back);
-
-    let rightContents = [closeBtn, save];
-
-    if (!isPopup) {
-        rightContents = [
-            id,
-            discard,
-            preview,
-            save,
-            next,
-        ] as typeof rightContents;
-    }
+    const nextMenuItem = menuItems?.[currentMenuIndex + 1];
 
     return (
-        <Topbar
-            style={style}
-            leftContents={leftContents}
-            rightContents={rightContents}
-        />
+        <div
+            style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 99999,
+            }}
+            className="bg-white"
+        >
+            <InlineStack style={style}>
+                <Button
+                    color="black"
+                    startIcon="chevron_backward"
+                    iconSize="2xl"
+                    style={{ padding: "20px" }}
+                    onClick={() => {
+                        if (isPopup) {
+                            onDismiss?.();
+                        } else {
+                            handleBack();
+                        }
+                    }}
+                >
+                    {isPopup
+                        ? __("Back To Editor", "ninja-drive")
+                        : isLargeScreen
+                        ? __("Back To Builder", "ninja-drive")
+                        : ""}
+                </Button>
+
+                <Divider variant="vertical" width="1px" height="80px" />
+
+                <InlineStack
+                    padding={20}
+                    align="between"
+                    gap={10}
+                    className="flex-1"
+                >
+                    <InlineStack
+                        style={{
+                            position: "relative",
+                        }}
+                    >
+                        <Tooltip
+                            title={
+                                getItemTypeInfo(edit_data?.type as ModuleKey) ||
+                                "File Browser"
+                            }
+                            wrap="no-wrap"
+                            placement="bottom"
+                            arrow
+                            style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "2px",
+                                transform: "translateY(-50%)",
+                                zIndex: 1,
+                            }}
+                        >
+                            <IconButton
+                                variant="white"
+                                name={
+                                    getItemTypeInfo(
+                                        edit_data?.type as ModuleKey,
+                                        true,
+                                    ) || "folder"
+                                }
+                                border
+                                borderColor="gray-200"
+                                color="primary"
+                                fontSize="2xl"
+                            />
+                        </Tooltip>
+
+                        <Input
+                            value={edit_data?.title || ""}
+                            placeholder="Enter widget name"
+                            fullWidth={false}
+                            customWidth="250px"
+                            background="gray-50"
+                            color="gray-200"
+                            style={{
+                                paddingLeft: "40px",
+                            }}
+                            suffix={
+                                toBoolean(pnpnd?.onboarding) &&
+                                isNextStep(1) && (
+                                    <BlockStack style={{ marginRight: "6px" }}>
+                                        <StepContent
+                                            title={__(
+                                                "Give a name",
+                                                "ninja-drive",
+                                            )}
+                                            description={__(
+                                                "Click it to create a new widget Click it to create a new widget Click it to create.",
+                                                "ninja-drive",
+                                            )}
+                                            content={
+                                                <InlineStack
+                                                    align="between"
+                                                    gap={10}
+                                                    style={{
+                                                        marginTop: "7px",
+                                                    }}
+                                                >
+                                                    <Text
+                                                        color="gray-300"
+                                                        size="sm"
+                                                    >
+                                                        {completedSteps?.length +
+                                                            1}{" "}
+                                                        {__(
+                                                            "of",
+                                                            "ninja-drive",
+                                                        )}{" "}
+                                                        8
+                                                    </Text>
+
+                                                    <Button
+                                                        variant="primary"
+                                                        size="extrasmall"
+                                                        onClick={() =>
+                                                            completeStep(1)
+                                                        }
+                                                    >
+                                                        Done
+                                                    </Button>
+                                                </InlineStack>
+                                            }
+                                            position="bottom-left"
+                                            arrowPosition="top-left"
+                                        />
+                                    </BlockStack>
+                                )
+                            }
+                            onChange={(value) =>
+                                dispatch(
+                                    updateEditData({
+                                        key: "title",
+                                        value: String(value),
+                                    }),
+                                )
+                            }
+                        />
+                    </InlineStack>
+
+                    <InlineStack gap={10}>
+                        {!isPopup && embedPage}
+
+                        {!isPopup && id}
+
+                        {discard}
+
+                        {!isPopup && preview}
+
+                        {save}
+                    </InlineStack>
+                </InlineStack>
+            </InlineStack>
+
+            <Divider width="100%" height="1px" />
+
+            <InlineStack
+                gap={20}
+                align="between"
+                style={{
+                    padding: 20,
+                }}
+            >
+                <div
+                    style={{
+                        opacity: isFirst ? 0 : 1,
+                        transition: "opacity 0.3s",
+                    }}
+                >
+                    <Button
+                        variant="outlined"
+                        startIcon="arrow_left_alt"
+                        style={{
+                            backgroundColor: "var(--pnpnd-gray-50)",
+                        }}
+                        onClick={onBack}
+                        disabled={isFirst}
+                    >
+                        Back
+                    </Button>
+                </div>
+
+                <Stepper
+                    steps={menuItems?.map((menu) => ({
+                        key: menu?.key,
+                        title: menu?.title,
+                    }))}
+                    active={widgetMenu || menuItems?.[0]?.key}
+                    onStepperClick={(key) => {
+                        handleStepClick(key);
+
+                        if (toBoolean(pnpnd?.onboarding)) {
+                            const currentStep =
+                                widgetMenu === "source"
+                                    ? 2
+                                    : widgetMenu === "configuration"
+                                    ? 3
+                                    : widgetMenu === "style"
+                                    ? 4
+                                    : widgetMenu === "permissions"
+                                    ? 5
+                                    : 0;
+
+                            completeStep(currentStep);
+                        }
+                    }}
+                />
+
+                <InlineStack gap={10}>
+                    {toBoolean(pnpnd?.onboarding) && getStep() && (
+                        <BlockStack style={{ marginRight: "6px" }}>
+                            <StepContent
+                                key={widgetMenu}
+                                title={`${__("Click to next", "ninja-drive")} ${
+                                    nextMenuItem?.title || "Embed Page"
+                                }`}
+                                description={__(
+                                    "Click it to create a new widget Click it to create a new widget Click it to create.",
+                                    "ninja-drive",
+                                )}
+                                position="bottom-right"
+                                arrowPosition="top-right"
+                            />
+                        </BlockStack>
+                    )}
+
+                    {isLast ? (
+                        <Button
+                            variant="primary"
+                            startIcon="check"
+                            onClick={() => {
+                                onSave("close", edit_data as ModuleConfig);
+
+                                if (toBoolean(pnpnd?.onboarding)) {
+                                    handleOnboardingStatus(false);
+                                }
+                            }}
+                            loading={loading}
+                            disabled={loading || !is_edited}
+                        >
+                            Finish
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="primary"
+                            endIcon="arrow_right_alt"
+                            onClick={() => {
+                                if (
+                                    edit_data?.data?.source?.selected_files
+                                        ?.length === 0
+                                )
+                                    return;
+
+                                onNext?.();
+
+                                if (toBoolean(pnpnd?.onboarding)) {
+                                    const currentStep =
+                                        widgetMenu === "source"
+                                            ? 2
+                                            : widgetMenu === "configuration"
+                                            ? 3
+                                            : widgetMenu === "style"
+                                            ? 4
+                                            : widgetMenu === "permissions"
+                                            ? 5
+                                            : 0;
+
+                                    completeStep(currentStep);
+                                }
+                            }}
+                            disabled={
+                                edit_data?.data?.source?.selected_files
+                                    ?.length === 0
+                            }
+                        >
+                            Next
+                        </Button>
+                    )}
+                </InlineStack>
+            </InlineStack>
+        </div>
     );
 };
 

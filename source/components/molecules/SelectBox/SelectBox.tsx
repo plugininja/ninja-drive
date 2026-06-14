@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 import {
     SelectBoxDropdownProps,
@@ -13,6 +13,7 @@ export const SelectBox = ({
     style,
     className = "",
     gap = 10,
+    background = "white",
     color = "primary-light",
     size = "medium",
     borderStyle = "solid",
@@ -159,6 +160,7 @@ export const SelectBox = ({
             )}
 
             <SelectTrigger
+                background={background}
                 color={color}
                 size={size}
                 borderStyle={borderStyle}
@@ -209,6 +211,7 @@ export const SelectBox = ({
 };
 
 const SelectTrigger = ({
+    background = "white",
     color,
     size,
     borderStyle,
@@ -237,6 +240,7 @@ const SelectTrigger = ({
             className={clsx(
                 "pn-select-trigger",
                 "border",
+                `bg-${background}`,
                 error ? "border-error" : `border-${color}`,
                 `border-${borderStyle}`,
                 `pn-select-trigger--${size}`,
@@ -265,13 +269,19 @@ const SelectTrigger = ({
                     <span className="pn-select-placeholder">{placeholder}</span>
                 ) : multiple ? (
                     selectedOpts.map((opt) => (
-                        <span key={opt.value} className={
-                            clsx("pn-select-tag",
-                                opt?.warning && "pn-select-tag--warning"
-                            )
-                        }>
+                        <span
+                            key={opt.value}
+                            className={clsx(
+                                "pn-select-tag",
+                                opt?.warning && "pn-select-tag--warning",
+                            )}
+                        >
                             {optionIcon && opt.icon && (
-                                <Icon name={opt.icon} fontSize="lg" />
+                                <Icon
+                                    name={opt.icon}
+                                    color="gray-700"
+                                    fontSize="lg"
+                                />
                             )}
 
                             {opt.name ?? opt.value}
@@ -328,8 +338,11 @@ const SelectDropdown = ({
     onSelect,
     onClearAll,
 }: SelectBoxDropdownProps) => {
-    const filtered = options.filter((o) =>
-        (o.name ?? o.value).toLowerCase().includes(searchText.toLowerCase()),
+    const filtered = options?.filter(
+        (o) =>
+            (o.name ?? o.value)
+                ?.toLowerCase()
+                .includes(searchText.toLowerCase()),
     );
 
     const visibleOptions = multiple
@@ -361,7 +374,7 @@ const SelectDropdown = ({
                                 setSearchText(e.target.value);
                                 onSearch?.(e.target.value);
                             }}
-                            placeholder={ __( "Search...", "ninja-drive" ) }
+                            placeholder={__("Search...", "ninja-drive")}
                             onClick={(e) => e.stopPropagation()}
                         />
                     </div>
@@ -373,7 +386,9 @@ const SelectDropdown = ({
                         <Icon name="progress_activity" className="loading" />
                     </div>
                 ) : visibleOptions.length === 0 ? (
-                    <div className="pn-select-not-found">{__("No results found", "ninja-drive")}</div>
+                    <div className="pn-select-not-found">
+                        {__("No results found", "ninja-drive")}
+                    </div>
                 ) : (
                     visibleOptions.map((opt) => (
                         <div
@@ -400,7 +415,9 @@ const SelectDropdown = ({
                                 />
                             )}
 
-                            <span className="pn-select-option-name">{opt.name ?? opt.value}</span>
+                            <span className="pn-select-option-name">
+                                {opt.name ?? opt.value}
+                            </span>
                         </div>
                     ))
                 )}
@@ -413,7 +430,9 @@ const SelectDropdown = ({
                             onClearAll(e);
                         }}
                     >
-                        <span  className="pn-select-clear-all-text">{__("Clear all", "ninja-drive")}</span>
+                        <span className="pn-select-clear-all-text">
+                            {__("Clear all", "ninja-drive")}
+                        </span>
                     </div>
                 )}
             </div>

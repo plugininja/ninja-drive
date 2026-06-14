@@ -1,13 +1,13 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "ninja-drive/shortcode",
+    "name": "ninja-drive/widget",
     "version": "1.0.0",
-    "title": "Shortcode",
+    "title": "Widget",
     "category": "ninja-drive",
     "icon": "format-gallery",
-    "description": "Display files from Google Drive as a shortcode",
-    "keywords": ["shortcode", "google drive", "files"],
+    "description": "Display files from Google Drive as a widget",
+    "keywords": ["widget", "google drive", "files"],
     "textdomain": "ninja-drive",
     "supports": {
         "html": false,
@@ -23,10 +23,13 @@
         },
         "type": {
             "type": "string",
-            "default": "shortcode"
+            "default": "widget"
         }
     },
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
-    "style": ["file:../../../../assets/css/admin.css", "file:../../../../assets/css/common.css"]
+    "style": [
+        "file:../../../../assets/css/admin.css",
+        "file:../../../../assets/css/common.css"
+    ]
 }

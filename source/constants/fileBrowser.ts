@@ -1,95 +1,94 @@
-import { __ } from "@wordpress/i18n";
-import SharedWithMe from "~/assets/icons/SharedWithMe";
-import SharedDrive from "~/assets/icons/SharedDrive";
-import Computers from "~/assets/icons/Computers";
-import Starred from "~/assets/icons/Starred";
-import MyDrive from "~/assets/icons/MyDrive";
-import { File } from "~/types/file.types";
 import { MenuKey } from "~/types/Types";
+import { __ } from "@wordpress/i18n";
 import {
     computersIcon,
     myDriveIcon,
     sharedDrivesIcon,
     sharedIcon,
     starredIcon,
-} from "~/assets/icons";
+    computersSvg,
+    myDriveSvg,
+    sharedDriveIcon,
+    sharedWithMeIcon,
+    starredSvg,
+} from "~/utils/icons";
 
-export const HOME_DIR_FILES: File<MenuKey>[] = [
+export const HOME_DIR_FILES = [
     {
-        fileKey: "my-drive",
+        file_key: "my-drive",
         name: __("My Drive", "ninja-drive"),
         icon: myDriveIcon,
         count: "0",
         extension: "folder",
-        mimeType: "application/vnd.google-apps.folder",
-        baseName: __("My Drive", "ninja-drive"),
+        mime_type: "application/vnd.google-apps.folder",
+        base_name: __("My Drive", "ninja-drive"),
     },
     {
-        fileKey: "computers",
+        file_key: "computers",
         name: __("Computers", "ninja-drive"),
         icon: computersIcon,
         count: "0",
         extension: "folder",
-        mimeType: "application/vnd.google-apps.folder",
-        baseName: __("Computers", "ninja-drive"),
+        mime_type: "application/vnd.google-apps.folder",
+        base_name: __("Computers", "ninja-drive"),
     },
     {
-        fileKey: "shared-drives",
+        file_key: "shared-drives",
         name: __("Shared Drives", "ninja-drive"),
         icon: sharedDrivesIcon,
         count: "0",
         extension: "folder",
-        mimeType: "application/vnd.google-apps.folder",
-        baseName: __("Shared Drives", "ninja-drive"),
+        mime_type: "application/vnd.google-apps.folder",
+        base_name: __("Shared Drives", "ninja-drive"),
     },
     {
-        fileKey: "shared",
+        file_key: "shared",
         name: __("Shared with me", "ninja-drive"),
         icon: sharedIcon,
         count: "0",
         extension: "folder",
-        mimeType: "application/vnd.google-apps.folder",
-        baseName: __("Shared with me", "ninja-drive"),
+        mime_type: "application/vnd.google-apps.folder",
+        base_name: __("Shared with me", "ninja-drive"),
     },
     {
-        fileKey: "starred",
+        file_key: "starred",
         name: __("Starred", "ninja-drive"),
         icon: starredIcon,
         count: "0",
         extension: "folder",
-        mimeType: "application/vnd.google-apps.folder",
-        baseName: __("Starred", "ninja-drive"),
+        mime_type: "application/vnd.google-apps.folder",
+        base_name: __("Starred", "ninja-drive"),
     },
 ];
 
 export const FILES_MENUS: {
     key: MenuKey;
     title: string;
-    icon: React.FC<React.SVGProps<SVGSVGElement>>;
+    icon: string;
 }[] = [
     {
         key: "my-drive",
         title: __("My Drive", "ninja-drive"),
-        icon: MyDrive,
+        icon: myDriveSvg,
     },
     {
         key: "computers",
         title: __("Computers", "ninja-drive"),
-        icon: Computers,
+        icon: computersSvg,
     },
     {
         key: "shared-drives",
         title: __("Shared Drives", "ninja-drive"),
-        icon: SharedDrive,
+        icon: sharedDriveIcon,
     },
     {
         key: "shared",
         title: __("Shared with me", "ninja-drive"),
-        icon: SharedWithMe,
+        icon: sharedWithMeIcon,
     },
     {
         key: "starred",
         title: __("Starred", "ninja-drive"),
-        icon: Starred,
+        icon: starredSvg,
     },
 ];

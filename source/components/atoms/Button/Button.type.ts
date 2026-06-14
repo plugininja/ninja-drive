@@ -14,7 +14,9 @@ export type ButtonVariant =
     | "outlined"
     | "warning"
     | "error"
-    | "link";
+    | "link"
+    | "gray"
+    | "white";
 
 export type ButtonStatusProps = StatusProps & {
     default?: boolean;

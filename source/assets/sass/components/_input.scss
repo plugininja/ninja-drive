@@ -40,7 +40,6 @@ $input-sizes: (
             position: relative;
             display: flex;
             align-items: center;
-            background: $white;
             transition:
                 border-color 0.2s ease,
                 box-shadow 0.2s ease;
@@ -85,7 +84,6 @@ $input-sizes: (
                 border: none !important;
                 outline: none !important;
                 background: transparent;
-                color: $black;
                 font-size: inherit;
                 line-height: 1;
 

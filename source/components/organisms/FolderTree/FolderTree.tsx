@@ -1,10 +1,11 @@
-import { __ } from "@wordpress/i18n";
-import { FolderTree as TFolderTree } from "~/types/file.types";
-import { MenuKey, Order, OrderBy } from "~/types/Types";
 import SkeletonLoader from "~/components/molecules/SkeletonLoader";
+import { FolderTree as TFolderTree } from "~/types/file.types";
 import BlockStack from "~/components/molecules/BlockStack";
+import { MenuKey, Order, OrderBy } from "~/types/Types";
 import { useParams } from "react-router-dom";
+import Text from "~/components/atoms/Text";
 import { TreeNodes } from "./TreeNodes";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 import {
     useEffect,
@@ -16,12 +17,11 @@ import {
     useGetFolderTreeQuery,
     useLazyGetFolderTreeQuery,
 } from "~/store/api/fileApi";
-import Text from "~/components/atoms/Text";
 
 const FolderTree = ({
     activeFolder,
-    sorting = { order: "ASC", orderBy: "name" },
-    widgetId,
+    sorting = { order: "ASC", order_by: "name" },
+    widget_id,
     openFolder,
     onSelect,
     style,
@@ -33,9 +33,9 @@ const FolderTree = ({
     activeFolder: string;
     sorting?: {
         order: Order;
-        orderBy: OrderBy;
+        order_by: OrderBy;
     };
-    widgetId?: string;
+    widget_id?: string;
     openFolder: (folderKey: string) => void;
     onSelect?: (folderKey: string, name: string) => void;
     style?: React.CSSProperties;
@@ -48,10 +48,10 @@ const FolderTree = ({
 
     const { data, isLoading, isFetching } = useGetFolderTreeQuery(
         {
-            fileKey: menuKey || "my-drive",
+            file_key: menuKey || "my-drive",
             order: sorting?.order,
-            orderBy: sorting?.orderBy,
-            widgetId,
+            order_by: sorting?.order_by,
+            widget_id,
         },
         { skip },
     );
@@ -74,10 +74,11 @@ const FolderTree = ({
         if (!folders.length) return;
 
         setTree(
-            folders.map((folder: any) => ({
-                fileKey: folder.fileKey,
+            folders.map((folder: TFolderTree) => ({
+                file_key: folder.file_key,
                 name: folder.name,
                 children: [],
+                icon: folder.icon,
             })),
         );
     }, [folders]);
@@ -88,7 +89,7 @@ const FolderTree = ({
         children: TFolderTree[],
     ): TFolderTree[] => {
         return nodes.map((node) => {
-            if (node.fileKey === key) {
+            if (node.file_key === key) {
                 return {
                     ...node,
                     children,
@@ -133,17 +134,18 @@ const FolderTree = ({
 
             try {
                 const res = await getFolderTree({
-                    fileKey: key,
+                    file_key: key,
                     order: sorting?.order,
-                    orderBy: sorting?.orderBy,
-                    widgetId,
+                    order_by: sorting?.order_by,
+                    widget_id,
                 }).unwrap();
 
                 const children =
-                    res?.data?.files?.map((folder: any) => ({
-                        fileKey: folder.fileKey,
+                    res?.data?.files?.map((folder: TFolderTree) => ({
+                        file_key: folder.file_key,
                         name: folder.name,
                         children: [],
+                        icon: folder.icon,
                     })) || [];
 
                 setTree((prev) => insertChildren(prev, key, children));
@@ -158,7 +160,7 @@ const FolderTree = ({
         key: string,
     ): TFolderTree | null => {
         for (const node of nodes) {
-            if (node.fileKey === key) return node;
+            if (node.file_key === key) return node;
             if (node.children?.length) {
                 const found = findNode(node.children, key);
                 if (found) return found;
@@ -192,24 +194,24 @@ const FolderTree = ({
                 minHeight: 0,
                 height: modal
                     ? "100%"
-                    : !pnpnd.isPro
-                    ? "calc(100% - 370px)"
-                    : "calc(100% - 290px)",
-                    marginTop: "20px"
+                    : !pnpnd.is_pro
+                    ? "calc(100% - 360px)"
+                    : "calc(100% - 310px)",
+                marginTop: "20px",
             }}
             className={className}
         >
-         
-            <Text size="md" weight="semibold">
+            <Text color="gray-700" size="md" weight="semibold">
                 {__("Folders", "ninja-drive")}
             </Text>
+
             <div className="pnpnd-folder-tree-fixed">
                 <div
                     ref={scrollRef}
                     onScroll={handleScroll}
                     className={clsx(
                         "pnpnd-folder-tree-container",
-                        !pnpnd.isPro && "pnpnd-folder-tree-container--free",
+                        !pnpnd.is_pro && "pnpnd-folder-tree-container--free",
                     )}
                 >
                     {loading ? (

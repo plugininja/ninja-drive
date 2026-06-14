@@ -1,5 +1,5 @@
-import BlockStack from "~/components/molecules/BlockStack";
 import MainLayout from "~/components/templates/MainLayout/MainLayout";
+import BlockStack from "~/components/molecules/BlockStack";
 import Content from "./components/Content";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";

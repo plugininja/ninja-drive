@@ -1,12 +1,12 @@
-import ConfigureTopButton from "./ConfigureTopButton";
 import BlockStack from "~/components/molecules/BlockStack";
+import ConfigureTopButton from "./ConfigureTopButton";
+import Button from "~/components/atoms/Button";
+import { toBoolean } from "~/utils/functions";
 import ShortCodeBlock from "./ShortCodeBlock";
 import { store } from "../../store/store";
-import Button from "~/components/atoms/Button";
 import IntroModule from "./IntroModule";
 import { Provider } from "react-redux";
 import { __ } from "@wordpress/i18n";
-import "../assets/sass/block.scss";
 import {
     useBlockProps,
     InspectorControls,
@@ -20,11 +20,13 @@ import {
 } from "@wordpress/components";
 
 type TAttributes = { id?: string; type: string };
+
 export type BlockContainerProps = {
     isPro?: boolean;
     attributes: TAttributes;
     setAttributes: ({ id, type }: TAttributes) => void;
 };
+
 const BlockContainer = ({
     attributes,
     setAttributes,
@@ -32,7 +34,7 @@ const BlockContainer = ({
 }: BlockContainerProps) => {
     const openModal = () => {
         PNPNDHelper.openModuleBuilder({
-            rootId: "editor",
+            root_id: "editor",
             id: attributes?.id || attributes?.type,
             integration: "gutenberg",
             onSave: (key, data) => {
@@ -45,7 +47,6 @@ const BlockContainer = ({
     let handleOpenModal = () => {
         openModal();
     };
-    
 
     return (
         <>
@@ -62,7 +63,10 @@ const BlockContainer = ({
                         ) : (
                             <ToolbarButton
                                 icon={"admin-generic"}
-                                label={__("Click to open Widget Builder", "ninja-drive")}
+                                label={__(
+                                    "Click to open Widget Builder",
+                                    "ninja-drive",
+                                )}
                                 text={__("Configure", "ninja-drive")}
                                 onClick={handleOpenModal}
                             />
@@ -110,6 +114,7 @@ const BlockContainer = ({
 
             <div {...useBlockProps()}>
                 <IntroModule
+                    isPro={isPro}
                     attributes={attributes}
                     setAttributes={setAttributes}
                     openModal={openModal}

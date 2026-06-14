@@ -30,7 +30,7 @@ const DOCS = {
         },
 
         integrations: {
-            mediaLibrary:
+            media_library:
                 "https://plugininja.com/docs/how-to-enable-google-drive-integration-with-media-library/",
             classicEditor:
                 "https://plugininja.com/docs/integration-for-google-drive-with-classic-editor/",
@@ -41,7 +41,7 @@ const DOCS = {
             gutenberg:
                 "https://plugininja.com/docs/integration-for-google-drive-in-gutenberg/",
         },
-        pricingPage: "https://plugininja.com/google-drive-pricing",
+        pricingPage: "https://plugininja.com/ninja-drive-pricing",
     },
 
     MODULE_BUILDER: {
@@ -51,10 +51,10 @@ const DOCS = {
         sources: {
             link: "https://plugininja.com/ninja-drive/",
         },
-        filter: {
+        configuration: {
             link: "https://plugininja.com/ninja-drive/",
         },
-        advanced: {
+        style: {
             link: "https://plugininja.com/ninja-drive/",
         },
         notifications: {
@@ -65,6 +65,12 @@ const DOCS = {
         },
     },
 
+    USER_ACCESS: {
+        link: "https://plugininja.com/ninja-drive/",
+    },
+
     supportLink: "https://plugininja.com/support-portal/",
+    googleApp:
+        "https://plugininja.com/docs/how-to-link-your-google-app-with-the-ninja-drive-plugin",
 };
 export default DOCS;

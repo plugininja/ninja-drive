@@ -5,10 +5,10 @@ import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
 import Dropdown from "~/components/molecules/Dropdown";
 import Button from "~/components/atoms/Button";
-import { __ } from "@wordpress/i18n";
 import Card from "~/components/molecules/Card";
 import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 
 const Details = ({
     notification,
@@ -40,6 +40,7 @@ const Details = ({
                     size="supersmall"
                     name="arrow_left_alt"
                     color="primary"
+                    borderColor="secondary"
                     onClick={() => setDetails(null)}
                 />
 
@@ -50,6 +51,7 @@ const Details = ({
                             size="supersmall"
                             name="more_vert"
                             color="primary"
+                            borderColor="secondary"
                         />
                     </Dropdown.Trigger>
 
@@ -80,8 +82,14 @@ const Details = ({
                 <InlineStack gap={10} align="start">
                     <Card
                         padding={3}
-                        background={`${type}extralight`}
-                        border={`${type}light`}
+                        background={
+                            type === "success"
+                                ? "primary-extralight"
+                                : `${type}-50`
+                        }
+                        border={
+                            type === "success" ? "primary-light" : `${type}-100`
+                        }
                         flex
                         align="center"
                         blockAlign="center"
@@ -92,7 +100,10 @@ const Details = ({
                             flexShrink: 0,
                         }}
                     >
-                        <Icon name={iconName} color={type} />
+                        <Icon
+                            name={iconName}
+                            color={type === "success" ? "primary" : type}
+                        />
                     </Card>
 
                     <Text weight="semibold">{title}</Text>

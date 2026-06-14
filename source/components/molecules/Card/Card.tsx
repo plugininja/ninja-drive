@@ -1,6 +1,6 @@
 import { forwardRef } from "@wordpress/element";
-import type { CardProps } from "./Card.type";
 import Status from "~/components/atoms/Status";
+import type { CardProps } from "./Card.type";
 import clsx from "clsx";
 import {
     gapStyle,

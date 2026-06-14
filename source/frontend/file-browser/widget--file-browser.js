@@ -7,9 +7,9 @@ function renderShortcode(element) {
     if (shortcodeId) {
         const data = window[shortcodeId];
 
-        if (data?.type !== "file-browser") {
+        if (data?.type !== "file_browser") {
             console.error(
-                `Element with ID ${shortcodeId} is not a File Browser shortcode.`
+                `Element with ID ${shortcodeId} is not a File Browser shortcode.`,
             );
             return;
         }
@@ -27,7 +27,7 @@ function renderShortcode(element) {
 }
 
 export const checkAndRenderElements = () => {
-    const elements = document.querySelectorAll(".pnpnd-file-browser");
+    const elements = document.querySelectorAll(".pnpnd-file_browser");
     if (elements.length === 0) {
         return;
     }

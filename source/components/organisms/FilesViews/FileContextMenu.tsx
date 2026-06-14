@@ -1,9 +1,9 @@
 import InlineStack from "~/components/molecules/InlineStack";
 import Status from "~/components/atoms/Status";
+import { Fragment } from "@wordpress/element";
+import Icon from "~/components/atoms/Icon";
 import { File } from "~/types/file.types";
 import { __ } from "@wordpress/i18n";
-import Icon from "~/components/atoms/Icon";
-import { Fragment } from "@wordpress/element";
 import {
     Item,
     Menu,
@@ -141,7 +141,7 @@ const FileContextMenu = ({
                 return filteredMenuList
                     .filter(
                         (item) =>
-                            !item.fileOnly || !isFolder(props?.file.mimeType),
+                            !item.fileOnly || !isFolder(props?.file.mime_type),
                     )
                     .map((item, index) => {
                         const file = props?.file;
@@ -181,7 +181,8 @@ const FileContextMenu = ({
                                                             }
                                                         />
                                                     )}
-                                                    {label}{__(" as", "ninja-drive")}
+                                                    {label}
+                                                    {__(" as", "ninja-drive")}
                                                 </InlineStack>
                                             }
                                         >

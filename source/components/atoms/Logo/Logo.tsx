@@ -1,9 +1,6 @@
-import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { CSS_VAR } from "~/types/tokens";
-import { ThemeType } from "~/types/Types";
 
 const Logo = () => {
-    const [theme] = useLocalStorage<ThemeType>("pnpnd-theme-status", "system");
     return (
         <svg
             width={700}

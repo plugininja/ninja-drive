@@ -1,5 +1,5 @@
-import { DisabledProps } from "./Disabled.type";
 import BlockStack from "~/components/molecules/BlockStack";
+import { DisabledProps } from "./Disabled.type";
 import clsx from "clsx";
 
 const Disabled = ({
@@ -8,6 +8,7 @@ const Disabled = ({
     className = "",
     depend = false,
     dependOn = "",
+    dependOnExact = false,
     gap = 20,
     children,
 }: DisabledProps) => {
@@ -19,7 +20,9 @@ const Disabled = ({
         if (dependent && depend) {
             e.stopPropagation();
 
-            const label = dependent.parentElement as HTMLElement;
+            const label = dependOnExact
+                ? dependent
+                : (dependent.parentElement as HTMLElement);
 
             if (!label) return;
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "@wordpress/element";
-import { __ } from "@wordpress/i18n";
 import { useCustomAlert } from "~/components/molecules/Alert";
+import { __ } from "@wordpress/i18n";
 import {
     useDeleteAllNotificationsMutation,
     useDeleteNotificationMutation,
@@ -11,7 +11,7 @@ import {
 
 const useNotifications = (skip: boolean) => {
     const [page, setPage] = useState(1);
-    const perPage = 10;
+    const per_page = 10;
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
 
@@ -25,7 +25,7 @@ const useNotifications = (skip: boolean) => {
     } = useGetNotificationsQuery(
         {
             page: page,
-            perPage: perPage,
+            per_page: per_page,
         },
         {
             skip: skip,
@@ -33,7 +33,7 @@ const useNotifications = (skip: boolean) => {
         },
     );
 
-    const hasMore = notificationsData?.data?.hasMore ?? false;
+    const has_more = notificationsData?.data?.has_more ?? false;
 
     useEffect(() => {
         if (!loadMoreRef.current) return;
@@ -42,13 +42,13 @@ const useNotifications = (skip: boolean) => {
 
         observer.current = new IntersectionObserver((entries) => {
             const first = entries[0];
-            if (first.isIntersecting && hasMore && !isFetching) {
+            if (first.isIntersecting && has_more && !isFetching) {
                 setPage((prev) => prev + 1);
             }
         });
 
         observer.current.observe(loadMoreRef.current);
-    }, [loadMoreRef.current, hasMore, isFetching]);
+    }, [loadMoreRef.current, has_more, isFetching]);
 
     const [notificationsAllReadMutation] = useNotificationsAllReadMutation();
     const [updateNotificationStatusMutation] =
@@ -72,7 +72,9 @@ const useNotifications = (skip: boolean) => {
             showAlert({
                 toast: true,
                 type: "success",
-                text: response?.message || __("All notifications marked as read.", "ninja-drive"),
+                text:
+                    response?.message ||
+                    __("All notifications marked as read.", "ninja-drive"),
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -83,7 +85,10 @@ const useNotifications = (skip: boolean) => {
                 type: "error",
                 text:
                     error?.data?.message ||
-                    __("Failed to mark all notifications as read.", "ninja-drive"),
+                    __(
+                        "Failed to mark all notifications as read.",
+                        "ninja-drive",
+                    ),
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -114,7 +119,10 @@ const useNotifications = (skip: boolean) => {
         showAlert({
             type: "error",
             title: __("Delete", "ninja-drive"),
-            text: __("Are you sure you want to delete all notifications?", "ninja-drive"),
+            text: __(
+                "Are you sure you want to delete all notifications?",
+                "ninja-drive",
+            ),
             showCancelButton: true,
             confirmButtonText: __("Delete", "ninja-drive"),
             onConfirm: async () => {
@@ -129,7 +137,10 @@ const useNotifications = (skip: boolean) => {
                         type: "success",
                         text:
                             response?.message ||
-                            __("All notifications deleted successfully.", "ninja-drive"),
+                            __(
+                                "All notifications deleted successfully.",
+                                "ninja-drive",
+                            ),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -140,7 +151,10 @@ const useNotifications = (skip: boolean) => {
                         type: "error",
                         text:
                             error?.data?.message ||
-                            __("Failed to delete all notifications.", "ninja-drive"),
+                            __(
+                                "Failed to delete all notifications.",
+                                "ninja-drive",
+                            ),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -181,8 +195,8 @@ const useNotifications = (skip: boolean) => {
     return {
         notifications: notificationsData?.data?.notices || [],
         total: notificationsData?.data?.total || 0,
-        unreadCount: notificationsData?.data?.unreadCount || 0,
-        hasMore: notificationsData?.data?.hasMore,
+        unread_count: notificationsData?.data?.unread_count || 0,
+        has_more: notificationsData?.data?.has_more,
         loadMoreRef,
         isLoading,
         isFetching,

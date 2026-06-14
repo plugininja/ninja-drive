@@ -1,11 +1,13 @@
-import { discardChanges } from "~/store/features/widgetBuilderSlice";
 import ModuleBuilder from "~/components/organisms/ModuleBuilder/ModuleBuilder";
-import { useNavigate, useParams } from "react-router-dom";
-import { useCustomAlert } from "~/components/molecules/Alert";
-import { ModuleConfig } from "~/types/widget.types";
-import ErrorBoundary from "~/components/ErrorBoundary";
+import { completeStep, resetSteps } from "~/hooks/useOnboardingStep";
+import { discardChanges } from "~/store/features/widgetBuilderSlice";
 import ErrorFallback from "~/components/organisms/ErrorFallback";
+import { useCustomAlert } from "~/components/molecules/Alert";
+import { useNavigate, useParams } from "react-router-dom";
+import ErrorBoundary from "~/components/ErrorBoundary";
+import { ModuleConfig } from "~/types/widget.types";
 import { useAppDispatch } from "~/store/hooks";
+import { toBoolean } from "~/utils/functions";
 import { __ } from "@wordpress/i18n";
 import {
     useAddModuleMutation,
@@ -13,8 +15,8 @@ import {
 } from "~/store/api/widgetApi";
 
 const Builder = () => {
-    const { widgetMenu, widgetId } = useParams<{
-        widgetId: string;
+    const { widgetMenu, widget_id } = useParams<{
+        widget_id: string;
         widgetMenu: string;
     }>();
 
@@ -32,7 +34,7 @@ const Builder = () => {
         key: "stay" | "close",
         data: ModuleConfig,
     ) => {
-        if (data?.data?.source?.selectedFiles?.length === 0) {
+        if (data?.data?.source?.selected_files?.length === 0) {
             showAlert({
                 toast: true,
                 type: "error",
@@ -56,14 +58,20 @@ const Builder = () => {
                     type: "success",
                     text:
                         res?.message ||
-                        __(
-                            "Widget created successfully.",
-                            "ninja-drive",
-                        ),
+                        __("Widget created successfully.", "ninja-drive"),
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false,
                 });
+
+                if (toBoolean(pnpnd?.onboarding)) {
+                    if (key === "stay") {
+                        completeStep(6);
+                    } else {
+                        completeStep(7);
+                        resetSteps();
+                    }
+                }
 
                 if (key === "stay") {
                     navigate(
@@ -81,12 +89,10 @@ const Builder = () => {
                 }).unwrap();
 
                 showAlert({
+                    position: "top-center",
                     toast: true,
                     type: "success",
-                    text: __(
-                        "Widget updated successfully.",
-                        "ninja-drive",
-                    ),
+                    text: __("Widget updated successfully.", "ninja-drive"),
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false,
@@ -117,7 +123,10 @@ const Builder = () => {
         showAlert({
             type: "warning",
             title: __("Discard", "ninja-drive"),
-            text: __("Are you sure you want to discard your changes?", "ninja-drive"),
+            text: __(
+                "Are you sure you want to discard your changes?",
+                "ninja-drive",
+            ),
             showCancelButton: true,
             confirmButtonText: __("Discard", "ninja-drive"),
             onConfirm: async () => {
@@ -127,7 +136,10 @@ const Builder = () => {
                     showAlert({
                         toast: true,
                         type: "success",
-                        text: __("Changes discarded successfully!", "ninja-drive"),
+                        text: __(
+                            "Changes discarded successfully!",
+                            "ninja-drive",
+                        ),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,

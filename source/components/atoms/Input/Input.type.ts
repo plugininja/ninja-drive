@@ -4,7 +4,7 @@ import {
     FontSize,
     FontWeight,
     Size,
-    TextColor
+    TextColor,
 } from "~/types/styles";
 
 export interface InputProps
@@ -21,6 +21,7 @@ export interface InputProps
     > {
     id?: string;
     name?: string;
+    background?: TextColor;
     style?: React.CSSProperties;
     inputStyle?: React.CSSProperties;
     className?: string;
@@ -36,12 +37,14 @@ export interface InputProps
     required?: boolean;
     spellCheck?: boolean;
     color?: TextColor;
+    inputTextColor?: TextColor;
     size?: Size;
     borderStyle?: BorderStyle;
     rounded?: BorderRadius;
     fullWidth?: boolean;
     customWidth?: React.CSSProperties["width"];
     label?: string;
+    labelColor?: TextColor;
     labelFontSize?: FontSize;
     labelFontWeight?: FontWeight;
     helperText?: string;

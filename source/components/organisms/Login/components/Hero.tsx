@@ -1,14 +1,14 @@
 import RoundedLogo from "~/components/atoms/Logo/RoundedLogo";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
-import { __ } from "@wordpress/i18n";
-import Text from "~/components/atoms/Text";
 import Card from "~/components/molecules/Card";
+import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import DOCS from "~/utils/docs";
 
 const Hero = () => {
-    const username = pnpnd?.currentUser?.name || "User";
+    const username = pnpnd?.current_user?.name || "User";
 
     return (
         <BlockStack align="center" inlineAlign="center" gap={30}>

@@ -15,15 +15,15 @@ export const settingsApi = baseApi.injectEndpoints({
                 const existing = state.api?.queries?.["getSettings(undefined)"];
 
                 if (!existing?.data) {
-                    const localData: SettingsData = pnpnd.settings;
+                    const local_data: SettingsData = pnpnd.settings;
 
                     return {
                         data: {
                             message: "success",
                             success: true,
                             data: {
-                                defaults: localData,
-                                current: localData,
+                                defaults: local_data,
+                                current: local_data,
                             },
                         },
                     };
@@ -57,13 +57,6 @@ export const settingsApi = baseApi.injectEndpoints({
             }),
         }),
 
-        clearAttachments: builder.mutation<void, void>({
-            query: () => ({
-                url: "media-library/clear",
-                method: "DELETE",
-            }),
-        }),
-
         importShortcodes: builder.mutation<
             ServerResponse<null>,
             { widgets: ModuleConfig[] }
@@ -77,61 +70,27 @@ export const settingsApi = baseApi.injectEndpoints({
             },
         }),
 
-        getMigrateInfo: builder.query<
+        syncSettings: builder.mutation<
             ServerResponse<{
-                old: number;
-                new: number;
-                migrationNeeded: number;
-                duplicate: number[];
+                message: string;
             }>,
             void
         >({
             query: () => ({
-                url: "media-library/migrate",
+                url: "settings/syncing",
                 method: "GET",
             }),
         }),
 
-        migrateAll: builder.mutation<
+        resetSettings: builder.mutation<
             ServerResponse<{
-                old: number;
-                new: number;
-                migrationNeeded: number;
-                duplicate: number[];
+                settings: SettingsData;
             }>,
-            {
-                isRemoveExist: boolean;
-            }
+            void
         >({
-            query: ({ isRemoveExist }) => ({
-                url: "media-library/migrate",
-                method: "POST",
-                body: { isRemoveExist },
-            }),
-        }),
-
-        mediaLibrarySync: builder.mutation<ServerResponse<null>, void>({
             query: () => ({
-                url: "media-library/sync",
+                url: "settings/reset",
                 method: "POST",
-            }),
-        }),
-
-        deleteDuplicates: builder.mutation<
-            ServerResponse<{
-                old: number;
-                new: number;
-                migrationNeeded: number;
-                duplicate: number[];
-            }>,
-            {
-                oldOrNew: "old" | "new";
-            }
-        >({
-            query: ({ oldOrNew }) => ({
-                url: "media-library/delete-duplicates",
-                method: "DELETE",
-                body: { oldOrNew },
             }),
         }),
     }),
@@ -141,10 +100,7 @@ export const settingsApi = baseApi.injectEndpoints({
 export const {
     useGetSettingsQuery,
     useUpdateSettingsMutation,
-    useClearAttachmentsMutation,
     useImportShortcodesMutation,
-    useGetMigrateInfoQuery,
-    useMigrateAllMutation,
-    useMediaLibrarySyncMutation,
-    useDeleteDuplicatesMutation,
+    useSyncSettingsMutation,
+    useResetSettingsMutation,
 } = settingsApi;

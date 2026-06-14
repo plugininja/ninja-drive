@@ -1,28 +1,35 @@
-import { __ } from "@wordpress/i18n";
 import InlineStack from "~/components/molecules/InlineStack";
-import { useFilesContext } from "./FilesViews";
 import SelectBox from "~/components/molecules/SelectBox";
 import Checkbox from "~/components/atoms/Checkbox";
-import { OrderBy } from "~/types/Types";
+import { BackgroundColor } from "~/types/styles";
+import { useFilesContext } from "./FilesViews";
 import Button from "~/components/atoms/Button";
-import Text from "~/components/atoms/Text";
 import Card from "~/components/molecules/Card";
+import Text from "~/components/atoms/Text";
+import { OrderBy } from "~/types/Types";
+import { __ } from "@wordpress/i18n";
 
-const Header = () => {
+const Header = ({
+    background = "white",
+    marginTop = 30,
+}: {
+    background?: BackgroundColor;
+    marginTop?: number;
+}) => {
     const {
         isFileSelecting,
         layout,
         setLayout,
-        selectedFiles,
+        selected_files,
         setIsFileSelecting,
         setSelectedFiles,
         files,
         sorting,
         setSorting,
     } = useFilesContext();
-    const { order, orderBy } = sorting;
+    const { order, order_by } = sorting;
 
-    const isAllSelected = selectedFiles.length === files.length;
+    const isAllSelected = selected_files.length === files.length;
 
     const handleBulkSelect = () => {
         setIsFileSelecting(!isFileSelecting);
@@ -38,7 +45,12 @@ const Header = () => {
     };
 
     return (
-        <Card background="white" padding={12} marginTop={30} rounded="md">
+        <Card
+            background={background}
+            padding={12}
+            marginTop={marginTop}
+            rounded="md"
+        >
             <InlineStack align="between" gap={6}>
                 <InlineStack gap={6}>
                     <SelectBox
@@ -49,11 +61,11 @@ const Header = () => {
                             </Text>
                         }
                         options={SORT_BY}
-                        value={[sorting.orderBy]}
+                        value={[sorting.order_by]}
                         onChange={(value) =>
                             setSorting({
                                 ...sorting,
-                                orderBy: value[0] as OrderBy,
+                                order_by: value[0] as OrderBy,
                             })
                         }
                     />
@@ -71,13 +83,15 @@ const Header = () => {
                             })
                         }
                     >
-                        {order === "ASC" ? __("Ascending", "ninja-drive") : __("Descending", "ninja-drive")}
+                        {order === "ASC"
+                            ? __("Ascending", "ninja-drive")
+                            : __("Descending", "ninja-drive")}
                     </Button>
                 </InlineStack>
 
                 <InlineStack gap={14}>
                     {isFileSelecting && (
-                        <InlineStack blockAlign="center" gap={6}>
+                        <InlineStack blockAlign="center" gap={10}>
                             <Checkbox
                                 size="medium"
                                 rounded="sm"
@@ -88,13 +102,20 @@ const Header = () => {
                                 onChange={() => handleAllSelect()}
                             />
 
-                            <Text as="span" size="xs" weight="medium">
-                                {isAllSelected ? __("Deselect All", "ninja-drive") : __("Select All", "ninja-drive")}
+                            <Text
+                                color="gray-800"
+                                size="sm"
+                                onClick={() => handleAllSelect()}
+                                style={{ cursor: "pointer" }}
+                            >
+                                {isAllSelected
+                                    ? __("Deselect All", "ninja-drive")
+                                    : __("Select All", "ninja-drive")}
                             </Text>
                         </InlineStack>
                     )}
 
-                    <InlineStack blockAlign="center" gap={6}>
+                    <InlineStack blockAlign="center" gap={10}>
                         <Checkbox
                             size="medium"
                             rounded="sm"
@@ -104,9 +125,18 @@ const Header = () => {
                             checked={isFileSelecting}
                             onChange={() => handleBulkSelect()}
                         />
-                        <Text as="span" size="xs" weight="medium">
+
+                        <Text
+                            color="gray-800"
+                            size="sm"
+                            onClick={() => handleBulkSelect()}
+                            style={{ cursor: "pointer" }}
+                        >
                             {isFileSelecting
-                                ? `${selectedFiles.length} ${__("selected", "ninja-drive")}`
+                                ? `${selected_files.length} ${__(
+                                      "selected",
+                                      "ninja-drive",
+                                  )}`
                                 : __("Bulk Select", "ninja-drive")}
                         </Text>
                     </InlineStack>
@@ -119,7 +149,9 @@ const Header = () => {
                             setLayout(layout === "list" ? "grid" : "list")
                         }
                     >
-                        {layout === "list" ? __("Grid View", "ninja-drive") : __("List View", "ninja-drive")}
+                        {layout === "list"
+                            ? __("Grid View", "ninja-drive")
+                            : __("List View", "ninja-drive")}
                     </Button>
                 </InlineStack>
             </InlineStack>
@@ -132,6 +164,6 @@ export default Header;
 export const SORT_BY = [
     { name: __("Name", "ninja-drive"), value: "name" },
     { name: __("Size", "ninja-drive"), value: "size" },
-    { name: __("Created At", "ninja-drive"), value: "createdAt" },
-    { name: __("Updated At", "ninja-drive"), value: "updatedAt" },
+    { name: __("Created At", "ninja-drive"), value: "created_at" },
+    { name: __("Updated At", "ninja-drive"), value: "updated_at" },
 ];

@@ -1,9 +1,9 @@
-import type { AvatarProps } from "./Avatar.type";
-import { Spinner } from "@wordpress/components";
-import { useState } from "@wordpress/element";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
+import type { AvatarProps } from "./Avatar.type";
+import { Spinner } from "@wordpress/components";
 import Card from "~/components/molecules/Card";
+import { useState } from "@wordpress/element";
 import clsx from "clsx";
 
 const Avatar = ({

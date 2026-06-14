@@ -1,60 +1,50 @@
 export type Accounts = {
-    connectionType: "automatic" | "manual";
-    appClientId: string;
-    appClientSecret: string;
-    redirectUri: string;
+    connection_type: "automatic" | "manual";
+    app_client_id: string;
+    app_client_secret: string;
+    redirect_uri: string;
 };
 
 export type Advanced = {
-    googleWorkspaceDomain: string;
-    sharingPermission: boolean;
-    allowDotExtension: boolean;
-    secureVideoPlayback: boolean;
-    deleteDataOnUninstall: boolean;
+    google_workspace_domain: string;
+    sharing_permission: boolean;
+    allow_dot_extension: boolean;
+    redirection: boolean;
+    delete_data_on_uninstall: boolean;
 };
 
 export type Appearance = {
     preloader: number;
-    primaryColor: string;
-    customCSS: string;
-};
-
-export type UserAccess = {
-    id: string;
-    type: "role" | "user";
-    value: string;
-    folders: string[];
-    pages: ("file_browser" | "settings" | "widget_builder" | "media_library")[];
+    primary_color: string;
+    custom_css: string;
 };
 
 export type Integrations = {
-    activeIntegrations: string[];
-    mediaLibrary: MediaLibrary;
+    active_integrations: string[];
+    media_library: MediaLibrary;
 };
 
 export type MediaLibrary = {
     folders: string[];
-    redirection: boolean;
-    deleteCloudFile: boolean;
-    mlHoverPreview: boolean;
+    delete_cloud_file: boolean;
+    ml_hover_preview: boolean;
 };
 
 export type Synchronization = {
-    enableSync: boolean;
+    enable_sync: boolean;
     folders: string[];
     timer: string;
-    customTimer: number;
+    custom_timer: number;
 };
 
 export type Tools = {
-    autoSave: boolean;
+    auto_save: boolean;
 };
 
 export type SettingsData = {
     accounts: Accounts;
     advanced: Advanced;
     appearance: Appearance;
-    userAccess: UserAccess[];
     integrations: Integrations;
     synchronization: Synchronization;
     tools: Tools;

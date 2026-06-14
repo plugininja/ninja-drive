@@ -1,15 +1,15 @@
 import { BackgroundColor, BorderStyle } from "~/types/styles";
-import { useRef, useState } from "@wordpress/element";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
-import { toBoolean } from "~/utils/functions";
-import useDevice from "~/hooks/useDevice";
+import { useRef, useState } from "@wordpress/element";
+import Card from "~/components/molecules/Card";
 import Button from "~/components/atoms/Button";
-import { __ } from "@wordpress/i18n";
+import { toBoolean } from "~/utils/functions";
 import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
-import Card from "~/components/molecules/Card";
+import useDevice from "~/hooks/useDevice";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 import useFileUploader, {
     IRawFile,
@@ -48,9 +48,9 @@ const Uploader = ({
         enableFolderUpload,
         uploadConfirmationMessage,
         uploadImmediately,
-        maxFiles,
+        max_files,
         isFormUploader,
-        widgetId = "",
+        widget_id = "",
     } = data;
 
     const {
@@ -74,12 +74,12 @@ const Uploader = ({
     return (
         <div
             onDragEnter={() =>
-                containerRef.current?.classList.add("drag-active")
+                containerRef.current?.classList.add("pnpnd-drag-active")
             }
             onDragLeave={() =>
-                containerRef.current?.classList.remove("drag-active")
+                containerRef.current?.classList.remove("pnpnd-drag-active")
             }
-            onDrop={() => containerRef.current?.classList.remove("drag-active")}
+            onDrop={() => containerRef.current?.classList.remove("pnpnd-drag-active")}
             ref={containerRef}
             style={{
                 width:
@@ -135,16 +135,13 @@ const Uploader = ({
                         }}
                     />
 
-                    {(!maxFiles || maxFiles > files.length) && (
+                    {(!max_files || max_files > files.length) && (
                         <Button
                             variant="primary"
                             size="small"
                             onClick={() => setIsUploadComplete(false)}
                         >
-                            {__(
-                                "Upload More Files",
-                                "ninja-drive",
-                            )}
+                            {__("Upload More Files", "ninja-drive")}
                         </Button>
                     )}
                 </Card>
@@ -176,15 +173,10 @@ const Uploader = ({
                 )}
 
                 <Text align="center">
-                    {__(
-                        "Drag & Drop your files here",
-                        "ninja-drive",
-                    )}
+                    {__("Drag & Drop your files here", "ninja-drive")}
                 </Text>
 
-                <Text color="primary">
-                    {__("OR", "ninja-drive")}
-                </Text>
+                <Text color="primary">{__("OR", "ninja-drive")}</Text>
 
                 <InlineStack gap={10} align="center">
                     <Button
@@ -213,10 +205,10 @@ const Uploader = ({
 
                 <div className="pnpnd-upload-info">
                     {!!minFileSize && (
-                        <span className="size-label pnpnd-text-sm">
-                            {__("Min File Size:", "ninja-drive")}{" "}
-                            {minFileSize}MB
-                        </span>
+                        <Text color="gray-700" size="sm" weight="medium">
+                            {__("Min File Size:", "ninja-drive")} {minFileSize}
+                            MB
+                        </Text>
                     )}
 
                     {!!minFileSize && !!minFileSize && (
@@ -224,10 +216,10 @@ const Uploader = ({
                     )}
 
                     {!!maxFileSize && (
-                        <span className="size-label pnpnd-text-sm">
-                            {__("Max File Size:", "ninja-drive")}{" "}
-                            {maxFileSize}MB
-                        </span>
+                        <Text color="gray-700" size="sm" weight="medium">
+                            {__("Max File Size:", "ninja-drive")} {maxFileSize}
+                            MB
+                        </Text>
                     )}
                 </div>
             </Card>
@@ -317,8 +309,8 @@ const Uploader = ({
 
                                 const itemClasses = clsx(
                                     "pnpnd-file-list-item",
-                                    isUploading && "active",
-                                    (isUploaded || isProcessing) && "uploaded",
+                                    isUploading && "pnpnd-active",
+                                    (isUploaded || isProcessing) && "pnpnd-uploaded",
                                 );
 
                                 return (
@@ -417,7 +409,7 @@ const Uploader = ({
                                                         name="close"
                                                         size="microsmall"
                                                         variant="error"
-                                                        className="remove-file"
+                                                        className="pnpnd-remove-file"
                                                         onClick={() => {
                                                             removeFile(file.id);
                                                         }}
@@ -427,7 +419,7 @@ const Uploader = ({
                                             </div>
 
                                             <span
-                                                className="file-info-progress"
+                                                className="pnpnd-file-info-progress"
                                                 style={
                                                     {
                                                         "--percentage":
@@ -437,7 +429,7 @@ const Uploader = ({
                                                     } as React.CSSProperties
                                                 }
                                             >
-                                                <span className="file-info-progress-bar" />
+                                                <span className="pnpnd-file-info-progress-bar" />
                                             </span>
                                         </div>
                                     </div>
@@ -449,7 +441,7 @@ const Uploader = ({
                             !toBoolean(!!uploadImmediately) && (
                                 <button
                                     type="button"
-                                    className="pnpnd-btn start-upload"
+                                    className="pnpnd-btn pnpnd-start-upload"
                                     onClick={() => startUpload()}
                                 >
                                     <Icon name="cloud_upload" color="white" />
@@ -459,10 +451,7 @@ const Uploader = ({
                                               "Uploading Files...",
                                               "ninja-drive",
                                           )
-                                        : __(
-                                              "Start Upload",
-                                              "ninja-drive",
-                                          )}
+                                        : __("Start Upload", "ninja-drive")}
                                 </button>
                             )}
                     </div>
@@ -481,16 +470,20 @@ const Uploader = ({
                             align={device === "mobile" ? "center" : "between"}
                             gap={10}
                         >
-                            <InlineStack gap={0} align="center" wrap={false}>
+                            <InlineStack gap={5} align="center" wrap={false}>
                                 {isUploadComplete ? (
                                     <IconButton
                                         variant="primary"
                                         name="cloud_done"
+                                        size="small"
+                                        borderStyle="none"
                                     />
                                 ) : (
                                     <IconButton
                                         variant="primary"
                                         name="cloud_upload"
+                                        size="small"
+                                        borderStyle="none"
                                     />
                                 )}
 
@@ -573,10 +566,7 @@ const Uploader = ({
                                             browseFilesBtn?.click();
                                         }}
                                     >
-                                        {__(
-                                            "Folder",
-                                            "ninja-drive",
-                                        )}
+                                        {__("Folder", "ninja-drive")}
                                     </Button>
                                 )}
                             </InlineStack>

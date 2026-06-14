@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "@wordpress/element";
 import { isFolder, isImage, isVideo } from "../utils/file";
+import { useEffect, useRef } from "@wordpress/element";
 import { File } from "~/types/file.types";
 
 export const useGallery = (
     currentFiles: File[],
-    widgetId?: string,
+    widget_id?: string,
     config?: {
         permissions?: { download: boolean };
         securePlayBack?: boolean;
@@ -34,34 +34,34 @@ export const useGallery = (
         const dynamicEl = mediaFiles.map((file: File) => {
             const previewUrl = PNPNDHelper.getUrl(
                 "preview",
-                file.fileKey,
+                file.file_key,
                 file.name,
-                widgetId,
+                widget_id,
                 undefined,
                 file.extension,
             );
             const imagePreviewUrl = PNPNDHelper.getUrl(
                 "thumbnail",
-                file.fileKey,
+                file.file_key,
                 file.name,
-                widgetId,
+                widget_id,
                 "5xl",
                 file.extension,
             );
             const thumbnail = PNPNDHelper.getUrl(
                 "thumbnail",
-                file.fileKey,
+                file.file_key,
                 file.name,
-                widgetId,
+                widget_id,
                 "md",
                 file.extension,
             );
 
             const downloadUrl = PNPNDHelper.getUrl(
                 "download",
-                file.fileKey,
+                file.file_key,
                 file.name,
-                widgetId,
+                widget_id,
                 undefined,
                 file.extension,
             );
@@ -73,7 +73,7 @@ export const useGallery = (
                     video: {
                         source: {
                             src: previewUrl,
-                            type: file.mimeType,
+                            type: file.mime_type,
                         },
                         attributes: {
                             preload: true,
@@ -93,7 +93,7 @@ export const useGallery = (
             //         audio: {
             //             source: {
             //                 src: previewUrl,
-            //                 type: file.mimeType,
+            //                 type: file.mime_type,
             //             },
             //             attributes: {
             //                 autoplay: false,
@@ -110,7 +110,7 @@ export const useGallery = (
                     downloadUrl,
                     src: imagePreviewUrl,
                     thumb: thumbnail,
-                    type: file.mimeType,
+                    type: file.mime_type,
                 };
             }
 
@@ -148,7 +148,7 @@ export const useGallery = (
     const viewFile = (key: string) => {
         if (!gallery.current) return;
         const index = mediaFiles.findIndex(
-            (file: File) => file.fileKey === key,
+            (file: File) => file.file_key === key,
         );
         if (index === -1) return;
 

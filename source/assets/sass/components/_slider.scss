@@ -8,6 +8,10 @@
         gap: 0.8rem;
         height: 40px;
 
+        &--only-input {
+            gap: 0.3rem;
+        }
+
         .pn-select-trigger {
             height: 38px !important;
         }
@@ -142,6 +146,11 @@
             &--no-unit {
                 padding: 0.2rem 0.6rem;
             }
+
+            &--only-input {
+                background-color: $gray-50;
+                border: 1px solid $gray-200;
+            }
         }
 
         &-input-box {
@@ -159,6 +168,10 @@
             &::-webkit-outer-spin-button {
                 opacity: 1;
             }
+
+            &--only-input {
+                background-color: transparent !important;
+            }
         }
 
         .pn-slider-input-box {
@@ -170,6 +183,12 @@
             height: 2rem;
             background-color: $secondary;
             margin: 0 0 0 0.5rem;
+        }
+
+        &-input-container--only-input {
+            .pn-slider-input-divider {
+                background-color: $gray-200;
+            }
         }
     }
 }

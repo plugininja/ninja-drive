@@ -13,33 +13,33 @@ export const useModuleFiles = (
     isPagination: boolean = false,
 ) => {
     const [isFirstCall, setIsFirstCall] = useState(true);
-    const { advanced } = data?.data;
+    const { style } = data?.data;
+    const { files: { per_page } = { per_page: 20 } } = style || {};
     const {
-        files: { perPage } = { perPage: 20 },
-        sort: { order, orderBy },
-    } = advanced || {};
+        sort: { order, order_by },
+    } = data?.data?.configuration?.advanced || {};
     const dispatch = useAppDispatch();
 
     const [queryArgs, setQueryArgs] = useState<QueryArgs>({
-        activeFolder: savedFolder ?? "",
+        active_folder: savedFolder ?? "/",
         page: 1,
-        perPage: perPage ?? PER_PAGE_LIMIT,
+        per_page: per_page ?? PER_PAGE_LIMIT,
         order: order ?? "ASC",
-        orderBy: orderBy ?? "name",
+        order_by: order_by ?? "name",
         search: null,
-        searchScope: "global",
+        search_scope: "global",
         types: types ?? ["all"],
-        autoFetch: false,
-        searchLocation: "cache",
+        auto_fetch: false,
+        search_location: "cache",
     });
 
     const [forceServer, setForceServer] = useState(false);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
-    const {
-        files: { loadingType } = { loadingType: "infinite_scroll" },
-        autoFetch,
-    } = data.data.advanced;
+    const { files: { loading_type } = { loading_type: "infinite_scroll" } } =
+        data?.data?.style || {};
+
+    const { auto_fetch } = data?.data?.configuration?.advanced || {};
 
     const {
         data: widgetData,
@@ -49,21 +49,21 @@ export const useModuleFiles = (
     } = useGetModuleFilesQuery(
         {
             id: data.id,
-            fileKey:
-                queryArgs.searchScope === "folder"
-                    ? queryArgs.activeFolder
+            file_key:
+                queryArgs.search_scope === "folder"
+                    ? queryArgs.active_folder
                     : "/",
             page: queryArgs.page,
-            perPage: queryArgs.perPage,
-            orderBy: queryArgs.orderBy,
+            per_page: queryArgs.per_page,
+            order_by: queryArgs.order_by,
             order: queryArgs.order,
             from:
-                forceServer || queryArgs.searchLocation === "server"
+                forceServer || queryArgs.search_location === "server"
                     ? "server"
                     : "cache",
             search: queryArgs.search,
-            searchScope: queryArgs.searchScope,
-            isPagination: isPagination || loadingType === "pagination",
+            search_scope: queryArgs.search_scope,
+            is_pagination: isPagination || loading_type === "pagination",
             types: queryArgs.types,
             isFirstCall,
         },
@@ -71,17 +71,16 @@ export const useModuleFiles = (
     );
 
     const files = widgetData?.data?.widget?.data?.source?.files ?? [];
-    const hasMore = widgetData?.data?.widget?.data?.source?.hasMore ?? false;
-    let breadcrumbs =
-        widgetData?.data?.widget?.data?.source?.breadcrumbs ?? [];
+    const has_more = widgetData?.data?.widget?.data?.source?.has_more ?? false;
+    let breadcrumbs = widgetData?.data?.widget?.data?.source?.breadcrumbs ?? [];
 
     breadcrumbs =
         breadcrumbs.length > 0
             ? breadcrumbs
-            : [{ fileKey: "/", name: "Home" }, ...breadcrumbs];
+            : [{ file_key: "/", name: "Home" }, ...breadcrumbs];
 
-    const totalPages =
-        widgetData?.data?.widget?.data?.source?.totalPages ?? 0;
+    const total_pages =
+        widgetData?.data?.widget?.data?.source?.total_pages ?? 0;
 
     useEffect(() => {
         if (!isFetching && forceServer) {
@@ -90,8 +89,8 @@ export const useModuleFiles = (
     }, [isFetching, forceServer]);
 
     useEffect(() => {
-        if (!isFetching && !isLoading && queryArgs.autoFetch) {
-            setQueryArgs((prev) => ({ ...prev, autoFetch: false }));
+        if (!isFetching && !isLoading && queryArgs.auto_fetch) {
+            setQueryArgs((prev) => ({ ...prev, auto_fetch: false }));
         }
     }, [files]);
 
@@ -107,7 +106,7 @@ export const useModuleFiles = (
 
         observer.current = new IntersectionObserver((entries) => {
             const first = entries[0];
-            if (first.isIntersecting && hasMore && !isFetching) {
+            if (first.isIntersecting && has_more && !isFetching) {
                 setQueryArgs((prev) => ({ ...prev, page: prev.page + 1 }));
             }
         });
@@ -119,19 +118,19 @@ export const useModuleFiles = (
                 observer.current.disconnect();
             }
         };
-    }, [queryArgs.activeFolder, hasMore, isFetching]);
+    }, [queryArgs.active_folder, has_more, isFetching]);
 
     const openFolder = (
         key: string,
-        searchScope: "folder" | "global" = "folder",
+        search_scope: "folder" | "global" = "folder",
         search: string = "",
     ) => {
         setQueryArgs((prev) => ({
             ...prev,
-            activeFolder: key,
+            active_folder: key,
             page: 1,
             search,
-            searchScope,
+            search_scope,
         }));
     };
 
@@ -143,8 +142,8 @@ export const useModuleFiles = (
         }
     };
 
-    const refresh = async (autoFetch = false) => {
-        setQueryArgs((prev) => ({ ...prev, page: 1, autoFetch }));
+    const refresh = async (auto_fetch = false) => {
+        setQueryArgs((prev) => ({ ...prev, page: 1, auto_fetch }));
         setForceServer(true);
     };
 
@@ -155,13 +154,13 @@ export const useModuleFiles = (
         loadingMore:
             (isFetching || isLoading) &&
             queryArgs.page > 1 &&
-            loadingType !== "pagination",
-        totalPages,
+            loading_type !== "pagination",
+        total_pages,
         queryArgs,
         setQueryArgs,
         openFolder,
         loadMoreRef,
-        hasMore,
+        has_more,
         loadMore,
         refresh,
         isError,

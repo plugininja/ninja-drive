@@ -18,6 +18,7 @@ export type InlineStackProps<T extends ElementType = "div"> = {
     wrap?: boolean;
     children?: React.ReactNode;
     onClick?: (e: React.MouseEvent) => void;
+    onBlur?: (e: React.FocusEvent) => void;
     onContextMenu?: (e: React.MouseEvent) => void;
     onDoubleClick?: (e: React.MouseEvent) => void;
 };

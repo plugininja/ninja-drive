@@ -1,12 +1,12 @@
-import { useEffect } from "@wordpress/element";
 import { useLocation } from "react-router-dom";
+import { useEffect } from "@wordpress/element";
 
 export const useMainMenuActive = () => {
     const { pathname } = useLocation();
 
     useEffect(() => {
         const anchors = document.querySelectorAll(
-            'a[href^="admin.php?page=ninja-drive#"]'
+            'a[href^="admin.php?page=ninja-drive#"]',
         );
 
         anchors.forEach((a) => {

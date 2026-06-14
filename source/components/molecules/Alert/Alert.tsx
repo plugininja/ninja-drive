@@ -1,3 +1,4 @@
+import Input from "~/components/atoms/Input";
 import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 import {
@@ -15,7 +16,6 @@ import {
     AlertState,
     AlertType,
 } from "./Alert.type";
-import Input from "~/components/atoms/Input";
 
 const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
@@ -38,8 +38,6 @@ export function CustomAlertProvider({
                 const id = options.id || `alert-${Date.now()}-${Math.random()}`;
 
                 const handleConfirm = async (inputValue: string | number) => {
-                    const alert = alerts.find((a) => a.id === id);
-
                     if (options.input && options.inputValidator) {
                         const error = options.inputValidator(inputValue);
 
@@ -60,7 +58,10 @@ export function CustomAlertProvider({
 
                     closeAlert(id);
 
-                    resolve({ isConfirmed: true, value: alert?.inputValue });
+                    resolve({
+                        isConfirmed: true,
+                        value: inputValue,
+                    });
                 };
 
                 const handleCancel = () => {
@@ -97,7 +98,7 @@ export function CustomAlertProvider({
                 setAlerts((prev) => [...prev, newAlert]);
             });
         },
-        [alerts, closeAlert],
+        [closeAlert],
     );
 
     return (
@@ -124,30 +125,69 @@ export function useCustomAlert() {
 function AlertContainer({ alerts }: { alerts: AlertState[] }) {
     if (typeof window === "undefined") return null;
 
+    const modals = alerts.filter((a) => !a.toast);
+    const toasts = alerts.filter((a) => a.toast);
+    const rootedToasts = toasts.filter((a) => a.root_id);
+    const traylessToasts = toasts.filter((a) => !a.root_id);
+
+    const toastGroups = new Map<string, AlertState[]>();
+
+    for (const toast of traylessToasts) {
+        const pos = toast.position || "top-center";
+
+        if (!toastGroups.has(pos)) {
+            toastGroups.set(pos, []);
+        }
+
+        toastGroups.get(pos)!.push(toast);
+    }
+
     return (
         <>
-            {alerts.map((alert) => {
-                const root = alert.rootId
-                    ? document.getElementById(alert.rootId)
-                    : document.querySelector(".pnpnd-top-level-wrapper") ||
-                      document.documentElement;
-                if (!root) return null;
-                let component = <AlertComponent key={alert.id} {...alert} />;
-                if (alert.rootId) {
-                    component = (
-                        <div className="pnpnd-top-level-wrapper">
-                            <AlertComponent key={alert.id} {...alert} />
-                        </div>
-                    );
-                }
+            {modals.map((modal) => {
+                const root = modal.root_id
+                    ? document.getElementById(modal.root_id) || document.body
+                    : document.body;
 
-                return createPortal(component, root);
+                if (!root) return null;
+
+                return createPortal(
+                    <div className="pnpnd-top-level-wrapper">
+                        <AlertComponent key={modal.id} {...modal} />
+                    </div>,
+                    root,
+                );
             })}
+
+            {rootedToasts.map((toast) => {
+                const root =
+                    document.getElementById(toast.root_id!) || document.body;
+
+                if (!root) return null;
+
+                return createPortal(
+                    <div className="pnpnd-top-level-wrapper">
+                        <AlertComponent key={toast.id} {...toast} />
+                    </div>,
+                    root,
+                );
+            })}
+
+            {Array.from(toastGroups.entries()).map(([position, groupToasts]) =>
+                createPortal(
+                    <div key={position} className={`pn-toast-tray ${position}`}>
+                        {groupToasts.map((toast) => (
+                            <AlertComponent key={toast.id} {...toast} inTray />
+                        ))}
+                    </div>,
+                    document.body,
+                ),
+            )}
         </>
     );
 }
 
-function AlertComponent(props: AlertState) {
+function AlertComponent(props: AlertState & { inTray?: boolean }) {
     const {
         title,
         text,
@@ -181,7 +221,8 @@ function AlertComponent(props: AlertState) {
         pauseOnHover = true,
         id,
         confirmOnEnter = true,
-        rootId,
+        root_id,
+        inTray = false,
     } = props;
 
     const [inputValue, setInputValue] = useState(initialInputValue);
@@ -195,6 +236,8 @@ function AlertComponent(props: AlertState) {
     const pausedElapsedRef = useRef<number>(0);
     const inputRef = useRef<HTMLElement | null>(null);
     const [isPaused, setIsPaused] = useState(false);
+    const onCloseRef = useRef(onClose);
+    onCloseRef.current = onClose;
 
     const isToastWithTimer = toast && !!timer && timer > 0;
     const shouldPauseOnHover = isToastWithTimer && pauseOnHover;
@@ -217,7 +260,7 @@ function AlertComponent(props: AlertState) {
 
                 if (newRemaining <= 0) {
                     if (timerRef.current) clearInterval(timerRef.current);
-                    if (onClose) onClose();
+                    if (onCloseRef.current) onCloseRef.current();
                 }
             }, 16);
         }
@@ -225,7 +268,7 @@ function AlertComponent(props: AlertState) {
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };
-    }, [isPaused, isToastWithTimer, timer, onClose]);
+    }, [isPaused, isToastWithTimer, timer]);
 
     const handleMouseEnter = () => {
         if (!shouldPauseOnHover) return;
@@ -300,6 +343,7 @@ function AlertComponent(props: AlertState) {
             await onConfirm(inputValue);
         }
     };
+
     useEffect(() => {
         if (!confirmOnEnter) return;
 
@@ -335,6 +379,7 @@ function AlertComponent(props: AlertState) {
         "pn-alert-overlay",
         isDark && "dark",
         toast && "pn-toast",
+        inTray && "pn-toast-in-tray",
         getPositionClass(),
     ]
         .filter(Boolean)
@@ -401,206 +446,207 @@ function AlertComponent(props: AlertState) {
         .filter(Boolean)
         .join(" ");
 
-    return (
+    const container = (
         <div
-            className={overlayClasses}
-            onClick={handleBackdropClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            style={{
+                ...style,
+                maxWidth: width ? width : "",
+                height: height ? height : "",
+            }}
+            className={containerClasses}
         >
-            <div
-                style={{
-                    ...style,
-                    maxWidth: width ? width : "",
-                    height: height ? height : "",
-                }}
-                className={containerClasses}
-            >
-                {timerProgressBar && isToastWithTimer && (
-                    <div
-                        style={{
-                            transform: `scaleX(${remainingTime / timer})`,
-                            transformOrigin: "left",
-                            transition: isPaused
-                                ? "none"
-                                : "transform 0.05s linear",
-                            borderRadius:
-                                "0 0 var(--alert-border-radius) var(--alert-border-radius)",
-                        }}
-                        className={clsx(
-                            "pn-alert-timer-progress",
-                            `pn-progress-${type}`,
-                        )}
-                    />
-                )}
+            {timerProgressBar && isToastWithTimer && (
+                <div
+                    style={{
+                        transform: `scaleX(${remainingTime / timer})`,
+                        transformOrigin: "left",
+                        transition: isPaused
+                            ? "none"
+                            : "transform 0.05s linear",
+                        borderRadius:
+                            "0 0 var(--alert-border-radius) var(--alert-border-radius)",
+                    }}
+                    className={clsx(
+                        "pn-alert-timer-progress",
+                        `pn-progress-${type}`,
+                    )}
+                />
+            )}
 
-                {showCloseButton && (
-                    <button
-                        aria-label={__("Close", "ninja-drive")}
-                        className={clsx(
-                            "pn-alert-close-button",
-                            isDark && "dark",
-                        )}
-                        onClick={handleCloseWithAnimation}
+            {showCloseButton && (
+                <button
+                    aria-label={__("Close", "ninja-drive")}
+                    className={clsx("pn-alert-close-button", isDark && "dark")}
+                    onClick={handleCloseWithAnimation}
+                >
+                    <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
                     >
-                        <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <path
-                                d="M18 6L6 18M6 6l12 12"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                    </button>
-                )}
+                        <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+                    </svg>
+                </button>
+            )}
 
-                {toast ? (
-                    <div className="pn-alert-toast-content">
-                        {showIcon && (
-                            <div className={iconClasses}>
-                                {getIcon({ icon, type, toast })}
-                            </div>
-                        )}
-
-                        <div className="pn-alert-toast-text">
-                            {title && <h3 className={titleClasses}>{title}</h3>}
-
-                            {text && <p className={messageClasses}>{text}</p>}
-
-                            {html && (
-                                <div className="pn-alert-html-content">
-                                    {html}
-                                </div>
-                            )}
+            {toast ? (
+                <div className="pn-alert-toast-content">
+                    {showIcon && (
+                        <div className={iconClasses}>
+                            {getIcon({ icon, type, toast })}
                         </div>
+                    )}
+
+                    <div className="pn-alert-toast-text">
+                        {title && <h3 className={titleClasses}>{title}</h3>}
+
+                        {text && <p className={messageClasses}>{text}</p>}
+
+                        {html && (
+                            <div className="pn-alert-html-content">{html}</div>
+                        )}
                     </div>
-                ) : (
-                    <>
-                        {showIcon && (
-                            <div className={iconClasses}>
-                                {getIcon({ icon, type, toast })}
-                            </div>
+                </div>
+            ) : (
+                <>
+                    {showIcon && (
+                        <div className={iconClasses}>
+                            {getIcon({ icon, type, toast })}
+                        </div>
+                    )}
+
+                    <div className={contentClasses}>
+                        {title && <h2 className={titleClasses}>{title}</h2>}
+
+                        {text && <p className={messageClasses}>{text}</p>}
+
+                        {html && (
+                            <div className="pn-alert-html-content">{html}</div>
                         )}
 
-                        <div className={contentClasses}>
-                            {title && <h2 className={titleClasses}>{title}</h2>}
+                        {input && (
+                            <div className="pn-alert-input-container">
+                                {input === "textarea" ? (
+                                    <textarea
+                                        ref={
+                                            inputRef as React.RefObject<HTMLTextAreaElement>
+                                        }
+                                        className={clsx(
+                                            inputClasses,
+                                            "pn-alert-textarea",
+                                        )}
+                                        placeholder={inputPlaceholder}
+                                        value={inputValue}
+                                        onChange={(e) => {
+                                            setInputValue(e.target.value);
+                                            setErrorMessage(null);
+                                        }}
+                                    />
+                                ) : input === "select" ? (
+                                    <select
+                                        ref={
+                                            inputRef as React.RefObject<HTMLSelectElement>
+                                        }
+                                        className={inputClasses}
+                                        value={inputValue}
+                                        onChange={(e) => {
+                                            setInputValue(e.target.value);
+                                            setErrorMessage(null);
+                                        }}
+                                    >
+                                        <option value="">
+                                            {inputPlaceholder ||
+                                                __(
+                                                    "Select an option",
+                                                    "ninja-drive",
+                                                )}
+                                        </option>
 
-                            {text && <p className={messageClasses}>{text}</p>}
-
-                            {html && (
-                                <div className="pn-alert-html-content">
-                                    {html}
-                                </div>
-                            )}
-
-                            {input && (
-                                <div className="pn-alert-input-container">
-                                    {input === "textarea" ? (
-                                        <textarea
-                                            ref={
-                                                inputRef as React.RefObject<HTMLTextAreaElement>
-                                            }
-                                            className={clsx(
-                                                inputClasses,
-                                                "pn-alert-textarea",
-                                            )}
-                                            placeholder={inputPlaceholder}
-                                            value={inputValue}
-                                            onChange={(e) => {
-                                                setInputValue(e.target.value);
-                                                setErrorMessage(null);
-                                            }}
-                                        />
-                                    ) : input === "select" ? (
-                                        <select
-                                            ref={
-                                                inputRef as React.RefObject<HTMLSelectElement>
-                                            }
-                                            className={inputClasses}
-                                            value={inputValue}
-                                            onChange={(e) => {
-                                                setInputValue(e.target.value);
-                                                setErrorMessage(null);
-                                            }}
-                                        >
-                                            <option value="">
-                                                {inputPlaceholder ||
-                                                    __("Select an option", "ninja-drive")}
+                                        {inputOptions.map((opt) => (
+                                            <option
+                                                key={opt.value}
+                                                value={opt.value}
+                                            >
+                                                {opt.label}
                                             </option>
+                                        ))}
+                                    </select>
+                                ) : (
+                                    <Input
+                                        ref={
+                                            inputRef as React.RefObject<HTMLInputElement>
+                                        }
+                                        type={input}
+                                        placeholder={inputPlaceholder}
+                                        value={inputValue}
+                                        suffix={inputSuffix && inputSuffix}
+                                        onChange={(value) => {
+                                            const convertedValue =
+                                                input === "number"
+                                                    ? Number(value)
+                                                    : String(value);
 
-                                            {inputOptions.map((opt) => (
-                                                <option
-                                                    key={opt.value}
-                                                    value={opt.value}
-                                                >
-                                                    {opt.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    ) : (
-                                        <Input
-                                            ref={
-                                                inputRef as React.RefObject<HTMLInputElement>
-                                            }
-                                            type={input}
-                                            placeholder={inputPlaceholder}
-                                            value={inputValue}
-                                            suffix={inputSuffix && inputSuffix}
-                                            onChange={(value) => {
-                                                const convertedValue =
-                                                    input === "number"
-                                                        ? Number(value)
-                                                        : String(value);
-
-                                                setInputValue(convertedValue);
-                                                setErrorMessage(null);
-                                            }}
-                                        />
-                                    )}
-
-                                    {errorMessage && (
-                                        <div className="pn-alert-error-text">
-                                            {errorMessage}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </>
-                )}
-
-                {(showConfirmButton || showCancelButton) && (
-                    <div className={buttonsClasses}>
-                        {showCancelButton && (
-                            <button
-                                className={cancelButtonClasses}
-                                onClick={onCancel}
-                                disabled={isLoading}
-                            >
-                                {cancelButtonText}
-                            </button>
-                        )}
-
-                        {showConfirmButton && (
-                            <button
-                                className={confirmButtonClasses}
-                                onClick={handleConfirmClick}
-                                disabled={isLoading}
-                            >
-                                {isLoading && (
-                                    <span className="pn-alert-spinner" />
+                                            setInputValue(convertedValue);
+                                            setErrorMessage(null);
+                                        }}
+                                    />
                                 )}
-                                {confirmButtonText}
-                            </button>
+
+                                {errorMessage && (
+                                    <div className="pn-alert-error-text">
+                                        {errorMessage}
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </div>
-                )}
-            </div>
+                </>
+            )}
+
+            {(showConfirmButton || showCancelButton) && (
+                <div className={buttonsClasses}>
+                    {showCancelButton && (
+                        <button
+                            className={cancelButtonClasses}
+                            onClick={onCancel}
+                            disabled={isLoading}
+                        >
+                            {cancelButtonText}
+                        </button>
+                    )}
+
+                    {showConfirmButton && (
+                        <button
+                            className={confirmButtonClasses}
+                            onClick={handleConfirmClick}
+                            disabled={isLoading}
+                        >
+                            {isLoading && <span className="pn-alert-spinner" />}
+                            {confirmButtonText}
+                        </button>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+
+    const overlayEventHandlers: Record<string, unknown> = {};
+
+    if (toast) {
+        overlayEventHandlers.onMouseEnter = handleMouseEnter;
+        overlayEventHandlers.onMouseLeave = handleMouseLeave;
+    }
+
+    if (!toast) {
+        overlayEventHandlers.onClick = handleBackdropClick;
+    }
+
+    return (
+        <div className={overlayClasses} {...overlayEventHandlers}>
+            {container}
         </div>
     );
 }

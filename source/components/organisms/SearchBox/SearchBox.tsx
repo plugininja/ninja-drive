@@ -1,16 +1,18 @@
-import { TQueryArgs } from "~/hooks/useFiles";
-import useOutsideClick from "~/hooks/useOutsideClick";
-import { useRef, useState } from "@wordpress/element";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
-import useDebounce from "~/hooks/useDebounce";
 import SelectBox from "~/components/molecules/SelectBox";
 import Dropdown from "~/components/molecules/Dropdown";
+import useOutsideClick from "~/hooks/useOutsideClick";
+import { useRef, useState } from "@wordpress/element";
 import Divider from "~/components/atoms/Divider";
-import { __ } from "@wordpress/i18n";
+import Card from "~/components/molecules/Card";
+import useDebounce from "~/hooks/useDebounce";
+import { TQueryArgs } from "~/hooks/useFiles";
 import Input from "~/components/atoms/Input";
+import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import Result from "./Result";
 import clsx from "clsx";
 import {
@@ -18,14 +20,13 @@ import {
     SearchBoxProps,
     SearchType,
 } from "./SearchBox.type";
-import Text from "~/components/atoms/Text";
-import Card from "~/components/molecules/Card";
 
 const SearchBox = ({
     id,
     style,
     className,
     isCompact = false,
+    isSuperCompact = false,
     fullWidth,
     setIsCompact,
     placeholder = __("Search My Drive", "ninja-drive"),
@@ -37,8 +38,9 @@ const SearchBox = ({
 }: SearchBoxProps) => {
     const [searchTerm, setSearchTerm] = useState<string | null>(null);
     const [open, setOpen] = useState<boolean>(false);
-    const [searchLocation, setSearchLocation] =
-        useState<TQueryArgs["searchLocation"]>("cache");
+    const [search_location, setSearchLocation] =
+        useState<TQueryArgs["search_location"]>("cache");
+    const [isFocused, setIsFocused] = useState(false);
 
     const wrapperRef = useRef<HTMLDivElement | null>(null);
 
@@ -50,11 +52,11 @@ const SearchBox = ({
                     search: searchTerm,
                     activeFolder,
                     page: 1,
-                    searchLocation,
+                    search_location,
                 }));
             }
         },
-        [searchTerm, activeFolder, searchLocation],
+        [searchTerm, activeFolder, search_location],
         800,
     );
 
@@ -63,6 +65,62 @@ const SearchBox = ({
         handler: () => setOpen(false),
         enabled: open,
     });
+
+    if (isSuperCompact) {
+        return (
+            <div
+                onMouseEnter={() => setIsFocused(true)}
+                onMouseLeave={() => {
+                    if (!searchTerm) {
+                        setIsFocused(false);
+                    }
+                }}
+            >
+                <InlineStack
+                    id={id}
+                    wrap={false}
+                    style={style}
+                    className={clsx(
+                        "pn-super-compact-search-box",
+                        isFocused && "pn-super-compact-search-box--focused",
+                        className,
+                        "bg-white",
+                    )}
+                >
+                    <Icon name="search" fontSize="xl" />
+
+                    <Input
+                        size="small"
+                        borderStyle="none"
+                        placeholder={placeholder}
+                        className="pn-super-compact-search-box__input"
+                        value={searchTerm || ""}
+                        onChange={(value) => setSearchTerm(value as string)}
+                    />
+
+                    {searchTerm && searchTerm.length > 0 && (
+                        <IconButton
+                            size="supersmall"
+                            rounded="full"
+                            name="close"
+                            className="pn-super-compact-search-box__clear"
+                            onClick={() => setSearchTerm("")}
+                        />
+                    )}
+
+                    <div>
+                        <SearchBox.TuneFilter
+                            fileType={fileType}
+                            queryArgs={queryArgs}
+                            setQueryArgs={setQueryArgs}
+                            search_location={search_location}
+                            setSearchLocation={setSearchLocation}
+                        />
+                    </div>
+                </InlineStack>
+            </div>
+        );
+    }
 
     if (isCompact) {
         return (
@@ -102,7 +160,7 @@ const SearchBox = ({
                     fileType={fileType}
                     queryArgs={queryArgs}
                     setQueryArgs={setQueryArgs}
-                    searchLocation={searchLocation}
+                    search_location={search_location}
                     setSearchLocation={setSearchLocation}
                 />
             </InlineStack>
@@ -124,8 +182,6 @@ const SearchBox = ({
                     align="between"
                     className={clsx("pn-search-box__input")}
                 >
-                    <Icon name="search" fontSize="xl" />
-
                     <Input
                         size="small"
                         borderStyle="none"
@@ -134,7 +190,6 @@ const SearchBox = ({
                         placeholder={placeholder}
                         value={searchTerm || ""}
                         onChange={(value) => setSearchTerm(value as string)}
-                        id="search"
                     />
 
                     {searchTerm && searchTerm.length > 0 && (
@@ -145,13 +200,15 @@ const SearchBox = ({
                             onClick={() => setSearchTerm("")}
                         />
                     )}
+
+                    <Icon name="search" fontSize="xl" />
                 </InlineStack>
 
                 <BlockStack className="pn-search-box__dropdown">
                     <SearchBox.Filter
                         queryArgs={queryArgs}
                         setQueryArgs={setQueryArgs}
-                        searchLocation={searchLocation}
+                        search_location={search_location}
                         setSearchLocation={setSearchLocation}
                     />
 
@@ -169,7 +226,7 @@ const SearchBox = ({
 SearchBox.Filter = ({
     queryArgs,
     setQueryArgs,
-    searchLocation,
+    search_location,
     setSearchLocation,
 }: SearchBoxFilterProps) => {
     return (
@@ -219,9 +276,9 @@ SearchBox.Filter = ({
                     minWidth: "100px",
                 }}
                 options={LOCATION_OPTIONS}
-                value={[searchLocation]}
+                value={[search_location]}
                 onChange={(value) =>
-                    setSearchLocation(value[0] as TQueryArgs["searchLocation"])
+                    setSearchLocation(value[0] as TQueryArgs["search_location"])
                 }
             />
 
@@ -231,11 +288,11 @@ SearchBox.Filter = ({
                     minWidth: "100px",
                 }}
                 options={SCOPE_OPTIONS}
-                value={[queryArgs.searchScope]}
+                value={[queryArgs.search_scope]}
                 onChange={(value) =>
                     setQueryArgs((prev) => ({
                         ...prev,
-                        searchScope: value[0] as TQueryArgs["searchScope"],
+                        search_scope: value[0] as TQueryArgs["search_scope"],
                     }))
                 }
             />
@@ -249,7 +306,7 @@ SearchBox.TuneFilter = ({
     fileType = true,
     queryArgs,
     setQueryArgs,
-    searchLocation,
+    search_location,
     setSearchLocation,
 }: SearchBoxFilterProps) => {
     return (
@@ -259,7 +316,7 @@ SearchBox.TuneFilter = ({
             </Dropdown.Trigger>
 
             <Dropdown.Content
-                position={{ top: "120%", left: "auto", right: "0" }}
+                position={{ top: "160%", left: "auto", right: "-12px" }}
                 style={{
                     padding: "10px",
                     display: "flex",
@@ -270,7 +327,7 @@ SearchBox.TuneFilter = ({
             >
                 {fileType && (
                     <>
-                        <Text size="sm">{ __( "File Type", "ninja-drive" ) }</Text>
+                        <Text size="sm">{__("File Type", "ninja-drive")}</Text>
 
                         <SelectBox
                             size="extrasmall"
@@ -308,7 +365,7 @@ SearchBox.TuneFilter = ({
                     </>
                 )}
 
-                <Text size="sm">{ __( "Search Location", "ninja-drive" ) }</Text>
+                <Text size="sm">{__("Search Location", "ninja-drive")}</Text>
 
                 <Card
                     padding={5}
@@ -327,20 +384,20 @@ SearchBox.TuneFilter = ({
                             align="center"
                             blockAlign="center"
                             background={
-                                searchLocation === option?.value
+                                search_location === option?.value
                                     ? "primary"
                                     : "white"
                             }
                             className="cursor-pointer"
                             onClick={() =>
                                 setSearchLocation(
-                                    option?.value as TQueryArgs["searchLocation"],
+                                    option?.value as TQueryArgs["search_location"],
                                 )
                             }
                         >
                             <Text
                                 color={
-                                    searchLocation === option?.value
+                                    search_location === option?.value
                                         ? "white"
                                         : "black"
                                 }
@@ -352,7 +409,7 @@ SearchBox.TuneFilter = ({
                     ))}
                 </Card>
 
-                <Text size="sm">{ __( "Search Scope", "ninja-drive" ) }</Text>
+                <Text size="sm">{__("Search Scope", "ninja-drive")}</Text>
 
                 <Card
                     padding={5}
@@ -371,7 +428,7 @@ SearchBox.TuneFilter = ({
                             align="center"
                             blockAlign="center"
                             background={
-                                queryArgs.searchScope === option?.value
+                                queryArgs.search_scope === option?.value
                                     ? "primary"
                                     : "white"
                             }
@@ -379,13 +436,13 @@ SearchBox.TuneFilter = ({
                             onClick={() =>
                                 setQueryArgs((prev) => ({
                                     ...prev,
-                                    searchScope: option?.value,
+                                    search_scope: option?.value,
                                 }))
                             }
                         >
                             <Text
                                 color={
-                                    queryArgs.searchScope === option?.value
+                                    queryArgs.search_scope === option?.value
                                         ? "white"
                                         : "black"
                                 }

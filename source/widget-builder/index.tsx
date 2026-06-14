@@ -1,5 +1,5 @@
-import { useEffect } from "@wordpress/element";
 import { useModuleBuilder } from "~/components/organisms/modals/ModuleBuilder";
+import { useEffect } from "@wordpress/element";
 
 export function ModuleBuilderBridge() {
     const { openModuleBuilder } = useModuleBuilder();

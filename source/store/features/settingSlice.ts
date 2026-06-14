@@ -8,14 +8,13 @@ import {
     SettingsData,
     Synchronization,
     Tools,
-    UserAccess,
 } from "~/types/settings";
 
 const initialState: SettingState = {
     data: null,
     draft: null,
-    defaultData: null,
-    isDirty: false,
+    default_data: null,
+    is_dirty: false,
 };
 
 export const settingSlice = createSlice({
@@ -28,7 +27,7 @@ export const settingSlice = createSlice({
         },
 
         defaultSettingsInit: (state, action: PayloadAction<SettingsData>) => {
-            state.defaultData = action.payload;
+            state.default_data = action.payload;
         },
 
         updateData: (state, action: PayloadAction<SettingsData>) => {
@@ -77,11 +76,6 @@ export const settingSlice = createSlice({
             };
         },
 
-        updateUserAccess: (state, action: PayloadAction<UserAccess[]>) => {
-            if (!state.data) return;
-            state.data.userAccess = action.payload;
-        },
-
         updateIntegrations: (
             state,
             action: PayloadAction<{
@@ -125,7 +119,7 @@ export const settingSlice = createSlice({
         },
 
         updateIsDirty: (state, action: PayloadAction<boolean>) => {
-            state.isDirty = action.payload;
+            state.is_dirty = action.payload;
         },
     },
 });
@@ -137,7 +131,6 @@ export const {
     updateAccounts,
     updateAdvanced,
     updateAppearance,
-    updateUserAccess,
     updateIntegrations,
     updateSynchronization,
     updateTools,

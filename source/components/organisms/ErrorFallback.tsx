@@ -1,7 +1,7 @@
-import { __ } from "@wordpress/i18n";
 import BlockStack from "~/components/molecules/BlockStack";
 import Button from "~/components/atoms/Button";
 import Card from "~/components/molecules/Card";
+import { __ } from "@wordpress/i18n";
 
 const ErrorFallback = () => {
     return (

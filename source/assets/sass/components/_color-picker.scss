@@ -45,6 +45,7 @@
                 border-left: none;
                 border-radius: 0 4px 4px 0;
                 margin-left: -1px;
+                min-height: 36px !important;
 
                 &.error {
                     border-color: $error;

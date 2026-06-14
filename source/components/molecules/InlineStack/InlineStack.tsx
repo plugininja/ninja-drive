@@ -27,6 +27,7 @@ const InlineStack = forwardRef(
             wrap = true,
             children,
             onClick,
+            onBlur,
             onContextMenu,
             onDoubleClick,
             ...rest
@@ -58,6 +59,7 @@ const InlineStack = forwardRef(
                 style={styles}
                 className={classes}
                 onClick={onClick}
+                onBlur={onBlur}
                 onContextMenu={onContextMenu}
                 onDoubleClick={onDoubleClick}
                 {...rest}

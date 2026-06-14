@@ -1,34 +1,36 @@
 import { removeThumbnail } from "~/store/features/widgetBuilderSlice";
 import InlineStack from "~/components/molecules/InlineStack";
-import { ModuleKey } from "~/types/widget.types";
 import IconButton from "~/components/molecules/IconButton";
 import BlockStack from "~/components/molecules/BlockStack";
+import { ModuleKey } from "~/types/widget.types";
 import { useAppDispatch } from "~/store/hooks";
-import { File } from "~/types/file.types";
 import Card from "~/components/molecules/Card";
 import Avatar from "~/components/atoms/Avatar";
 import Button from "~/components/atoms/Button";
-import { __ } from "@wordpress/i18n";
-import { isFolder } from "~/utils/file";
-import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import Text from "~/components/atoms/Text";
+import { File } from "~/types/file.types";
+import { isFolder } from "~/utils/file";
+import { __ } from "@wordpress/i18n";
 
 const SelectedFileList = ({
     widgetType,
-    selectedFiles,
+    selected_files,
     setSelectedFiles,
     selectedActionKey,
     setSelectedActionKey,
+    style,
 }: {
     widgetType?: ModuleKey;
-    selectedFiles: File[];
+    selected_files: File[];
     setSelectedFiles: (files: File[]) => void;
     selectedActionKey?: string;
     setSelectedActionKey?: (key: string) => void;
+    style?: React.CSSProperties;
 }) => {
     const dispatch = useAppDispatch();
 
-    const maxDigits = String(selectedFiles?.length)?.length;
+    const maxDigits = String(selected_files?.length)?.length;
 
     const indexWidth = `${maxDigits * 8 + 8}px`;
 
@@ -39,6 +41,7 @@ const SelectedFileList = ({
             padding={0}
             background="white"
             style={{
+                ...style,
                 flex: "0 0 250px",
                 position: "sticky",
                 top: 0,
@@ -56,7 +59,7 @@ const SelectedFileList = ({
                 <InlineStack gap={10}>
                     <Text color="black" size="sm" weight="medium">
                         <Text color="primary" size="sm" weight="medium">
-                            ({selectedFiles?.length})
+                            ({selected_files?.length})
                         </Text>{" "}
                         Items Selected
                     </Text>
@@ -66,26 +69,26 @@ const SelectedFileList = ({
                     variant="error"
                     size="supersmall"
                     onClick={() => setSelectedFiles([])}
-                    disabled={selectedFiles?.length === 0}
+                    disabled={selected_files?.length === 0}
                 >
                     Clear
                 </Button>
             </InlineStack>
 
             <BlockStack
-                marginTop={selectedFiles?.length > 0 ? 0 : 10}
+                marginTop={selected_files?.length > 0 ? 0 : 10}
                 style={{
                     minWidth: 0,
                 }}
             >
-                {selectedFiles?.length > 0 ? (
+                {selected_files?.length > 0 ? (
                     <>
-                        {selectedFiles.map((file, index) => {
-                            const _isFolder = isFolder(file?.mimeType);
+                        {selected_files.map((file, index) => {
+                            const _isFolder = isFolder(file?.mime_type);
                             const thumbnail = _isFolder
                                 ? PNPNDHelper.getUrl(
                                       "thumbnail",
-                                      file?.fileKey,
+                                      file?.file_key,
                                       file?.name,
                                       undefined,
                                       "lg",
@@ -93,7 +96,7 @@ const SelectedFileList = ({
                                   )
                                 : PNPNDHelper.getUrl(
                                       "thumbnail",
-                                      file?.fileKey,
+                                      file?.file_key,
                                       file?.name,
                                       undefined,
                                       "md",
@@ -102,7 +105,7 @@ const SelectedFileList = ({
 
                             return (
                                 <Card
-                                    key={file?.fileKey}
+                                    key={file?.file_key}
                                     padding={10}
                                     background="white"
                                     borderStyle="none"
@@ -177,7 +180,7 @@ const SelectedFileList = ({
                                         </InlineStack>
 
                                         <InlineStack gap={5} wrap={false}>
-                                            {widgetType === "media-player" &&
+                                            {widgetType === "media_player" &&
                                                 !isFolder(
                                                     file.extension || "",
                                                 ) && (
@@ -190,9 +193,9 @@ const SelectedFileList = ({
                                                         onClick={() =>
                                                             setSelectedActionKey?.(
                                                                 selectedActionKey ===
-                                                                    file?.fileKey
+                                                                    file?.file_key
                                                                     ? ""
-                                                                    : file?.fileKey,
+                                                                    : file?.file_key,
                                                             )
                                                         }
                                                     />
@@ -208,10 +211,10 @@ const SelectedFileList = ({
                                                 }}
                                                 onClick={() =>
                                                     setSelectedFiles(
-                                                        selectedFiles.filter(
+                                                        selected_files.filter(
                                                             (f) =>
-                                                                f?.fileKey !==
-                                                                file?.fileKey,
+                                                                f?.file_key !==
+                                                                file?.file_key,
                                                         ),
                                                     )
                                                 }
@@ -219,7 +222,7 @@ const SelectedFileList = ({
                                         </InlineStack>
                                     </InlineStack>
 
-                                    {selectedActionKey === file?.fileKey && (
+                                    {selectedActionKey === file?.file_key && (
                                         <Card
                                             padding={0}
                                             background="primary-extralight"
@@ -232,7 +235,7 @@ const SelectedFileList = ({
                                                 position: "relative",
                                             }}
                                         >
-                                            {file?.thumbnailData?.fileKey && (
+                                            {file?.thumbnail_data?.file_key && (
                                                 <Card
                                                     padding="5px 10px"
                                                     background="error"
@@ -249,9 +252,10 @@ const SelectedFileList = ({
                                                     }}
                                                     onClick={() => {
                                                         if (
-                                                            !file?.thumbnailData ||
-                                                            file?.thumbnailData
-                                                                ?.fileKey === ""
+                                                            !file?.thumbnail_data ||
+                                                            file?.thumbnail_data
+                                                                ?.file_key ===
+                                                                ""
                                                         ) {
                                                             setSelectedActionKey?.(
                                                                 "",
@@ -260,8 +264,8 @@ const SelectedFileList = ({
                                                             dispatch(
                                                                 removeThumbnail(
                                                                     {
-                                                                        fileKey:
-                                                                            file?.fileKey,
+                                                                        file_key:
+                                                                            file?.file_key,
                                                                     },
                                                                 ),
                                                             );
@@ -277,16 +281,17 @@ const SelectedFileList = ({
                                                 </Card>
                                             )}
 
-                                            {file?.thumbnailData?.fileKey ? (
+                                            {file?.thumbnail_data?.file_key ? (
                                                 <Avatar
                                                     src={PNPNDHelper.getUrl(
                                                         "thumbnail",
-                                                        file?.thumbnailData
-                                                            ?.fileKey,
-                                                        file?.thumbnailData?.name,
+                                                        file?.thumbnail_data
+                                                            ?.file_key,
+                                                        file?.thumbnail_data
+                                                            ?.name,
                                                         "",
                                                         "md",
-                                                        file?.thumbnailData
+                                                        file?.thumbnail_data
                                                             ?.extension,
                                                     )}
                                                     width="100%"
@@ -308,7 +313,9 @@ const SelectedFileList = ({
                     <InlineStack align="center" blockAlign="center" gap={7}>
                         <Icon name="info" />
 
-                        <Text size="sm">{ __( "No files selected.", "ninja-drive" ) }</Text>
+                        <Text size="sm">
+                            {__("No files selected.", "ninja-drive")}
+                        </Text>
                     </InlineStack>
                 )}
             </BlockStack>

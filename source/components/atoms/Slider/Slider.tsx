@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "@wordpress/element";
-import type { SliderProps } from "./Slider.type";
-import { __ } from "@wordpress/i18n";
+import IconButton from "~/components/molecules/IconButton";
 import SelectBox from "~/components/molecules/SelectBox";
+import type { SliderProps } from "./Slider.type";
 import Button from "~/components/atoms/Button";
 import Text from "~/components/atoms/Text";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 
 const Slider: React.FC<SliderProps> = ({
@@ -26,6 +27,7 @@ const Slider: React.FC<SliderProps> = ({
     unitPlaceholder = __("Unit", "ninja-drive"),
     trackDisabled = false,
     disabled = false,
+    onlyInput = false,
     onChange,
 }) => {
     const [inputValue, setInputValue] = useState<string | number>(value);
@@ -127,85 +129,91 @@ const Slider: React.FC<SliderProps> = ({
                 "pn-slider",
                 size === "small" && "pn-slider--small",
                 disabled && "pn-slider--disabled",
+                onlyInput && "pn-slider--only-input",
                 className,
             )}
         >
-            <div
-                className={clsx(
-                    "pn-slider__track-container",
-                    trackDisabled && "pn-slider__track-container--disabled",
-                )}
-            >
+            {!onlyInput && (
                 <div
-                    ref={trackRef}
-                    className="pn-slider__track-container-wrapper"
-                    onMouseDown={handleMouseDown}
+                    className={clsx(
+                        "pn-slider__track-container",
+                        trackDisabled && "pn-slider__track-container--disabled",
+                    )}
                 >
-                    <div className="pn-slider__track-container-wrapper-track">
-                        <div
-                            className="pn-slider__track-container-wrapper-track-fill"
-                            style={{ width: `${percent}%` }}
-                        />
-
-                        <div
-                            style={{ left: `${percent}%` }}
-                            className={clsx(
-                                "pn-slider__track-container-wrapper-thumb",
-                                isDragging &&
-                                    "pn-slider__track-container-wrapper-thumb--active",
-                            )}
-                        />
-                    </div>
-
                     <div
-                        className="pn-slider__track-container-wrapper-tooltip"
-                        style={{ left: `${tooltipLeft}px` }}
+                        ref={trackRef}
+                        className="pn-slider__track-container-wrapper"
+                        onMouseDown={handleMouseDown}
                     >
-                        {value}
+                        <div className="pn-slider__track-container-wrapper-track">
+                            <div
+                                className="pn-slider__track-container-wrapper-track-fill"
+                                style={{ width: `${percent}%` }}
+                            />
+
+                            <div
+                                style={{ left: `${percent}%` }}
+                                className={clsx(
+                                    "pn-slider__track-container-wrapper-thumb",
+                                    isDragging &&
+                                        "pn-slider__track-container-wrapper-thumb--active",
+                                )}
+                            />
+                        </div>
+
+                        <div
+                            className="pn-slider__track-container-wrapper-tooltip"
+                            style={{ left: `${tooltipLeft}px` }}
+                        >
+                            {value}
+                        </div>
                     </div>
+
+                    {showMark && (
+                        <div className="pn-slider-marks">
+                            {marks.map(({ name, value: markValue }, index) => {
+                                const markLeft = getMarkPosition(markValue);
+                                const isActive = value === markValue;
+                                const isPassed = value >= markValue;
+
+                                return (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            position: "absolute",
+                                            left: `${markLeft}px`,
+                                            transform: "translateX(-50%)",
+                                        }}
+                                        className={clsx(
+                                            "pn-slider-mark",
+                                            isActive &&
+                                                "pn-slider-mark--active",
+                                            isPassed &&
+                                                "pn-slider-mark--passed",
+                                        )}
+                                        onClick={() => {
+                                            setError("");
+                                            !disabled &&
+                                                handleOnchange(
+                                                    markValue,
+                                                    unitValue[0],
+                                                );
+                                        }}
+                                    >
+                                        {name}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
-
-                {showMark && (
-                    <div className="pn-slider-marks">
-                        {marks.map(({ name, value: markValue }, index) => {
-                            const markLeft = getMarkPosition(markValue);
-                            const isActive = value === markValue;
-                            const isPassed = value >= markValue;
-
-                            return (
-                                <div
-                                    key={index}
-                                    style={{
-                                        position: "absolute",
-                                        left: `${markLeft}px`,
-                                        transform: "translateX(-50%)",
-                                    }}
-                                    className={clsx(
-                                        "pn-slider-mark",
-                                        isActive && "pn-slider-mark--active",
-                                        isPassed && "pn-slider-mark--passed",
-                                    )}
-                                    onClick={() => {
-                                        setError("");
-                                        !disabled &&
-                                            handleOnchange(
-                                                markValue,
-                                                unitValue[0],
-                                            );
-                                    }}
-                                >
-                                    {name}
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
-            </div>
+            )}
 
             <div
                 className={clsx(
                     "pn-slider-input-container",
                     unit ? "" : "pn-slider-input-container--no-unit",
+                    onlyInput && "pn-slider-input-container--only-input",
                 )}
             >
                 <input
@@ -213,25 +221,28 @@ const Slider: React.FC<SliderProps> = ({
                     value={inputValue}
                     step={step}
                     disabled={disabled}
-                    className={clsx("pn-slider-input-box")}
+                    className={clsx(
+                        "pn-slider-input-box",
+                        onlyInput && "pn-slider-input-box--only-input",
+                    )}
                     onChange={(e) => {
                         setInputValue(e.target.value);
                         setError("");
                         if (max < Number(e.target.value)) {
                             setError(
-                                __(
+                                `${__(
                                     "Value exceeds maximum",
                                     "ninja-drive",
-                                ),
+                                )} ${max} ${unitValue[0]}`,
                             );
                             return;
                         }
                         if (min > Number(e.target.value)) {
                             setError(
-                                __(
+                                `${__(
                                     "Value is below minimum",
                                     "ninja-drive",
-                                ),
+                                )} ${min} ${unitValue[0]}`,
                             );
                             return;
                         }
@@ -245,6 +256,7 @@ const Slider: React.FC<SliderProps> = ({
                     <SelectBox
                         size={size === "small" ? "small" : "medium"}
                         borderStyle="none"
+                        background={onlyInput ? "gray-50" : "white"}
                         options={unitOptions}
                         value={unitValue}
                         placeholder={unitPlaceholder}
@@ -256,7 +268,7 @@ const Slider: React.FC<SliderProps> = ({
                 )}
             </div>
 
-            {reset && (
+            {reset && !onlyInput && (
                 <Button
                     variant="error"
                     size={size === "small" ? "small" : "medium"}
@@ -265,6 +277,17 @@ const Slider: React.FC<SliderProps> = ({
                 >
                     {__("Reset", "ninja-drive")}
                 </Button>
+            )}
+
+            {reset && onlyInput && (
+                <IconButton
+                    variant="gray"
+                    color="gray-600"
+                    name="mop"
+                    size={size === "small" ? "small" : "medium"}
+                    onClick={handleReset}
+                    disabled={disabled}
+                />
             )}
 
             {error && (

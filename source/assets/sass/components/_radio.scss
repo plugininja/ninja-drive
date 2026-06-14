@@ -1,0 +1,121 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-top-level-wrapper {
+    .pn-radio {
+        display: inline-flex;
+        align-items: center;
+
+        &__ring {
+            position: relative;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            border: 1.5px solid $gray-500;
+            background: $white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition:
+                border-color 0.2s ease,
+                background-color 0.2s ease;
+        }
+
+        &__dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: $primary;
+            transform: scale(0);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        &__check {
+            position: absolute;
+            width: 0.75rem;
+            height: 0.75rem;
+            overflow: visible;
+            opacity: 0;
+
+            path {
+                stroke-dasharray: 20;
+                stroke-dashoffset: 20;
+                transition:
+                    stroke-dashoffset 0.3s cubic-bezier(0.65, 0, 0.35, 1),
+                    opacity 0.1s ease;
+            }
+        }
+
+        &--dot {
+            .pn-radio__ring--active {
+                border-color: $primary;
+
+                .pn-radio__dot {
+                    transform: scale(1);
+                }
+            }
+
+            .pn-radio__ring--loading {
+                .pn-radio__dot {
+                    animation: pn-radio-dot-loading 1s infinite ease-in-out;
+                }
+            }
+        }
+
+        &--check {
+            .pn-radio__ring--active {
+                border-color: $primary;
+                background-color: $primary;
+
+                .pn-radio__check {
+                    opacity: 1;
+
+                    path {
+                        stroke-dashoffset: 0;
+                    }
+                }
+            }
+
+            .pn-radio__ring--loading {
+                .pn-radio__check {
+                    opacity: 1;
+
+                    path {
+                        animation: pn-radio-check-loading 1s infinite
+                            ease-in-out;
+                    }
+                }
+            }
+        }
+
+        &--disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+    }
+}
+
+@keyframes pn-radio-dot-loading {
+    0%,
+    100% {
+        transform: scale(0.4);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes pn-radio-check-loading {
+    0%,
+    100% {
+        stroke-dashoffset: 20;
+        opacity: 0.4;
+    }
+    50% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}

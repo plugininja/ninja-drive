@@ -1,5 +1,5 @@
 export type TBreadcrumb = {
-    fileKey: string;
+    file_key: string;
     name: string;
 };
 

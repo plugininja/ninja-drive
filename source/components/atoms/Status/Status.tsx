@@ -1,11 +1,12 @@
 import type { StatusConfig, StatusProps } from "./Status.type";
-import { toBoolean } from "~/utils/functions";
 import InlineStack from "~/components/molecules/InlineStack";
+import { BackgroundColor, TextColor } from "~/types/styles";
 import Tooltip from "~/components/atoms/Tooltip";
-import Icon from "~/components/atoms/Icon";
 import Card from "~/components/molecules/Card";
-import clsx from "clsx";
+import { toBoolean } from "~/utils/functions";
+import Icon from "~/components/atoms/Icon";
 import { __ } from "@wordpress/i18n";
+import clsx from "clsx";
 
 const Status = ({
     id,
@@ -25,9 +26,10 @@ const Status = ({
     size = "medium",
     widthFull = true,
     ignore = false,
+    overlay = true,
     children,
 }: StatusProps) => {
-    const allowFeature = isPro ? toBoolean(pnpnd.isPro) : true;
+    const allowFeature = isPro ? toBoolean(pnpnd.is_pro) : true;
 
     const statusConfig: StatusConfig[] = [
         {
@@ -64,7 +66,7 @@ const Status = ({
         },
         {
             key: "beta",
-            variant: "primary-light",
+            variant: "secondary",
             title: __("Beta Feature", "ninja-drive"),
             icon: "running_with_errors",
             iconColor: "primary",
@@ -186,7 +188,7 @@ const Status = ({
                             padding={5}
                             rounded="sm"
                             borderStyle="none"
-                            background={variant}
+                            background={variant as BackgroundColor}
                             className={clsx(
                                 "pn-status__items-item",
                                 `pn-status__items-item--${size}`,
@@ -201,7 +203,7 @@ const Status = ({
             <div
                 className={clsx(
                     "pn-status__content",
-                    !allowFeature || isComingSoon
+                    overlay && (!allowFeature || isComingSoon)
                         ? "pn-status__content--disabled"
                         : "",
                 )}
@@ -222,6 +224,39 @@ const Status = ({
                 {children}
             </div>
         </div>
+    );
+};
+
+Status.Pro = ({
+    title,
+    color = "primary",
+}: {
+    title?: string;
+    color?: TextColor;
+}) => {
+    if (toBoolean(pnpnd?.is_pro)) {
+        return null;
+    }
+
+    return (
+        <Tooltip
+            title={
+                title ||
+                __(
+                    "This feature is only available in the pro version",
+                    "ninja-drive",
+                )
+            }
+            arrow
+            wrap="no-wrap"
+            style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            <Icon name="crown" color={color} fontSize="xl" />
+        </Tooltip>
     );
 };
 

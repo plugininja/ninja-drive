@@ -1,21 +1,32 @@
+import { completeStep, useOnboardingStep } from "~/hooks/useOnboardingStep";
+import MainLayout from "~/components/templates/MainLayout/MainLayout";
+import FilesViews from "~/components/organisms/FilesViews/FilesViews";
+import { isAudio, isFolder, isImage, isVideo } from "~/utils/file";
+import FileInfo from "~/components/organisms/FilesViews/FileInfo";
+import PageContainer from "~/components/molecules/PageContainer";
+import Uploader from "~/components/organisms/Uploader/Uploader";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import StepContent from "~/components/onboarding/StepContent";
+import Description from "~/components/molecules/Description";
+import InlineStack from "~/components/molecules/InlineStack";
+import BlockStack from "~/components/molecules/BlockStack";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "@wordpress/element";
 import { useFileActions } from "~/hooks/useFileActions";
-import PageContainer from "~/components/molecules/PageContainer";
 import { checkSelectionFiles } from "~/utils/helpers";
 import { File, FileTypes } from "~/types/file.types";
-import FilesViews from "~/components/organisms/FilesViews/FilesViews";
+import Checkbox from "~/components/atoms/Checkbox";
 import { MENU_KEYS, MenuKey } from "~/types/Types";
 import SelectedFileList from "./SelectedFileList";
-import InlineStack from "~/components/molecules/InlineStack";
+import Divider from "~/components/atoms/Divider";
 import { ModuleKey } from "~/types/widget.types";
-import FileInfo from "~/components/organisms/FilesViews/FileInfo";
 import { useGallery } from "~/hooks/useGallery";
-import MainLayout from "~/components/templates/MainLayout/MainLayout";
-import { useFiles } from "~/hooks/useFiles";
 import Card from "~/components/molecules/Card";
-import { isAudio, isFolder, isVideo } from "~/utils/file";
+import Button from "~/components/atoms/Button";
+import { toBoolean } from "~/utils/functions";
+import { useFiles } from "~/hooks/useFiles";
+import Text from "~/components/atoms/Text";
+import { __ } from "@wordpress/i18n";
 import { TLayout } from "~/types/ui";
 import FileSidebar from "./Sidebar";
 import FileTopbar from "./Topbar";
@@ -25,19 +36,16 @@ import {
     selectThumbnail,
     updateEditData,
 } from "~/store/features/widgetBuilderSlice";
-import SettingsField from "~/components/molecules/SettingsField";
-import Switcher from "~/components/atoms/Switcher";
-import Uploader from "~/components/organisms/Uploader/Uploader";
 
 const defaultFileTypes: Record<ModuleKey, FileTypes[]> = {
     gallery: ["image", "folder"],
-    "file-browser": ["all"],
-    "file-uploader": ["folder"],
-    "embed-documents": ["folder", "archive", "document"],
-    "file-list": ["all"],
-    "media-player": ["folder", "video", "audio"],
-    "search-box": ["all"],
-    "slider-carousel": ["folder", "image"],
+    file_browser: ["all"],
+    file_uploader: ["folder"],
+    embed_documents: ["folder", "archive", "document"],
+    file_list: ["all"],
+    media_player: ["folder", "video", "audio"],
+    search_box: ["all"],
+    slider_carousel: ["folder", "image"],
 };
 
 const Source = () => {
@@ -45,22 +53,24 @@ const Source = () => {
         null,
     );
     const [showUploader, setShowUploader] = useState(false);
+
     const [layout, setLayout] = useState<TLayout>("grid");
 
-    const { editData } = useAppSelector((state) => state?.widgetBuilder);
+    const { edit_data } = useAppSelector((state) => state?.widget_builder);
 
-    const selectedFiles = editData?.data?.source?.selectedFiles || [];
+    const selected_files = edit_data?.data?.source?.selected_files || [];
 
     const navigate = useNavigate();
+
     const dispatch = useAppDispatch();
 
-    const { menuKey, widgetId } = useParams<{
+    const { menuKey, widget_id } = useParams<{
         menuKey?: MenuKey;
-        widgetId?: string;
+        widget_id?: string;
         widgetMenu?: string;
     }>();
 
-    const types = defaultFileTypes[editData?.type as ModuleKey];
+    const types = defaultFileTypes[edit_data?.type as ModuleKey];
 
     const {
         files,
@@ -68,7 +78,7 @@ const Source = () => {
         openFolder,
         loading,
         loadMoreRef,
-        hasMore,
+        has_more,
         loadingMore,
         refresh,
         isError,
@@ -76,9 +86,11 @@ const Source = () => {
         setQueryArgs,
     } = useFiles("my-drive", !types, types);
 
-    const { activeFolder, order, orderBy } = queryArgs;
+    const { active_folder, order, order_by } = queryArgs;
 
     const { viewFile } = useGallery(files);
+
+    const { isNextStep, completedSteps } = useOnboardingStep();
 
     const {
         activeFile,
@@ -94,37 +106,38 @@ const Source = () => {
     } = useFileActions();
 
     useEffect(() => {
-        if (activeFolder && MENU_KEYS?.includes(activeFolder as MenuKey)) {
-            navigate(`/widget-builder/${widgetId}/source/${activeFolder}`);
+        if (active_folder && MENU_KEYS?.includes(active_folder as MenuKey)) {
+            navigate(`/widget-builder/${widget_id}/source/${active_folder}`);
         }
-    }, [activeFolder]);
+    }, [active_folder]);
 
     useEffect(() => {
         if (
             menuKey &&
             breadcrumbs?.length &&
-            !breadcrumbs?.some((b) => b?.fileKey === menuKey)
+            !breadcrumbs?.some((b) => b?.file_key === menuKey)
         ) {
             openFolder(menuKey);
         }
     }, [menuKey]);
 
     const handleSelectFile = (newSelectedFiles: File | File[]) => {
-        if (activeFolder === "home") return;
-        if (selectedActionKey && editData?.type === "media-player") {
+        if (active_folder === "home") return;
+        if (selectedActionKey && edit_data?.type === "media_player") {
             if (Array.isArray(newSelectedFiles)) {
                 return;
             }
 
+            if (!isImage(newSelectedFiles?.extension || "")) return;
             dispatch(
                 selectThumbnail({
-                    fileKey: selectedActionKey,
+                    file_key: selectedActionKey,
                     thumbnail: newSelectedFiles,
                 }),
             );
             return;
         }
-        if (editData?.type === "file-uploader") {
+        if (edit_data?.type === "file_uploader") {
             if (!Array.isArray(newSelectedFiles)) {
                 dispatch(selectFileKeys([newSelectedFiles]));
             }
@@ -132,16 +145,20 @@ const Source = () => {
         }
         const _newSelectedFiles = checkSelectionFiles(
             newSelectedFiles,
-            selectedFiles,
+            selected_files,
         );
         dispatch(selectFileKeys(_newSelectedFiles));
+
+        if (toBoolean(pnpnd?.onboarding)) {
+            completeStep(2);
+        }
     };
 
     const handleDoubleClick = (file: File) => {
         if (isFolder(file?.extension || "")) {
-            openFolder(file?.fileKey);
+            openFolder(file?.file_key);
         } else {
-            viewFile(file?.fileKey);
+            viewFile(file?.file_key);
         }
     };
 
@@ -157,10 +174,28 @@ const Source = () => {
         }
     };
 
+    const handlePrivateFolder = () => {
+        if (!edit_data) return;
+
+        dispatch(
+            updateEditData({
+                key: "data",
+                value: {
+                    ...edit_data?.data,
+                    source: {
+                        ...edit_data?.data?.source,
+                        private_folder:
+                            !edit_data?.data?.source?.private_folder,
+                    },
+                },
+            }),
+        );
+    };
+
     const handleContextMenuClick = (actionId: string, file: File) => {
         switch (actionId) {
             case "preview":
-                viewFile(file.fileKey);
+                viewFile(file.file_key);
                 break;
             case "open":
                 openGoogleDrive(file);
@@ -177,28 +212,28 @@ const Source = () => {
             case "copy":
                 copy({
                     file,
-                    widgetId: "",
-                    activeFolderKey: activeFolder,
+                    widget_id: "",
+                    active_folder_key: active_folder,
                     breadcrumbs,
                 });
                 break;
             case "move":
                 move({
                     file,
-                    widgetId: "",
-                    activeFolderKey: activeFolder,
+                    widget_id: "",
+                    active_folder_key: active_folder,
                     breadcrumbs,
                 });
                 break;
             case "rename":
-                rename(file, activeFolder);
+                rename(file, active_folder);
                 break;
             case "delete":
-                const fileKeys =
-                    selectedFiles.length > 0
-                        ? selectedFiles.map((file) => file?.fileKey)
-                        : [file?.fileKey];
-                deleteFile(fileKeys, activeFolder);
+                const file_keys =
+                    selected_files.length > 0
+                        ? selected_files.map((file) => file?.file_key)
+                        : [file?.file_key];
+                deleteFile(file_keys, active_folder);
                 break;
             default:
                 break;
@@ -206,13 +241,13 @@ const Source = () => {
     };
 
     const _selectedFiles = !selectedActionKey
-        ? selectedFiles
-        : selectedFiles
+        ? selected_files
+        : selected_files
               .filter(
                   (file) =>
-                      (isVideo(file?.mimeType) || isAudio(file?.mimeType)) &&
-                      file?.thumbnailData &&
-                      file?.fileKey === selectedActionKey,
+                      (isVideo(file?.mime_type) || isAudio(file?.mime_type)) &&
+                      file?.thumbnail_data &&
+                      file?.file_key === selectedActionKey,
               )
               .map((file) => file);
 
@@ -223,8 +258,8 @@ const Source = () => {
             shadow
             data={{
                 minFileSize: 0,
-                maxFileSize: pnpnd.isPro ? 5 : 0,
-                activeFolder: activeFolder,
+                maxFileSize: pnpnd.is_pro ? 5 : 0,
+                activeFolder: active_folder,
                 onFileUpload: () => {},
                 setIsUploading: setShowUploader,
                 uploadImmediately: true,
@@ -236,144 +271,189 @@ const Source = () => {
 
     return (
         <PageContainer
-            widget
-            title="Select Folders and Files"
-            description="Select folders and files to include in the widget."
+            nodeTitle={
+                <InlineStack gap={10}>
+                    <Text as="h2" weight="medium" size="lg">
+                        {__("Select Folders and Files", "ninja-drive")}
+                    </Text>
+
+                    {toBoolean(pnpnd?.onboarding) && isNextStep(2) && (
+                        <StepContent
+                            title={__("Select files to show", "ninja-drive")}
+                            description={__(
+                                "Click it to create a new widget Click it to create a new widget Click it to create.",
+                                "ninja-drive",
+                            )}
+                            content={
+                                <InlineStack
+                                    align="between"
+                                    gap={10}
+                                    style={{
+                                        marginTop: "7px",
+                                    }}
+                                >
+                                    <Text color="gray-300" size="sm">
+                                        {completedSteps?.length + 1}{" "}
+                                        {__("of", "ninja-drive")} 8
+                                    </Text>
+
+                                    <Button
+                                        variant="primary"
+                                        size="extrasmall"
+                                        onClick={() => completeStep(2)}
+                                    >
+                                        Done
+                                    </Button>
+                                </InlineStack>
+                            }
+                            position="bottom-left"
+                            arrowPosition="top-left"
+                        />
+                    )}
+                </InlineStack>
+            }
             docLink={DOCS?.MODULE_BUILDER?.sources?.link}
         >
+            <Card background="white" border="gray-200">
 
-            <InlineStack blockAlign="start" gap={20} wrap={false}>
-                <Card
-                    style={{
-                        position: "sticky",
-                        top: 0,
-                        height: "80vh",
-                    }}
-                    background="white"
-                    padding={0}
-                >
-                    <MainLayout
+                <InlineStack blockAlign="start" gap={20} wrap={false}>
+                    <Card
                         style={{
-                            borderRadius: "12px",
+                            position: "sticky",
+                            top: 0,
+                            height: "80vh",
                         }}
-                        className="pnpnd-widget-builder-layout"
+                        background="white"
+                        padding={0}
                     >
-                        <FileSidebar
-                            border={false}
-                            className="pnpnd-widget-file-sidebar"
-                            activeFolder={activeFolder}
-                            sorting={{ order, orderBy }}
-                            loading={loading}
-                            openFolder={openFolder}
-                        />
-
-                        <MainLayout.ContentWrapper>
-                            <FileTopbar
-                                style={{
-                                    borderRadius: "0 12px 0 0",
-                                }}
-                                activeFolder={activeFolder}
-                                queryArgs={queryArgs}
-                                expandSearch={setQueryArgs}
-                                refresh={refresh}
+                        <MainLayout
+                            style={{
+                                borderRadius: "12px",
+                            }}
+                            className="pnpnd-widget-builder-layout"
+                        >
+                            <FileSidebar
+                                border={false}
+                                className="pnpnd-widget-file-sidebar"
+                                activeFolder={active_folder}
+                                sorting={{ order, order_by }}
                                 loading={loading}
+                                openFolder={openFolder}
                             />
 
-                            <MainLayout.Content
+                            <MainLayout.ContentWrapper
                                 style={{
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: "20px",
+                                    overflow: "hidden",
                                 }}
                             >
-                                <FilesViews
-                                    onFileClick={handleSelectFile}
-                                    onFileDoubleClick={handleDoubleClick}
-                                    isFileSelecting={true}
-                                    setIsFileSelecting={() => {}}
-                                    layout={layout}
-                                    setLayout={setLayout}
-                                    files={files}
-                                    activeFolder={activeFolder}
-                                    breadcrumbs={breadcrumbs}
-                                    openFolder={openFolder}
-                                    activeFile={activeFile}
-                                    setActiveFile={viewDetails}
-                                    selectedFiles={_selectedFiles}
-                                    setSelectedFiles={handleSelectFile}
-                                    filesStatus={{
-                                        loading,
-                                        loadingMore,
-                                        hasMore,
+                                <MainLayout.Content
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "flex-start",
+                                        gap: "20px",
+                                        borderRadius: "12px",
+                                        padding: "0px 20px 20px 20px",
                                     }}
-                                    showUploader={showUploader}
-                                    setShowUploader={setShowUploader}
-                                    sorting={{ order, orderBy }}
-                                    setSorting={(value) =>
-                                        setQueryArgs({ ...queryArgs, ...value })
-                                    }
+                                    className="bg-white"
                                 >
-                                    <InlineStack
-                                        align="between"
-                                        gap={10}
-                                        wrap={false}
-                                    >
-                                        <FilesViews.Breadcrumbs />
-
-                                        {pnpnd.currentUser?.can
-                                            ?.manageFileBrowser && (
-                                            <FilesViews.Actions
-                                                isCompact
-                                                createFolder={createFolder}
-                                            />
-                                        )}
-                                    </InlineStack>
-                                    <FilesViews.Header />
-
-                                    <FilesViews.Files
-                                        style={{
-                                            marginTop: "20px",
-                                            paddingBottom: "20px",
+                                    <FilesViews
+                                        onFileClick={handleSelectFile}
+                                        onFileDoubleClick={handleDoubleClick}
+                                        isFileSelecting={true}
+                                        setIsFileSelecting={() => {}}
+                                        layout={layout}
+                                        setLayout={setLayout}
+                                        files={files}
+                                        activeFolder={active_folder}
+                                        breadcrumbs={breadcrumbs}
+                                        openFolder={openFolder}
+                                        activeFile={activeFile}
+                                        setActiveFile={viewDetails}
+                                        selected_files={_selectedFiles}
+                                        setSelectedFiles={handleSelectFile}
+                                        filesStatus={{
+                                            loading,
+                                            loadingMore,
+                                            has_more,
                                         }}
-                                    />
-
-                                    <FilesViews.FileContextMenu
-                                        onMenuClick={handleContextMenuClick}
-                                    />
-
-                                    {hasMore && (
-                                        <div
-                                            ref={loadMoreRef}
+                                        showUploader={showUploader}
+                                        setShowUploader={setShowUploader}
+                                        sorting={{ order, order_by }}
+                                        setSorting={(value) =>
+                                            setQueryArgs({
+                                                ...queryArgs,
+                                                ...value,
+                                            })
+                                        }
+                                    >
+                                        <FileTopbar
                                             style={{
-                                                height: "20px",
-                                                marginTop: "-20px",
+                                                position: "sticky",
+                                                top: 0,
+                                            }}
+                                            activeFolder={active_folder}
+                                            queryArgs={queryArgs}
+                                            expandSearch={setQueryArgs}
+                                            createFolder={createFolder}
+                                            refresh={refresh}
+                                            loading={loading}
+                                        >
+                                            <FilesViews.Breadcrumbs />
+                                        </FileTopbar>
+
+                                        <FilesViews.Header
+                                            background="primary-extralight"
+                                            marginTop={5}
+                                        />
+
+                                        <FilesViews.Files
+                                            style={{
+                                                marginTop: "20px",
+                                                paddingBottom: "100px",
                                             }}
                                         />
+
+                                        <FilesViews.FileContextMenu
+                                            onMenuClick={handleContextMenuClick}
+                                        />
+
+                                        {has_more && (
+                                            <div
+                                                ref={loadMoreRef}
+                                                style={{
+                                                    height: "20px",
+                                                    marginTop: "-20px",
+                                                }}
+                                            />
+                                        )}
+                                    </FilesViews>
+
+                                    {activeFile && (
+                                        <FileInfo
+                                            activeFile={activeFile}
+                                            onClose={() =>
+                                                viewDetails(undefined)
+                                            }
+                                        />
                                     )}
-                                </FilesViews>
+                                </MainLayout.Content>
+                            </MainLayout.ContentWrapper>
+                        </MainLayout>
+                    </Card>
 
-                                {activeFile && (
-                                    <FileInfo
-                                        activeFile={activeFile}
-                                        onClose={() => viewDetails(undefined)}
-                                    />
-                                )}
-                                {showUploader && uploader}
-                            </MainLayout.Content>
-                        </MainLayout.ContentWrapper>
-                    </MainLayout>
-                </Card>
+                    <SelectedFileList
+                        widgetType={edit_data?.type}
+                        selected_files={selected_files}
+                        setSelectedFiles={(newSelectedFiles) =>
+                            dispatch(selectFileKeys(newSelectedFiles))
+                        }
+                        selectedActionKey={selectedActionKey || ""}
+                        setSelectedActionKey={handleSelectAction}
+                    />
+                </InlineStack>
 
-                <SelectedFileList
-                    widgetType={editData?.type}
-                    selectedFiles={selectedFiles}
-                    setSelectedFiles={(newSelectedFiles) =>
-                        dispatch(selectFileKeys(newSelectedFiles))
-                    }
-                    selectedActionKey={selectedActionKey || ""}
-                    setSelectedActionKey={handleSelectAction}
-                />
-            </InlineStack>
+                {showUploader && uploader}
+            </Card>
         </PageContainer>
     );
 };

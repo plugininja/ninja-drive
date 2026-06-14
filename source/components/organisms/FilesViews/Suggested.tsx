@@ -1,18 +1,18 @@
 import { useContextMenu } from "~/components/molecules/ContextMenu";
-import { useRef, useState, useEffect } from "@wordpress/element";
-import { useLocalStorage } from "~/hooks/useLocalStorage";
 import SkeletonLoader from "~/components/molecules/SkeletonLoader";
-import { formatFileSize } from "~/utils/functions";
+import { useRef, useState, useEffect } from "@wordpress/element";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
+import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { useGallery } from "~/hooks/useGallery";
+import Card from "~/components/molecules/Card";
 import { useFilesContext } from "./FilesViews";
+import { formatFileSize } from "~/utils/file";
+import Text from "~/components/atoms/Text";
+import Icon from "~/components/atoms/Icon";
 import { File } from "~/types/file.types";
 import { isFolder } from "~/utils/file";
 import { __ } from "@wordpress/i18n";
-import Card from "~/components/molecules/Card";
-import Icon from "~/components/atoms/Icon";
-import Text from "~/components/atoms/Text";
 import Thumbnail from "./Thumbnail";
 
 const Suggested = ({
@@ -35,9 +35,9 @@ const Suggested = ({
 
     const handleFileClick = (file: File) => {
         if (isFolder(file?.extension || "")) {
-            openFolder(file.fileKey);
+            openFolder(file.file_key);
         } else {
-            viewFile(file.fileKey);
+            viewFile(file.file_key);
         }
     };
 
@@ -80,10 +80,7 @@ const Suggested = ({
             <InlineStack gap={10} align="between">
                 <InlineStack gap={8} style={{ height: "25px" }}>
                     <Text size="sm">
-                        {__(
-                            "Suggested from my engagement",
-                            "ninja-drive",
-                        )}
+                        {__("Suggested from my engagement", "ninja-drive")}
                     </Text>
 
                     <Icon

@@ -1,18 +1,19 @@
+import SettingsField from "~/components/molecules/SettingsField";
 import { selectSettings } from "~/store/features/settingSlice";
 import { useCustomAlert } from "~/components/molecules/Alert";
-import useSaveSettings from "~/hooks/useSaveSettings";
-import SettingsField from "~/components/molecules/SettingsField";
 import BlockStack from "~/components/molecules/BlockStack";
-import { useAppSelector } from "~/store/hooks";
-import { useState } from "@wordpress/element";
 import GridStack from "~/components/molecules/GridStack";
-import { googleIcon } from "~/assets/icons";
-import useDevice from "~/hooks/useDevice";
+import useSaveSettings from "~/hooks/useSaveSettings";
+import { useAppSelector } from "~/store/hooks";
 import Button from "~/components/atoms/Button";
+import { useState } from "@wordpress/element";
 import Input from "~/components/atoms/Input";
+import { googleIcon } from "~/utils/icons";
+import Icon from "~/components/atoms/Icon";
+import Text from "~/components/atoms/Text";
+import useDevice from "~/hooks/useDevice";
 import useAuth from "~/hooks/useAuth";
 import { __ } from "@wordpress/i18n";
-import Text from "~/components/atoms/Text";
 import DOCS from "~/utils/docs";
 
 const Form = ({ login = false }: { login?: boolean }) => {
@@ -23,7 +24,8 @@ const Form = ({ login = false }: { login?: boolean }) => {
 
     const device = useDevice();
 
-    const { appClientId, appClientSecret, redirectUri } = data?.accounts || {};
+    const { app_client_id, app_client_secret, redirect_uri } =
+        data?.accounts || {};
 
     const [iDError, setIDError] = useState<string | null>(null);
     const [secretError, setSecretError] = useState<string | null>(null);
@@ -37,10 +39,10 @@ const Form = ({ login = false }: { login?: boolean }) => {
             /^[0-9]+-[a-zA-Z0-9]+\.apps\.googleusercontent\.com$/;
         const secretKeyRegex = /^GOCSPX-[\w-]{20,}$/;
 
-        if (!appClientId?.trim()) {
+        if (!app_client_id?.trim()) {
             setIDError(__("Client ID is required.", "ninja-drive"));
             valid = false;
-        } else if (!clientIdRegex.test(appClientId?.trim())) {
+        } else if (!clientIdRegex.test(app_client_id?.trim())) {
             setIDError(__("Invalid Client ID format.", "ninja-drive"));
             valid = false;
         } else {
@@ -49,14 +51,14 @@ const Form = ({ login = false }: { login?: boolean }) => {
 
         if (!valid) return valid;
 
-        if (appClientSecret?.includes("*")) {
+        if (app_client_secret?.includes("*")) {
             return true;
         }
 
-        if (!appClientSecret?.trim()) {
+        if (!app_client_secret?.trim()) {
             setSecretError(__("Secret Key is required.", "ninja-drive"));
             valid = false;
-        } else if (!secretKeyRegex.test(appClientSecret?.trim())) {
+        } else if (!secretKeyRegex.test(app_client_secret?.trim())) {
             setSecretError(__("Invalid Secret Key format.", "ninja-drive"));
             valid = false;
         } else {
@@ -71,7 +73,7 @@ const Form = ({ login = false }: { login?: boolean }) => {
     };
 
     const handleCopy = () => {
-        if (!redirectUri) {
+        if (!redirect_uri) {
             showAlert({
                 position: "top-center",
                 toast: true,
@@ -84,7 +86,7 @@ const Form = ({ login = false }: { login?: boolean }) => {
             return;
         }
 
-        navigator.clipboard.writeText(redirectUri).then(() => {
+        navigator.clipboard.writeText(redirect_uri).then(() => {
             showAlert({
                 toast: true,
                 type: "success",
@@ -98,13 +100,20 @@ const Form = ({ login = false }: { login?: boolean }) => {
 
     const handleSignIn = () => {
         if (!validateFields()) return;
-        handleAddNewAccount("", appClientId, appClientSecret, false, "manual");
+        handleAddNewAccount(
+            "",
+            app_client_id,
+            app_client_secret,
+            false,
+            "manual",
+        );
     };
 
     return (
         <SettingsField
-            background={login ? "white" : "primary-extralight"}
-            borderStyle={login ? "none" : "dashed"}
+            gap={login ? 20 : 10}
+            background={login ? "white" : "gray-50"}
+            borderStyle={login ? "none" : "solid"}
             style={{
                 height: login
                     ? device === "mobile"
@@ -121,28 +130,6 @@ const Form = ({ login = false }: { login?: boolean }) => {
                     : "12px",
             }}
         >
-            {/* {!login && (
-                <Note type="warning">
-                    <Note.Bullet>
-                        <Note.Text>
-                            Using your own Google App is optional. For an easy
-                            setup you can use the default App of the plugin. If
-                            you decide to create your own Google App, please
-                            enter your App Client ID & Secret Key below.
-                        </Note.Text>
-                    </Note.Bullet>
-
-                    <Note.Bullet>
-                        <Note.Text>
-                            Visit{" "}
-                            <Note.Link url={DOCS.SETTINGS.account.appCreate}>
-                                Documentation
-                            </Note.Link>{" "}
-                            to learn how to create a Google App.
-                        </Note.Text>
-                    </Note.Bullet>
-                </Note>
-            )} */}
             {login && (
                 <>
                     <Text size="2xl" weight="semibold" align="center">
@@ -189,15 +176,17 @@ const Form = ({ login = false }: { login?: boolean }) => {
             )}
             <GridStack columns={login ? 2 : 3} gap={20}>
                 <Input
-                    id="appClientId"
+                    id="app_client_id"
+                    inputTextColor="gray-600"
                     label={__("App Client ID", "ninja-drive")}
+                    labelColor={login ? "black" : "gray-600"}
                     labelFontSize={login ? "xs" : "sm"}
                     placeholder={__("App Client ID", "ninja-drive")}
-                    size="small"
+                    rounded="md"
                     required
-                    value={appClientId || ""}
+                    value={app_client_id || ""}
                     onChange={(value) =>
-                        saveAccounts("appClientId", String(value))
+                        saveAccounts("app_client_id", String(value))
                     }
                     onBlur={submit}
                     error={!!iDError}
@@ -205,27 +194,33 @@ const Form = ({ login = false }: { login?: boolean }) => {
                 />
 
                 <Input
-                    id="appClientSecret"
+                    id="app_client_secret"
+                    inputTextColor="gray-600"
                     label={__("App Secret Key", "ninja-drive")}
+                    labelColor={login ? "black" : "gray-600"}
                     labelFontSize={login ? "xs" : "sm"}
                     placeholder={__("App Secret Key", "ninja-drive")}
-                    size="medium"
+                    rounded="md"
                     required
-                    value={appClientSecret || ""}
+                    value={app_client_secret || ""}
                     onChange={(value) =>
-                        saveAccounts("appClientSecret", String(value))
+                        saveAccounts("app_client_secret", String(value))
                     }
                     onBlur={submit}
                     error={!!secretError}
                     errorText={secretError || ""}
                 />
+
                 {!login && (
                     <Input
-                        id="redirectUri"
+                        id="redirect_uri"
+                        inputTextColor="gray-600"
                         label={__("Redirect URI", "ninja-drive")}
+                        labelColor="gray-600"
                         labelFontSize={login ? "xs" : "sm"}
-                        value={redirectUri || ""}
-                        size="medium"
+                        suffix={<Icon name="content_copy" color="primary" />}
+                        value={redirect_uri || ""}
+                        rounded="md"
                         readOnly
                         style={{
                             cursor: "pointer",
@@ -239,10 +234,10 @@ const Form = ({ login = false }: { login?: boolean }) => {
             </GridStack>
             {login && (
                 <Input
-                    id="redirectUri"
+                    id="redirect_uri"
                     label={__("Redirect URI", "ninja-drive")}
                     labelFontSize={login ? "xs" : "sm"}
-                    value={redirectUri || ""}
+                    value={redirect_uri || ""}
                     size="medium"
                     readOnly
                     style={{
@@ -255,7 +250,7 @@ const Form = ({ login = false }: { login?: boolean }) => {
                 />
             )}{" "}
             {!login && (
-                <Text size="xs">
+                <Text color="gray-500" size="xs">
                     {__("Visit", "ninja-drive")}{" "}
                     <Text
                         size="xs"
@@ -265,12 +260,7 @@ const Form = ({ login = false }: { login?: boolean }) => {
                             textDecoration: "underline",
                             cursor: "pointer",
                         }}
-                        onClick={() =>
-                            window.open(
-                                DOCS.SETTINGS.account.appCreate,
-                                "_blank",
-                            )
-                        }
+                        onClick={() => window.open(DOCS.googleApp, "_blank")}
                     >
                         {__("Documentation", "ninja-drive")}
                     </Text>{" "}

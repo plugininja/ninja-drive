@@ -1,13 +1,13 @@
 import Notifications from "~/components/organisms/Notifications/Notifications";
+import SearchBox from "~/components/organisms/SearchBox/SearchBox";
 import { useEffect, useState } from "@wordpress/element";
 import { TQueryArgs, useFiles } from "~/hooks/useFiles";
 import Accounts from "~/components/molecules/Accounts";
-import SearchBox from "~/components/organisms/SearchBox/SearchBox";
-import Button from "~/components/atoms/Button";
 import Topbar from "~/components/molecules/Topbar";
+import Button from "~/components/atoms/Button";
+import { toBoolean } from "~/utils/functions";
 import Icon from "~/components/atoms/Icon";
 import clsx from "clsx";
-import { toBoolean } from "~/utils/functions";
 
 const FileTopbar = ({
     refresh,
@@ -19,7 +19,7 @@ const FileTopbar = ({
 }: {
     refresh: () => void;
     activeFolder: string;
-    openFolder: (fileKey: string) => void;
+    openFolder: (file_key: string) => void;
     queryArgs: TQueryArgs;
     expandSearch: (queryArgs: React.SetStateAction<TQueryArgs>) => void;
     loading: boolean;
@@ -28,10 +28,9 @@ const FileTopbar = ({
     const {
         files,
         loading: isSearchLoading,
-        totalCount,
         queryArgs: searchQueryArgs,
         setQueryArgs: setSearchQueryArgs,
-    } = useFiles("my-drive");
+    } = useFiles(activeFolder);
 
     useEffect(() => {
         if (isCompact) {
@@ -50,7 +49,6 @@ const FileTopbar = ({
                 files: files,
                 loading: isSearchLoading,
                 openFolder: openFolder,
-                totalCount: totalCount,
             }}
         />
     );
@@ -67,13 +65,23 @@ const FileTopbar = ({
         </Button>
     );
 
-    const notifications = <Notifications skip={loading} />;
+    const notifications = pnpnd?.current_user?.can?.has_full_access && (
+        <Notifications skip={loading} />
+    );
 
     const profile = <Accounts />;
+
     const rightContents = [refreshButton, notifications, profile];
-    if (toBoolean(pnpnd.isPro) && !pnpnd?.currentUser?.can?.hasFullAccess) {
+
+    if (
+        toBoolean(pnpnd.is_pro) &&
+        !pnpnd?.current_user?.can?.has_full_access &&
+        !pnpnd?.current_user?.can?.accounts_connect &&
+        !pnpnd?.current_user?.can?.accounts_manage
+    ) {
         rightContents.pop();
     }
+
     return <Topbar leftContents={[search]} rightContents={rightContents} />;
 };
 

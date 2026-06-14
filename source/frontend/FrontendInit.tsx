@@ -1,8 +1,8 @@
 import { CustomAlertProvider } from "~/components/molecules/Alert";
+import { useMemo, type ReactNode } from "@wordpress/element";
 import { widgetApi } from "../store/api/widgetApi";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import type { ReactNode } from "react";
 
 const createFrontendStore = () =>
     configureStore({
@@ -14,8 +14,17 @@ const createFrontendStore = () =>
             getDefaultMiddleware().concat(widgetApi.middleware),
     });
 
+let cachedStore: ReturnType<typeof createFrontendStore> | null = null;
+
+const getFrontendStore = () => {
+    if (!cachedStore) {
+        cachedStore = createFrontendStore();
+    }
+    return cachedStore;
+};
+
 const FrontendInit = ({ children }: { children: ReactNode }) => {
-    const frontEndStore = createFrontendStore();
+    const frontEndStore = useMemo(() => getFrontendStore(), []);
 
     return (
         <Provider store={frontEndStore}>

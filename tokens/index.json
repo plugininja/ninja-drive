@@ -74,35 +74,44 @@
                 "dark": "#ffffff"
             },
             "gray-50": {
-                "value": "#f9fafb"
+                "light": "#f9fafb",
+                "dark": "#151515"
             },
             "gray-100": {
-                "value": "#f3f4f6"
+                "light": "#f3f4f6",
+                "dark": "#1e1e1e"
             },
             "gray-200": {
-                "value": "#e5e7eb"
+                "light": "#e5e7eb",
+                "dark": "#2c2c2c"
             },
             "gray-300": {
-                "value": "#d1d5db"
+                "light": "#d1d5db",
+                "dark": "#3a3a3a"
             },
             "gray-400": {
-                "value": "#9ca3af"
+                "light": "#9ca3af",
+                "dark": "#4a4a4a"
             },
             "gray-500": {
-                "value": "#979797"
+                "light": "#979797",
+                "dark": "#5a5a5a"
             },
             "gray-600": {
-                "value": "#6b7280"
+                "light": "#6b7280",
+                "dark": "#6b6b6b"
             },
             "gray-700": {
-                "value": "#374151"
+                "light": "#374151",
+                "dark": "#7c7c7c"
             },
             "gray-800": {
                 "light": "#243247",
-                "dark": "#f6fcfa"
+                "dark": "#8c8c8c"
             },
             "gray-900": {
-                "value": "#111827"
+                "light": "#111827",
+                "dark": "#9c9c9c"
             },
             "shadow-sm": {
                 "value": "#7587804d"

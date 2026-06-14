@@ -3,7 +3,7 @@
 .pnpnd-top-level-wrapper {
     .pn-accordion {
         background: $white;
-        border: 1px solid $primary-light;
+        border: 1px solid $gray-200;
 
         &__header {
             padding: 1rem;
@@ -50,7 +50,7 @@
                     left: 1rem;
                     right: 1rem;
                     height: 1px;
-                    background-color: $secondary;
+                    background-color: $gray-200;
                 }
             }
         }

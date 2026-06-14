@@ -1,26 +1,26 @@
-import { __ } from "@wordpress/i18n";
 import { useCustomAlert } from "~/components/molecules/Alert";
 import InlineStack from "~/components/molecules/InlineStack";
 import IconButton from "~/components/molecules/IconButton";
+import Card from "~/components/molecules/Card";
 import { useState } from "@wordpress/element";
+import Icon from "~/components/atoms/Icon";
+import Text from "~/components/atoms/Text";
 import { File } from "~/types/file.types";
 import { TBreadcrumb } from "~/types/ui";
 import FolderTree from "../FolderTree";
-import Text from "~/components/atoms/Text";
-import Card from "~/components/molecules/Card";
-import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 
 export function CopyMoveContent({
     mode,
     file,
-    widgetId,
+    widget_id,
     breadcrumbs,
     onSelect,
     onClose,
 }: {
     mode: "copy" | "move";
     file: File;
-    widgetId?: string;
+    widget_id?: string;
     breadcrumbs?: TBreadcrumb[];
     onSelect: (folderKey: string) => void;
     onClose?: () => void;
@@ -31,7 +31,8 @@ export function CopyMoveContent({
     }>();
 
     const currentLocation =
-        breadcrumbs?.[breadcrumbs.length - 1]?.name || __("My Drive", "ninja-drive");
+        breadcrumbs?.[breadcrumbs.length - 1]?.name ||
+        __("My Drive", "ninja-drive");
 
     const handleSelect = (folderKey: string, name: string) => {
         setSelectedFolder({ folderKey, name: name || "" });
@@ -59,7 +60,9 @@ export function CopyMoveContent({
 
             <InlineStack align="center" gap={8}>
                 <Text size="xl" weight="medium">
-                    {mode === "copy" ? __("Copy", "ninja-drive") : __("Move", "ninja-drive")}
+                    {mode === "copy"
+                        ? __("Copy", "ninja-drive")
+                        : __("Move", "ninja-drive")}
                 </Text>
 
                 <Text size="xl" weight="medium">
@@ -89,11 +92,14 @@ export function CopyMoveContent({
                 </Card>
 
                 <Text color="gray-500" size="sm">
-                    {mode === "copy" ? __("Copying to:", "ninja-drive") : __("Moving to:", "ninja-drive")}
+                    {mode === "copy"
+                        ? __("Copying to:", "ninja-drive")
+                        : __("Moving to:", "ninja-drive")}
                 </Text>
 
                 <Text size="sm">
-                    {selectedFolder?.name || __("Select a folder", "ninja-drive")}
+                    {selectedFolder?.name ||
+                        __("Select a folder", "ninja-drive")}
                 </Text>
             </InlineStack>
 
@@ -114,7 +120,7 @@ export function CopyMoveContent({
                     openFolder={() => {}}
                     onSelect={handleSelect}
                     activeFolder={selectedFolder?.folderKey || ""}
-                    widgetId={widgetId}
+                    widget_id={widget_id}
                     skip={false}
                     modal
                     hideFade
@@ -129,13 +135,13 @@ export function useCopyMoveAlert() {
     const openCopyMove = ({
         mode,
         file,
-        widgetId,
+        widget_id,
         breadcrumbs,
         onConfirm,
     }: {
         mode: "copy" | "move";
         file: File;
-        widgetId?: string;
+        widget_id?: string;
         breadcrumbs?: TBreadcrumb[];
         onConfirm: (folderKey: string) => Promise<void>;
     }) => {
@@ -146,7 +152,10 @@ export function useCopyMoveAlert() {
             type: "info",
             showIcon: false,
             showConfirmButton: true,
-            confirmButtonText: mode === "copy" ? __("Copy", "ninja-drive") : __("Move", "ninja-drive"),
+            confirmButtonText:
+                mode === "copy"
+                    ? __("Copy", "ninja-drive")
+                    : __("Move", "ninja-drive"),
             showCancelButton: true,
             allowOutsideClick: false,
             allowEscapeKey: false,
@@ -156,7 +165,7 @@ export function useCopyMoveAlert() {
                 <CopyMoveContent
                     mode={mode}
                     file={file}
-                    widgetId={widgetId}
+                    widget_id={widget_id}
                     breadcrumbs={breadcrumbs}
                     onSelect={(folderKey) => {
                         selectedFolderRef.current = folderKey;

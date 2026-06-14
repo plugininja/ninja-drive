@@ -1,4 +1,7 @@
+import InlineStack from "~/components/molecules/InlineStack";
 import { CheckboxProps } from "./Checkbox.type";
+import Status from "../Status";
+import Text from "../Text";
 import clsx from "clsx";
 
 const Checkbox = ({
@@ -16,6 +19,7 @@ const Checkbox = ({
     readonly,
     visible = true,
     disabled = false,
+    isPro = false,
     onChange,
 }: CheckboxProps) => {
     const classes = clsx(
@@ -23,7 +27,6 @@ const Checkbox = ({
         `pn-checkbox--${size}`,
         `rounded-${rounded}`,
         disabled && "pn-checkbox--disabled",
-        className,
     );
 
     const handleCheck = (checked: boolean) => {
@@ -34,29 +37,68 @@ const Checkbox = ({
     if (!visible) return null;
 
     return (
-        <label
-            title={title}
-            style={style}
-            className={classes}
-            onClick={(e) => e.stopPropagation()}
+        <InlineStack
+            gap={10}
+            style={{
+                opacity: disabled ? "0.6" : "1",
+            }}
+            className={className}
         >
-            <input
-                id={id}
-                type="checkbox"
-                name={name}
-                checked={checked}
-                defaultChecked={defaultChecked}
-                className="pn-checkbox__input"
+            <label
+                title={title}
+                style={style}
+                className={classes}
                 onClick={(e) => e.stopPropagation()}
-                onChange={(e) => onChange && handleCheck(e.target.checked)}
-                tabIndex={tabIndex}
-                aria-label={ariaLabel}
-                aria-readonly={readonly || undefined}
-                readOnly={readonly}
-                disabled={disabled}
-            />
-            <span className="pn-checkbox__box" />
-        </label>
+            >
+                <input
+                    id={id}
+                    type="checkbox"
+                    name={name}
+                    checked={checked}
+                    defaultChecked={defaultChecked}
+                    className="pn-checkbox__input"
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => onChange && handleCheck(e.target.checked)}
+                    tabIndex={tabIndex}
+                    aria-label={ariaLabel}
+                    aria-readonly={readonly || undefined}
+                    readOnly={readonly}
+                    disabled={disabled}
+                />
+                <span className="pn-checkbox__box" />
+            </label>
+
+            {title &&
+                (isPro ? (
+                    <InlineStack gap={10} wrap={false}>
+                        <Text
+                            color="gray-700"
+                            size="sm"
+                            style={{
+                                cursor: "pointer",
+                                userSelect: "none",
+                            }}
+                            onClick={() => handleCheck(!checked)}
+                        >
+                            {title}
+                        </Text>
+
+                        <Status.Pro />
+                    </InlineStack>
+                ) : (
+                    <Text
+                        color="gray-700"
+                        size="sm"
+                        style={{
+                            cursor: "pointer",
+                            userSelect: "none",
+                        }}
+                        onClick={() => handleCheck(!checked)}
+                    >
+                        {title}
+                    </Text>
+                ))}
+        </InlineStack>
     );
 };
 

@@ -1,27 +1,31 @@
-import { useCallback, useEffect, useRef, useState } from "@wordpress/element";
-import { useLazySyncAccountStatusQuery } from "~/store/api/authApi";
+import { useUpgradePopUp } from "~/components/organisms/modals/UpgradeModal";
+import { useSyncStatusPolling } from "~/hooks/useSyncStatusPolling";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { selectAuth } from "~/store/features/authSlice";
+import { useEffect } from "@wordpress/element";
 import { useLocation } from "react-router-dom";
 import { useAppSelector } from "~/store/hooks";
 import Cron from "~/components/molecules/Cron";
 import { CSS_VAR } from "~/types/tokens";
+import { __ } from "@wordpress/i18n";
 
 const MainRoute = ({ children }: { children: React.ReactNode }) => {
     const [theme] = useLocalStorage<"light" | "dark" | "system">(
         "pnpnd-theme-status",
-        "system",
+        "light",
     );
     const { pathname } = useLocation();
-    const { loginAccounts } = useAppSelector(selectAuth);
-    const [syncAccountStatus] = useLazySyncAccountStatusQuery();
 
-    const [isSyncing, setIsSyncing] = useState(false);
-    const isPollingRef = useRef(false);
-    const currentAccountKeyRef = useRef<string | null>(null);
+    const { showUpgradePopUp } = useUpgradePopUp();
+    const { login_accounts } = useAppSelector(selectAuth);
+    const { isSyncing, startPolling, stopPolling } = useSyncStatusPolling();
 
     useEffect(() => {
-        const color = pnpnd.settings?.appearance?.primaryColor ?? "#0061fe";
+        window.PNPNDHelper.openUpgradePopUp = showUpgradePopUp;
+    }, [showUpgradePopUp]);
+
+    useEffect(() => {
+        const color = pnpnd.settings?.appearance?.primary_color ?? "#0061fe";
         const root = document.documentElement;
 
         const applyTheme = () => {
@@ -77,55 +81,11 @@ const MainRoute = ({ children }: { children: React.ReactNode }) => {
         }
     }, [pathname]);
 
-    const stopPolling = useCallback(() => {
-        setIsSyncing(false);
-        currentAccountKeyRef.current = null;
-        isPollingRef.current = false;
-    }, []);
-
-    const pollSyncStatus = useCallback(
-        async (accountKey: string) => {
-            if (isPollingRef.current) return;
-            if (
-                currentAccountKeyRef.current &&
-                currentAccountKeyRef.current !== accountKey
-            ) {
-                stopPolling();
-            }
-
-            isPollingRef.current = true;
-            currentAccountKeyRef.current = accountKey;
-            setIsSyncing(true);
-
-            try {
-                const response = await syncAccountStatus({
-                    accountKey,
-                }).unwrap();
-
-                const isStillSyncing = response?.data?.syncing === true;
-
-                if (isStillSyncing) {
-                    setTimeout(() => {
-                        pollSyncStatus(accountKey);
-                    }, 5000);
-                } else {
-                    stopPolling();
-                }
-            } catch (error) {
-                stopPolling();
-            } finally {
-                isPollingRef.current = false;
-            }
-        },
-        [syncAccountStatus, stopPolling],
-    );
-
     useEffect(() => {
-        const handleSyncEvent = (e: CustomEvent<{ accountKey: string }>) => {
-            const { accountKey } = e.detail;
-            if (accountKey) {
-                stopPolling();
-                pollSyncStatus(accountKey);
+        const handleSyncEvent = (e: CustomEvent<{ account_key: string }>) => {
+            const { account_key } = e.detail;
+            if (account_key) {
+                startPolling(account_key);
             }
         };
 
@@ -141,23 +101,33 @@ const MainRoute = ({ children }: { children: React.ReactNode }) => {
             );
             stopPolling();
         };
-    }, [pollSyncStatus, stopPolling]);
+    }, [startPolling, stopPolling]);
 
     useEffect(() => {
-        if (!loginAccounts || isSyncing) return;
+        if (isSyncing) return;
 
-        const syncingAccount = loginAccounts.find(
+        const syncingAccount = login_accounts?.find(
             (acc: any) => acc?.syncing === true,
         );
 
-        if (syncingAccount?.accountKey) {
-            pollSyncStatus(syncingAccount?.accountKey);
+        if (syncingAccount?.account_key) {
+            startPolling(syncingAccount.account_key);
         }
-    }, [loginAccounts, pollSyncStatus, isSyncing]);
+    }, [login_accounts]);
 
     useEffect(() => {
         return () => stopPolling();
     }, [stopPolling]);
+
+    useEffect(() => {
+        const element = document.querySelector(".ninja-drive.upgrade-mode");
+
+        if (element) {
+            element.parentElement?.classList.add(
+                "ninja-drive-upgrade-mode-button",
+            );
+        }
+    }, []);
 
     useEffect(() => {
         document.getElementById("dolly")?.style.setProperty("display", "none");
@@ -202,7 +172,17 @@ const MainRoute = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <>
-            {isSyncing && <Cron loading={isSyncing} />}
+            {isSyncing && (
+                <Cron
+                    loading={isSyncing}
+                    title={__("Syncing in progress", "ninja-drive")}
+                    description={__(
+                        "All cache files are currently syncing in the background and may take some time. You can continue with other tasks or browse freely in the meantime.",
+                        "ninja-drive",
+                    )}
+                />
+            )}
+
             {children}
         </>
     );

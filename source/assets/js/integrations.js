@@ -1,4 +1,5 @@
 import "../../widget-builder/widget-builder.js";
+import { __ } from "@wordpress/i18n";
 
 (function ($) {
     "use strict";
@@ -6,6 +7,38 @@ import "../../widget-builder/widget-builder.js";
     const rerenderModules = () => {
         if (window.pnpndRenderModules) {
             window.pnpndRenderModules();
+        }
+    };
+
+    /**
+     * Fetch a widget over REST so builder previews can render widgets whose
+     * data was not printed on page load (existing widgets picked from a
+     * select dropdown). Shared by the form-builder integrations.
+     */
+    const fetchWidgetData = async (widgetId) => {
+        const restUrl = window.pnpnd?.rest_url;
+        const nonce = window.pnpnd?.nonce;
+
+        if (!restUrl || !widgetId) {
+            return null;
+        }
+
+        const base = `${restUrl}widget/${widgetId}`;
+        const url = `${base}${base.includes("?") ? "&" : "?"}is_admin=true`;
+
+        try {
+            const response = await fetch(url, {
+                headers: { "X-WP-Nonce": nonce },
+            });
+
+            if (!response.ok) {
+                return null;
+            }
+
+            const json = await response.json();
+            return json?.data?.widget ?? null;
+        } catch (_e) {
+            return null;
         }
     };
 
@@ -43,8 +76,7 @@ import "../../widget-builder/widget-builder.js";
                 if (enabled) {
                     try {
                         instance.init();
-                    } catch (error) {
-                    }
+                    } catch (error) {}
                 }
             });
 
@@ -59,6 +91,28 @@ import "../../widget-builder/widget-builder.js";
         },
     };
 
+    const ClassicEditorIntegration = {
+        name: "classic_editor",
+        priority: 5,
+        _inserter: null,
+
+        isEnabled() {
+            return (
+                window.pnpnd?.settings?.integrations?.active_integrations?.includes(
+                    "classic_editor",
+                ) === true
+            );
+        },
+
+        init() {
+            $(document).ready(() => {
+                this._inserter = new window.PNPNDMediaInserter(
+                    "#pnpnd-media-button",
+                );
+            });
+        },
+    };
+
     const ElementorIntegration = {
         name: "elementor",
         priority: 20,
@@ -66,7 +120,7 @@ import "../../widget-builder/widget-builder.js";
         isEnabled() {
             return (
                 typeof elementor !== "undefined" ||
-                window.pnpnd?.settings?.integrations?.activeIntegrations?.includes(
+                window.pnpnd?.settings?.integrations?.active_integrations?.includes(
                     "elementor",
                 ) === true
             );
@@ -92,8 +146,6 @@ import "../../widget-builder/widget-builder.js";
                         '[data-setting="widget_data"]',
                     );
 
-                    console.dir(widgetDataField);
-
                     if (!widgetDataField.length) {
                         console.error("Widget data field not found");
                         return;
@@ -111,7 +163,11 @@ import "../../widget-builder/widget-builder.js";
                         widgetData?.is_pro === true ||
                         widgetData?.is_pro === "true";
 
-                    if (!window.pnpnd?.isPro && isProWidget) {
+                    const hasProLicense = [true, "true", "1", 1].includes(
+                        window.pnpnd?.is_pro,
+                    );
+
+                    if (!hasProLicense && isProWidget) {
                         if (window.PNPNDHelper?.openUpgradePopUp) {
                             window.PNPNDHelper.openUpgradePopUp();
                         } else {
@@ -127,7 +183,7 @@ import "../../widget-builder/widget-builder.js";
 
             $(document).on(
                 "change",
-                '[data-setting="select_shortcode"]',
+                '[data-setting="select_widget"]',
                 function (e) {
                     const widgetDataField = window.parent.jQuery(
                         '[data-setting="widget_data"]',
@@ -148,7 +204,7 @@ import "../../widget-builder/widget-builder.js";
                     const selectedShortcode = $(this).val();
 
                     widgetData.id = selectedShortcode;
-                    widgetData.type = widgetData.type || "file-browser";
+                    widgetData.type = widgetData.type || "file_browser";
 
                     widgetDataField.val(JSON.stringify(widgetData));
                     widgetDataField.trigger("input");
@@ -195,8 +251,9 @@ import "../../widget-builder/widget-builder.js";
             }
 
             widgetBuilder.openModuleBuilder({
-                id: widgetData.id || "file-browser",
-                type: widgetData.type || "file-browser",
+                root_id: "elementor",
+                id: widgetData.id || "new",
+                type: widgetData.type || "file_browser",
                 integration: "elementor",
                 onSave: (key, data) => {
                     const { id, type } = data;
@@ -309,71 +366,8 @@ import "../../widget-builder/widget-builder.js";
         },
     };
 
-    const ContactForm7Integration = {
-        name: "contactForm7",
-        priority: 15,
-
-        isEnabled() {
-            return (
-                window.pnpnd?.settings?.integrations?.activeIntegrations?.includes(
-                    "contactForm7",
-                ) === true
-            );
-        },
-
-        init() {
-            this.selectFolder();
-        },
-
-        selectFolder() {
-            $(document).off("click", "#pnpnd-form-uploader-config-cf7");
-            $(document).on(
-                "click",
-                "#pnpnd-form-uploader-config-cf7",
-                function (e) {
-                    e.preventDefault();
-
-                    if (
-                        !window.PNPNDHelper ||
-                        typeof window.PNPNDHelper !== "function"
-                    ) {
-                        console.error("Widget builder not available");
-                        return;
-                    }
-
-                    window.PNPNDHelper.openModuleBuilder({
-                        rootId: "tag-generator-panel-google_drive",
-                        id: "file-uploader",
-                        title: "Select Google Drive Folder for File Uploads",
-                        integration: "contactForm7",
-                        onSave: (key, data) => {
-                            const dataField = document.getElementById(
-                                "tag-generator-panel-google_drive-data",
-                            );
-
-                            if (!dataField) {
-                                console.error("Data field not found");
-                                return;
-                            }
-
-                            if (!data || !data.id) {
-                                console.error("Invalid data received");
-                                return;
-                            }
-
-                            dataField.value = data.id;
-                            dataField.dispatchEvent(
-                                new Event("change", { bubbles: true }),
-                            );
-                        },
-                    });
-                },
-            );
-        },
-    };
-
+    IntegrationManager.register("classicEditor", ClassicEditorIntegration);
     IntegrationManager.register("elementor", ElementorIntegration);
-    IntegrationManager.register("contactForm7", ContactForm7Integration);
 
     $(function () {
         IntegrationManager.initAll();

@@ -1,26 +1,26 @@
 import { widgetInit, setIsEdited } from "~/store/features/widgetBuilderSlice";
+import MainLayout from "~/components/templates/MainLayout/MainLayout";
+import Configuration from "./pages/Configuration/Configuration";
 import { ModuleConfig, ModuleKey } from "~/types/widget.types";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import { useCustomAlert } from "~/components/molecules/Alert";
+import BlockStack from "~/components/molecules/BlockStack";
 import { useGetModuleQuery } from "~/store/api/widgetApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCustomAlert } from "~/components/molecules/Alert";
 import { getModuleMenuItems } from "~/constants/widget";
 import { useEffect, useRef } from "@wordpress/element";
-import ModuleSidebar from "./components/ModuleSidebar";
-import ModuleFooter from "./components/ModuleFooter";
-import ModuleTopbar from "./components/ModuleTopbar";
 import ErrorBoundary from "~/components/ErrorBoundary";
-import BlockStack from "~/components/molecules/BlockStack";
-import MainLayout from "~/components/templates/MainLayout/MainLayout";
+import ModuleTopbar from "./components/ModuleTopbar";
 import Loading from "~/components/atoms/Loading";
-import Advanced from "./pages/Advanced";
+import Style from "./pages/Style/Style";
 import Source from "./pages/Source";
-import Filter from "./pages/Filter";
 
 export type TModuleBuilder = {
     style?: React.CSSProperties;
     onSave: (key: "stay" | "close", data: ModuleConfig) => void;
+    onBack?: () => void;
     onNext?: () => void;
+    isFirst?: boolean;
     isLast?: boolean;
     onDismiss?: () => void;
     loading?: boolean;
@@ -33,11 +33,11 @@ const ModuleBuilder = ({
     loading,
     isPopup,
 }: TModuleBuilder) => {
-    const { editData, isEdited, defaultData } = useAppSelector(
-        (state) => state?.widgetBuilder,
+    const { edit_data, is_edited, default_data } = useAppSelector(
+        (state) => state?.widget_builder,
     );
 
-    const { widgetId, widgetMenu } = useParams();
+    const { widget_id, widgetMenu } = useParams();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -47,18 +47,18 @@ const ModuleBuilder = ({
 
     const { data, isFetching, isLoading, isError, error } = useGetModuleQuery(
         {
-            id: widgetId || "new",
-            isAdmin: true,
+            id: widget_id || "new",
+            is_admin: true,
         },
         {
-            skip: !widgetId,
+            skip: !widget_id,
         },
     );
 
     useEffect(() => {
-        if (!editData?.id) return;
+        if (!edit_data?.id) return;
         if (
-            editData?.data?.source?.selectedFiles?.length === 0 &&
+            edit_data?.data?.source?.selected_files?.length === 0 &&
             widgetMenu !== "source"
         ) {
             showAlert({
@@ -69,10 +69,10 @@ const ModuleBuilder = ({
                 timerProgressBar: true,
                 showConfirmButton: false,
             });
-            navigate(`/widget-builder/${widgetId}/source/my-drive`);
+            navigate(`/widget-builder/${widget_id}/source/my-drive`);
             return;
         }
-    }, [editData?.data?.source?.selectedFiles, widgetMenu]);
+    }, [edit_data?.data?.source?.selected_files, widgetMenu]);
 
     useEffect(() => {
         if (isError) {
@@ -91,10 +91,10 @@ const ModuleBuilder = ({
     useEffect(() => {
         dispatch(
             setIsEdited(
-                JSON.stringify(defaultData) !== JSON.stringify(editData),
+                JSON.stringify(default_data) !== JSON.stringify(edit_data),
             ),
         );
-    }, [data, editData]);
+    }, [data, edit_data]);
 
     useEffect(() => {
         if (data) {
@@ -108,16 +108,27 @@ const ModuleBuilder = ({
             e.preventDefault();
             e.returnValue = "";
         };
-        if (isEdited) {
+        if (is_edited) {
             window.addEventListener("beforeunload", handleBeforeUnload);
         }
 
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [isEdited]);
+    }, [is_edited]);
 
-    const menuItems = getModuleMenuItems(editData?.type as ModuleKey);
+    const initialMenuItems = getModuleMenuItems(edit_data?.type as ModuleKey);
+
+    const shouldShowPermission =
+        edit_data?.data?.style?.file_uploader?.upload_preview?.enable;
+
+    const menuItems = initialMenuItems?.filter(
+        (menu) =>
+            edit_data?.type !== "file_uploader" ||
+            menu.key !== "permissions" ||
+            shouldShowPermission,
+    );
+
     const keys = menuItems?.map((option) => option?.key) || [];
     const currentIndex = keys.indexOf(widgetMenu as any);
 
@@ -127,12 +138,12 @@ const ModuleBuilder = ({
     const handleBack = () => {
         if (isFirst) return;
         const prevKey = keys[currentIndex - 1];
-        navigate(`/widget-builder/${widgetId}/${prevKey}`);
+        navigate(`/widget-builder/${widget_id}/${prevKey}`);
     };
 
     const handleNext = () => {
         const nextKey = keys[currentIndex + 1];
-        navigate(`/widget-builder/${widgetId}/${nextKey}`);
+        navigate(`/widget-builder/${widget_id}/${nextKey}`);
     };
 
     if ((isFetching || isLoading) && firstRender?.current)
@@ -144,50 +155,45 @@ const ModuleBuilder = ({
     firstRender.current = false;
 
     const renderModuleMenu = () => {
-        switch (widgetMenu) {
-            case "source":
-                return <Source />;
-            case "filter":
-                return <Filter />;
-            case "advanced":
-                return <Advanced />;
+        const moduleComponents: Record<string, JSX.Element> = {
+            source: <Source />,
+            configuration: <Configuration />,
+            style: <Style />,
+        };
 
-            default:
-                return <Source />;
-        }
+        return moduleComponents[widgetMenu!] || <Source />;
     };
 
-    if (!editData) return null;
+    if (!edit_data) return null;
+
     return (
         <MainLayout>
-            <ModuleSidebar />
-
             <MainLayout.ContentWrapper>
                 <ErrorBoundary>
                     <ModuleTopbar
                         style={{
                             borderRadius: "0 10px 0 0",
                         }}
+                        onBack={handleBack}
                         onDismiss={onDismiss}
                         onSave={onSave}
                         onNext={handleNext}
+                        isFirst={isFirst}
                         isLast={isLast}
                         loading={loading}
                         isPopup={isPopup}
                     />
                 </ErrorBoundary>
 
-                <MainLayout.Content>{renderModuleMenu()}</MainLayout.Content>
-
-                <ModuleFooter
-                    style={{ borderRadius: "0 0 10px 0" }}
-                    onSave={onSave}
-                    onBack={handleBack}
-                    onNext={handleNext}
-                    isFirst={isFirst}
-                    isLast={isLast}
-                    loading={loading}
-                />
+                <MainLayout.Content
+                    style={{
+                        padding: isPopup
+                            ? "20px 20px 215px 20px"
+                            : "20px 20px 100px 20px",
+                    }}
+                >
+                    {renderModuleMenu()}
+                </MainLayout.Content>
             </MainLayout.ContentWrapper>
         </MainLayout>
     );

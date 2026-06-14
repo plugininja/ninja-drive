@@ -17,7 +17,7 @@ const fileSelectorSlice = createSlice({
     reducers: {
         setMenuKey: (
             state,
-            action: PayloadAction<FileSelectorState["menuKey"]>
+            action: PayloadAction<FileSelectorState["menuKey"]>,
         ) => {
             state.menuKey = action.payload;
         },

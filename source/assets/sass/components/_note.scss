@@ -3,13 +3,12 @@
 .pnpnd-top-level-wrapper {
     .pn-note {
         padding: 0.625rem 0.9375rem;
-        border-radius: 0.625rem;
         font-size: 0.75rem;
         line-height: 1.5;
         list-style: none;
 
         &--info {
-            border-left: 5px solid $primary;
+            border: 1px solid $secondary;
             background-color: hsl(from var(--pnpnd-primary) h s l / 10%);
             a {
                 color: $primary;
@@ -17,7 +16,7 @@
         }
 
         &--warning {
-            border-left: 5px solid $warning;
+            border: 1px solid $warning-100;
             background-color: hsl(from var(--pnpnd-warning) h s l / 12%);
             a {
                 color: $warning;
@@ -25,7 +24,7 @@
         }
 
         &--error {
-            border-left: 5px solid $error;
+            border: 1px solid $error-100;
             background-color: hsl(from var(--pnpnd-error) h s l / 16%);
             a {
                 color: $error;

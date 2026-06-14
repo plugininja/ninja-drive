@@ -1,10 +1,8 @@
-import FolderOpenIcon from "~/assets/icons/FolderOpenIcon";
-import FolderIcon from "~/assets/icons/FolderIcon";
 import InlineStack from "~/components/molecules/InlineStack";
 import { FolderTree } from "~/types/file.types";
-import { MutableRefObject } from "react";
 import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import { MutableRefObject } from "react";
 import clsx from "clsx";
 
 export function TreeNodes({
@@ -27,17 +25,17 @@ export function TreeNodes({
     return (
         <div style={{ paddingLeft: level > 0 ? 12 : 0 }}>
             {nodes.map((node) => {
-                const isExpanded = expandedKeys.includes(node.fileKey);
+                const isExpanded = expandedKeys.includes(node.file_key);
                 const hasChildren = node.children && node.children?.length > 0;
-                const isActive = node.fileKey === activeFolderKey;
-                const isLoadingNode = loadingKeys.includes(node.fileKey);
+                const isActive = node.file_key === activeFolderKey;
+                const isLoadingNode = loadingKeys.includes(node.file_key);
 
                 return (
                     <div
-                        key={node.fileKey}
+                        key={node.file_key}
                         className="pnpnd-folder-tree-wrapper"
                         ref={(el) => {
-                            nodeRefs.current[node.fileKey] = el;
+                            nodeRefs.current[node.file_key] = el;
                         }}
                     >
                         <InlineStack
@@ -49,7 +47,7 @@ export function TreeNodes({
                                 isActive && "pnpnd-folder-tree--open",
                             )}
                             onClick={() =>
-                                onExpand(node.fileKey, "open", node.name)
+                                onExpand(node.file_key, "open", node.name)
                             }
                         >
                             <div
@@ -61,7 +59,11 @@ export function TreeNodes({
                                 )}
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    onExpand(node.fileKey, "expand", node.name);
+                                    onExpand(
+                                        node.file_key,
+                                        "expand",
+                                        node.name,
+                                    );
                                 }}
                             >
                                 {isLoadingNode ? (
@@ -81,11 +83,16 @@ export function TreeNodes({
                             </div>
 
                             <div className="pnpnd-folder-tree__icon">
-                                {isExpanded || isActive ? (
+                                {/* {isExpanded || isActive ? (
                                     <FolderOpenIcon />
                                 ) : (
                                     <FolderIcon />
-                                )}
+                                )} */}
+                                <img
+                                    src={node.icon}
+                                    alt={node.name}
+                                    style={{ width: "24px", height: "24px" }}
+                                />
                             </div>
 
                             <Text

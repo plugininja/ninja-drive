@@ -1,9 +1,9 @@
-import { __ } from "@wordpress/i18n";
-import { ModuleConfig } from "~/types/widget.types";
 import BlockStack from "~/components/molecules/BlockStack";
-import { File } from "~/types/file.types";
+import { ModuleConfig } from "~/types/widget.types";
 import Card from "~/components/molecules/Card";
 import Text from "~/components/atoms/Text";
+import { File } from "~/types/file.types";
+import { __ } from "@wordpress/i18n";
 
 const EmbedDocuments = ({
     data,
@@ -12,8 +12,8 @@ const EmbedDocuments = ({
     data: ModuleConfig;
     files: File[];
 }) => {
-    const { showFileName, width, height, allowPopOut } =
-        data?.data?.advanced?.embedDocuments || {};
+    const { show_file_name, width, height, allow_pop_out } =
+        data?.data?.style?.embed_documents || {};
 
     const getIframeWidth = () => {
         if (width) return `${width?.value}${width?.unit}`;
@@ -25,21 +25,28 @@ const EmbedDocuments = ({
         return "600px";
     };
 
+    const sandbox = ["allow-same-origin", "allow-scripts", "allow-forms"];
+
+    if (allow_pop_out) {
+        sandbox.push("allow-popups");
+    }
+
     return (
         <BlockStack gap={10}>
             {files.map((file) => (
                 <Card
                     padding={0}
-                    key={file.fileKey}
-                    background="transparent"
+                    key={file.file_key}
+                    background="white"
                     borderStyle="none"
+                    style={{ position: "relative" }}
                 >
-                    {showFileName && <Text>{file.name}</Text>}
+                    {show_file_name && <Text>{file.name}</Text>}
 
                     <iframe
                         src={PNPNDHelper.getUrl(
                             "preview",
-                            file.fileKey,
+                            file.file_key,
                             file.name,
                             data?.id,
                             undefined,
@@ -49,14 +56,16 @@ const EmbedDocuments = ({
                         width={getIframeWidth()}
                         height={getIframeHeight()}
                         allow="autoplay"
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                        aria-label={__("To enrich screen reader interactions, please activate Accessibility in Grammarly extension settings", "ninja-drive")}
+                        sandbox={sandbox.join(" ")}
+                        aria-label={__(
+                            "To enrich screen reader interactions, please activate Accessibility in Grammarly extension settings",
+                            "ninja-drive",
+                        )}
                         referrerPolicy="no-referrer"
                         allowFullScreen
                         style={{
-                            pointerEvents: allowPopOut ? "auto" : "none",
                             border: "none",
-                            marginTop: showFileName ? "10px" : "0",
+                            marginTop: show_file_name ? "10px" : "0",
                         }}
                     />
                 </Card>

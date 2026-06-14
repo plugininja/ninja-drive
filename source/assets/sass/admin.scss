@@ -1,6 +1,5 @@
 @use "./utilities/variable" as *;
 @use "./admin/index" as *;
-@forward "./frontend/index";
 
 :root {
     --pnpnd-primary: #1f6cfa;
@@ -255,6 +254,18 @@
             &__button {
                 width: 100%;
             }
+        }
+    }
+
+    .ninja-drive-upgrade-mode-button {
+        background-color: #adff2f;
+
+        span {
+            color: #000000 !important;
+        }
+
+        &:hover {
+            background-color: #adff2f !important;
         }
     }
 }

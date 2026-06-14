@@ -1,32 +1,37 @@
 import { selectSettings, settingsInit } from "~/store/features/settingSlice";
-import { useAppDispatch, useAppSelector } from "~/store/hooks";
-import { useGetModulesQuery } from "~/store/api/widgetApi";
-import { useCustomAlert } from "~/components/molecules/Alert";
-import PageContainer from "~/components/molecules/PageContainer";
-import useSaveSettings from "~/hooks/useSaveSettings";
 import SettingsField from "~/components/molecules/SettingsField";
+import PageContainer from "~/components/molecules/PageContainer";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import { useCustomAlert } from "~/components/molecules/Alert";
+import Description from "~/components/molecules/Description";
 import InlineStack from "~/components/molecules/InlineStack";
-import { useNavigate } from "react-router-dom";
+import { useGetModulesQuery } from "~/store/api/widgetApi";
+import BlockStack from "~/components/molecules/BlockStack";
 import SelectBox from "~/components/molecules/SelectBox";
-import { useState } from "@wordpress/element";
+import useSaveSettings from "~/hooks/useSaveSettings";
 import Switcher from "~/components/atoms/Switcher";
+import Divider from "~/components/atoms/Divider";
 import Button from "~/components/atoms/Button";
+import { useNavigate } from "react-router-dom";
+import { useState } from "@wordpress/element";
+import Text from "~/components/atoms/Text";
+import { CSS_VAR } from "~/types/tokens";
 import { __ } from "@wordpress/i18n";
-import Note from "~/components/molecules/Note";
 import {
     useImportShortcodesMutation,
+    useResetSettingsMutation,
     useUpdateSettingsMutation,
 } from "~/store/api/settingsApi";
-import { CSS_VAR } from "~/types/tokens";
 
 type ExportOptions = "export_all" | "settings" | "shortcode_widgets";
 
 const Tools = () => {
     const [exportedData, setExportedData] =
         useState<ExportOptions>("export_all");
-    const { data, defaultData } = useAppSelector(selectSettings);
+    const { data, default_data } = useAppSelector(selectSettings);
     const { saveTools } = useSaveSettings();
     const [updateSettings] = useUpdateSettingsMutation();
+    const [resetSettings] = useResetSettingsMutation();
 
     const [importShortcodes] = useImportShortcodesMutation();
 
@@ -36,13 +41,13 @@ const Tools = () => {
 
     const dispatch = useAppDispatch();
 
-    const { autoSave } = data?.tools || {};
+    const { auto_save } = data?.tools || {};
 
     const { data: widgetsData } = useGetModulesQuery({
-        orderBy: "name",
+        order_by: "name",
         order: "ASC",
         page: 1,
-        perPage: -1,
+        per_page: -1,
         type: "all",
         search: "",
         status: "all",
@@ -195,7 +200,7 @@ const Tools = () => {
                             text:
                                 error?.data?.message ||
                                 __(
-                                    "Failed to import widget widgets.",
+                                    "Failed to import widget data.",
                                     "ninja-drive",
                                 ),
                             timer: 3000,
@@ -224,19 +229,22 @@ const Tools = () => {
         showAlert({
             type: "error",
             title: __("Reset Settings", "ninja-drive"),
-            text: __("Are you sure you want to reset all settings?", "ninja-drive"),
+            text: __(
+                "Are you sure you want to reset all settings?",
+                "ninja-drive",
+            ),
             showCancelButton: true,
             confirmButtonText: __("Reset", "ninja-drive"),
             onConfirm: async () => {
                 try {
-                    if (!defaultData) return;
+                    if (!default_data) return;
 
-                    const result = await updateSettings(defaultData).unwrap();
+                    const result = await resetSettings().unwrap();
 
                     dispatch(settingsInit(result.data?.settings!));
 
                     const color =
-                        result.data?.settings?.appearance?.primaryColor ||
+                        result.data?.settings?.appearance?.primary_color ||
                         "#1F6CFA";
 
                     const root = document.documentElement;
@@ -248,7 +256,9 @@ const Tools = () => {
                     showAlert({
                         toast: true,
                         type: "success",
-                        text: result?.message || __("Settings reset successfully!", "ninja-drive"),
+                        text:
+                            result?.message ||
+                            __("Settings reset successfully!", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -258,7 +268,8 @@ const Tools = () => {
                         toast: true,
                         type: "error",
                         text:
-                            error?.data?.message || __("Failed to reset settings!", "ninja-drive"),
+                            error?.data?.message ||
+                            __("Failed to reset settings!", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -269,42 +280,44 @@ const Tools = () => {
     };
 
     return (
-        <PageContainer>
-            <input
-                id="pnpnd-import-input"
-                type="file"
-                accept=".json"
-                style={{ display: "none" }}
-                onChange={handleImportData}
-            />
+        <PageContainer compact style={{ margin: "0 auto" }}>
+            <SettingsField>
+                <input
+                    id="pnpnd-import-input"
+                    type="file"
+                    accept=".json"
+                    style={{ display: "none" }}
+                    onChange={handleImportData}
+                />
 
-            <SettingsField
-                description={__("Enable or Disable Auto Save on Settings Page.", "ninja-drive")}
-                action={
+                <BlockStack gap={10}>
                     <Switcher
                         title={__("Enable Auto Save", "ninja-drive")}
-                        checked={autoSave}
-                        onChange={() => saveTools("autoSave", !autoSave)}
+                        titleSize="sm"
+                        checked={auto_save}
+                        onChange={() => saveTools("auto_save", !auto_save)}
                     />
-                }
-            />
 
-            <SettingsField
-                title={__("Clear Cache Files", "ninja-drive")}
-                description={__("Clear cache files and update cloud file synchronization", "ninja-drive")}
-                secondaryAction={
-                    <Button variant="warning" size="small" startIcon="cached">
-                        {__("Clear Cache", "ninja-drive")}
-                    </Button>
-                }
-            />
+                    <Description
+                        text={__(
+                            "Enable or Disable Auto Save on Settings Page.",
+                            "ninja-drive",
+                        )}
+                    />
+                </BlockStack>
 
-            <SettingsField
-                title={__("Export Data", "ninja-drive")}
-                secondaryAction={
+                <Divider width="100%" height="1px" />
+
+                <BlockStack gap={10}>
                     <InlineStack gap={10}>
+                        <Text color="gray-700" size="sm" weight="medium">
+                            {__("Export Data:", "ninja-drive")}
+                        </Text>
+
                         <SelectBox
                             size="small"
+                            background="gray-50"
+                            color="gray-200"
                             style={{
                                 width: "200px",
                             }}
@@ -318,53 +331,77 @@ const Tools = () => {
                         <Button
                             variant="primary"
                             size="small"
-                            startIcon="output_circle"
+                            startIcon="archive"
                             onClick={handleExportData}
                         >
                             {__("Export", "ninja-drive")}
                         </Button>
                     </InlineStack>
-                }
-            >
-                <Note>
-                    <Note.Normal>
-                        <Note.Title title={__("Note", "ninja-drive")} />
-                        <Note.Text>
-                            {__("Export your settings and widget widgets to backup or transfer to another site.", "ninja-drive")}
-                        </Note.Text>
-                    </Note.Normal>
-                </Note>
+
+                    <Description
+                        text={__(
+                            "Export your settings and shortcode widgets to back up or transfer to another site.",
+                            "ninja-drive",
+                        )}
+                    />
+                </BlockStack>
+
+                <BlockStack gap={10}>
+                    <InlineStack gap={10}>
+                        <Text color="gray-700" size="sm" weight="medium">
+                            {__("Import Data", "ninja-drive")}
+                        </Text>
+
+                        <Button
+                            variant="secondary"
+                            size="small"
+                            color="primary"
+                            startIconColor="primary"
+                            startIcon="arrow_circle_up"
+                            style={{
+                                backgroundColor:
+                                    "var(--pnpnd-primary-extralight)",
+                            }}
+                            onClick={handleImport}
+                        >
+                            {__("Import", "ninja-drive")}
+                        </Button>
+                    </InlineStack>
+
+                    <Description
+                        text={__(
+                            "Select the exported JSON file you would like to import. Please note that the import will replace the current data.",
+                            "ninja-drive",
+                        )}
+                    />
+                </BlockStack>
+
+                <Divider width="100%" height="1px" />
+
+                <BlockStack gap={10}>
+                    <InlineStack gap={10}>
+                        <Text color="gray-700" size="sm" weight="medium">
+                            {__("Reset Settings", "ninja-drive")}
+                        </Text>
+
+                        <Button
+                            variant="error"
+                            size="small"
+                            startIcon="reset_settings"
+                            onClick={handleReset}
+                        >
+                            {__("Reset", "ninja-drive")}
+                        </Button>
+                    </InlineStack>
+
+                    <Description
+                        text={__(
+                            "Reset all settings to the default values.",
+                            "ninja-drive",
+                        )}
+                    />
+                </BlockStack>
             </SettingsField>
-
-            <SettingsField
-                title={__("Import Data", "ninja-drive")}
-                description={__("Select the exported JSON file you would like to import. Please note that the import will replace the current data.", "ninja-drive")}
-                secondaryAction={
-                    <Button
-                        variant="primary"
-                        size="small"
-                        startIcon="input_circle"
-                        onClick={handleImport}
-                    >
-                        {__("Import", "ninja-drive")}
-                    </Button>
-                }
-            />
-
-            <SettingsField
-                title={__("Reset Settings", "ninja-drive")}
-                description={__("Reset all settings to the default values.", "ninja-drive")}
-                secondaryAction={
-                    <Button
-                        variant="error"
-                        size="small"
-                        startIcon="autorenew"
-                        onClick={handleReset}
-                    >
-                        {__("Reset", "ninja-drive")}
-                    </Button>
-                }
-            />
         </PageContainer>
     );
 };

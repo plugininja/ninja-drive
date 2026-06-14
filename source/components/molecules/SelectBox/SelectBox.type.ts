@@ -1,4 +1,10 @@
-import { BorderRadius, BorderStyle, Size, TextColor } from "~/types/styles";
+import {
+    BackgroundColor,
+    BorderRadius,
+    BorderStyle,
+    Size,
+    TextColor,
+} from "~/types/styles";
 
 export type Option = {
     name?: string;
@@ -14,6 +20,7 @@ export interface SelectBoxProps {
     gap?: number | string;
     color?: TextColor;
     size?: Size;
+    background?: BackgroundColor;
     borderStyle?: BorderStyle;
     rounded?: BorderRadius;
     multiple?: boolean;
@@ -46,6 +53,7 @@ export interface SelectBoxProps {
 }
 
 export type SelectBoxTriggerProps = {
+    background?: BackgroundColor;
     color: TextColor;
     size: Size;
     borderStyle: BorderStyle;

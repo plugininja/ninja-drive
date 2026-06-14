@@ -1,14 +1,12 @@
-import { Item, Menu, Separator } from "~/components/molecules/ContextMenu";
-import Status from "~/components/atoms/Status";
-import { __ } from "@wordpress/i18n";
+import { Item, Menu } from "~/components/molecules/ContextMenu";
+import BlockStack from "~/components/molecules/BlockStack";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 
 const ModuleContextMenu = ({
     onMenuClick,
-    isPro = false,
 }: {
     onMenuClick: (key: string, id: string, title?: string) => void;
-    isPro?: boolean;
 }) => {
     return (
         <Menu
@@ -20,15 +18,8 @@ const ModuleContextMenu = ({
         >
             {({ props }) =>
                 MODULE_ACTIONS.map(({ key, title, icon, className }, index) => {
-                    const lastItem = index === MODULE_ACTIONS.length - 1;
-
                     return (
-                        <Status
-                            isPro={key === "delete" ? false : isPro}
-                            size="extrasmall"
-                            top={3}
-                            right={3}
-                        >
+                        <BlockStack key={key ?? index}>
                             <Item
                                 className={className || ""}
                                 onClick={() =>
@@ -43,9 +34,7 @@ const ModuleContextMenu = ({
 
                                 {title}
                             </Item>
-
-                            {!lastItem && <Separator />}
-                        </Status>
+                        </BlockStack>
                     );
                 })
             }

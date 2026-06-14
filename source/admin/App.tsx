@@ -1,11 +1,13 @@
-import Dashboard from "~/components/pages/ModuleDashboard/Dashboard";
-import { Navigate, Route, Routes } from "react-router-dom";
-import Builder from "~/components/pages/ModuleBuilder/Builder";
+import UserAccessAdd from "~/components/organisms/UserAccess/UserAccess";
 import FileBrowser from "~/components/pages/FileBrowser/FileBrowser";
-import SettingsRoute from "~/Routes/SettingsRoute";
+import Dashboard from "~/components/pages/ModuleDashboard/Dashboard";
+import UserAccess from "~/components/pages/UserAccess/UserAccess";
+import Builder from "~/components/pages/ModuleBuilder/Builder";
 import Settings from "~/components/pages/Settings/Settings";
-import AuthRoute from "~/Routes/AuthRoute";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "~/components/organisms/Login/Login";
+import SettingsRoute from "~/Routes/SettingsRoute";
+import AuthRoute from "~/Routes/AuthRoute";
 
 const App = () => {
     return (
@@ -56,10 +58,28 @@ const App = () => {
             />
 
             <Route
-                path="/widget-builder/:widgetId/:widgetMenu/:menuKey?"
+                path="/widget-builder/:widget_id/:widgetMenu/:menuKey?"
                 element={
                     <AuthRoute>
                         <Builder />
+                    </AuthRoute>
+                }
+            />
+
+            <Route
+                path="/user-access"
+                element={
+                    <AuthRoute>
+                        <UserAccess />
+                    </AuthRoute>
+                }
+            />
+
+            <Route
+                path="/user-access/:access_id/:accessMenu/:menuKey?"
+                element={
+                    <AuthRoute>
+                        <UserAccessAdd />
                     </AuthRoute>
                 }
             />

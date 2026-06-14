@@ -3,7 +3,7 @@ export interface TNotification {
     title: string;
     description: string;
     htmlContent?: React.ReactNode;
-    createdAt: string;
+    created_at: string;
     type: "success" | "error" | "warning" | "info";
     status: "read" | "unread";
 }

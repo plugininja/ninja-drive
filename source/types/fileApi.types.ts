@@ -1,101 +1,101 @@
-import { File } from "./file.types";
 import { Breadcrumb, OrderBy } from "./Types";
+import { File } from "./file.types";
 
 export interface BaseApiRequest {
-    activeFolderKey?: string;
+    active_folder_key?: string;
 }
 
 export interface GetFilesRequest extends BaseApiRequest {
-    fileKey: string;
+    file_key: string;
     types?: string;
     search?: string;
     refresh?: boolean;
-    orderBy?: OrderBy;
+    order_by?: OrderBy;
     order?: "ASC" | "DESC";
     page?: number;
-    perPage?: number;
+    per_page?: number;
 }
 
 export interface GetFoldersRequest {
-    fileKey: string;
+    file_key: string;
     type?: string;
     from?: string;
 }
 
 export interface GetFileRequest extends BaseApiRequest {
-    fileKey: string;
+    file_key: string;
     from?: "cache" | "server";
 }
 
 export interface CreateFolderRequest extends BaseApiRequest {
-    parentKey: string;
-    folderName: string;
-    widgetId?: string;
+    parent_key: string;
+    folder_name: string;
+    widget_id?: string;
 }
 
 export interface MoveFolderRequest extends BaseApiRequest {
-    folderId: string;
-    newParentId: string;
+    folder_id: string;
+    new_parent_id: string;
 }
 
 export interface UploadFileRequest extends BaseApiRequest {
-    parentId: string;
+    parent_id: string;
     file: File;
-    fileName?: string;
+    file_name?: string;
 }
 
 export interface DeleteFileRequest extends BaseApiRequest {
-    fileKeys: string[];
+    file_keys: string[];
 }
 
 export interface RenameFileRequest extends BaseApiRequest {
-    fileKey: string;
+    file_key: string;
     name: string;
 }
 
 export interface DownloadLinkRequest extends BaseApiRequest {
-    fileKey: string;
+    file_key: string;
 }
 
 export interface PreviewLinkRequest extends BaseApiRequest {
-    fileKey: string;
+    file_key: string;
 }
 
 export interface CopyMoveFileRequest extends BaseApiRequest {
-    fileKeys: string[];
-    folderKey: string;
+    file_keys: string[];
+    folder_key: string;
 }
 
 export interface UpdateDescriptionRequest extends BaseApiRequest {
-    fileKey: string;
+    file_key: string;
     description: string;
 }
 
 export interface ImportToMLRequest extends BaseApiRequest {
-    fileKey: string;
-    mimeType: string;
+    file_key: string;
+    mime_type: string;
 }
 
 export interface UploadUrlRequest extends BaseApiRequest {
     name: string;
     type: string;
-    folderKey: string;
+    folder_key: string;
     description?: string;
     page_secret?: string;
-    queueIndex?: number;
+    queue_index?: number;
     extension?: string;
     size?: number;
 }
 
 export interface UploadedUrlRequest extends BaseApiRequest {
     id: string;
-    accountKey: string;
-    uploadId: string;
-    folderKey: string;
+    account_key: string;
+    upload_id: string;
+    folder_key: string;
 }
 
 export interface SearchFilesRequest extends BaseApiRequest {
-    folderKey: string;
+    folder_key: string;
     from: string;
     query: string;
     types: string[];
@@ -105,11 +105,11 @@ export interface SearchFilesRequest extends BaseApiRequest {
 export interface GetFilesResponse {
     breadcrumbs: Breadcrumb[];
     files: File[];
-    hasMore: boolean;
-    nextPage: number;
-    totalFiles: number;
-    totalPages: number;
-    currentPage: number;
+    has_more: boolean;
+    next_page: number;
+    total_files: number;
+    total_pages: number;
+    current_page: number;
 }
 
 export interface GetFoldersResponse {
@@ -142,8 +142,8 @@ export interface UploadedResponse {
 }
 
 export interface ShareLinkRequest {
-    fileKey: string;
-    isPasswordProtected?: boolean;
+    file_key: string;
+    is_password_protected?: boolean;
     password?: string;
     lifetime?: number;
 }
@@ -151,13 +151,15 @@ export interface ShareLinkRequest {
 export const isCreateFolderRequest = (obj: any): obj is CreateFolderRequest => {
     return (
         obj &&
-        typeof obj.parentKey === "string" &&
-        typeof obj.folderName === "string"
+        typeof obj.parent_key === "string" &&
+        typeof obj.folder_name === "string"
     );
 };
 
 export const isGetFilesRequest = (obj: any): obj is GetFilesRequest => {
-    return obj && obj.activeFolder && typeof obj.activeFolder.key === "string";
+    return (
+        obj && obj.active_folder && typeof obj.active_folder.key === "string"
+    );
 };
 
 export const API_ENDPOINTS = {

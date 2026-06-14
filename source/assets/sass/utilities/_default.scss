@@ -13,8 +13,8 @@ body:has(.pnpnd-top-level-wrapper) {
 
 .pnpnd-top-level-wrapper {
     font-family: $primary-font;
-    background: white;
-
+    background: $white;
+    
     * {
         box-sizing: border-box;
         scroll-behavior: smooth;

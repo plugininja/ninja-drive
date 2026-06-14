@@ -14,7 +14,7 @@ const SettingsRoute = ({ children }: { children: React.ReactNode }) => {
     const { data: settingsData } = useGetSettingsQuery();
 
     const dispatch = useAppDispatch();
-    
+
     const settings = settingsData?.data?.current;
 
     const defaultSettings = settingsData?.data?.defaults;

@@ -32,7 +32,6 @@ export interface SidebarItemProps {
     title: React.ReactNode;
     icon?: string;
     iconUrl?: string;
-    svgIcon?: React.FC<React.SVGProps<SVGSVGElement>>;
     iconSize?: FontSize;
     active?: boolean;
     background?: BackgroundColor;
@@ -53,6 +52,7 @@ export interface SidebarItemProps {
 export interface SidebarDropdownItemProps {
     childrenItems?: SidebarItemProps[];
     activeKey?: string;
+    disabled?: boolean;
 }
 
 export interface SidebarBottomProps {

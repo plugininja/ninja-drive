@@ -5,11 +5,10 @@ export const SETTING_MENUS: {
     key:
         | "accounts"
         | "advanced"
-        | "appearance"
-        | "user-access"
         | "integrations"
         | "media-library"
         | "synchronization"
+        | "appearance"
         | "tools";
     title: string;
     icon: string;
@@ -26,14 +25,14 @@ export const SETTING_MENUS: {
         icon: "category_search",
     },
     {
-        key: "appearance",
-        title: __("Appearance", "ninja-drive"),
-        icon: "format_paint",
-    },
-    {
         key: "integrations",
         title: __("Integrations", "ninja-drive"),
         icon: "automation",
+    },
+    {
+        key: "appearance",
+        title: __("Appearance", "ninja-drive"),
+        icon: "format_paint",
     },
     {
         key: "tools",

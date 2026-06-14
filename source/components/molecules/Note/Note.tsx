@@ -13,13 +13,19 @@ const Note = ({
     style,
     className = "",
     type = "info",
+    rounded = "md",
     children,
 }: NoteProps) => {
     return (
         <ul
             id={id}
             style={style}
-            className={clsx("pn-note", `pn-note--${type}`, className)}
+            className={clsx(
+                "pn-note",
+                `pn-note--${type}`,
+                `rounded-${rounded}`,
+                className,
+            )}
         >
             {children}
         </ul>

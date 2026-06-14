@@ -1,10 +1,9 @@
 import { ColorBoxProps, ColorPickerComponent } from "./ColorPicker.type";
 import { useEffect, useState } from "@wordpress/element";
-import { StatusProps } from "~/components/atoms/Status/Status.type";
-import { __ } from "@wordpress/i18n";
 import Button from "~/components/atoms/Button";
-import Status from "~/components/atoms/Status";
+import { toBoolean } from "~/utils/functions";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 
 const formatColorInput = (value: string): string => {
@@ -85,27 +84,26 @@ const ColorPicker: ColorPickerComponent = ({
     const isValid = isValidCssColor(formatColorInput(inputValue));
 
     const handleColorBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (statusProps?.isPro && !toBoolean(pnpnd?.is_pro)) return;
+
         setColor(e.target.value);
         setInputValue(e.target.value);
         onChange?.(e.target.value);
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (statusProps?.isPro && !toBoolean(pnpnd?.is_pro)) return;
+
         setInputValue(e.target.value);
     };
 
     const handleClear = () => {
+        if (statusProps?.isPro && !toBoolean(pnpnd?.is_pro)) return;
+
         setColor(resolvedDefault);
         setInputValue(resolvedDefault);
         onChange?.(resolvedDefault);
     };
-
-    const finalStatusProps = {
-        ...statusProps,
-        size: "extrasmall",
-        placement: "right-center",
-        right: 8,
-    } as StatusProps;
 
     return (
         <div
@@ -114,27 +112,25 @@ const ColorPicker: ColorPickerComponent = ({
             className={clsx("pn-color-picker", className)}
         >
             <div className="pn-color-picker__wrapper">
-                <Status {...finalStatusProps}>
-                    <input
-                        type="color"
-                        value={color}
-                        onChange={handleColorBoxChange}
-                        className="pn-color-picker__wrapper-picker-box"
-                    />
-                </Status>
+                <input
+                    type="color"
+                    value={color}
+                    onChange={handleColorBoxChange}
+                    className="pn-color-picker__wrapper-picker-box"
+                    disabled={statusProps?.isPro && !toBoolean(pnpnd?.is_pro)}
+                />
 
-                <Status {...finalStatusProps}>
-                    <input
-                        type="text"
-                        value={inputValue}
-                        onChange={handleInputChange}
-                        placeholder="Type Color"
-                        className={clsx(
-                            "pn-color-picker__wrapper-picker-input",
-                            !isValid && "error",
-                        )}
-                    />
-                </Status>
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder={__("Type color", "ninja-drive")}
+                    className={clsx(
+                        "pn-color-picker__wrapper-picker-input",
+                        !isValid && "error",
+                    )}
+                    disabled={statusProps?.isPro && !toBoolean(pnpnd?.is_pro)}
+                />
             </div>
 
         </div>

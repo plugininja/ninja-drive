@@ -1,9 +1,11 @@
 import BlockStack from "~/components/molecules/BlockStack";
-import { __ } from "@wordpress/i18n";
+import Checkbox from "~/components/atoms/Checkbox";
+import Card from "~/components/molecules/Card";
 import Button from "~/components/atoms/Button";
 import Input from "~/components/atoms/Input";
 import Text from "~/components/atoms/Text";
-import Card from "~/components/molecules/Card";
+import InlineStack from "../InlineStack";
+import { __ } from "@wordpress/i18n";
 import {
     createContext,
     useContext,
@@ -239,7 +241,7 @@ const AutoFillInput = ({
 
                 {separators && (
                     <BlockStack gap={10}>
-                        <Text weight="medium">
+                        <Text color="gray-700" size="sm" weight="medium">
                             {__("Separators", "ninja-drive")}
                         </Text>
 
@@ -292,6 +294,8 @@ AutoFillInput.Options = ({
     title,
     background = "white",
     options,
+    checkbox = false,
+    flex = false,
     disabled = false,
 }: AutoFillIInputOptionsCard) => {
     const { max, setAllOptions, selectedOptions, toggleOption } =
@@ -310,6 +314,36 @@ AutoFillInput.Options = ({
             return [...prev, ...newOptions];
         });
     }, [options]);
+
+    const Component = flex ? InlineStack : BlockStack;
+
+    if (checkbox) {
+        return (
+            <Component gap={15} blockAlign="center">
+                {title && title}
+
+                {options?.map((option, index) => {
+                    const isSelected = selectedOptions?.some(
+                        (o) => o?.value === option?.value,
+                    );
+
+                    const isDisabled =
+                        disabled ||
+                        (!isSelected && selectedOptions?.length >= max);
+                    return (
+                        <Checkbox
+                            key={option?.value ?? index}
+                            title={option?.name}
+                            rounded="sm"
+                            checked={isSelected}
+                            onChange={() => toggleOption(option)}
+                            disabled={isDisabled}
+                        />
+                    );
+                })}
+            </Component>
+        );
+    }
 
     return (
         <BlockStack gap={10}>
@@ -338,10 +372,10 @@ AutoFillInput.Options = ({
 
                     return (
                         <Button
-                            key={index}
+                            key={option?.value ?? index}
                             variant={isSelected ? "primary" : "outlined"}
                             size="small"
-                            textTransform="transformnone"
+                            textTransform="none"
                             disabled={isDisabled}
                             onClick={() => {
                                 if (isDisabled) return;

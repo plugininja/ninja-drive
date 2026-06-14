@@ -16,7 +16,7 @@ const useQueryParams = () => {
         (key: string): string | null => {
             return queryParams.get(key);
         },
-        [queryParams]
+        [queryParams],
     );
 
     const getAllQueryParams = useCallback(() => {
@@ -41,7 +41,7 @@ const useQueryParams = () => {
 
             navigate(`?${updatedParams.toString()}`, { replace: true });
         },
-        [location.search, navigate]
+        [location.search, navigate],
     );
 
     return {

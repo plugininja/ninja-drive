@@ -1,5 +1,5 @@
 @use "../utilities/variable" as *;
-@forward "./file-browser.scss";
+
 .pnpnd-top-level-wrapper {
     .pnpnd-uploader {
         width: 500px;
@@ -11,10 +11,10 @@
         border: 1px solid $primary-light;
         border-radius: $rounded-lg;
         overflow: hidden;
-        &.drag-active {
+        &.pnpnd-drag-active {
             border: 1px solid $primary;
         }
-        .close {
+        .pnpnd-close {
             z-index: 1;
         }
     }
@@ -33,11 +33,11 @@
         right: 1em;
         padding: var(--pnpnd-space-5);
 
-        &.fixed {
+        &.pnpnd-fixed {
             position: fixed;
         }
 
-        .start-upload {
+        .pnpnd-start-upload {
             margin: 10px auto;
             display: flex;
             align-items: center;
@@ -118,7 +118,7 @@
                             min-width: 20px;
                             height: 20px;
                         }
-                        .play_arrow {
+                        .pnpnd-play_arrow {
                             padding-left: 3px;
                         }
 
@@ -158,13 +158,13 @@
                             }
                         }
 
-                        .percentage {
+                        .pnpnd-percentage {
                             margin: 0 7px;
                         }
                     }
                 }
 
-                .file-info-progress {
+                .pnpnd-file-info-progress {
                     width: 100%;
                     height: 8px;
                     border-radius: 0.25em;
@@ -179,7 +179,7 @@
                     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
                 }
 
-                .file-info-progress-bar {
+                .pnpnd-file-info-progress-bar {
                     width: var(--percentage);
                     height: 100%;
                     background-color: $primary;
@@ -209,22 +209,22 @@
                     }
                 }
 
-                .file-info-error {
+                .pnpnd-file-info-error {
                     color: $error;
                     width: 100%;
                     font-size: 0.75em;
                     margin-top: 3px;
                 }
 
-                &.uploaded {
-                    .file-info {
-                        .check {
+                &.pnpnd-uploaded {
+                    .pnpnd-file-info {
+                        .pnpnd-check {
                             background: $primary;
                             color: $white;
                             border-radius: 50%;
                         }
 
-                        .remove-file {
+                        .pnpnd-remove-file {
                             background: transparent;
                             color: $warning;
                             border: 1px solid $warning;
@@ -237,33 +237,33 @@
                             }
                         }
 
-                        .upload-item-name {
+                        .pnpnd-upload-item-name {
                             color: $black;
                         }
                     }
 
-                    .file-info-progress {
+                    .pnpnd-file-info-progress {
                         display: flex;
                     }
 
-                    .file-info-progress-bar {
+                    .pnpnd-file-info-progress-bar {
                         background-image: none;
                         background-color: $primary;
                     }
                 }
 
-                &.active {
-                    .file-info {
-                        .remove-file {
+                &.pnpnd-active {
+                    .pnpnd-file-info {
+                        .pnpnd-remove-file {
                             opacity: 0.7;
                         }
 
-                        .upload-item-name {
+                        .pnpnd-upload-item-name {
                             color: $black;
                         }
                     }
 
-                    .file-info-progress {
+                    .pnpnd-file-info-progress {
                         display: flex;
                     }
                 }
@@ -282,7 +282,7 @@
     }
 }
 
-.pnpnd-file-uploader {
+.pnpnd-file_uploader {
     .pnpnd-file-uploader-preview-mode {
         .pnpnd-uploader {
             z-index: 0 !important;

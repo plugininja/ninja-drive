@@ -6,7 +6,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 
 const rawBaseQuery = fetchBaseQuery({
-    baseUrl: pnpnd.restUrl,
+    baseUrl: pnpnd.rest_url,
     credentials: "same-origin",
     prepareHeaders: (headers) => {
         headers.set("X-WP-Nonce", pnpnd.nonce);
@@ -22,7 +22,7 @@ export const wpBaseQuery: BaseQueryFn<
 > = async (args, api, extraOptions) => {
     if (
         typeof args === "object" &&
-        pnpnd.isPlain &&
+        pnpnd.is_plain &&
         args.params &&
         Object.keys(args.params).length > 0
     ) {
@@ -39,7 +39,7 @@ export const wpBaseQuery: BaseQueryFn<
         ).toString();
 
         if (qs) {
-            args.url += pnpnd.restUrl.includes("?") ? `&${qs}` : `?${qs}`;
+            args.url += pnpnd.rest_url.includes("?") ? `&${qs}` : `?${qs}`;
         }
 
         delete args.params;

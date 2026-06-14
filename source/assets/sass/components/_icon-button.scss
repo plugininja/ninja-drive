@@ -133,6 +133,32 @@ $icon-button-sizes: (
             }
         }
 
+        &.pn-icon-button--light {
+            color: $black;
+            background-color: $primary-light;
+            border: 1px solid $primary-light;
+
+            &:hover {
+                background-color: $secondary;
+            }
+            &:focus {
+                background-color: $secondary;
+            }
+        }
+
+        &.pn-icon-button--gray {
+            color: $black;
+            background-color: $gray-50;
+            border: 1px solid $gray-200;
+
+            &:hover {
+                background-color: $gray-100;
+            }
+            &:focus {
+                background-color: $gray-100;
+            }
+        }
+
         &.pn-icon-button--disabled {
             cursor: not-allowed;
             opacity: 0.6;

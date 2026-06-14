@@ -1,31 +1,32 @@
+import { useModuleSelector } from "~/components/organisms/modals/ModuleSelector";
+import SkeletonLoader from "~/components/molecules/SkeletonLoader";
 import { MenuProvider } from "~/components/molecules/ContextMenu";
 import { ModuleConfig, ModuleKey } from "~/types/widget.types";
-import { useModuleSelector } from "~/components/organisms/modals/ModuleSelector";
-import { useGetModulesQuery } from "~/store/api/widgetApi";
 import InlineStack from "~/components/molecules/InlineStack";
-import SkeletonLoader from "~/components/molecules/SkeletonLoader";
-import { Order, OrderBy } from "~/types/Types";
-import ModuleTopbar from "./components/ModuleTopbar";
-import NoFoundIcon from "~/assets/icons/NoFoundIcon";
 import MainLayout from "~/components/templates/MainLayout";
-import Pagination from "./components/Pagination";
-import ModuleList from "./components/ModuleList";
+import { useGetModulesQuery } from "~/store/api/widgetApi";
 import BlockStack from "~/components/molecules/BlockStack";
 import EmptyState from "~/components/molecules/EmptyState";
 import IconButton from "~/components/molecules/IconButton";
+import { useLocalStorage } from "~/hooks/useLocalStorage";
+import SelectBox from "~/components/molecules/SelectBox";
+import { useEffect, useState } from "@wordpress/element";
+import ModuleTopbar from "./components/ModuleTopbar";
+import { noFoundIconSvg } from "~/utils/icons";
 import Topbar from "~/components/molecules/Topbar";
+import Pagination from "./components/Pagination";
+import ModuleList from "./components/ModuleList";
 import { useNavigate } from "react-router-dom";
 import Button from "~/components/atoms/Button";
-import SelectBox from "~/components/molecules/SelectBox";
-import { useState } from "@wordpress/element";
+import { Order, OrderBy } from "~/types/Types";
 import Text from "~/components/atoms/Text";
 import { __ } from "@wordpress/i18n";
 
 export type TQueryArgs = {
-    orderBy: OrderBy;
+    order_by: OrderBy;
     order: Order;
     page: number;
-    perPage: number;
+    per_page: number;
     type: ModuleKey | "all";
     search: string;
     status: string;
@@ -37,29 +38,43 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const { open } = useModuleSelector();
 
+    const [page, setPage] = useLocalStorage("pnpnd_widget_dashboard_page", 1);
+    const [perPage, setPerPage] = useLocalStorage(
+        "pnpnd_widget_dashboard_per_page",
+        10,
+    );
+
     const [queryArgs, setQueryArgs] = useState<TQueryArgs>({
-        orderBy: "updatedAt",
+        order_by: "updated_at",
         order: "DESC",
-        page: 1,
-        perPage: 10,
+        page: page,
+        per_page: perPage,
         type: "all",
         search: "",
         status: "all",
     });
 
     const { data, isFetching, isLoading } = useGetModulesQuery({
-        orderBy: queryArgs.orderBy,
+        order_by: queryArgs.order_by,
         order: queryArgs.order,
-        page: queryArgs.page,
-        perPage: queryArgs.perPage,
+        page: page,
+        per_page: perPage,
         type: queryArgs.type,
         search: queryArgs.search,
         status: "all",
     });
 
     const widgets = data?.data?.widgets || [];
-    const totalPages = data?.data?.totalPages || 1;
+    const total_pages = data?.data?.total_pages || 1;
     const totalItems = data?.data?.total || 0;
+
+    useEffect(() => {
+        if (!isLoading && !isFetching) {
+            if (widgets?.length === 0 && totalItems > 0) {
+                setPage(1);
+            }
+        }
+    }, [data]);
 
     const handleAddNewShortcode = () => {
         open({
@@ -72,14 +87,21 @@ const Dashboard = () => {
     const dashboardTitle = (
         <InlineStack gap={10}>
             <IconButton
-                variant="secondary"
+                variant="white"
                 rounded="md"
-                name="data_object"
+                name="handyman"
                 color="primary"
+                border
+                borderColor="gray-200"
                 fontSize="2xl"
+                style={{
+                    backgroundColor: "var(--pnpnd-gray-50)",
+                }}
             />
 
-            <Text weight="semibold">{__("Widget Builder", "ninja-drive")}</Text>
+            <Text color="gray-700" weight="semibold">
+                {__("Widgets Builder", "ninja-drive")}
+            </Text>
         </InlineStack>
     );
 
@@ -96,7 +118,7 @@ const Dashboard = () => {
 
     const renderSkeletonLoader = () => (
         <BlockStack marginTop={15} className="pnpnd-widget-list">
-            {Array.from({ length: queryArgs.perPage }).map((_, idx) => (
+            {Array.from({ length: perPage }).map((_, idx) => (
                 <SkeletonLoader
                     key={idx}
                     width="100%"
@@ -117,10 +139,26 @@ const Dashboard = () => {
                 />
 
                 <MainLayout.Content>
-                    <InlineStack gap={3}>
-                        <Text weight="semibold">{__("All Widgets", "ninja-drive")}</Text>
+                    <InlineStack gap={10} align="between">
+                        <InlineStack gap={5}>
+                            <Text color="gray-700" weight="semibold">
+                                {__("All Widgets", "ninja-drive")}
+                            </Text>
 
-                        <Text size="sm">({totalItems} {__("items", "ninja-drive")})</Text>
+                            <Text color="gray-600" size="sm">
+                                ({totalItems} {__("items", "ninja-drive")})
+                            </Text>
+                        </InlineStack>
+
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            startIcon="info"
+                            href=""
+                            target="_blank"
+                        >
+                            {__("Documentation", "ninja-drive")}
+                        </Button>
                     </InlineStack>
 
                     <ModuleTopbar
@@ -135,13 +173,19 @@ const Dashboard = () => {
                     {widgets.length === 0 && (!isLoading || !isFetching) && (
                         <BlockStack
                             marginTop={15}
-                            padding={20}
+                            padding={30}
                             className="pnpnd-widget-list"
                         >
                             <EmptyState
-                                icon={<NoFoundIcon />}
-                                title={__("You have no widgets created yet.", "ninja-drive")}
-                                description={__("Get started by creating a new widget.", "ninja-drive")}
+                                icon={<img src={noFoundIconSvg} alt="" style={{ width: "200px", height: "200px" }} />}
+                                title={__(
+                                    "You Haven’t Created Any Widgets",
+                                    "ninja-drive",
+                                )}
+                                description={__(
+                                    "Click the button below to add user access.",
+                                    "ninja-drive",
+                                )}
                             >
                                 <Button
                                     variant="primary"
@@ -172,26 +216,17 @@ const Dashboard = () => {
                         <BlockStack margin={"15px"}>
                             <InlineStack gap={5} align="center">
                                 <Pagination
-                                    currentPage={queryArgs?.page}
-                                    totalPages={totalPages}
-                                    onPageChange={(p) =>
-                                        setQueryArgs((prev) => ({
-                                            ...prev,
-                                            page: p,
-                                        }))
-                                    }
+                                    current_page={page}
+                                    total_pages={total_pages}
+                                    onPageChange={(p) => setPage(p)}
                                 />
 
                                 <SelectBox
                                     placement="top"
                                     options={PAGE_OPTIONS}
-                                    value={[String(queryArgs.perPage)]}
+                                    value={[String(perPage)]}
                                     onChange={(value) =>
-                                        setQueryArgs((prev) => ({
-                                            ...prev,
-                                            perPage: Number(value[0]),
-                                            page: 1,
-                                        }))
+                                        setPerPage(Number(value[0]))
                                     }
                                 />
                             </InlineStack>
@@ -205,7 +240,7 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const PAGE_OPTIONS: { name: string; value: string }[] = [
+export const PAGE_OPTIONS: { name: string; value: string }[] = [
     { name: __("5/Page", "ninja-drive"), value: "5" },
     { name: __("10/Page", "ninja-drive"), value: "10" },
     { name: __("20/Page", "ninja-drive"), value: "20" },

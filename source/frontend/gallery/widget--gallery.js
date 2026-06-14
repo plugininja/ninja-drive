@@ -9,7 +9,7 @@ function renderGalleryShortcode(element) {
 
         if (data.type !== "gallery") {
             console.error(
-                `Element with ID ${shortcodeId} is not a gallery shortcode.`
+                `Element with ID ${shortcodeId} is not a gallery shortcode.`,
             );
             return;
         }

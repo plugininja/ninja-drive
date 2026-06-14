@@ -1,0 +1,33 @@
+.pnpnd-block-icon {
+    font-size: 35px !important;
+}
+
+.pnpnd-block-icon-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .components-button {
+        border: 1px solid;
+    }
+
+    .pnpnd-configure-icon-pro {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        color: #d1a40e;
+    }
+
+    .pnpnd-icon-outside {
+        top: -18px;
+        right: -18px;
+    }
+
+    .pnpnd-icon-pro {
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        color: #d1a40e;
+    }
+}

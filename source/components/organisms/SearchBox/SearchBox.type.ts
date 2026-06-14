@@ -17,6 +17,7 @@ export interface SearchBoxProps {
     style?: React.CSSProperties;
     className?: string;
     isCompact?: boolean;
+    isSuperCompact?: boolean;
     fullWidth?: boolean;
     setIsCompact?: (isCompact: boolean) => void;
     placeholder?: string;
@@ -31,17 +32,17 @@ export interface SearchBoxFilterProps {
     fileType?: boolean;
     queryArgs: TQueryArgs;
     setQueryArgs: React.Dispatch<React.SetStateAction<TQueryArgs>>;
-    searchLocation: TQueryArgs["searchLocation"];
+    search_location: TQueryArgs["search_location"];
     setSearchLocation: React.Dispatch<
-        React.SetStateAction<TQueryArgs["searchLocation"]>
+        React.SetStateAction<TQueryArgs["search_location"]>
     >;
 }
 
 export interface SearchBoxResultProps {
     files?: File[] | null;
-    totalCount?: number;
+    total_count?: number;
     queryArgs?: TQueryArgs;
     loading?: boolean;
-    openFolder?: (fileKey: string) => void;
+    openFolder?: (file_key: string) => void;
     setIsCompact?: (isCompact: boolean) => void;
 }

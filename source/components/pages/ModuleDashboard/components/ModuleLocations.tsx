@@ -1,10 +1,10 @@
-import { ShortCodeLocation } from "~/types/widget.types";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
+import { ShortCodeLocation } from "~/types/widget.types";
 import { isValidArray } from "~/utils/helpers";
-import { __ } from "@wordpress/i18n";
 import Icon from "~/components/atoms/Icon";
 import Text from "~/components/atoms/Text";
+import { __ } from "@wordpress/i18n";
 
 const ModuleLocations = ({ locations }: { locations: ShortCodeLocation[] }) => {
     const handleClick = (url: string) => {

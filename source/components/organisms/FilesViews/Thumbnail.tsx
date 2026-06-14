@@ -1,13 +1,13 @@
-import { __ } from "@wordpress/i18n";
 import SkeletonLoader from "~/components/molecules/SkeletonLoader";
+import { isAudio, isFolder, isShortcut } from "~/utils/file";
+import IconButton from "~/components/molecules/IconButton";
 import { MENU_KEYS, MenuKey } from "~/types/Types";
+import Card from "~/components/molecules/Card";
 import { useFilesContext } from "./FilesViews";
 import { useState } from "@wordpress/element";
 import { File } from "~/types/file.types";
-import { isAudio, isFolder, isShortcut } from "~/utils/file";
-import Card from "~/components/molecules/Card";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
-import IconButton from "~/components/molecules/IconButton";
 
 const Thumbnail = ({
     style,
@@ -20,10 +20,10 @@ const Thumbnail = ({
     compact?: boolean;
     suggested?: boolean;
 }) => {
-    const { widgetId } = useFilesContext();
+    const { widget_id } = useFilesContext();
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
-    const _isFolder = isFolder(file.mimeType);
+    const _isFolder = isFolder(file.mime_type);
     const _isAudio = isAudio(file.extension || "");
     const _isShortcut = isShortcut(file.extension || "");
 
@@ -31,13 +31,13 @@ const Thumbnail = ({
         ? file.icon
         : PNPNDHelper.getUrl(
               "thumbnail",
-              file.fileKey,
+              file.file_key,
               file.name,
-              widgetId,
+              widget_id,
               "md",
               file.extension,
           );
-    thumbnail = MENU_KEYS.includes(file.fileKey as MenuKey)
+    thumbnail = MENU_KEYS.includes(file.file_key as MenuKey)
         ? file.icon
         : thumbnail;
 

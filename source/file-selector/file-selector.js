@@ -1,8 +1,8 @@
-import * as WPElement from "@wordpress/element";
-import { FileSelectorBridge } from "./index.tsx";
 import { CustomAlertProvider } from "~/components/molecules/Alert";
-import { Provider } from "react-redux";
+import { FileSelectorBridge } from "./index.tsx";
+import * as WPElement from "@wordpress/element";
 import { store } from "~/store/store.ts";
+import { Provider } from "react-redux";
 
 function render() {
     const container = document.createElement("div");

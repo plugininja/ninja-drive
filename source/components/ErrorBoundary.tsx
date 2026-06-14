@@ -1,10 +1,9 @@
-import type { ReactNode, ErrorInfo } from "react";
 import { Component } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 
 interface ErrorBoundaryProps {
-    children: ReactNode;
-    fallback?: ReactNode;
+    children: React.ReactNode;
+    fallback?: React.ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -21,7 +20,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         return { hasError: true };
     }
 
-    componentDidCatch(error: Error, info: ErrorInfo) {
+    componentDidCatch(error: Error, info: React.ErrorInfo) {
         console.error("Error caught:", error, info);
     }
 

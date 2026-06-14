@@ -1,12 +1,11 @@
-import {
-    CustomAlertProvider,
-    useCustomAlert,
-} from "~/components/molecules/Alert";
 import ModuleBuilder from "../ModuleBuilder/ModuleBuilder";
+import IconButton from "~/components/molecules/IconButton";
 import { selectAuth } from "~/store/features/authSlice";
-import { ModuleConfig } from "~/types/widget.types";
 import ErrorBoundary from "~/components/ErrorBoundary";
+import { ModuleConfig } from "~/types/widget.types";
+import SettingsRoute from "~/Routes/SettingsRoute";
 import { useAppSelector } from "~/store/hooks";
+import { toBoolean } from "~/utils/functions";
 import ErrorFallback from "../ErrorFallback";
 import AuthRoute from "~/Routes/AuthRoute";
 import MainRoute from "~/Routes/MainRoute";
@@ -24,12 +23,14 @@ import {
     useAddModuleMutation,
     useUpdateModuleMutation,
 } from "~/store/api/widgetApi";
-import SettingsRoute from "~/Routes/SettingsRoute";
-import IconButton from "~/components/molecules/IconButton";
+import {
+    CustomAlertProvider,
+    useCustomAlert,
+} from "~/components/molecules/Alert";
 
 export type ModuleBuilderProps = {
     id?: string;
-    rootId?: string;
+    root_id?: string;
     onSave: (key: "stay" | "close", data: ModuleConfig) => void;
     onDismiss?: () => void;
     onClose?: () => void;
@@ -41,14 +42,14 @@ export function BuilderContent({
     onSave,
     id,
     integration,
-    rootId,
+    root_id,
     onClose,
 }: ModuleBuilderProps) {
-    const { widgetMenu, widgetId } = useParams<{
-        widgetId: string;
+    const { widgetMenu, widget_id } = useParams<{
+        widget_id: string;
         widgetMenu: string;
     }>();
-    const { activeAccount } = useAppSelector(selectAuth);
+    const { active_account } = useAppSelector(selectAuth);
     const [addModule, { isLoading: addLoading }] = useAddModuleMutation();
     const [updateModule, { isLoading: updateLoading }] =
         useUpdateModuleMutation();
@@ -95,7 +96,7 @@ export function BuilderContent({
         }
     };
 
-    if (activeAccount === null)
+    if (active_account === null)
         return (
             <>
                 <Login />
@@ -132,7 +133,7 @@ export function useModuleBuilder() {
 
     const openModuleBuilder = (props: ModuleBuilderProps) => {
         showAlert({
-            rootId: props.rootId,
+            root_id: props.root_id,
             id: "pnpnd-widget-builder-modal",
             type: "info",
             showIcon: false,
@@ -151,11 +152,16 @@ export function useModuleBuilder() {
                     <Provider store={store}>
                         <CustomAlertProvider>
                             <MainRoute>
-                                <AuthRoute skipAuthGuard>
+                                <AuthRoute
+                                    skipPermissionGuard={
+                                        !toBoolean(pnpnd?.is_pro)
+                                    }
+                                    skipAuthGuard
+                                >
                                     <SettingsRoute>
                                         <Routes>
                                             <Route
-                                                path="/widget-builder/:widgetId/:widgetMenu/:menuKey?"
+                                                path="/widget-builder/:widget_id/:widgetMenu/:menuKey?"
                                                 element={
                                                     <BuilderContent
                                                         {...props}

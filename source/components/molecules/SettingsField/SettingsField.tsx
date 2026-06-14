@@ -1,10 +1,10 @@
 import InlineStack from "~/components/molecules/InlineStack";
 import Description from "~/components/molecules/Description";
 import BlockStack from "~/components/molecules/BlockStack";
-import { __ } from "@wordpress/i18n";
-import Button from "~/components/atoms/Button";
 import Card from "~/components/molecules/Card";
+import Button from "~/components/atoms/Button";
 import Text from "~/components/atoms/Text";
+import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 import {
     SettingsFieldProps,
@@ -16,14 +16,16 @@ const SettingsField: SettingsFieldProps = ({
     style,
     className,
     title,
+    titleSize = "md",
     description,
     docLink,
     background = "white",
-    border = "primary-light",
+    border = "gray-200",
     borderStyle = "solid",
     rounded,
     gap = 20,
     children,
+    compact = false,
     isIgnoreChildren = false,
     action,
     secondaryAction,
@@ -32,13 +34,13 @@ const SettingsField: SettingsFieldProps = ({
     return (
         <Card
             id={id}
-            style={style}
+            style={{ ...style, maxWidth: compact ? 1024 : "100%" }}
             background={background}
             border={border}
             borderStyle={borderStyle}
             rounded={rounded}
             statusProps={statusProps}
-            className={className}
+            className={clsx(className, "pn-settings-field")}
         >
             <InlineStack
                 align="between"
@@ -57,7 +59,12 @@ const SettingsField: SettingsFieldProps = ({
                         {action && action}
 
                         {title && (
-                            <Text as="h4" weight="medium">
+                            <Text
+                                as="h4"
+                                color="gray-700"
+                                size={titleSize}
+                                weight="medium"
+                            >
                                 {title}
                             </Text>
                         )}
@@ -99,6 +106,7 @@ const SettingsSubField: React.FC<SettingsSubFieldProps> = ({
     rounded = "md",
     gap = 20,
     children,
+    compact = false,
     action,
     secondaryAction,
     isIgnoreChildren,
@@ -129,7 +137,7 @@ const SettingsSubField: React.FC<SettingsSubFieldProps> = ({
     return (
         <Card
             id={id}
-            style={style}
+            style={{ ...style, maxWidth: compact ? 1024 : "100%" }}
             background={background}
             border={border}
             borderStyle={borderStyle}
@@ -155,7 +163,7 @@ const SettingsSubField: React.FC<SettingsSubFieldProps> = ({
                         {action && action}
 
                         {title && (
-                            <Text as="h4" weight="medium">
+                            <Text as="h4" color="gray-700" weight="medium">
                                 {title}
                             </Text>
                         )}
@@ -183,6 +191,8 @@ const SettingsSubField: React.FC<SettingsSubFieldProps> = ({
         </Card>
     );
 };
+
+export { SettingsSubField };
 
 SettingsField.SubField = SettingsSubField;
 

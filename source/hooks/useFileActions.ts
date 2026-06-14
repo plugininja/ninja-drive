@@ -1,12 +1,14 @@
-import { __, sprintf } from "@wordpress/i18n";
-import { selectFile } from "../store/features/manageFileSlice";
 import { useDownloadLink } from "~/components/organisms/modals/DownloadLink";
-import { useCustomAlert } from "~/components/molecules/Alert";
 import { useCopyMoveAlert } from "~/components/organisms/modals/CopyMove";
 import { useShareLink } from "~/components/organisms/modals/ShareLink";
+import { selectFile } from "../store/features/manageFileSlice";
+import { useCustomAlert } from "~/components/molecules/Alert";
 import { useAppDispatch } from "../store/hooks";
 import { useState } from "@wordpress/element";
 import { File } from "~/types/file.types";
+import { TBreadcrumb } from "~/types/ui";
+import { isFolder } from "~/utils/file";
+import { __ } from "@wordpress/i18n";
 import {
     useCopyMutation,
     useCreateFolderMutation,
@@ -15,8 +17,6 @@ import {
     useOpenInGoogleDriveMutation,
     useRenameFileMutation,
 } from "../store/api/fileApi";
-import { TBreadcrumb } from "~/types/ui";
-import { isFolder } from "~/utils/file";
 
 export const useFileActions = () => {
     const [activeFile, setActiveFile] = useState<File | undefined>(undefined);
@@ -33,13 +33,16 @@ export const useFileActions = () => {
     const [moveFile] = useMoveMutation();
     const [copyFile] = useCopyMutation();
 
-    const createFolder = async (activeFolderKey: string, widgetId?: string) => {
+    const createFolder = async (
+        activeFolderKey: string,
+        widget_id?: string,
+    ) => {
         showAlert({
             type: "info",
             showIcon: false,
             title: __("Create a folder", "ninja-drive"),
             input: "text",
-            inputValue: "",
+            inputValue: "New Folder",
             inputPlaceholder: __("Enter new name", "ninja-drive"),
             showCancelButton: true,
             confirmButtonText: __("Create", "ninja-drive"),
@@ -53,19 +56,23 @@ export const useFileActions = () => {
             onConfirm: async (inputValue) => {
                 try {
                     const res = await createFolderMutation({
-                        fileKey:
+                        file_key:
                             activeFolderKey === "/"
                                 ? "my-drive"
                                 : activeFolderKey,
-                        name: String(inputValue) || __("New Folder", "ninja-drive"),
-                        widgetId,
+                        name:
+                            String(inputValue) ||
+                            __("New Folder", "ninja-drive"),
+                        widget_id,
                     }).unwrap();
 
                     if (res.success) {
                         showAlert({
                             toast: true,
                             type: "success",
-                            text: res.message || __("Create Successfully!", "ninja-drive"),
+                            text:
+                                res.message ||
+                                __("Create Successfully!", "ninja-drive"),
                             timer: 3000,
                             timerProgressBar: true,
                             showConfirmButton: false,
@@ -74,7 +81,9 @@ export const useFileActions = () => {
                         showAlert({
                             toast: true,
                             type: "error",
-                            text: res.message || __("Create Failed!", "ninja-drive"),
+                            text:
+                                res.message ||
+                                __("Create Failed!", "ninja-drive"),
                             timer: 3000,
                             timerProgressBar: true,
                             showConfirmButton: false,
@@ -84,7 +93,9 @@ export const useFileActions = () => {
                     showAlert({
                         toast: true,
                         type: "error",
-                        text: error?.data?.message || __("Folder Create Failed!", "ninja-drive"),
+                        text:
+                            error?.data?.message ||
+                            __("Folder Create Failed!", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -95,15 +106,18 @@ export const useFileActions = () => {
     };
 
     const handleDelete = async (
-        fileKeys: string[],
-        activeFolderKey: string,
-        widgetId?: string,
+        file_keys: string[],
+        active_folder_key: string,
+        widget_id?: string,
         onSuccess?: () => void,
     ) => {
         showAlert({
             type: "error",
-            title: __("Delete this item?", "ninja-drive"),
-            text: __("You won't be able to revert this!", "ninja-drive"),
+            title: __("Delete?", "ninja-drive"),
+            text: __(
+                "Are you sure you want to delete this file?",
+                "ninja-drive",
+            ),
             showConfirmButton: true,
             confirmButtonText: __("Delete", "ninja-drive"),
             showCancelButton: true,
@@ -112,9 +126,9 @@ export const useFileActions = () => {
             onConfirm: async () => {
                 try {
                     const res = await deleteFiles({
-                        fileKeys,
-                        parentKey: activeFolderKey,
-                        widgetId,
+                        file_keys,
+                        parent_key: active_folder_key,
+                        widget_id,
                     }).unwrap();
 
                     dispatch(selectFile([]));
@@ -122,7 +136,9 @@ export const useFileActions = () => {
                     showAlert({
                         toast: true,
                         type: "success",
-                        text: res?.message || __("Deleted Successfully!", "ninja-drive"),
+                        text:
+                            res?.message ||
+                            __("Deleted Successfully!", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -135,7 +151,10 @@ export const useFileActions = () => {
                         type: "error",
                         text:
                             error?.data?.message ||
-                            __("Delete Failed! Please try again.", "ninja-drive"),
+                            __(
+                                "Delete Failed! Please try again.",
+                                "ninja-drive",
+                            ),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -147,16 +166,16 @@ export const useFileActions = () => {
 
     const rename = async (
         file: File,
-        activeFolderKey: string,
-        widgetId?: string,
+        active_folder_key: string,
+        widget_id?: string,
     ) => {
         showAlert({
             type: "info",
             showIcon: false,
             title: __("Rename this file", "ninja-drive"),
             input: "text",
-            inputValue: file?.additionalData?.baseName,
-            inputSuffix: isFolder(file?.mimeType)
+            inputValue: file?.additional_data?.base_name,
+            inputSuffix: isFolder(file?.mime_type)
                 ? undefined
                 : file?.extension
                 ? `.${file?.extension}`
@@ -175,19 +194,21 @@ export const useFileActions = () => {
             onConfirm: async (inputValue) => {
                 try {
                     const res = await renameFile({
-                        fileKey: file?.fileKey,
+                        file_key: file?.file_key,
                         name:
                             String(inputValue) ||
-                            file?.additionalData?.baseName ||
+                            file?.additional_data?.base_name ||
                             file?.name,
-                        parentKey: activeFolderKey,
-                        widgetId,
+                        parent_key: active_folder_key,
+                        widget_id,
                     });
 
                     showAlert({
                         toast: true,
                         type: "success",
-                        text: res.data?.message || __("Rename Successfully!", "ninja-drive"),
+                        text:
+                            res.data?.message ||
+                            __("Rename Successfully!", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -198,7 +219,10 @@ export const useFileActions = () => {
                         type: "error",
                         text:
                             error?.data?.message ||
-                            __("Rename Failed! Please try again.", "ninja-drive"),
+                            __(
+                                "Rename Failed! Please try again.",
+                                "ninja-drive",
+                            ),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -208,15 +232,15 @@ export const useFileActions = () => {
         });
     };
 
-    const download = (file: File, widgetId?: string, extension?: string) => {
-        const { fileKey, name, extension: fileExtension } = file;
+    const download = (file: File, widget_id?: string, extension?: string) => {
+        const { file_key, name, extension: fileExtension } = file;
 
         try {
             const downloadUrl = PNPNDHelper.getUrl(
                 "download",
-                fileKey,
+                file_key,
                 name,
-                widgetId,
+                widget_id,
                 "xl",
                 extension ? extension : fileExtension,
             );
@@ -240,7 +264,9 @@ export const useFileActions = () => {
             showAlert({
                 toast: true,
                 type: "error",
-                text: error?.data?.message || __("An unexpected error occurred.", "ninja-drive"),
+                text:
+                    error?.data?.message ||
+                    __("An unexpected error occurred.", "ninja-drive"),
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -250,11 +276,11 @@ export const useFileActions = () => {
         }
     };
 
-    const openGoogleDrive = async (file: File, widgetId?: string) => {
+    const openGoogleDrive = async (file: File, widget_id?: string) => {
         try {
             const res = await openInGoogleDrive({
-                fileKey: file.fileKey,
-                widgetId,
+                file_key: file.file_key,
+                widget_id,
             }).unwrap();
 
             const previewUrl = res.data;
@@ -262,7 +288,9 @@ export const useFileActions = () => {
             showAlert({
                 toast: true,
                 type: "success",
-                text: res?.message || __("Opening in Google Drive...", "ninja-drive"),
+                text:
+                    res?.message ||
+                    __("Opening in Google Drive...", "ninja-drive"),
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -273,7 +301,9 @@ export const useFileActions = () => {
             showAlert({
                 toast: true,
                 type: "error",
-                text: error?.data?.message || __("Invalid response from server", "ninja-drive"),
+                text:
+                    error?.data?.message ||
+                    __("Invalid response from server", "ninja-drive"),
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -284,33 +314,36 @@ export const useFileActions = () => {
 
     const copy = ({
         file,
-        widgetId,
-        activeFolderKey,
+        widget_id,
+        active_folder_key,
         breadcrumbs,
     }: {
         file: File;
-        widgetId?: string;
-        activeFolderKey: string;
+        widget_id?: string;
+        active_folder_key: string;
         breadcrumbs?: TBreadcrumb[];
     }) => {
         openCopyMove({
             mode: "copy",
             file,
-            widgetId,
+            widget_id,
             breadcrumbs,
             onConfirm: async (folderKey) => {
+                console.log("trigger");
                 try {
                     const res = await copyFile({
-                        currentFolderKey: activeFolderKey,
+                        current_folder_key: active_folder_key,
                         destination: folderKey,
-                        fileKeys: [file.fileKey],
-                        widgetId,
+                        file_keys: [file.file_key],
+                        widget_id,
                     }).unwrap();
 
                     showAlert({
                         toast: true,
                         type: "success",
-                        text: res?.message || __("Copy Successfully!", "ninja-drive"),
+                        text:
+                            res?.message ||
+                            __("Copy Successfully!", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -333,33 +366,35 @@ export const useFileActions = () => {
 
     const move = ({
         file,
-        widgetId,
-        activeFolderKey,
+        widget_id,
+        active_folder_key,
         breadcrumbs,
     }: {
         file: File;
-        widgetId?: string;
-        activeFolderKey: string;
+        widget_id?: string;
+        active_folder_key: string;
         breadcrumbs?: TBreadcrumb[];
     }) => {
         openCopyMove({
             mode: "move",
             file,
-            widgetId,
+            widget_id,
             breadcrumbs,
             onConfirm: async (folderKey) => {
                 try {
                     const res = await moveFile({
-                        currentFolderKey: activeFolderKey,
+                        current_folder_key: active_folder_key,
                         destination: folderKey,
-                        fileKeys: [file?.fileKey],
-                        widgetId,
+                        file_keys: [file?.file_key],
+                        widget_id,
                     }).unwrap();
 
                     showAlert({
                         toast: true,
                         type: "success",
-                        text: res?.message || __("Move Successfully!", "ninja-drive"),
+                        text:
+                            res?.message ||
+                            __("Move Successfully!", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -380,25 +415,25 @@ export const useFileActions = () => {
         });
     };
 
-    const share = (file: File, widgetId?: string) => {
+    const share = (file: File, widget_id?: string) => {
         openShareLink({
             file,
-            widgetId,
-            onConfirm: async (fileKey) => {},
+            widget_id,
+            onConfirm: async (file_key) => {},
         });
     };
 
     const downloadLinkOpen = (file: File) => {
         openDownloadLink({
             file,
-            onConfirm: async (fileKey) => {},
+            onConfirm: async (file_key) => {},
         });
     };
 
     const actionExecuter = async (
         actionId: string,
         file: File,
-        activeFolderKey: string,
+        active_folder_key: string,
     ) => {
         switch (actionId) {
             case "open":
@@ -416,20 +451,17 @@ export const useFileActions = () => {
             case "download-link":
                 downloadLinkOpen(file);
                 break;
-            case "import":
-                importToMedia(file?.fileKey, file?.mimeType);
-                break;
             case "move":
-                move({ file, activeFolderKey });
+                move({ file, active_folder_key });
                 break;
             case "rename":
-                rename(file, activeFolderKey);
+                rename(file, active_folder_key);
                 break;
             case "copy":
-                copy({ file, activeFolderKey });
+                copy({ file, active_folder_key });
                 break;
             case "delete":
-                handleDelete([file?.fileKey], activeFolderKey);
+                handleDelete([file?.file_key], active_folder_key);
                 break;
             default:
                 break;

@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from "@wordpress/element";
 const createBoxNode = () => {
     const box = document.createElement("div");
     box.style.position = "absolute";
-    box.style.background = "var(--pnpnd-light)";
-    box.style.boxShadow = "inset 0 0 0 2px var(--pnpnd-primary)";
-    box.style.borderRadius = "2px";
+    box.style.background = "var(--pnpnd-primary-light)";
+    box.style.border = "1px dashed var(--pnpnd-primary)";
     box.style.pointerEvents = "none";
     box.style.mixBlendMode = "multiply";
     return box;
@@ -125,7 +124,6 @@ export const useDragSelect = (
             containerRef.current.removeChild(boxRef.current);
         }
 
-        // setSelectionBox(null);
         drawAreaRef.current = {};
     };
 

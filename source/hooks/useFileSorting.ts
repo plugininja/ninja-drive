@@ -8,7 +8,7 @@ export const useFileSorting = () => {
     const [sortingType, setSortingType] = useState<TSortingType>({
         editData: {
             sortingType: JSON.parse(
-                localStorage.getItem("idbox-file-sorting-type") as string
+                localStorage.getItem("pnpnd-file-sorting-type") as string,
             ) || {
                 label: "Sort By: Modified",
                 value: "modified",
@@ -17,21 +17,12 @@ export const useFileSorting = () => {
     });
     const [sortingOrder, setSortingOrder] = useState<"ASC" | "DESC">(
         (localStorage.getItem("pnpnd-file-sorting-order") as "ASC" | "DESC") ||
-            "ASC"
+            "ASC",
     );
     const firstRender = useRef(true);
     useEffect(() => {
-        if (!firstRender.current) {
-            // dispatch(
-            //   sortFiles({
-            //     // sortBy: sortingType.editData.sortingType.value,
-            //     sortOrder: sortingOrder,
-            //   })
-            // );
-        } else {
-            firstRender.current = false;
-        }
-    }, [sortingOrder, sortingType]);
+        firstRender.current = false;
+    }, []);
 
     useEffect(() => {
         localStorage.setItem("pnpnd-file-sorting-order", sortingOrder);
@@ -49,11 +40,11 @@ export const useFileSorting = () => {
             },
         });
         localStorage.setItem(
-            "idbox-file-sorting-type",
+            "pnpnd-file-sorting-type",
             JSON.stringify({
                 label: `Sort By: ${val.sortingType.label}`,
                 value: val.sortingType.value,
-            })
+            }),
         );
     };
     return {

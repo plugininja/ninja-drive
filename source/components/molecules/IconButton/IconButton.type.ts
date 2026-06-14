@@ -16,13 +16,14 @@ export type ButtonVariant =
     | "white"
     | "warning"
     | "error"
-    | "link";
+    | "link"
+    | "light"
+    | "gray";
 
 export interface IconButtonProps
     extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     name?: string;
     iconUrl?: string;
-    svgIcon?: React.FC<React.SVGProps<SVGSVGElement>>;
     id?: string;
     style?: React.CSSProperties;
     className?: string;

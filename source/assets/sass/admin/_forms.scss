@@ -26,15 +26,11 @@
     .pnpnd-existing-widget {
         width: 100% !important;
         padding: 10px !important;
-        border: 1px solid #00ac47 !important;
+        border: 1px solid var(--pnpnd-primary) !important;
         border-radius: 4px !important;
         background-color: #fff !important;
         font-size: 14px !important;
         height: auto !important;
         margin-bottom: var(--pnpnd-space-5) !important;
     }
-}
-
-label #widget_id {
-    display: none !important;
 }

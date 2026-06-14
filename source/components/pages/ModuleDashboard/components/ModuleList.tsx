@@ -1,28 +1,27 @@
+import { useModulePreview } from "~/components/organisms/modals/ModulePreview";
 import ModuleContextMenu, { MODULE_ACTIONS } from "./ModuleContextMenu";
 import { MODULE_LIST_HEADERS, MODULE_LISTS } from "~/constants/widget";
 import { useContextMenu } from "~/components/molecules/ContextMenu";
 import { ModuleConfig, ModuleKey } from "~/types/widget.types";
-import { useModulePreview } from "~/components/organisms/modals/ModulePreview";
 import { useCustomAlert } from "~/components/molecules/Alert";
 import InlineStack from "~/components/molecules/InlineStack";
 import BlockStack from "~/components/molecules/BlockStack";
 import IconButton from "~/components/molecules/IconButton";
-import ModuleLocations from "./ModuleLocations";
-import IntegrationIcon from "./IntegrationIcon";
-import { useNavigate } from "react-router-dom";
-import { useState } from "@wordpress/element";
-import Checkbox from "~/components/atoms/Checkbox";
 import Dropdown from "~/components/molecules/Dropdown";
 import Switcher from "~/components/atoms/Switcher";
-import Divider from "~/components/atoms/Divider";
+import Checkbox from "~/components/atoms/Checkbox";
 import Tooltip from "~/components/atoms/Tooltip";
-import Status from "~/components/atoms/Status";
-import Button from "~/components/atoms/Button";
-import Input from "~/components/atoms/Input";
-import { __ } from "@wordpress/i18n";
-import Text from "~/components/atoms/Text";
+import Divider from "~/components/atoms/Divider";
+import ModuleLocations from "./ModuleLocations";
+import IntegrationIcon from "./IntegrationIcon";
 import Card from "~/components/molecules/Card";
+import Button from "~/components/atoms/Button";
+import { useNavigate } from "react-router-dom";
+import { useState } from "@wordpress/element";
+import Input from "~/components/atoms/Input";
+import Text from "~/components/atoms/Text";
 import Icon from "~/components/atoms/Icon";
+import { __ } from "@wordpress/i18n";
 import {
     useDeleteModuleMutation,
     useDuplicateModuleMutation,
@@ -42,7 +41,7 @@ const ModuleList = ({
 }) => {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editedTitle, setEditedTitle] = useState<string>("");
-    const flexValues = [0.3, 0.4, 2, 1.2, 0.6, 1.7, 0.6, 1];
+    const flexValues = [0.3, 0.4, 2, 1.5, 0.7, 1.8, 0.6, 1.2, 0.6];
     const [updateModule] = useUpdateModuleMutation();
     const [duplicateModule] = useDuplicateModuleMutation();
     const [deleteModule] = useDeleteModuleMutation();
@@ -107,10 +106,9 @@ const ModuleList = ({
                 toast: true,
                 type: "success",
                 text:
-                    result?.message ||
-                    action === "rename"
-                        ? __("Shortcode renamed successfully", "ninja-drive")
-                        : __("Shortcode updated successfully", "ninja-drive"),
+                    result?.message || action === "status"
+                        ? __("Shortcode updated successfully", "ninja-drive")
+                        : __("Shortcode renamed successfully", "ninja-drive"),
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -120,8 +118,7 @@ const ModuleList = ({
                 toast: true,
                 type: "error",
                 text:
-                    error?.data?.message ||
-                    action === "rename"
+                    error?.data?.message || action === "rename"
                         ? __("Failed to rename widget", "ninja-drive")
                         : __("Failed to update widget", "ninja-drive"),
                 timer: 3000,
@@ -141,8 +138,14 @@ const ModuleList = ({
             title: __("Duplicate", "ninja-drive"),
             text:
                 allIds.length > 1
-                    ? __("Are you sure you want to duplicate these widgets?", "ninja-drive")
-                    : __("Are you sure you want to duplicate this widget?", "ninja-drive"),
+                    ? __(
+                          "Are you sure you want to duplicate these widgets?",
+                          "ninja-drive",
+                      )
+                    : __(
+                          "Are you sure you want to duplicate this widget?",
+                          "ninja-drive",
+                      ),
             showCancelButton: true,
             confirmButtonText: __("Duplicate", "ninja-drive"),
             onConfirm: async () => {
@@ -156,7 +159,10 @@ const ModuleList = ({
                         type: "success",
                         text:
                             result?.message ||
-                            __("Shortcode duplicated successfully", "ninja-drive"),
+                            __(
+                                "Shortcode duplicated successfully",
+                                "ninja-drive",
+                            ),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -187,8 +193,14 @@ const ModuleList = ({
             title: __("Delete", "ninja-drive"),
             text:
                 allIds.length > 1
-                    ? __("Are you sure you want to delete these widgets?", "ninja-drive")
-                    : __("Are you sure you want to delete this widget?", "ninja-drive"),
+                    ? __(
+                          "Are you sure you want to delete these widgets?",
+                          "ninja-drive",
+                      )
+                    : __(
+                          "Are you sure you want to delete this widget?",
+                          "ninja-drive",
+                      ),
             showCancelButton: true,
             confirmButtonText: __("Delete", "ninja-drive"),
             onConfirm: async () => {
@@ -201,7 +213,8 @@ const ModuleList = ({
                         toast: true,
                         type: "success",
                         text:
-                            result?.message || __("Shortcode deleted successfully", "ninja-drive"),
+                            result?.message ||
+                            __("Shortcode deleted successfully", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -210,7 +223,9 @@ const ModuleList = ({
                     showAlert({
                         toast: true,
                         type: "error",
-                        text: error?.data?.message ||                             __("Failed to delete widget", "ninja-drive"),
+                        text:
+                            error?.data?.message ||
+                            __("Failed to delete widget", "ninja-drive"),
                         timer: 3000,
                         timerProgressBar: true,
                         showConfirmButton: false,
@@ -254,6 +269,7 @@ const ModuleList = ({
                     <InlineStack
                         key={index}
                         gap={5}
+                        align={key === "action" ? "end" : "start"}
                         style={{ flex: flexValues[index], minWidth: 0 }}
                     >
                         {key === "checkbox" ? (
@@ -268,6 +284,7 @@ const ModuleList = ({
                             />
                         ) : (
                             <Text
+                                color="gray-900"
                                 size="sm"
                                 weight="semibold"
                                 wrap={false}
@@ -278,33 +295,23 @@ const ModuleList = ({
                         )}
                     </InlineStack>
                 ))}
-
-                <Text
-                    size="sm"
-                    weight="semibold"
-                    style={{
-                        width: "80px",
-                    }}
-                >
-                    {__("Action:", "ninja-drive")}
-                </Text>
             </InlineStack>
 
-            {widgets.map((widget, index) => {
+            {widgets?.map((widget, index) => {
                 const {
                     id,
                     type,
                     title,
                     status,
                     integration,
-                    createdAt,
+                    created_at,
                     locations,
                 } = widget as ModuleConfig;
 
                 const isChecked = selectedModules.some(
                     (item) => item.id === id,
                 );
-                const isEditing = editingId === id;
+                const is_editing = editingId === id;
 
                 return (
                     <InlineStack
@@ -323,20 +330,22 @@ const ModuleList = ({
                             );
                         }}
                     >
-                        <Checkbox
-                            rounded="sm"
-                            style={{ flex: 0.3 }}
-                            checked={isChecked}
-                            onChange={() => handleSelect(widget)}
-                        />
+                        <InlineStack style={{ flex: flexValues[0] }}>
+                            <Checkbox
+                                rounded="sm"
+                                checked={isChecked}
+                                onChange={() => handleSelect(widget)}
+                            />
+                        </InlineStack>
 
                         <Text
+                            color="gray-700"
                             size="sm"
                             weight="semibold"
                             wrap={false}
                             ellipsis
                             style={{
-                                flex: 0.4,
+                                flex: flexValues[1],
                                 minWidth: 0,
                             }}
                         >
@@ -346,7 +355,7 @@ const ModuleList = ({
                         <InlineStack
                             gap={10}
                             wrap={false}
-                            style={{ flex: 2, minWidth: 0 }}
+                            style={{ flex: flexValues[2], minWidth: 0 }}
                         >
                             {editingId === id ? (
                                 <Input
@@ -370,6 +379,7 @@ const ModuleList = ({
                                 />
                             ) : (
                                 <Text
+                                    color="gray-700"
                                     size="sm"
                                     weight="medium"
                                     wrap={false}
@@ -384,9 +394,9 @@ const ModuleList = ({
 
                             <IconButton
                                 size="small"
-                                name={isEditing ? "check" : "edit_square"}
+                                name={is_editing ? "check" : "border_color"}
                                 color="primary"
-                                fontSize={isEditing ? "2xl" : "lg"}
+                                fontSize={is_editing ? "2xl" : "lg"}
                                 onClick={() => {
                                     if (editingId === id) {
                                         handleUpdate(widget, "rename");
@@ -402,7 +412,7 @@ const ModuleList = ({
                         <InlineStack
                             gap={10}
                             wrap={false}
-                            style={{ flex: 1.2, minWidth: 0 }}
+                            style={{ flex: flexValues[3], minWidth: 0 }}
                         >
                             <div
                                 style={{
@@ -433,6 +443,7 @@ const ModuleList = ({
                             </div>
 
                             <Text
+                                color="gray-700"
                                 size="sm"
                                 wrap={false}
                                 ellipsis
@@ -445,7 +456,7 @@ const ModuleList = ({
                         </InlineStack>
 
                         <Switcher
-                            style={{ flex: 0.6, minWidth: 0 }}
+                            style={{ flex: flexValues[4], minWidth: 0 }}
                             checked={status === "active"}
                             onChange={(checked) =>
                                 handleUpdate(
@@ -458,7 +469,9 @@ const ModuleList = ({
                             }
                         />
 
-                        <InlineStack style={{ flex: 1.7, minWidth: 0 }}>
+                        <InlineStack
+                            style={{ flex: flexValues[5], minWidth: 0 }}
+                        >
                             <Button
                                 variant="outlined"
                                 size="small"
@@ -475,11 +488,16 @@ const ModuleList = ({
                                         minWidth: 0,
                                     }}
                                 >
-                                    <Text size="sm" style={{ flexShrink: 0 }}>
+                                    <Text
+                                        color="gray-700"
+                                        size="sm"
+                                        style={{ flexShrink: 0 }}
+                                    >
                                         [
                                     </Text>
 
                                     <Text
+                                        color="gray-700"
                                         size="sm"
                                         wrap={false}
                                         ellipsis
@@ -492,6 +510,7 @@ const ModuleList = ({
                                     </Text>
 
                                     <Text
+                                        color="gray-700"
                                         size="sm"
                                         style={{ flexShrink: 0 }}
                                         textTransform="lowercase"
@@ -503,7 +522,9 @@ const ModuleList = ({
                             </Button>
                         </InlineStack>
 
-                        <InlineStack style={{ flex: 0.6, minWidth: 0 }}>
+                        <InlineStack
+                            style={{ flex: flexValues[6], minWidth: 0 }}
+                        >
                             <Tooltip
                                 component={
                                     <ModuleLocations locations={locations} />
@@ -517,7 +538,8 @@ const ModuleList = ({
                             >
                                 <Card
                                     padding={9}
-                                    background="primary-extralight"
+                                    background="gray-50"
+                                    border="gray-200"
                                     flex
                                     align="center"
                                     blockAlign="center"
@@ -529,7 +551,7 @@ const ModuleList = ({
                                     }}
                                 >
                                     <Text
-                                        color="primary"
+                                        color="gray-700"
                                         size="sm"
                                         weight="medium"
                                     >
@@ -540,21 +562,23 @@ const ModuleList = ({
                         </InlineStack>
 
                         <Text
+                            color="gray-700"
                             size="sm"
                             wrap={false}
                             ellipsis
                             style={{
-                                flex: 1,
+                                flex: flexValues[7],
                                 minWidth: 0,
                             }}
                         >
-                            {createdAt}
+                            {created_at}
                         </Text>
 
                         <InlineStack
                             gap={10}
                             wrap={false}
-                            style={{ width: "80px" }}
+                            align="end"
+                            style={{ flex: flexValues[8] }}
                         >
                             <Button
                                 variant="primary"
@@ -575,7 +599,7 @@ const ModuleList = ({
                                 <Dropdown.Trigger>
                                     <Icon
                                         name="more_vert"
-                                        color="primary"
+                                        color="gray-700"
                                         fontSize="2xl"
                                         fontWeight="medium"
                                         style={{
@@ -602,56 +626,48 @@ const ModuleList = ({
 
                                             return (
                                                 <BlockStack key={key ?? index}>
-                                                    <Status
-                                                        size="extrasmall"
-                                                        placement="right-center"
-                                                        right={5}
+                                                    <Dropdown.MenuItem
+                                                        onClick={() => {
+                                                            handleAction(
+                                                                key,
+                                                                id,
+                                                                title,
+                                                            );
+                                                        }}
+                                                        style={{
+                                                            padding: "8px 13px",
+                                                            borderRadius: first
+                                                                ? "8px 8px 0 0"
+                                                                : last
+                                                                ? "0 0 8px 8px"
+                                                                : 0,
+                                                        }}
+                                                        className={
+                                                            last
+                                                                ? "hover-error-50"
+                                                                : "hover-secondary"
+                                                        }
                                                     >
-                                                        <Dropdown.MenuItem
-                                                            onClick={() => {
-                                                                handleAction(
-                                                                    key,
-                                                                    id,
-                                                                    title,
-                                                                );
-                                                            }}
-                                                            style={{
-                                                                padding:
-                                                                    "8px 13px",
-                                                                borderRadius:
-                                                                    first
-                                                                        ? "8px 8px 0 0"
-                                                                        : last
-                                                                        ? "0 0 8px 8px"
-                                                                        : 0,
-                                                            }}
-                                                            className={
+                                                        <Icon
+                                                            name={icon}
+                                                            color={
                                                                 last
-                                                                    ? "hover-errorprimary-extralight"
-                                                                    : "hover-secondary"
+                                                                    ? "error"
+                                                                    : "black"
                                                             }
-                                                        >
-                                                            <Icon
-                                                                name={icon}
-                                                                color={
-                                                                    last
-                                                                        ? "error"
-                                                                        : "black"
-                                                                }
-                                                            />
+                                                        />
 
-                                                            <Text
-                                                                color={
-                                                                    last
-                                                                        ? "error"
-                                                                        : "black"
-                                                                }
-                                                                size="sm"
-                                                            >
-                                                                {actionTitle}
-                                                            </Text>
-                                                        </Dropdown.MenuItem>
-                                                    </Status>
+                                                        <Text
+                                                            color={
+                                                                last
+                                                                    ? "error"
+                                                                    : "black"
+                                                            }
+                                                            size="sm"
+                                                        >
+                                                            {actionTitle}
+                                                        </Text>
+                                                    </Dropdown.MenuItem>
 
                                                     {!last && <Divider />}
                                                 </BlockStack>
@@ -665,7 +681,7 @@ const ModuleList = ({
                 );
             })}
 
-            <ModuleContextMenu onMenuClick={handleAction} isPro={isPro} />
+            <ModuleContextMenu onMenuClick={handleAction} />
         </BlockStack>
     );
 };

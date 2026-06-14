@@ -11,7 +11,8 @@ export interface TooltipProps {
     openStyle?: "fade" | "zoom" | "slide-down";
     trigger?: "hover" | "click";
     width?: string;
-    wrap?: "wrap" | "no-wrap";
+    maxWidth?: string;
+    wrap?: "wrap" | "no-wrap" | "max-width-wrap";
     color?: TextColor;
     background?: BackgroundColor;
     border?: BorderColor;

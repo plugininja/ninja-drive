@@ -1,4 +1,6 @@
+import { toBoolean } from "~/utils/functions";
 import Icon from "~/components/atoms/Icon";
+import clsx from "clsx";
 
 const ConfigureTopButton = ({
     children,
@@ -13,8 +15,12 @@ const ConfigureTopButton = ({
 }) => {
     return (
         <div
-            className={`pnpnd-top-level-wrapper pnpnd-block-icon-wrapper ${className}`}
+            className={clsx(
+                "pnpnd-top-level-wrapper pnpnd-block-icon-wrapper",
+                className,
+            )}
         >
+
             {children}
         </div>
     );

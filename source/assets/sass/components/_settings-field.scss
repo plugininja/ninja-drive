@@ -1,4 +1,23 @@
+@use "../utilities/variable" as *;
+
 .pnpnd-top-level-wrapper {
+    .pn-settings-field {
+        &__collapse-button {
+            .pn-icon {
+                transition: transform 0.3s ease;
+                transform: rotate(-180deg);
+            }
+
+            &--open .pn-icon {
+                transform: rotate(0deg);
+            }
+        }
+
+        &__body {
+            transition: max-height 0.3s ease;
+        }
+    }
+
     .pn-settings-field-disabled {
         position: relative;
         opacity: 0.5;

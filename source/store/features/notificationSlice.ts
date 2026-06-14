@@ -31,13 +31,13 @@ export const notificationSlice = createSlice({
 
         deleteNotification: (state, action: PayloadAction<string>) => {
             state.notifications = state.notifications.filter(
-                (n) => n.id !== action.payload
+                (n) => n.id !== action.payload,
             );
         },
 
         statusChange: (
             state,
-            action: PayloadAction<{ id: string; status: "read" | "unread" }>
+            action: PayloadAction<{ id: string; status: "read" | "unread" }>,
         ) => {
             state.notifications = state.notifications.map((n) => {
                 if (n.id === action.payload.id) {

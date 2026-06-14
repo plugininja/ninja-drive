@@ -10,7 +10,7 @@ export type AlertPosition =
     | "bottom-right";
 
 export interface AlertProps {
-    rootId?: string;
+    root_id?: string;
     id?: string;
     title?: string;
     text?: string;
