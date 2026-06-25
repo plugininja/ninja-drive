@@ -123,6 +123,7 @@ class Client {
 				__( 'Account connection lost', 'ninja-drive' ),
 				__( 'Your account connection was lost. Please re-authorize to continue.', 'ninja-drive' )
 			);
+			do_action( 'pnpnd_account_lost', $this->account );
 		}
 
 		try {
@@ -136,6 +137,7 @@ class Client {
 			if ( is_wp_error( $lost_account ) ) {
 				return $lost_account;
 			}
+			do_action( 'pnpnd_account_lost', $this->account );
 
 			return new WP_Error( 403, $th->getMessage() );
 		}
@@ -225,6 +227,12 @@ class Client {
 		$client_id     = Helpers::get_setting( 'accounts.app_client_id', null );
 		$client_secret = Helpers::get_setting( 'accounts.app_client_secret', null, 'decode' );
 		$redirect_uri  = PNPND_REDIRECT_URI;
+
+		if ( 'automatic' === Helpers::get_setting( 'accounts.connection_type', 'manual' ) ) {
+			$client_id     = '';
+			$client_secret = '';
+			$redirect_uri  = 'https://plugininja.com/?authorization=integration-ninja-drive';
+		}
 
 		if ( empty( $client_id ) ) {
 			return new WP_Error( 403, __( 'Client ID is required. Please set it in the settings.', 'ninja-drive' ) );

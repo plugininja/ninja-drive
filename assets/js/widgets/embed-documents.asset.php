@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-element', 'wp-i18n'), 'version' => 'bf9f0777f5cf02887900', 'handle' => 'undefined-widgets/embed-documents');
+<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-components', 'wp-element', 'wp-i18n'), 'version' => 'd44452d2430c43e2d408', 'handle' => 'undefined-widgets/embed-documents');

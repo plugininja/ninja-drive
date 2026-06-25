@@ -1,68 +1,24 @@
-.pnpnd-top-level-wrapper {
-    .elementor-panel-category-items {
-        .elementor-element-wrapper {
-            .elementor-element {
-                .icon {
-                    i[class*="pnpnd"] {
-                        font-family: 'pnpnd-icon' !important;
-                        font-style: normal;
+.elementor-widget-container {
+    .pnpnd-top-level-wrapper {
 
-                        &.pnpnd-file-browser {
+        .pnpnd-notice-card-wrapper {
 
-                            &::before {
-                                content: "folder";
-                            }
-                        }
+            .pnpnd-icon {
+                font-family: eicons !important;
 
-                        &.pnpnd-gallery {
+                &.eicon-crown {
+                    font-family: "pnpnd-icon" !important;
 
-                            &::before {
-                                content: "imagesmode";
-                            }
-                        }
-
-                        &.pnpnd-file-list {
-
-                            &::before {
-                                content: "event_list";
-                            }
-                        }
-
-                        &.pnpnd-media-player {
-
-                            &::before {
-                                content: "stock_media";
-                            }
-                        }
-
-                        &.pnpnd-slider-carousel {
-
-                            &::before {
-                                content: "slideshow";
-                            }
-                        }
-
-                        &.pnpnd-search-box {
-
-                            &::before {
-                                content: "feature_search";
-                            }
-                        }
-
-                        &.pnpnd-embed-document {
-
-                            &::before {
-                                content: "text_compare";
-                            }
-                        }
-
-                        &.pnpnd-select-widget {
-
-                            &::before {
-                                content: "code";
-                            }
-                        }
+                    &:before {
+                        content: "crown";
                     }
+                }
+            }
+            
+            .pnpnd-notice-card-wrapper-buttons {
+
+                .pnpnd-icon {
+                    font-family: "pnpnd-icon" !important;
                 }
             }
         }

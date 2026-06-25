@@ -1,5 +1,5 @@
-import Gallery from "~/components/organisms/Modules/Gallery/Gallery";
-import { ModuleConfig } from "../../types/widget.types";
+import Gallery from "~features/widget-builder/components/Modules/Gallery/Gallery";
+import { ModuleConfig } from "~/features/widget-builder";
 import FrontendContainer from "../FrontendContainer";
 import { useState } from "@wordpress/element";
 import FrontendInit from "../FrontendInit";

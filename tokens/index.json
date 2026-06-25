@@ -16,8 +16,7 @@
                 "value": "hsl(from var(--pnpnd-primary) h s l / 11%)"
             },
             "primary-extralight": {
-                "light": "hsl(from var(--pnpnd-primary) h s l / 5%)",
-                "dark": "#000000"
+                "value": "hsl(from var(--pnpnd-primary) h s l / 5%)"
             }
         },
         "semantic": {
@@ -29,6 +28,33 @@
             },
             "success-50": {
                 "value": "#00ac471a"
+            },
+            "skyblue": {
+                "value": "#00afff"
+            },
+            "skyblue-50": {
+                "value": "#00afff0d"
+            },
+            "skyblue-100": {
+                "value": "#00afff26"
+            },
+            "purple": {
+                "value": "#8900ff"
+            },
+            "purple-50": {
+                "value": "#8300ff0d"
+            },
+            "purple-100": {
+                "value": "#8300ff26"
+            },
+            "pink": {
+                "value": "#ff00ff"
+            },
+            "pink-50": {
+                "value": "#ff00ff0d"
+            },
+            "pink-100": {
+                "value": "#ff00ff26"
             },
             "warning": {
                 "value": "#ff5900"

@@ -1,7 +1,7 @@
-import { CustomAlertProvider } from "~/components/molecules/Alert";
+import { CustomAlertProvider } from "~/shared/molecules/Alert";
 import { FileSelectorBridge } from "./index.tsx";
 import * as WPElement from "@wordpress/element";
-import { store } from "~/store/store.ts";
+import { store } from "~kernel/store/store.ts";
 import { Provider } from "react-redux";
 
 function render() {

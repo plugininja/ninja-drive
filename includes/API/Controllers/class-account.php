@@ -181,7 +181,6 @@ class Account extends Base_Controller {
 				}
 			}
 
-			$connection_type = $request->get_param( 'connection_type' );
 			if ( ! empty( $connection_type ) ) {
 				$validated_connection_types = array( 'automatic', 'manual' );
 
@@ -418,4 +417,34 @@ class Account extends Base_Controller {
 		return $schema;
 	}
 
+	public function switch_account__premium_only( WP_REST_Request $request ): WP_REST_Response {
+		try {
+			$account_key = $request->get_param( 'account_key' );
+
+			if ( empty( $account_key ) ) {
+				return self::error_response( __( 'Account key is required.', 'ninja-drive' ), self::HTTP_BAD_REQUEST );
+			}
+
+			$account = pnpnd_get_account_by_key( $account_key );
+
+			if ( is_wp_error( $account ) ) {
+				return self::error_response( $account->get_error_message(), self::HTTP_BAD_REQUEST );
+			}
+
+			if ( empty( $account ) || ! $account instanceof AppAccount ) {
+				return self::error_response( __( 'Invalid account key provided.', 'ninja-drive' ), self::HTTP_BAD_REQUEST );
+			}
+
+			$account = Accounts::get_instance()->switch_account__premium_only( $account->get_id() );
+
+			if ( empty( $account ) ) {
+				return $this->error_response( 'Failed to switch account', 400 );
+			}
+
+				return $this->success_response( $account->jsonSerialize(), 'Account switched successfully' );
+
+		} catch ( \Exception $e ) {
+			return $this->handle_exception( $e, 'Failed to switch account' );
+		}
+	}
 }

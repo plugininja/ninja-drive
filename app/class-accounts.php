@@ -127,10 +127,16 @@ class Accounts {
 			$this->accounts[ $account_id ] = $updated_account;
 		}
 
+		if ( $account->get_active() ) {
+			update_user_meta( get_current_user_id(), Account_Model::USER_ACTIVE_ACCOUNT_KEY, $account_id );
+		}
+
 		return $this->accounts[ $account_id ] ?? $result;
 	}
 
 	public function delete_account( $account_id ) {
+		$account = $this->accounts[ $account_id ] ?? null;
+
 		$result = $this->model->delete_account( $account_id );
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -144,6 +150,10 @@ class Accounts {
 		}
 
 		unset( $this->accounts[ $account_id ] );
+
+		if ( $account ) {
+			do_action( 'pnpnd_account_deleted', $account );
+		}
 
 		return true;
 	}
@@ -161,4 +171,14 @@ class Accounts {
 	 *
 	 * @return Account|bool The switched account object if successful, false if the switch failed.
 	 */
+	public function switch_account__premium_only( $account_id ) {
+		if ( ! $this->model->switch_account__premium_only( $account_id ) ) {
+			return false;
+		}
+
+		$this->current_account         = $this->model->get_account();
+		$this->accounts[ $account_id ] = $this->current_account;
+
+		return $this->current_account;
+	}
 }

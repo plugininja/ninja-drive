@@ -1,7 +1,7 @@
 class PNGallery {
     constructor(options = {}) {
-        this.containerSelector = options.containerSelector || ".gallery";
-        this.itemSelector = options.itemSelector || ".gallery-item";
+        this.containerSelector = options.containerSelector || ".pn-gallery";
+        this.itemSelector = options.itemSelector || ".pn-gallery-item";
         this.items = options.items || [];
         this.currentIndex = 0;
         this.overlay = null;
@@ -82,34 +82,34 @@ class PNGallery {
 
     createOverlay() {
         const overlay = document.createElement("div");
-        overlay.className = "pngallery pngallery-overlay";
+        overlay.className = "pn-gallery pn-overlay";
 
         const content = document.createElement("div");
-        content.className = "pngallery-content";
+        content.className = "pn-content";
 
         // Toolbar
         const toolbar = document.createElement("div");
-        toolbar.className = "pngallery-toolbar";
+        toolbar.className = "pn-toolbar";
 
         const closeBtn = document.createElement("span");
-        closeBtn.className = "pngallery-close";
+        closeBtn.className = "pn-close";
         closeBtn.innerHTML =
             '<svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>';
         closeBtn.onclick = () => this.close();
 
         const counter = document.createElement("span");
-        counter.className = "pngallery-counter";
+        counter.className = "pn-counter";
         counter.textContent = `${this.currentIndex + 1} / ${this.items.length}`;
 
         const playBtn = document.createElement("span");
-        playBtn.className = "pngallery-play";
+        playBtn.className = "pn-play";
         playBtn.innerHTML =
             '<svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e3e3e3"><path d="M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z"/></svg>';
         playBtn.onclick = () => this.toggleAutoplay(playBtn);
 
         // Zoom buttons (only for images)
         const zoomInBtn = document.createElement("span");
-        zoomInBtn.className = "pngallery-zoom-in";
+        zoomInBtn.className = "pn-zoom-in";
         zoomInBtn.innerHTML =
             '<svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e3e3e3"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Zm-40-60v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/></svg>';
         zoomInBtn.onclick = (e) => {
@@ -118,7 +118,7 @@ class PNGallery {
         };
 
         const zoomOutBtn = document.createElement("span");
-        zoomOutBtn.className = "pngallery-zoom-out";
+        zoomOutBtn.className = "pn-zoom-out";
         zoomOutBtn.innerHTML =
             '<svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e3e3e3"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400ZM280-540v-80h200v80H280Z"/></svg>';
         zoomOutBtn.onclick = (e) => {
@@ -127,7 +127,7 @@ class PNGallery {
         };
 
         const resetZoomBtn = document.createElement("span");
-        resetZoomBtn.className = "pngallery-reset-zoom";
+        resetZoomBtn.className = "pn-reset-zoom";
         resetZoomBtn.innerHTML =
             '<svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-80q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-440h80q0 117 81.5 198.5T480-160q117 0 198.5-81.5T760-440q0-117-81.5-198.5T480-720h-6l62 62-56 58-160-160 160-160 56 58-62 62h6q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-440q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-80Z"/></svg>';
         resetZoomBtn.onclick = (e) => {
@@ -147,7 +147,7 @@ class PNGallery {
         const item = this.items[this.currentIndex];
         if (item?.download && item.downloadUrl) {
             const downloadButton = document.createElement("span");
-            downloadButton.className = "pngallery-download";
+            downloadButton.className = "pn-download";
             downloadButton.innerHTML =
                 '<svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e3e3e3"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>';
             downloadButton.onclick = () =>
@@ -160,7 +160,7 @@ class PNGallery {
         overlay.appendChild(toolbar);
 
         const sliderTrack = document.createElement("div");
-        sliderTrack.className = "pngallery-slider-track";
+        sliderTrack.className = "pn-slider-track";
         sliderTrack.style.display = "flex";
         sliderTrack.style.transition = "transform 0.5s ease";
         sliderTrack.style.cursor = "grab";
@@ -168,7 +168,7 @@ class PNGallery {
         // Create slides for all media types
         this.items.forEach((item, index) => {
             const slide = document.createElement("div");
-            slide.className = "pngallery-slide";
+            slide.className = "pn-slide";
             slide.style.minWidth = "100%";
             slide.style.flexShrink = "0";
             slide.style.position = "relative";
@@ -181,7 +181,7 @@ class PNGallery {
             if (item.video) {
                 // Video slide
                 const videoContainer = document.createElement("div");
-                videoContainer.className = "pngallery-video-container";
+                videoContainer.className = "pn-video-container";
                 videoContainer.style.width = "100%";
                 videoContainer.style.height = "100%";
                 videoContainer.style.display = "flex";
@@ -193,7 +193,7 @@ class PNGallery {
             } else if (item.audio) {
                 // Audio slide
                 const audioContainer = document.createElement("div");
-                audioContainer.className = "pngallery-audio-container";
+                audioContainer.className = "pn-audio-container";
                 audioContainer.style.width = "100%";
                 audioContainer.style.height = "100%";
                 audioContainer.style.display = "flex";
@@ -206,7 +206,7 @@ class PNGallery {
             } else if (item.iframe) {
                 // Document slide (PDF, etc.)
                 const docContainer = document.createElement("div");
-                docContainer.className = "pngallery-document-container";
+                docContainer.className = "pn-document-container";
                 docContainer.style.width = "100%";
                 docContainer.style.height = "100%";
                 docContainer.style.display = "flex";
@@ -220,7 +220,7 @@ class PNGallery {
             } else {
                 // Image slide (default)
                 const imgContainer = document.createElement("div");
-                imgContainer.className = "pngallery-img-container";
+                imgContainer.className = "pn-img-container";
                 imgContainer.style.width = "100%";
                 imgContainer.style.height = "100%";
                 imgContainer.style.display = "flex";
@@ -230,7 +230,7 @@ class PNGallery {
                 imgContainer.style.position = "relative";
                 if (item.download) {
                     const downloadBtn = document.createElement("a");
-                    downloadBtn.className = "pngallery-download";
+                    downloadBtn.className = "pn-download";
                     downloadBtn.href = item.downloadUrl;
                     downloadBtn.target = "_blank";
                     downloadBtn.textContent = "Download";
@@ -247,7 +247,7 @@ class PNGallery {
 
         // Navigation arrows
         const prevBtn = document.createElement("span");
-        prevBtn.className = "pngallery-btn pngallery-prev";
+        prevBtn.className = "pn-btn pn-prev";
         prevBtn.textContent = "❮";
         prevBtn.onclick = (e) => {
             e.stopPropagation();
@@ -256,7 +256,7 @@ class PNGallery {
         };
 
         const nextBtn = document.createElement("span");
-        nextBtn.className = "pngallery-btn pngallery-next";
+        nextBtn.className = "pn-btn pn-next";
         nextBtn.textContent = "❯";
         nextBtn.onclick = (e) => {
             e.stopPropagation();
@@ -314,10 +314,10 @@ class PNGallery {
 
     // Update getCurrentImage to handle different media types
     getCurrentImage() {
-        const slides = this.sliderTrack.querySelectorAll(".pngallery-slide");
+        const slides = this.sliderTrack.querySelectorAll(".pn-slide");
         if (slides[this.currentIndex]) {
             // Only return image elements for zoom functionality
-            return slides[this.currentIndex].querySelector(".pngallery-img");
+            return slides[this.currentIndex].querySelector(".pn-img");
         }
         return null;
     }
@@ -344,15 +344,13 @@ class PNGallery {
         if (!item) return;
 
         if (item.video) {
-            const videoContainer = slide.querySelector(
-                ".pngallery-video-container",
-            );
+            const videoContainer = slide.querySelector(".pn-video-container");
             if (!videoContainer) return;
 
             videoContainer.innerHTML = "";
 
             const video = document.createElement("video");
-            video.className = "pngallery-video";
+            video.className = "pn-video";
             video.controls = true;
             video.preload = "metadata";
             video.style.maxWidth = "100%";
@@ -380,7 +378,7 @@ class PNGallery {
             video.addEventListener("error", () => {
                 loader.style.display = "none";
                 loader.innerHTML =
-                    '<div class="pngallery-error">Failed to load video</div>';
+                    '<div class="pn-error">Failed to load video</div>';
             });
 
             video.addEventListener("loadedmetadata", () => {
@@ -390,15 +388,13 @@ class PNGallery {
 
             videoContainer.appendChild(video);
         } else if (item.audio) {
-            const audioContainer = slide.querySelector(
-                ".pngallery-audio-container",
-            );
+            const audioContainer = slide.querySelector(".pn-audio-container");
             if (!audioContainer) return;
 
             audioContainer.innerHTML = "";
 
             const audio = document.createElement("audio");
-            audio.className = "pngallery-audio";
+            audio.className = "pn-audio";
             audio.controls = true;
             audio.preload = "metadata";
             audio.style.width = "100%";
@@ -423,7 +419,7 @@ class PNGallery {
             audio.addEventListener("error", () => {
                 loader.style.display = "none";
                 loader.innerHTML =
-                    '<div class="pngallery-error">Failed to load audio</div>';
+                    '<div class="pn-error">Failed to load audio</div>';
             });
 
             audio.addEventListener("loadedmetadata", () => {
@@ -435,23 +431,21 @@ class PNGallery {
             // audioContainer.appendChild(loader);
             audioContainer.appendChild(audio);
         } else if (item.iframe) {
-            const docContainer = slide.querySelector(
-                ".pngallery-document-container",
-            );
+            const docContainer = slide.querySelector(".pn-document-container");
             if (!docContainer) return;
 
             docContainer.innerHTML = "";
             // Create loader for document
             const loader = document.createElement("div");
-            loader.className = "pngallery-loader";
+            loader.className = "pn-loader";
             loader.innerHTML = `
-                <div class="pngallery-spinner"></div>
-                <div class="pngallery-loading-text">Loading document...</div>
+                <div class="pn-spinner"></div>
+                <div class="pn-loading-text">Loading document...</div>
             `;
 
             // Generic iframe for documents
             const iframe = document.createElement("iframe");
-            iframe.className = "pngallery-iframe";
+            iframe.className = "pn-iframe";
             iframe.src = item.src;
             // iframe.style.aspectRatio = "16 / 9";
             iframe.style.width = "100%";
@@ -478,15 +472,13 @@ class PNGallery {
             iframe.addEventListener("error", () => {
                 loader.style.display = "none";
                 loader.innerHTML =
-                    '<div class="pngallery-error">Failed to load document</div>';
+                    '<div class="pn-error">Failed to load document</div>';
             });
 
             docContainer.appendChild(loader);
             docContainer.appendChild(iframe);
         } else {
-            const imgContainer = slide.querySelector(
-                ".pngallery-img-container",
-            );
+            const imgContainer = slide.querySelector(".pn-img-container");
             if (!imgContainer) return;
 
             // Clear existing content
@@ -494,19 +486,19 @@ class PNGallery {
 
             // Create loader
             const loader = document.createElement("div");
-            loader.className = "pngallery-loader";
+            loader.className = "pn-loader";
             loader.innerHTML = `
-            <div class="pngallery-spinner"></div>
-            <div class="pngallery-loading-text">Loading...</div>
+            <div class="pn-spinner"></div>
+            <div class="pn-loading-text">Loading...</div>
         `;
 
             const img = document.createElement("img");
-            img.className = "pngallery-img";
+            img.className = "pn-img";
             // img.setAttribute("loading", "lazy");
-            img.classList.add("loading");
+            img.classList.add("pn-loading");
 
             img.onload = () => {
-                img.classList.remove("loading");
+                img.classList.remove("pn-loading");
                 loader.style.display = "none";
                 img.style.opacity = "1";
                 this.loadedImages.add(item.src);
@@ -514,10 +506,10 @@ class PNGallery {
             };
 
             img.onerror = () => {
-                img.classList.remove("loading");
+                img.classList.remove("pn-loading");
                 loader.style.display = "none";
                 loader.innerHTML =
-                    '<div class="pngallery-error">Failed to load image</div>';
+                    '<div class="pn-error">Failed to load image</div>';
             };
 
             img.src = item.src;
@@ -596,7 +588,7 @@ class PNGallery {
         const slide = this.sliderTrack.children[index];
         if (!slide) return;
 
-        const imgContainer = slide.querySelector(".pngallery-img-container");
+        const imgContainer = slide.querySelector(".pn-img-container");
         if (imgContainer) {
             imgContainer.innerHTML = ""; // Clear the image
         }
@@ -605,32 +597,31 @@ class PNGallery {
 
     createThumbnails() {
         const thumbnailsContainer = document.createElement("div");
-        thumbnailsContainer.className = "pngallery-thumbnails";
+        thumbnailsContainer.className = "pn-thumbnails";
 
         const thumbnailsTrack = document.createElement("div");
-        thumbnailsTrack.className = "pngallery-thumbnails-track";
+        thumbnailsTrack.className = "pn-thumbnails-track";
 
         this.items.forEach((item, index) => {
             const thumbnail = document.createElement("div");
-            thumbnail.className = "pngallery-thumbnail";
+            thumbnail.className = "pn-thumbnail";
             if (index === this.currentIndex) {
-                thumbnail.classList.add("active");
+                thumbnail.classList.add("pn-active");
             }
 
             const thumbnailImgContainer = document.createElement("div");
-            thumbnailImgContainer.className =
-                "pngallery-thumbnail-img-container";
+            thumbnailImgContainer.className = "pn-thumbnail-img-container";
             thumbnailImgContainer.style.position = "relative";
             thumbnailImgContainer.style.width = "100%";
             thumbnailImgContainer.style.height = "100%";
 
             const thumbnailLoader = document.createElement("div");
-            thumbnailLoader.className = "pngallery-thumbnail-loader";
+            thumbnailLoader.className = "pn-thumbnail-loader";
             thumbnailLoader.innerHTML =
-                '<div class="pngallery-thumbnail-spinner"></div>';
+                '<div class="pn-thumbnail-spinner"></div>';
 
             const thumbnailImg = document.createElement("img");
-            thumbnailImg.className = "pngallery-thumbnail-img";
+            thumbnailImg.className = "pn-thumbnail-img";
 
             const thumbnailSrc = item.thumb || item.src;
 
@@ -672,19 +663,18 @@ class PNGallery {
     updateThumbnails() {
         if (!this.thumbnailsTrack) return;
 
-        const thumbnails = this.thumbnailsTrack.querySelectorAll(
-            ".pngallery-thumbnail",
-        );
+        const thumbnails =
+            this.thumbnailsTrack.querySelectorAll(".pn-thumbnail");
         thumbnails.forEach((thumb, index) => {
             if (index === this.currentIndex) {
-                thumb.classList.add("active");
+                thumb.classList.add("pn-active");
                 thumb.scrollIntoView({
                     behavior: "smooth",
                     block: "nearest",
                     inline: "center",
                 });
             } else {
-                thumb.classList.remove("active");
+                thumb.classList.remove("pn-active");
             }
         });
     }
@@ -697,7 +687,7 @@ class PNGallery {
         this.overlay = this.createOverlay();
         document.body.appendChild(this.overlay);
 
-        setTimeout(() => this.overlay.classList.add("active"), 10);
+        setTimeout(() => this.overlay.classList.add("pn-active"), 10);
         document.body.style.overflow = "hidden";
 
         this.goToSlide(this.currentIndex);
@@ -707,7 +697,7 @@ class PNGallery {
 
     close() {
         if (!this.overlay) return;
-        this.overlay.classList.remove("active");
+        this.overlay.classList.remove("pn-active");
         this.overlay?.remove();
         this.overlay = null;
         this.isOpen = false;
@@ -871,9 +861,9 @@ class PNGallery {
     }
 
     getCurrentImage() {
-        const slides = this.sliderTrack.querySelectorAll(".pngallery-slide");
+        const slides = this.sliderTrack.querySelectorAll(".pn-slide");
         if (slides[this.currentIndex]) {
-            return slides[this.currentIndex].querySelector(".pngallery-img");
+            return slides[this.currentIndex].querySelector(".pn-img");
         }
         return null;
     }
@@ -1011,20 +1001,20 @@ class PNGallery {
 
         if (
             this._mouseEndX === 0 &&
-            !e.target.classList.contains("pngallery-img") &&
-            !e.target.classList.contains("pngallery-document") &&
-            !e.target.classList.contains("pngallery-audio") &&
-            !e.target.classList.contains("pngallery-video")
+            !e.target.classList.contains("pn-img") &&
+            !e.target.classList.contains("pn-document") &&
+            !e.target.classList.contains("pn-audio") &&
+            !e.target.classList.contains("pn-video")
         ) {
             this.close();
             return;
         }
         if (
             this._mouseEndX === 0 &&
-            (e.target.classList.contains("pngallery-img") ||
-                e.target.classList.contains("pngallery-document") ||
-                e.target.classList.contains("pngallery-audio") ||
-                e.target.classList.contains("pngallery-video"))
+            (e.target.classList.contains("pn-img") ||
+                e.target.classList.contains("pn-document") ||
+                e.target.classList.contains("pn-audio") ||
+                e.target.classList.contains("pn-video"))
         ) {
             return;
         }

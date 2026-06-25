@@ -4,6 +4,7 @@ namespace Pnpnd\ND\Integrations;
 
 use Pnpnd\ND\Traits\Singleton;
 use Pnpnd\ND\Widget;
+use Pnpnd\ND\Enqueue;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -17,7 +18,20 @@ class Blocks extends Base_Integration {
 
 	public function init( string $id, array $integration ): void {
 		add_action( 'init', array( $this, 'register_gutenberg_blocks' ) );
+		add_action( 'init', array( $this, 'register_block_dependencies' ), 9 );
 		add_filter( 'block_categories_all', array( $this, 'block_category' ), 10, 2 );
+	}
+
+	/**
+	 * Register the core dependency scripts needed by Gutenberg block
+	 * editorScript assets. Runs early (init:9) so that when register_block_type()
+	 * processes block.json at init:10, the pnpnd-shared dependency (and its
+	 * chain pnpnd-common → pnpnd-vendors → pnpnd-runtime) is already
+	 * registered. Without this, the block editor script may fail to enqueue
+	 * when its asset.php declares pnpnd-shared as a dependency.
+	 */
+	public function register_block_dependencies(): void {
+		Enqueue::get_instance()->register_assets( 'init', 'admin' );
 	}
 
 	public function register_gutenberg_blocks() {

@@ -12,6 +12,7 @@ use Pnpnd\ND\Integrations\Classic_Editor;
 use Pnpnd\ND\Integrations\Elementor;
 use Pnpnd\ND\Traits\Singleton;
 use Pnpnd\ND\Widget\Locations;
+use Pnpnd\ND\Account_Notifications;
 
 class Plugininja {
 
@@ -36,8 +37,12 @@ class Plugininja {
 
 		Schedule::get_instance();
 		Review_Banner::get_instance();
+		Updater::get_instance();
+		Legacy_Cleanup_Notice::get_instance();
+		Account_Notifications::get_instance();
 
-	}
+			new \Pnpnd\ND\Integrations\Media_Library();
+			}
 
 	private function do_hooks() {
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
@@ -53,6 +58,7 @@ class Plugininja {
 		}
 
 		\Pnpnd\pnpnd_fs()->add_action( 'after_license_activation', array( Activation::class, 'init' ) );
+		\Pnpnd\pnpnd_fs()->add_action( 'after_premium_version_activation', array( Activation::class, 'init' ) );
 	}
 
 	public function plugin_row_meta( $links, $file ) {

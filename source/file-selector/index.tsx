@@ -1,4 +1,4 @@
-import { useFileSelector } from "~/components/organisms/modals/FileSelector";
+import { useFileSelector } from "~/shared/file-picker/components/FileSelector";
 import { useEffect } from "@wordpress/element";
 
 export function FileSelectorBridge() {

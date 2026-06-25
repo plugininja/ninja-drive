@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-components', 'wp-element', 'wp-i18n'), 'version' => 'efd6e81b38f084c35cf1', 'handle' => 'undefined-file-selector');
+<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-components', 'wp-element', 'wp-i18n'), 'version' => '2ecf4781a7a5c1789602', 'handle' => 'undefined-file-selector');

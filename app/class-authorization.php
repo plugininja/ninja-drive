@@ -101,6 +101,7 @@ class Authorization {
 					__( 'Account added successfully.', 'ninja-drive' ),
 					__( 'Great! Your account is added successfully. Now you can start using your files in your website. if you have any issue or need any help please feel free to contact us.', 'ninja-drive' )
 				);
+				do_action( 'pnpnd_account_added', $account );
 			}
 		} catch ( Exception $exception ) {
 			pnpnd_notify(

@@ -102,8 +102,24 @@ class App {
 		return ( new Media_Link_Generator( $this->client ) )->generate_download_link( $file_key, $options );
 	}
 
+	public function update_download_link__premium_only( string $file_key, string $download_link_id, array $options = array() ) {
+		return ( new Media_Link_Generator( $this->client ) )->update_download_link__premium_only( $file_key, $download_link_id, $options );
+	}
+
+	public function delete_download_link( string $file_key, string $download_link_id ) {
+		return ( new Media_Link_Generator( $this->client ) )->delete_download_link( $file_key, $download_link_id );
+	}
+
 	public function generate_shared_link( string $file_key, array $options = array() ) {
 		return ( new Media_Link_Generator( $this->client ) )->generate_shared_link( $file_key, $options );
+	}
+
+	public function update_shared_link__premium_only( string $file_key, string $share_link_id, array $options = array() ) {
+		return ( new Media_Link_Generator( $this->client ) )->update_shared_link__premium_only( $file_key, $share_link_id, $options );
+	}
+
+	public function delete_shared_link( string $file_key, string $share_link_id ) {
+		return ( new Media_Link_Generator( $this->client ) )->delete_shared_link( $file_key, $share_link_id );
 	}
 
 	public function search( array $data ) {
@@ -120,4 +136,31 @@ class App {
 		$this->files      = new File_Service( $this->client );
 	}
 
+	public function get_folders_by_media_library__premium_only( $folder_key, $order_by, $order ) {
+		return ( new \Pnpnd\ND\App\Feature\MediaLibrary__premium_only( $this->files, $this->account_id ) )->get_folders_by_media_library( $folder_key, $order_by, $order );
+	}
+
+	public function move_attachments_to_trash__premium_only( $attachment_ids ) {
+		return ( new \Pnpnd\ND\App\Feature\MediaLibrary__premium_only( $this->files, $this->account_id ) )->move_attachments_to_trash( $attachment_ids );
+	}
+
+	public function restore_attachments_from_trash__premium_only( $attachment_ids ) {
+		return ( new \Pnpnd\ND\App\Feature\MediaLibrary__premium_only( $this->files, $this->account_id ) )->restore_attachments_from_trash( $attachment_ids );
+	}
+
+	public function delete_attachments_permanently__premium_only( $attachment_ids ) {
+		return ( new \Pnpnd\ND\App\Feature\MediaLibrary__premium_only( $this->files, $this->account_id ) )->delete_attachments_permanently( $attachment_ids );
+	}
+
+	public function upload_to_media_library__premium_only( $file_key ) {
+		return ( new \Pnpnd\ND\App\Feature\MediaLibrary__premium_only( $this->files, $this->account_id ) )->upload_to_media_library( $file_key );
+	}
+
+	public function move__premium_only( $file_keys, $destination_key ) {
+		return ( new File_Editor( $this->files, $this->account_id ) )->move__premium_only( $file_keys, $destination_key );
+	}
+
+	public function copy__premium_only( $file_keys, $destination_key ) {
+		return ( new File_Editor( $this->files, $this->account_id ) )->copy__premium_only( $file_keys, $destination_key );
+	}
 }

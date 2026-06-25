@@ -588,6 +588,54 @@ class Widget extends Base_Model {
 						continue;
 					}
 
+					$password_protect = $value['configuration']['security']['password_protect'] ?? array();
+
+					$is_password_bypassed = current_user_can( 'manage_options' );
+
+					if ( ! empty( $password_protect ) && ! $is_password_bypassed ) {
+
+						if ( isset( $password_protect['enable'] ) && $password_protect['enable'] && isset( $password_protect['password'] ) && ! empty( $password_protect['password'] ) ) {
+							$stored_password = $password_protect['password'];
+
+							$cookie_key = "pnpnd_token_{$id}";
+
+							$secure_hash = hash( 'sha256', $stored_password );
+
+							if ( ( isset( $_COOKIE[ $cookie_key ] ) && sanitize_text_field( wp_unslash( $_COOKIE[ $cookie_key ] ) ) !== $secure_hash ) || empty( $_COOKIE[ $cookie_key ] ) ) {
+
+								if ( empty( $password ) ) {
+
+									$processed_data['error_type']    = 'password-protected';
+									$processed_data['error_message'] = __( 'This widget is password protected. Please enter the password to view the content.', 'ninja-drive' );
+									unset( $value['data'] );
+
+									return $processed_data;
+								}
+
+								$new_hash = hash( 'sha256', $password );
+								if ( $secure_hash !== $new_hash ) {
+									$processed_data['error_type']    = 'password_incorrect';
+									$processed_data['error_message'] = __( 'Password is incorrect', 'ninja-drive' );
+									unset( $value['data'] );
+									pnpnd_notify(
+										\Pnpnd\ND\Notice::TYPE_ERROR,
+										__( 'Password Error', 'ninja-drive' ),
+										sprintf(
+											"A User '%s' tried to access #%d: %s widget with an incorrect password.",
+											wp_get_current_user()->user_login ?? 'Guest',
+											$id,
+											$widget_type
+										)
+									);
+
+									return $processed_data;
+								} else {
+									setcookie( $cookie_key, $secure_hash, time() + DAY_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+								}
+							}
+						}
+					}
+
 					$source_file_keys = $value['source']['file_keys'] ?? array();
 
 					$file_keys = $source_file_keys;
@@ -596,29 +644,30 @@ class Widget extends Base_Model {
 						return new WP_Error( 'no_file_keys', __( 'No file keys specified in the widget data.', 'ninja-drive' ), array( 'status' => 400 ) );
 					}
 
-					if ( ! empty( $file_key ) && '/' !== $file_key && '' !== $file_key && 'my-drive' !== $file_key ) {
-						$file_keys = array_column( $file_keys, 'file_key' );
+						if ( ! empty( $file_key ) && '/' !== $file_key && '' !== $file_key && 'my-drive' !== $file_key ) {
+							$file_keys = array_column( $file_keys, 'file_key' );
 
-						if ( Helpers::validate_file_key( $file_key, $file_keys ) ) {
-							$file_keys                 = array(
-								array(
-									'file_key'      => $file_key,
-									'thumbnail_key' => '',
-								),
-							);
-							$query_config['recursive'] = true;
-						} else {
-							return new WP_Error( 'file_key_not_allowed', __( 'The specified file key is not allowed for this widget.', 'ninja-drive' ), array( 'status' => 403 ) );
+							if ( Helpers::validate_file_key( $file_key, $file_keys ) ) {
+								$file_keys                 = array(
+									array(
+										'file_key'      => $file_key,
+										'thumbnail_key' => '',
+									),
+								);
+								$query_config['recursive'] = true;
+							} else {
+								return new WP_Error( 'file_key_not_allowed', __( 'The specified file key is not allowed for this widget.', 'ninja-drive' ), array( 'status' => 403 ) );
+							}
 						}
-					}
-
+					
 					$sort = $value['configuration']['advanced']['sort'] ?? false;
 
 					if ( $sort ) {
-						$setting_order = strtoupper( $sort['order'] ?? 'DESC' );
+						$setting_order    = strtoupper( $sort['order'] ?? 'DESC' );
+						$setting_order_by = $sort['order_by'] ?? 'name';
 
 						$query_config['order']    = $order ?? $setting_order;
-						$query_config['order_by'] = $order_by ?? $setting_order;
+						$query_config['order_by'] = $order_by ?? $setting_order_by;
 					}
 
 					$auto_fetch = $value['configuration']['advanced']['auto_fetch'] ?? false;
@@ -682,21 +731,21 @@ class Widget extends Base_Model {
 					$value['source']['total_pages']  = $total_pages;
 					$value['source']['has_more']     = $has_more;
 
-					if ( 'file_browser' === $widget_type ) {
-						$breadcrumb_key = $source_file_keys[0]['file_key'] ?? null;
+						if ( 'file_browser' === $widget_type ) {
+							$breadcrumb_key = $source_file_keys[0]['file_key'] ?? null;
 
-						$breadcrumbs_args = array(
-							'root_file_key'    => $breadcrumb_key,
-							'root_folder_name' => 'Home',
-						);
+							$breadcrumbs_args = array(
+								'root_file_key'    => $breadcrumb_key,
+								'root_folder_name' => 'Home',
+							);
 
-						$breadcrumbs = App::get_instance()->get_breadcrumb_by_key( $file_key, $breadcrumbs_args );
+							$breadcrumbs = App::get_instance()->get_breadcrumb_by_key( $file_key, $breadcrumbs_args );
 
-						if ( is_array( $breadcrumbs ) && ! empty( $breadcrumbs ) && ! is_wp_error( $breadcrumbs ) ) {
-							$value['source']['breadcrumbs'] = array_reverse( $breadcrumbs );
+							if ( is_array( $breadcrumbs ) && ! empty( $breadcrumbs ) && ! is_wp_error( $breadcrumbs ) ) {
+								$value['source']['breadcrumbs'] = array_reverse( $breadcrumbs );
+							}
 						}
-					}
-
+					
 					$value['source']['files']     = $files;
 					$value['source']['next_page'] = $has_more ? $current_page + 1 : null;
 

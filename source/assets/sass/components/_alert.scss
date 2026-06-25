@@ -28,9 +28,9 @@
     animation: pn-alert-fade-in 0.3s ease-out;
 }
 
-.pn-alert-overlay.dark {
-    background: var(--alert-overlay-dark);
-}
+// .pn-alert-overlay.dark {
+//     background: var(--alert-overlay-dark);
+// }
 
 .pn-alert-overlay.pn-toast {
     background: transparent;
@@ -59,10 +59,10 @@
     scrollbar-width: none;
 }
 
-.pn-alert-container.dark {
-    background: $black;
-    color: $black;
-}
+// .pn-alert-container.dark {
+//     background: $black;
+//     color: $black;
+// }
 
 .pn-alert-container.pn-toast {
     max-width: 350px;
@@ -242,13 +242,13 @@
     border-color: var(--alert-error);
 }
 
-.pn-alert-input.dark {
-    border-color: #374151;
-}
+// .pn-alert-input.dark {
+//     border-color: #374151;
+// }
 
-.pn-alert-input.dark:focus {
-    border-color: var(--alert-primary);
-}
+// .pn-alert-input.dark:focus {
+//     border-color: var(--alert-primary);
+// }
 
 .pn-alert-textarea {
     resize: vertical;
@@ -358,9 +358,9 @@
     background: hsl(from var(--alert-error) h s l / 30%);
 }
 
-.pn-alert-cancel-button.dark:hover {
-    background: #4b5563;
-}
+// .pn-alert-cancel-button.dark:hover {
+//     background: #4b5563;
+// }
 
 .pn-alert-close-button {
     position: absolute;
@@ -385,9 +385,9 @@
     background: rgba(0, 0, 0, 0.05);
 }
 
-.pn-alert-close-button.dark:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
+// .pn-alert-close-button.dark:hover {
+//     background: rgba(255, 255, 255, 0.1);
+// }
 
 .pn-alert-close-button svg {
     width: 20px;

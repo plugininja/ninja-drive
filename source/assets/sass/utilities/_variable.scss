@@ -20,6 +20,15 @@ $shadow-xs: var(--pnpnd-shadow-xs, #6c7f9e1a);
 $success: var(--pnpnd-success, #1f6cfa);
 $success-100: var(--pnpnd-success-100, #00ac4733);
 $success-50: var(--pnpnd-success-50, #00ac471a);
+$skyblue: var(--pnpnd-skyblue, #00afff);
+$skyblue-50: var(--pnpnd-skyblue-50, #00afff0d);
+$skyblue-100: var(--pnpnd-skyblue-100, #00afff26);
+$purple: var(--pnpnd-purple, #8900ff);
+$purple-50: var(--pnpnd-purple-50, #8300ff0d);
+$purple-100: var(--pnpnd-purple-100, #8300ff26);
+$pink: var(--pnpnd-pink, #ff00ff);
+$pink-50: var(--pnpnd-pink-50, #ff00ff0d);
+$pink-100: var(--pnpnd-pink-100, #ff00ff26);
 $warning: var(--pnpnd-warning, #ff5900);
 $warning-100: var(--pnpnd-warning-100, #ff590033);
 $warning-50: var(--pnpnd-warning-50, #ff59001a);
@@ -57,6 +66,15 @@ $colors: (
     "success": $success,
     "success-100": $success-100,
     "success-50": $success-50,
+    "skyblue": $skyblue,
+    "skyblue-50": $skyblue-50,
+    "skyblue-100": $skyblue-100,
+    "purple": $purple,
+    "purple-50": $purple-50,
+    "purple-100": $purple-100,
+    "pink": $pink,
+    "pink-50": $pink-50,
+    "pink-100": $pink-100,
     "warning": $warning,
     "warning-100": $warning-100,
     "warning-50": $warning-50,

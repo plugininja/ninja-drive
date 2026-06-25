@@ -1,8 +1,8 @@
-import { ModuleConfig, ModuleKey } from "../types/widget.types";
-import EmptyState from "~/components/molecules/EmptyState";
+import { ModuleConfig, ModuleKey } from "~/features/widget-builder";
 import PreviewEmbedDocuments from "./embed-documents";
-import { noFoundIconSvg } from "~/utils/icons";
+import { noFoundIconSvg } from "~kernel/utils/icons";
 import PreviewFileBrowser from "./file-browser";
+import { EmptyState } from "~/ui/molecules";
 import PreviewGallery from "./gallery";
 import { __ } from "@wordpress/i18n";
 
@@ -21,7 +21,13 @@ const RenderShortcode = ({ data }: { data: ModuleConfig }) => {
         <SelectedComponent data={data} />
     ) : (
         <EmptyState
-            icon={<img src={noFoundIconSvg} alt="" style={{ width: "200px", height: "200px" }} />}
+            icon={
+                <img
+                    src={noFoundIconSvg}
+                    alt=""
+                    style={{ width: "200px", height: "200px" }}
+                />
+            }
             title={__("No files found", "ninja-drive")}
         />
     );

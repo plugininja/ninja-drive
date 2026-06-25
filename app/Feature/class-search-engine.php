@@ -20,7 +20,7 @@ class Search_Engine {
 			$data,
 			array(
 				'from'           => 'cache',
-				'scope'          => 'parent',
+				'scope'          => 'folder',
 				'types'          => array(),
 				'limit'          => 100,
 				'query'          => '',
@@ -36,12 +36,20 @@ class Search_Engine {
 
 		$query = trim( $data['query'] );
 
-		$data['scope'] = in_array( $data['scope'], array( 'parent', 'global' ), true ) ? $data['scope'] : 'parent';
+		$data['scope'] = in_array( $data['scope'], array( 'folder', 'global' ), true ) ? $data['scope'] : 'folder';
 		$data['from']  = in_array( $data['from'], array( 'cache', 'server' ), true ) ? $data['from'] : 'cache';
 
 		if ( 'cache' === $data['from'] ) {
-			return Files::get_instance()->search( $data );
-		} elseif ( 'server' === $data['from'] ) {
+			$result = Files::get_instance()->search( $data );
+
+			if ( ! empty( $data['types'] ) && is_array( $data['types'] ) && empty( $result ) ) {
+				$data['from'] = 'server';
+			} else {
+				return $result;
+			}
+		}
+
+		if ( 'server' === $data['from'] ) {
 			$full_text = filter_var( $data['full_text'], FILTER_VALIDATE_BOOLEAN );
 			$mimetypes = pnpnd_get_mimetypes_by_group( $data['types'] );
 
@@ -87,7 +95,7 @@ class Search_Engine {
 		}
 
 		if ( ! empty( $params['mimetypes'] ) && is_array( $params['mimetypes'] ) ) {
-			$mime_queries  = array_map( fn ( $type ) => "mime_type = '{$type}'", $params['mimetypes'] );
+			$mime_queries  = array_map( fn ( $type ) => "mimeType = '{$type}'", $params['mimetypes'] );
 			$query_parts[] = '(' . implode( ' or ', $mime_queries ) . ')';
 		}
 

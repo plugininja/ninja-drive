@@ -4,6 +4,7 @@ namespace Pnpnd\ND;
 
 use Pnpnd\ND\App\Account;
 use Pnpnd\ND\App\Accounts;
+use Pnpnd\ND\Models\Account as Account_Model;
 use Pnpnd\ND\Notice;
 use Pnpnd\ND\Utils\Helpers;
 use Pnpnd\ND\Traits\Singleton;
@@ -51,8 +52,8 @@ class Enqueue {
 
 	private function normalize_asset_name( string $value ): string {
 
-		return str_replace( '_', '-', $value );
-	}
+			return str_replace( '_', '-', $value );
+			}
 
 	private function style( string $handle, array $deps = array(), $args = array() ) {
 		$_args = array(
@@ -156,18 +157,20 @@ class Enqueue {
 		'post-new.php',
 		'site-editor.php',
 		'upload.php',
+		'wpforms_page_wpforms-builder',
 	);
 
 	public function admin_enqueue( string $hook ): void {
 		$this->common_scripts( $hook );
 
 		if ( in_array( $hook, $this->admin_hooks, true ) ) {
-			$this->script( 'admin', array( 'pnpnd-shared', 'wp-plupload', 'pnpnd-file-selector', 'pnpnd-widget-builder' ) );
+			$this->script( 'admin', array( 'pnpnd-shared', 'pnpnd-vendors-admin', 'wp-plupload', 'pnpnd-file-selector', 'pnpnd-widget-builder' ) );
 		}
 
-		$this->style( 'admin', array() );
+		$this->style( 'admin' );
 
 		$admin_widget_styles = array( 'file_browser', 'gallery', 'embed_documents', 'file_uploader' );
+
 		foreach ( $admin_widget_styles as $_handle ) {
 			if ( wp_style_is( "pnpnd-$_handle", 'registered' ) ) {
 				wp_enqueue_style( "pnpnd-$_handle" );
@@ -185,7 +188,6 @@ class Enqueue {
 		$this->enqueue_common_assets( $hook, $context );
 
 		if ( 'admin' === $context ) {
-			wp_enqueue_script( 'pnpnd-vendors-admin' );
 
 			$post_edit_hooks = array( 'post.php', 'post-new.php' );
 			if ( current_user_can( 'manage_options' ) ) {
@@ -251,12 +253,11 @@ class Enqueue {
 
 		$widget_style_args = array( 'folder' => 'css/frontend' );
 		$common_deps       = array();
-		$fb_deps = array( 'wp-components', 'pnpnd-file_uploader' );
-		$this->r_style( 'file_browser', array_merge( $common_deps, $fb_deps ), $widget_style_args );
+
+		$this->r_style( 'file_uploader', array_merge( $common_deps ), $widget_style_args );
+		$this->r_style( 'file_browser', array_merge( $common_deps, array( 'pnpnd-file_uploader' ) ), $widget_style_args );
 		$this->r_style( 'gallery', array_merge( $common_deps ), $widget_style_args );
 		$this->r_style( 'embed_documents', $common_deps, $widget_style_args );
-
-		$this->r_style( 'file_uploader', array_merge( $common_deps, array( 'wp-components' ) ), $widget_style_args );
 
 	}
 
@@ -419,7 +420,7 @@ class Enqueue {
 			'extension_groups' => pnpnd_get_extension_groups(),
 			'widget_list'      => pnpnd_get_widgets(),
 		);
-
+        
 		if ( is_user_logged_in() ) {
 			$data['current_user'] = array(
 				'id'       => get_current_user_id(),
@@ -427,19 +428,36 @@ class Enqueue {
 				'username' => wp_get_current_user()->user_login,
 				'roles'    => wp_get_current_user()->roles ?? array( 'subscriber' ),
 			);
+
+			global $pagenow;
+
+			$data['pagenow'] = $pagenow;
 		}
 
-		if ( current_user_can( 'manage_options' ) ) {
+		if ( is_user_logged_in() ) {
 			$accounts = Accounts::get_instance()->get_accounts();
 			if ( is_wp_error( $accounts ) ) {
 				$accounts = array();
 			}
 
+			$current_user_active_account = get_user_meta( get_current_user_id(), Account_Model::USER_ACTIVE_ACCOUNT_KEY, true );
+
+			$active_account = array_find(
+				$accounts,
+				function ( Account $account ) use ( $current_user_active_account ) {
+					return $account->get_id() === $current_user_active_account;
+				}
+			);
+
+			$active_account_id = $active_account ? $active_account->get_id() : null;
+
 			$accounts = array_map(
-				function ( Account $account ) {
+				function ( Account $account ) use ( $active_account_id ) {
 					$account_id = $account->get_id();
 
 					$syncing = get_transient( "pnpnd_syncing_account_{$account_id}" );
+
+					$is_active_account = $active_account_id ? $active_account_id === $account_id : $account->get_active();
 
 					return array(
 						'id'          => $account_id,
@@ -448,7 +466,7 @@ class Enqueue {
 						'email'       => $account->get_email(),
 						'photo'       => $account->get_photo(),
 						'syncing'     => $syncing ? true : false,
-						'active'      => $account->get_active(),
+						'active'      => $is_active_account,
 						'lost'        => $account->is_lost(),
 						'root_id'     => $account->get_root_id(),
 						'storage'     => $account->get_storage(),
@@ -458,18 +476,20 @@ class Enqueue {
 				$accounts
 			);
 
-			$data['accounts']         = array_values( $accounts ?? array() );
-			$data['settings']         = Helpers::get_settings();
-			$data['default_settings'] = pnpnd_get_default_settings();
-			$data['admin_page_url']   = admin_url( 'admin.php?page=ninja-drive' );
-			$data['redirect_uri']     = PNPND_REDIRECT_URI;
-			$data['onboarding']       = get_option( 'pnpnd_onboarding_module_builder', 1 );
+			$settings         = Helpers::get_settings();
+			$default_settings = pnpnd_get_default_settings();
+			$admin_url        = admin_url( 'admin.php?page=ninja-drive' );
+			$onboarding       = get_option( 'pnpnd_onboarding_module_builder', 1 );
 
-		}
-
-		if ( current_user_can( 'manage_options' ) ) {
-			$data['active_plugins'] = $this->get_active_integration_plugins();
-		}
+				if ( current_user_can( 'manage_options' ) ) {
+					$data['accounts']         = array_values( $accounts ?? array() );
+					$data['settings']         = $settings;
+					$data['default_settings'] = $default_settings;
+					$data['admin_page_url']   = $admin_url;
+					$data['redirect_uri']     = PNPND_REDIRECT_URI;
+					$data['onboarding']       = $onboarding;
+				}
+					}
 
 		$data = apply_filters( 'pnpnd_localize_data', $data, $script, $hook );
 

@@ -4,8 +4,10 @@ namespace Pnpnd\ND\Models;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
+use Pnpnd\ND\App\Accounts;
 use Pnpnd\ND\Utils\Helpers;
 use Pnpnd\ND\Traits\Singleton;
+use Pnpnd\ND\Models\File_Meta;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
@@ -160,7 +162,7 @@ class Files extends Base_Model {
 
 			$per_page     = (int) $config['per_page'];
 			$current_page = (int) $config['page'];
-			$has_more     = $current_page < $total_page;
+			$has_more     = $total_page > $current_page;
 			$next_page    = $has_more ? $current_page + 1 : null;
 
 			$response = array(
@@ -194,7 +196,7 @@ class Files extends Base_Model {
 		$order        = $data['order'] ?? 'ASC';
 		$order_by     = $data['order_by'] ?? 'name';
 		$folder_id    = $data['folderId'] ?? '';
-		$scope        = isset( $data['scope'] ) && in_array( $data['scope'], array( 'parent', 'global' ), true ) ? $data['scope'] : 'parent';
+		$scope        = isset( $data['scope'] ) && in_array( $data['scope'], array( 'folder', 'global' ), true ) ? $data['scope'] : 'folder';
 
 		if ( ! Account::get_instance()->is_valid_account( $account_id ) ) {
 			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
@@ -221,7 +223,7 @@ class Files extends Base_Model {
 			$query_string .= $wpdb->prepare( " AND extension IN ($placeholders)", $extensions );
 		}
 
-		if ( 'parent' === $scope && ! empty( $folder_id ) ) {
+		if ( 'folder' === $scope && ! empty( $folder_id ) ) {
 			$query_string .= $wpdb->prepare( ' AND parent_id = %s', $folder_id );
 		}
 
@@ -411,6 +413,7 @@ class Files extends Base_Model {
 			'search'          => '',
 			'search_scope'    => 'folder',
 			'search_location' => 'cache',
+			'types'           => array(),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -422,10 +425,10 @@ class Files extends Base_Model {
 		$extensions_filter_type = $args['extensions_filter_type'] ?? '';
 		$search                 = $args['search'];
 		$search_scope           = $args['search_scope'];
-
-		$names_string       = $args['names'] ?? '';
-		$names_filter_type  = $args['names_filter_type'] ?? '';
-		$apply_names_filter = $args['apply_name_filter'] ?? array();
+		$types                  = $args['types'];
+		$names_string           = $args['names'] ?? '';
+		$names_filter_type      = $args['names_filter_type'] ?? '';
+		$apply_names_filter     = $args['apply_name_filter'] ?? array();
 
 		$allowed_extensions = pnpnd_get_allowed_widget_extensions( $widget_type );
 
@@ -434,6 +437,10 @@ class Files extends Base_Model {
 			$additional_extensions,
 			$extensions_filter_type
 		);
+
+		if ( 'all' !== $types && ! empty( $types ) ) {
+			$extensions = pnpnd_get_extension_groups( $types );
+		}
 
 		$files_data = $this->get_file_attributes_by_keys( $keys, array( 'id', 'account_id', 'name', 'is_dir' ) );
 
@@ -603,7 +610,7 @@ class Files extends Base_Model {
 			return new WP_Error( 403, __( 'This account is lost or does not exist. Please re-authorize it.', 'ninja-drive' ) );
 		}
 
-		if ( count( $attributes ) === 1 ) {
+		if ( 1 === count( $attributes ) ) {
 			$attr   = $attributes[0];
 			$result = array();
 			foreach ( $processed_files as $file ) {
@@ -745,7 +752,7 @@ class Files extends Base_Model {
 			wp_cache_delete( $cache_key, 'pnpnd_files' );
 			wp_cache_delete( $cache_key_by_file_key, 'pnpnd_files' );
 
-			return $wpdb->query( $sql ) !== false; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			return false !== $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		}
 
 		$cache_key             = "pnpnd_file_{$id}";
@@ -905,14 +912,14 @@ class Files extends Base_Model {
 		$expire_in = intval( $options['expire_in'] );
 		$password  = sanitize_text_field( $options['password'] ?? null );
 
-		$expiry        = $expire_in > 0 ? time() + $expire_in : 0;
+		$expiry        = 0 < $expire_in ? time() + $expire_in : 0;
 		$password_hash = ! empty( $password ) ? md5( $password ) : '';
 
 		$shared_data = $this->get_shared_data( $file_key );
 
 		$key = md5( "$file_key|$expiry|$password_hash" );
 
-		if ( ! empty( $shared_data[ $key ] ) && $shared_data[ $key ]['expiry'] >= time() ) {
+		if ( ! empty( $shared_data[ $key ] ) && time() <= $shared_data[ $key ]['expiry'] ) {
 			return "{$file_key}-{$key}";
 		}
 
@@ -926,6 +933,51 @@ class Files extends Base_Model {
 		$this->save_shared_data( $file_key, $shared_data );
 
 		return "{$file_key}-{$key}";
+	}
+
+	public function update_shared_key__premium_only( string $file_key, string $share_link_id, array $options = array() ) {
+		$shared_data = $this->get_shared_data( $file_key );
+
+		if ( empty( $shared_data[ $share_link_id ] ) ) {
+			return new WP_Error( 404, __( 'The specified share link does not exist.', 'ninja-drive' ) );
+		}
+
+		$share_info = $shared_data[ $share_link_id ];
+
+		$expire_in = isset( $options['expire_in'] ) ? intval( $options['expire_in'] ) : null;
+		$password  = isset( $options['password'] ) ? sanitize_text_field( $options['password'] ) : null;
+
+		if ( null !== $expire_in ) {
+			$share_info['expiry'] = 0 < $expire_in ? time() + $expire_in : 0;
+		}
+
+		if ( null !== $password ) {
+			$share_info['password'] = ! empty( $password ) ? md5( $password ) : '';
+		}
+
+		$shared_data[ $share_link_id ] = $share_info;
+
+		return $this->save_shared_data( $file_key, $shared_data );
+	}
+
+	public function delete_shared_key( string $file_key, string $share_link_id ) {
+		$shared_data = $this->get_shared_data( $file_key );
+
+		if ( empty( $shared_data[ $share_link_id ] ) && 'all' !== $share_link_id ) {
+			return new WP_Error( 404, __( 'The specified share link does not exist.', 'ninja-drive' ) );
+		}
+
+		if ( 'all' === $share_link_id ) {
+			$shared_data = null;
+		} else {
+			unset( $shared_data[ $share_link_id ] );
+
+			if ( empty( $shared_data ) ) {
+				$shared_data = null;
+			}
+		}
+
+		return $this->save_shared_data( $file_key, $shared_data );
 	}
 
 	public function validate_shared_link( string $combined_key, string $password = '' ) {
@@ -944,7 +996,7 @@ class Files extends Base_Model {
 
 		$share_info = $shared_data[ $link_key ];
 
-		if ( $share_info['expiry'] < time() && 0 !== $share_info['expiry'] ) {
+		if ( time() > $share_info['expiry'] && 0 !== $share_info['expiry'] ) {
 			$this->delete_shared_entry( $file_key, $link_key );
 
 			return false;
@@ -956,7 +1008,7 @@ class Files extends Base_Model {
 				return new WP_Error( 'password_required', __( 'This shared link is protected by a password. Please provide the password to access the file.', 'ninja-drive' ) );
 			}
 
-			if ( $share_info['password'] !== $hashed_password ) {
+			if ( $hashed_password !== $share_info['password'] ) {
 				return new WP_Error( 'invalid_password', __( 'The provided password is incorrect.', 'ninja-drive' ) );
 			}
 		}
@@ -989,13 +1041,13 @@ class Files extends Base_Model {
 
 		$download_info = $download_data[ $link_key ];
 
-		if ( $download_info['expiry'] < time() && 0 !== $download_info['expiry'] ) {
+		if ( time() > $download_info['expiry'] && 0 !== $download_info['expiry'] ) {
 			return new WP_Error( 'link_expired', __( 'This download link has expired.', 'ninja-drive' ) );
 		}
 
 		$download_limit = intval( $download_info['limit'] ?? 0 );
 
-		if ( $download_limit > 0 && intval( $download_info['download_count'] ?? 0 ) >= $download_limit ) {
+		if ( 0 < $download_limit && $download_limit <= intval( $download_info['download_count'] ?? 0 ) ) {
 			return new WP_Error( 'download_limit_exceeded', __( 'The download limit for this link has been exceeded.', 'ninja-drive' ) );
 		}
 
@@ -1005,7 +1057,7 @@ class Files extends Base_Model {
 				return new WP_Error( 'password_required', __( 'This Download link is protected by a password. Please provide the password to access the file.', 'ninja-drive' ) );
 			}
 
-			if ( $download_info['password'] !== $hashed_password ) {
+			if ( $hashed_password !== $download_info['password'] ) {
 				return new WP_Error( 'invalid_password', __( 'The provided password is incorrect.', 'ninja-drive' ) );
 			}
 		}
@@ -1035,14 +1087,14 @@ class Files extends Base_Model {
 		$password  = sanitize_text_field( $options['password'] ?? null );
 		$limit     = intval( $options['limit'] );
 
-		$expiry        = $expire_in > 0 ? time() + $expire_in : 0;
+		$expiry        = 0 < $expire_in ? time() + $expire_in : 0;
 		$password_hash = ! empty( $password ) ? md5( $password ) : '';
 
 		$download_data = $this->get_download_data( $file_key );
 
 		$key = md5( "$file_key|$expiry|$password_hash|$limit" );
 
-		if ( ! empty( $download_data[ $key ] ) && $download_data[ $key ]['expiry'] >= time() ) {
+		if ( ! empty( $download_data[ $key ] ) && time() <= $download_data[ $key ]['expiry'] ) {
 			return "{$file_key}-{$key}";
 		}
 
@@ -1059,6 +1111,56 @@ class Files extends Base_Model {
 		return "{$file_key}-{$key}";
 	}
 
+	public function update_download_key__premium_only( string $file_key, string $download_link_id, array $options = array() ) {
+		$download_data = $this->get_download_data( $file_key );
+
+		if ( empty( $download_data[ $download_link_id ] ) ) {
+			return new WP_Error( 404, __( 'The specified download link does not exist.', 'ninja-drive' ) );
+		}
+
+		$download_info = $download_data[ $download_link_id ];
+
+		$expire_in = isset( $options['expire_in'] ) ? intval( $options['expire_in'] ) : null;
+		$password  = isset( $options['password'] ) ? sanitize_text_field( $options['password'] ) : null;
+		$limit     = isset( $options['limit'] ) ? intval( $options['limit'] ) : null;
+
+		if ( null !== $expire_in ) {
+			$download_info['expiry'] = 0 < $expire_in ? time() + $expire_in : 0;
+		}
+
+		if ( null !== $password ) {
+			$download_info['password'] = ! empty( $password ) ? md5( $password ) : '';
+		}
+
+		if ( null !== $limit ) {
+			$download_info['limit'] = $limit;
+		}
+
+		$download_data[ $download_link_id ] = $download_info;
+
+		return $this->save_download_data( $file_key, $download_data );
+	}
+
+	public function delete_download_key( string $file_key, string $download_link_id ) {
+		$download_data = $this->get_download_data( $file_key );
+
+		if ( empty( $download_data[ $download_link_id ] ) && 'all' !== $download_link_id ) {
+			return new WP_Error( 404, __( 'The specified download link does not exist.', 'ninja-drive' ) );
+		}
+
+		if ( 'all' === $download_link_id ) {
+			$download_data = null;
+		} else {
+			unset( $download_data[ $download_link_id ] );
+
+			if ( empty( $download_data ) ) {
+				$download_data = null;
+			}
+		}
+
+		return $this->save_download_data( $file_key, $download_data );
+	}
+
 	private function parse_combined_key( string $combined_key ) {
 		$parts = explode( '-', $combined_key, 2 );
 
@@ -1072,37 +1174,21 @@ class Files extends Base_Model {
 			return array();
 		}
 
-		$meta_data = maybe_unserialize( $file->meta_data );
+		$meta = File_Meta::get_instance()->get_meta( $file_key, 'shared_data' );
 
-		return $meta_data['shared_data'] ?? array();
+		return is_array( $meta ) ? $meta : array();
 	}
 
-	private function save_shared_data( string $file_key, array $shared_data ) {
-		global $wpdb;
-
+	private function save_shared_data( string $file_key, ?array $shared_data ) {
 		$file = $this->get_file_by_key( $file_key );
 
 		if ( ! $file ) {
 			return false;
 		}
 
-		$meta_data                = maybe_unserialize( $file->meta_data ) ?? array();
-		$meta_data['shared_data'] = $shared_data;
+		File_Meta::get_instance()->update_meta( $file_key, 'shared_data', $shared_data );
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$result = $wpdb->update(
-			$this->table_name,
-			array( 'meta_data' => maybe_serialize( $meta_data ) ),
-			array( 'file_key' => $file_key ),
-			array( '%s' ),
-			array( '%s' )
-		);
-
-		if ( ! is_wp_error( $result ) && false !== $result ) {
-			wp_cache_flush_group( 'pnpnd_files' );
-		}
-
-		return $result;
+		return $this->get_shared_data( $file_key );
 	}
 
 	private function delete_shared_entry( string $file_key, string $link_key ) {
@@ -1156,12 +1242,12 @@ class Files extends Base_Model {
 			return array();
 		}
 
-		$meta_data = maybe_unserialize( $file->meta_data );
+		$meta = File_Meta::get_instance()->get_meta( $file_key, 'download_data' );
 
-		return $meta_data['download_data'] ?? array();
+		return is_array( $meta ) ? $meta : array();
 	}
 
-	private function save_download_data( string $file_key, array $download_data ) {
+	private function save_download_data( string $file_key, ?array $download_data ) {
 		global $wpdb;
 
 		$file = $this->get_file_by_key( $file_key );
@@ -1170,23 +1256,9 @@ class Files extends Base_Model {
 			return false;
 		}
 
-		$meta_data                  = maybe_unserialize( $file->meta_data ) ?? array();
-		$meta_data['download_data'] = $download_data;
+		File_Meta::get_instance()->update_meta( $file_key, 'download_data', $download_data );
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$result = $wpdb->update(
-			$this->table_name,
-			array( 'meta_data' => maybe_serialize( $meta_data ) ),
-			array( 'file_key' => $file_key ),
-			array( '%s' ),
-			array( '%s' )
-		);
-
-		if ( ! is_wp_error( $result ) && false !== $result ) {
-			wp_cache_flush_group( 'pnpnd_files' );
-		}
-
-		return $result;
+		return $this->get_download_data( $file_key );
 	}
 
 	public function update_download_data( string $combined_key, array $updates = array() ) {
@@ -1215,10 +1287,131 @@ class Files extends Base_Model {
 		return $this->save_download_data( $file_key, $download_data );
 	}
 
-	private function process_files( $files, $return_type = 'array', $filter = null ) {
+	public function shared_files( array $args = array() ) {
+		return $this->files_by_meta_key( 'shared_data', $args );
+	}
+
+	public function downloaded_files( array $args = array() ) {
+		return $this->files_by_meta_key( 'download_data', $args );
+	}
+
+	public function cached_files( array $args = array() ) {
+		return $this->files_by_meta_key( 'cached_data', $args );
+	}
+
+	private function files_by_meta_key( string $meta_key, array $args = array() ) {
+		global $wpdb;
+
+		$defaults = array(
+			'account_id' => null,
+			'per_page'   => 5,
+			'page'       => 1,
+			'order_by'   => 'updated_at',
+			'order'      => 'DESC',
+		);
+		$args     = wp_parse_args( $args, $defaults );
+
+		$account_id = $args['account_id'];
+
+		if ( empty( $account_id ) ) {
+			$account = Accounts::get_instance()->get_account();
+			if ( is_wp_error( $account ) ) {
+				return $account;
+			}
+
+			$account_id = $account ? $account->get_id() : null;
+		}
+
+		$per_page = (int) $args['per_page'];
+		$page     = (int) $args['page'];
+
+		$pagination = $this->sanitize_pagination( $page, $per_page );
+		$order      = $this->sanitize_order( $args['order'] );
+		$order_by   = $this->sanitize_order_by( $args['order_by'], array( 'name', 'created_at', 'updated_at', 'size' ) );
+
+		$meta_table = File_Meta::get_instance()->get_table_name();
+
+		$sql = $wpdb->prepare(
+			"SELECT f.* FROM %i f INNER JOIN %i fm ON f.file_key = fm.file_key WHERE fm.meta_key = %s AND `meta_value` IS NOT NULL AND `meta_value` != '' AND `meta_value` != 'a:0:{}'",
+			$this->table_name,
+			$meta_table,
+			$meta_key
+		);
+
+		$count_sql = $wpdb->prepare(
+			"SELECT COUNT(*) FROM %i f INNER JOIN %i fm ON f.file_key = fm.file_key WHERE fm.meta_key = %s AND `meta_value` IS NOT NULL AND `meta_value` != '' AND `meta_value` != 'a:0:{}'",
+			$this->table_name,
+			$meta_table,
+			$meta_key
+		);
+
+		if ( $args['account_id'] ) {
+			$sql       .= $wpdb->prepare( ' AND f.`account_id` = %s', $args['account_id'] );
+			$count_sql .= $wpdb->prepare( ' AND f.`account_id` = %s', $args['account_id'] );
+		}
+
+		if ( 'ASC' === $order ) {
+			$sql .= $wpdb->prepare( ' ORDER BY f.%i ASC LIMIT %d OFFSET %d', $order_by, $pagination['per_page'], $pagination['offset'] );
+		} else {
+			$sql .= $wpdb->prepare( ' ORDER BY f.%i DESC LIMIT %d OFFSET %d', $order_by, $pagination['per_page'], $pagination['offset'] );
+		}
+
+		$files = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$total = $wpdb->get_var( $count_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		if ( is_wp_error( $files ) ) {
+			return $files;
+		}
+
+		if ( empty( $files ) ) {
+			return array(
+				'files'        => array(),
+				'total'        => 0,
+				'per_page'     => $pagination['per_page'],
+				'current_page' => $pagination['page'],
+				'total_pages'  => 0,
+				'has_more'     => false,
+				'next_page'    => null,
+			);
+		}
+
+		$files = $this->process_files( $files );
+
+		$result = array(
+			'files'        => $files,
+			'total'        => (int) $total,
+			'per_page'     => $pagination['per_page'],
+			'current_page' => $pagination['page'],
+			'total_pages'  => ceil( $total / $pagination['per_page'] ),
+			'has_more'     => $total > $pagination['page'] * $pagination['per_page'],
+			'next_page'    => $total > $pagination['page'] * $pagination['per_page'] ? $pagination['page'] + 1 : null,
+		);
+
+		return $result;
+	}
+
+	private function process_files( array $files, $return_type = 'array', $filter = null ) {
+		if ( empty( $files ) ) {
+			return array();
+		}
+
+		// Batch-load meta to avoid N+1 queries in list views.
+		$file_keys = array();
+		foreach ( $files as $file ) {
+			if ( isset( $file['file_key'] ) ) {
+				$file_keys[] = $file['file_key'];
+			}
+		}
+
+		$all_meta = array();
+		if ( ! empty( $file_keys ) ) {
+			$all_meta = File_Meta::get_instance()->get_meta_for_files( $file_keys );
+		}
+
 		$processed_files = array();
 		foreach ( $files as $file ) {
-			$processed_files[] = $this->process_file( $file, $return_type, $filter );
+			$file['__batch_meta__'] = $all_meta[ $file['file_key'] ] ?? array();
+			$processed_files[]      = $this->process_file( $file, $return_type, $filter );
 		}
 
 		return $processed_files;
@@ -1230,7 +1423,15 @@ class Files extends Base_Model {
 			return array();
 		}
 
-		$file_data['thumbnail'] = ( Helpers::check_lifetime( $file['updated_at'] ) > 0 ) ? $file['thumbnail'] : null;
+		$file_data['thumbnail'] = ( 0 < Helpers::check_lifetime( $file['updated_at'] ) ) ? $file['thumbnail'] : null;
+
+		// Prefer meta loaded in batch by process_files(); otherwise fall back to a single lookup.
+		if ( isset( $file['__batch_meta__'] ) ) {
+			$resolved_meta = ! empty( $file['__batch_meta__'] ) ? $file['__batch_meta__'] : false;
+			unset( $file['__batch_meta__'] );
+		} else {
+			$resolved_meta = $this->load_file_meta( $file['file_key'] );
+		}
 
 		$file_data = array(
 			'id'              => $file['id'],
@@ -1244,7 +1445,7 @@ class Files extends Base_Model {
 			'extension'       => $file['extension'],
 			'icon'            => $file['icon'],
 			'additional_data' => maybe_unserialize( $file['additional_data'] ),
-			'meta_data'       => maybe_unserialize( $file['meta_data'] ),
+			'meta_data'       => $resolved_meta,
 			'is_dir'          => $file['is_dir'],
 			'is_shared'       => $file['is_shared'],
 			'is_starred'      => $file['is_starred'],
@@ -1271,6 +1472,23 @@ class Files extends Base_Model {
 			'mime_type' => $file['mime_type'],
 			'size'      => $file['size'],
 		);
+	}
+
+	/**
+	 * Single-file meta lookup. Used by `process_file()` only when the row is
+	 * not part of a batch (e.g. direct calls to `get_file()` / `get_file_by_key()`).
+	 */
+	private function load_file_meta( string $file_key ) {
+		if ( empty( $file_key ) ) {
+			return false;
+		}
+
+		$meta = File_Meta::get_instance()->get_all_meta( $file_key );
+		if ( empty( $meta ) ) {
+			return false;
+		}
+
+		return $meta;
 	}
 
 	private function process_extensions( array $extensions, array $additional_extensions, string $filter_type ): array {
@@ -1329,4 +1547,119 @@ class Files extends Base_Model {
 		return $result;
 	}
 
+	private function process_naming_filters__premium_only( string $names_string, array $apply_names_filter, string $names_filter_type ) {
+
+		if ( ! empty( $names_string ) && ! empty( $apply_names_filter ) ) {
+			$names     = array_map( 'trim', explode( ',', $names_string ) );
+			$sql_names = array_map(
+				fn ( $p ) => strtr(
+					$p,
+					array(
+						'*' => '%',
+						'?' => '_',
+					)
+				),
+				$names
+			);
+
+			$type_where  = array();
+			$type_params = array();
+			foreach ( $apply_names_filter as $type => $value ) {
+				if ( ! $value ) {
+					continue;
+				}
+
+				$type_where[]  = 'is_dir = %d';
+				$type_params[] = ( 'folders' === $type ) ? 1 : 0;
+			}
+
+			$type_sql = $type_where ? '(' . implode( ' OR ', $type_where ) . ')' : '';
+
+			$name_where  = array();
+			$name_params = array();
+
+			$like_op    = ( 'include' === $names_filter_type ) ? 'LIKE' : 'NOT LIKE';
+			$glue       = ( 'include' === $names_filter_type ) ? 'OR' : 'AND';
+			$multi_type = 1 < count( $type_params );
+
+			foreach ( $sql_names as $pat ) {
+				if ( $multi_type ) {
+					$name_where[] = "($type_sql AND name $like_op %s)";
+					$name_params  = array_merge( $name_params, $type_params, array( $pat ) );
+				} else {
+					$name_where[] = "($type_sql AND name $like_op %s OR is_dir != %d)";
+					$name_params  = array_merge( $name_params, $type_params, array( $pat ), $type_params );
+				}
+			}
+
+			if ( $name_where ) {
+				$sql = ' AND (' . implode( " $glue ", $name_where ) . ')';
+
+				return array(
+					'sql'        => $sql,
+					'params'     => $name_params,
+					'sql_glue'   => $glue,
+					'name_where' => $name_where,
+				);
+			}
+
+			return array();
+		}
+	}
+
+	public function add_to_cache( $file_key, $size ) {
+		if ( empty( $file_key ) ) {
+			return false;
+		}
+
+		$cached_data          = File_Meta::get_instance()->get_meta( $file_key, 'cached_data' ) ?? array();
+		$cached_data[ $size ] = current_time( 'mysql' );
+
+		delete_transient( 'pnpnd_dashboard_image_cache' );
+
+		return File_Meta::get_instance()->update_meta( $file_key, 'cached_data', $cached_data );
+	}
+
+	public function clear_cache_files( $size = null ) {
+		global $wpdb;
+
+		$meta_table = File_Meta::get_instance()->get_table_name();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$files = $wpdb->get_col(
+			$wpdb->prepare(
+				'SELECT `file_key` FROM %i WHERE `meta_key` = %s',
+				$meta_table,
+				'cached_data'
+			)
+		);
+
+		if ( is_wp_error( $files ) || empty( $files ) ) {
+			return true;
+		}
+
+		foreach ( $files as $file_key ) {
+			$this->clear_cache( $file_key, $size );
+		}
+
+		return true;
+	}
+
+	public function clear_cache( $file_key, $size = null ) {
+		if ( empty( $file_key ) ) {
+			return false;
+		}
+
+		if ( $size ) {
+			$cached_data = File_Meta::get_instance()->get_meta( $file_key, 'cached_data' ) ?? array();
+			unset( $cached_data[ $size ] );
+			$result = File_Meta::get_instance()->update_meta( $file_key, 'cached_data', $cached_data );
+		} else {
+			$result = File_Meta::get_instance()->delete_meta( $file_key, 'cached_data' );
+		}
+
+		delete_transient( 'pnpnd_dashboard_image_cache' );
+
+		return ! is_wp_error( $result ) && $result;
+	}
 }

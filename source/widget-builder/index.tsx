@@ -1,4 +1,4 @@
-import { useModuleBuilder } from "~/components/organisms/modals/ModuleBuilder";
+import { useModuleBuilder } from "~features/widget-builder/components/modals/ModuleBuilder";
 import { useEffect } from "@wordpress/element";
 
 export function ModuleBuilderBridge() {

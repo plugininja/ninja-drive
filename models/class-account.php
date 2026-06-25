@@ -16,6 +16,8 @@ class Account extends Base_Model {
 
 	use Singleton;
 
+	public const USER_ACTIVE_ACCOUNT_KEY = 'pnpnd_active_account';
+
 	/**
 	 * Constructor to initialize the model with database access
 	 */
@@ -92,6 +94,48 @@ class Account extends Base_Model {
 		return $processed_accounts;
 	}
 
+	public function get_accounts_summary() {
+		global $wpdb;
+
+		$cache_key = 'pnpnd_dashboard_accounts_summary';
+		$cache     = wp_cache_get( $cache_key, 'pnpnd_accounts' );
+		if ( false !== $cache ) {
+			return $cache;
+		}
+
+		$sql = $wpdb->prepare(
+			'SELECT id, account_key, name, email, photo, lost, active, created_at
+			FROM %i
+			ORDER BY active DESC, created_at DESC',
+			$this->table_name
+		);
+
+		$accounts = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+
+		if ( is_wp_error( $accounts ) || empty( $accounts ) ) {
+			return array();
+		}
+
+		$summary = array();
+
+		foreach ( $accounts as $account ) {
+			$summary[] = array(
+				'id'           => $account['id'],
+				'account_key'  => $account['account_key'],
+				'name'         => $account['name'],
+				'email'        => $account['email'],
+				'photo'        => $account['photo'],
+				'is_lost'      => (bool) $account['lost'],
+				'is_active'    => (bool) $account['active'],
+				'connected_at' => $account['created_at'],
+			);
+		}
+
+		wp_cache_set( $cache_key, $summary, 'pnpnd_accounts', HOUR_IN_SECONDS );
+
+		return $summary;
+	}
+
 	/**
 	 * Get account by ID
 	 *
@@ -105,6 +149,13 @@ class Account extends Base_Model {
 		$cached_account = wp_cache_get( $cache_key, 'pnpnd_accounts' );
 		if ( false !== $cached_account ) {
 			return $cached_account;
+		}
+
+		if ( empty( $id ) ) {
+			$get_current_user_active_account = get_user_meta( get_current_user_id(), self::USER_ACTIVE_ACCOUNT_KEY, true );
+			if ( ! empty( $get_current_user_active_account ) ) {
+				$id = $get_current_user_active_account;
+			}
 		}
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -121,6 +172,10 @@ class Account extends Base_Model {
 		$result = $this->process_account( $result );
 
 		wp_cache_set( $cache_key, $result, 'pnpnd_accounts' );
+
+		if ( empty( $id ) && $result instanceof AppAccount ) {
+			update_user_meta( get_current_user_id(), self::USER_ACTIVE_ACCOUNT_KEY, $result->get_id() );
+		}
 
 		return $result;
 	}
@@ -252,6 +307,8 @@ class Account extends Base_Model {
 		wp_cache_delete( 'pnpnd_account_active', 'pnpnd_accounts' );
 		wp_cache_delete( 'pnpnd_accounts_all', 'pnpnd_accounts' );
 
+		update_user_meta( get_current_user_id(), self::USER_ACTIVE_ACCOUNT_KEY, $account->get_id() );
+
 		return (bool) $result;
 	}
 
@@ -351,6 +408,17 @@ class Account extends Base_Model {
 		wp_cache_delete( 'pnpnd_account_active', 'pnpnd_accounts' );
 		wp_cache_delete( 'pnpnd_accounts_all', 'pnpnd_accounts' );
 
+		$get_all_user = get_users(
+			array(
+				'meta_key'   => self::USER_ACTIVE_ACCOUNT_KEY,
+				'meta_value' => $id,
+			)
+		);
+
+		foreach ( $get_all_user as $user ) {
+			delete_user_meta( $user->ID, self::USER_ACTIVE_ACCOUNT_KEY );
+		}
+
 		return (bool) $result;
 	}
 
@@ -370,6 +438,17 @@ class Account extends Base_Model {
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
+		}
+
+		$get_all_user = get_users(
+			array(
+				'meta_key'   => self::USER_ACTIVE_ACCOUNT_KEY,
+				'meta_value' => $id,
+			)
+		);
+
+		foreach ( $get_all_user as $user ) {
+			delete_user_meta( $user->ID, self::USER_ACTIVE_ACCOUNT_KEY );
 		}
 
 		return (bool) $result;
@@ -568,4 +647,39 @@ class Account extends Base_Model {
 	 * @param string|int $id The ID of the account to switch to.
 	 * @return bool|WP_Error True if the account was successfully switched, false otherwise.
 	 */
+	public function switch_account__premium_only( $id ) {
+		if ( ! pnpnd_get_current_user_access__premium_only() || empty( $id ) ) {
+			return new WP_Error( 401, __( 'You do not have permission to switch accounts.', 'ninja-drive' ) );
+		}
+
+		$account = $this->get_account( $id );
+
+		if ( is_wp_error( $account ) ) {
+			return $account;
+		}
+
+		if ( empty( $account ) ) {
+			return new WP_Error( 400, __( 'The account you are trying to switch does not exist.', 'ninja-drive' ) );
+		}
+
+		if ( $account->is_lost() ) {
+			return new WP_Error( 400, __( 'The account you are trying to switch is lost.', 'ninja-drive' ) );
+		}
+
+		global $wpdb;
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$result = $wpdb->query( $wpdb->prepare( 'UPDATE %i SET active = CASE WHEN id = %s THEN 1 ELSE 0 END', $this->table_name, $id ) );
+
+		if ( $wpdb->last_error ) {
+			return new WP_Error( 400, __( 'A database error occurred: ', 'ninja-drive' ) . $wpdb->last_error );
+		}
+
+		wp_cache_delete( 'pnpnd_account_active', 'pnpnd_accounts' );
+		wp_cache_delete( 'pnpnd_accounts_all', 'pnpnd_accounts' );
+
+		update_user_meta( get_current_user_id(), self::USER_ACTIVE_ACCOUNT_KEY, $id );
+
+		return (bool) $result;
+	}
 }

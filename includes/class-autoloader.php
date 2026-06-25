@@ -48,11 +48,10 @@ final class Autoloader {
 			return array();
 		}
 
-		$class_name = array_pop( $parts );
-
+		$class_name     = array_pop( $parts );
 		$namespace_path = implode( DIRECTORY_SEPARATOR, $parts );
 
-		$namespace_path = false !== strpos( $prefix, 'Pnpnd\ND\Google' ) ? $namespace_path : strtolower( $namespace_path );
+		$namespace_path = false !== strpos( $prefix, 'Pnpnd\ND\Google' ) ? $namespace_path : self::to_lowercase_namespace( $namespace_path );
 
 		$namespace_path = empty( $parts ) ? '' : $namespace_path . DIRECTORY_SEPARATOR;
 
@@ -63,6 +62,25 @@ final class Autoloader {
 		$paths[]     = $namespace_path . $prefix . $kebab_class . '.php';
 
 		return $paths;
+	}
+
+	private static function to_lowercase_namespace( string $namespace_path ): string {
+		$parts = explode( DIRECTORY_SEPARATOR, $namespace_path );
+
+		$lowercased_parts = array_map(
+			function ( $part ) {
+				if ( strpos( $part, '__' ) !== false ) {
+					return $part;
+				}
+
+				return strtolower( $part );
+			},
+			$parts
+		);
+
+		$lowercased_parts = implode( DIRECTORY_SEPARATOR, $lowercased_parts );
+
+		return $lowercased_parts;
 	}
 
 	private static function is_trait( array $namespace_parts, string $class_name ): bool {
@@ -76,6 +94,7 @@ final class Autoloader {
 		$text = str_replace( '__', "\x00", $text );
 		$text = preg_replace( '/([A-Z]+)/', '-$1', lcfirst( $text ) );
 		$text = strtolower( $text );
+
 		$text = str_replace( "\x00", '__', $text );
 		$text = str_replace( '_', '-', $text );
 		$text = preg_replace( '/-+/', '-', $text );
@@ -92,10 +111,11 @@ final class Autoloader {
 	private static function get_autoload_paths(): array {
 		if ( null === self::$autoload_paths ) {
 			self::$autoload_paths = array(
-				'Pnpnd\\ND\\Google\\'    => array( PNPND_VENDORS . '/Google' ),
-				'Pnpnd\\ND\\Models\\'    => array( PNPND_MODELS ),
-				'Pnpnd\\ND\\App\\'       => array( PNPND_APP ),
-				'Pnpnd\\ND\\'            => array( PNPND_INCLUDES ),
+				'Pnpnd\\ND\\Google\\'  => array( PNPND_VENDORS . '/Google' ),
+				'Pnpnd\\ND\\Models\\'  => array( PNPND_MODELS ),
+				'Pnpnd\\ND\\App\\'     => array( PNPND_APP ),
+				'Pnpnd\\ND\\Updates\\' => array( PNPND_UPDATES ),
+				'Pnpnd\\ND\\'          => array( PNPND_INCLUDES ),
 			);
 		}
 

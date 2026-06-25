@@ -152,6 +152,13 @@ class Folder extends Base_Controller {
 							'default'           => null,
 							'sanitize_callback' => 'sanitize_text_field',
 						),
+						'scope'    => array(
+							'type'              => 'string',
+							'required'          => false,
+							'default'           => 'folder',
+							'enum'              => array( 'folder', 'global' ),
+							'sanitize_callback' => 'sanitize_text_field',
+						),
 					),
 				),
 			)
@@ -168,6 +175,7 @@ class Folder extends Base_Controller {
 			$order    = $request->get_param( 'order' );
 			$types    = $request->get_param( 'types' );
 			$search   = $request->get_param( 'search' );
+			$scope    = $request->get_param( 'scope' );
 
 			$types = 'all' === $types ? array() : array_filter( array_map( 'trim', explode( ',', $types ) ) );
 
@@ -179,6 +187,7 @@ class Folder extends Base_Controller {
 				'order'    => $order,
 				'types'    => $types,
 				'search'   => $search,
+				'scope'    => $scope,
 			);
 
 			$folder = App::get_instance()->get_folder_by_key( $key, $args );
@@ -358,16 +367,16 @@ class Folder extends Base_Controller {
 				return $this->error_response( __( 'Folder name and parent file key are required', 'ninja-drive' ), self::HTTP_BAD_REQUEST );
 			}
 
-			$folder = App::get_instance()->new_folder( $name, $parent );
+				$folder = App::get_instance()->new_folder( $name, $parent );
 
-			if ( empty( $folder['file_key'] ) ) {
-				return $this->error_response( 'Failed to create folder. No file key returned.', self::HTTP_INTERNAL_SERVER_ERROR );
-			}
+				if ( empty( $folder['file_key'] ) ) {
+					return $this->error_response( 'Failed to create folder. No file key returned.', self::HTTP_INTERNAL_SERVER_ERROR );
+				}
 
-			if ( is_wp_error( $folder ) ) {
-				return $this->error_response( $folder->get_error_message(), self::HTTP_INTERNAL_SERVER_ERROR );
-			}
-
+				if ( is_wp_error( $folder ) ) {
+					return $this->error_response( $folder->get_error_message(), self::HTTP_INTERNAL_SERVER_ERROR );
+				}
+			
 			return $this->success_response( $folder, 'Folder created successfully' );
 
 		} catch ( Exception $e ) {

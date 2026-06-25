@@ -336,4 +336,98 @@ class File_Service extends Drive_Service {
 		}
 	}
 
+	public function move_file__premium_only( $file_id, $destination_id ) {
+		try {
+			$file = $this->files->get(
+				$file_id,
+				array(
+					'fields'            => 'parents',
+					'supportsAllDrives' => true,
+				)
+			);
+
+			$previous_parents        = $file->getParents();
+			$previous_parents_string = implode( ',', $previous_parents );
+			$new_parents             = $destination_id ?? 'root';
+
+			$file->setParents( $new_parents );
+
+			$empty_file_metadata = new ServiceDriveDriveFile();
+
+			$response = $this->files->update(
+				$file_id,
+				$empty_file_metadata,
+				array(
+					'addParents'    => $new_parents,
+					'removeParents' => $previous_parents_string,
+					'fields'        => PNPND_FILE_FIELDS,
+				)
+			);
+
+			if ( ! $response instanceof ServiceDriveDriveFile ) {
+				return new WP_Error( 404, 'File not found.' );
+			}
+
+			$response->setAccountId( $this->account_id );
+			$file = new File( $response );
+
+			wp_cache_flush_group( 'pnpnd_files' );
+
+			return $file->save();
+		} catch ( Exception $exception ) {
+
+			return new WP_Error( 500, $exception->getMessage() );
+		}
+	}
+
+	public function copy_files__premium_only( $files, $destination_id ) {
+
+		try {
+
+			$this->client->setUseBatch( true );
+			$batch         = new HttpBatch( $this->client );
+			$file_metadata = new ServiceDriveDriveFile();
+
+			foreach ( $files as $file ) {
+				if ( ! empty( $destination_id ) && $destination_id !== $file['parent_id'] ) {
+					$file_metadata->setParents( array( $destination_id ) );
+					$file_metadata->setName( $file['name'] );
+				} else {
+					$file_name = 'Copy of ' . $file['name'];
+					$file_metadata->setName( $file_name );
+				}
+
+				$request = $this->files->copy(
+					$file['id'],
+					$file_metadata,
+					array(
+						'fields' => PNPND_FILE_FIELDS,
+					)
+				);
+
+				$batch->add( $request );
+			}
+
+			$results = $batch->execute();
+
+			$copied_files = array();
+
+			foreach ( $results as $result ) {
+				if ( $result instanceof ServiceDriveDriveFile ) {
+					$result->setAccountId( $this->account_id );
+					$file           = new File( $result );
+					$copied_files[] = $file->save();
+				}
+			}
+
+			$this->client->setUseBatch( false );
+
+			wp_cache_flush_group( 'pnpnd_files' );
+
+			return $copied_files;
+		} catch ( \Throwable $th ) {
+
+			return new WP_Error( 500, $th->getMessage() );
+		}
+	}
 }

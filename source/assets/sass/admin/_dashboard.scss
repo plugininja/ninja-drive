@@ -1,0 +1,12 @@
+@use "../utilities/variable" as *;
+
+.pnpnd-dashboard-item-index-border {
+    border-left: 1px solid $primary-light;
+    border-right: 1px solid $primary-light;
+    border-bottom: 1px solid $primary-light;
+    padding: 10px 20px;
+
+    &:last-child {
+        border-radius: 0 0 $rounded-md $rounded-md;
+    }
+}

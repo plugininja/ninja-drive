@@ -603,4 +603,21 @@ class Settings extends Base_Controller {
 		);
 	}
 
+	public function syncing__premium_only( WP_REST_Request $request ): WP_REST_Response {
+		try {
+
+			$auto_sync = \Pnpnd\ND\AutoSync__premium_only::get_instance();
+
+			$auto_sync->run_cron_task();
+
+			return $this->success_response(
+				array(
+					'message' => 'Auto sync executed successfully',
+				)
+			);
+
+		} catch ( \Exception $e ) {
+			return $this->handle_exception( $e, 'Failed to retrieve syncing intervals' );
+		}
+	}
 }

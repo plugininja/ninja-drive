@@ -1,7 +1,7 @@
+import { useGetModuleQuery } from "~features/widget-builder/api/widgetApi";
 import RenderShortcode from "../../frontend/RenderShortcode";
-import { useGetModuleQuery } from "~/store/api/widgetApi";
-import Loading from "~/components/atoms/Loading";
 import { memo } from "@wordpress/element";
+import { Loading } from "~/ui/atoms";
 import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 

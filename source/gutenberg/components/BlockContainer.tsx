@@ -1,12 +1,12 @@
-import BlockStack from "~/components/molecules/BlockStack";
 import ConfigureTopButton from "./ConfigureTopButton";
-import Button from "~/components/atoms/Button";
-import { toBoolean } from "~/utils/functions";
+import { toBoolean } from "~kernel/utils/functions";
 import ShortCodeBlock from "./ShortCodeBlock";
-import { store } from "../../store/store";
+import { BlockStack } from "~/ui/molecules";
 import IntroModule from "./IntroModule";
+import { store } from "~/kernel/store";
 import { Provider } from "react-redux";
 import { __ } from "@wordpress/i18n";
+import { Button } from "~/ui/atoms";
 import {
     useBlockProps,
     InspectorControls,

@@ -38,6 +38,10 @@ abstract class Base_Controller extends WP_REST_Controller {
 		return current_user_can( 'manage_options' );
 	}
 
+	public function has_settings_permission__premium_only(): bool {
+		return pnpnd_has_permission__premium_only( 'users.manage' );
+	}
+
 	protected function success_response( $data, string $message = 'Success', array $meta = array() ): WP_REST_Response {
 		$response_data = array(
 			'success' => true,

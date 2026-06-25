@@ -279,8 +279,17 @@ class Helpers {
 		}
 	}
 
+	private static function get_encryption_key(): string {
+		$uuid = get_option( 'pnpnd_encryption_key' );
+		if ( ! $uuid ) {
+			$uuid = wp_generate_uuid4();
+			update_option( 'pnpnd_encryption_key', $uuid, false );
+		}
+		return $uuid;
+	}
+
 	public static function encode( string $input ) {
-		$uuid = get_option( 'pnpnd_encryption_key', 'pnpnd' );
+		$uuid = self::get_encryption_key();
 		$key  = hash( 'sha256', $uuid, true );
 
 		if ( function_exists( 'sodium_crypto_secretbox' ) ) {
@@ -291,7 +300,7 @@ class Helpers {
 	}
 
 	public static function decode( string $input ) {
-		$uuid = get_option( 'pnpnd_encryption_key', 'pnpnd' );
+		$uuid = self::get_encryption_key();
 		$key  = hash( 'sha256', $uuid, true );
 
 		// Legacy format detection
@@ -376,7 +385,7 @@ class Helpers {
 
 	private static function legacy_decode( string $input, ?string $key = null ) {
 		if ( null === $key ) {
-			$key = get_option( 'pnpnd_encryption_key', 'pnpnd' );
+			$key = self::get_encryption_key();
 		}
 
 		$prefix        = 'PNPND';
@@ -442,32 +451,39 @@ class Helpers {
 		$widget = Widget::get_instance()->get_widget( $widget_id );
 		$type   = $widget['type'] ?? '';
 
-		if ( ! empty( $key ) && '/' !== $key && 'my-drive' !== $key ) {
-			$file_keys = array();
+			if ( ! empty( $key ) && '/' !== $key && 'my-drive' !== $key ) {
+				$file_keys = array();
 
-			$file_key_thumbnail_key = $widget['data']['source']['file_keys'] ?? array();
-			if ( is_wp_error( $file_key_thumbnail_key ) || empty( $file_key_thumbnail_key ) ) {
-				return false;
-			}
-
-			foreach ( $file_key_thumbnail_key as $item ) {
-				if ( isset( $item['file_key'] ) ) {
-					if ( 'thumbnail' === $action && isset( $item['thumbnail_key'] ) && $item['thumbnail_key'] === $key ) {
-						return true;
-					}
-					$file_keys[] = $item['file_key'];
+				$file_key_thumbnail_key = $widget['data']['source']['file_keys'] ?? array();
+				if ( is_wp_error( $file_key_thumbnail_key ) || empty( $file_key_thumbnail_key ) ) {
+					return false;
 				}
-			}
 
-			if ( ! self::validate_file_key( $key, $file_keys ) ) {
-				return false;
-			}
+				foreach ( $file_key_thumbnail_key as $item ) {
+					if ( isset( $item['file_key'] ) ) {
+						if ( 'thumbnail' === $action && isset( $item['thumbnail_key'] ) && $item['thumbnail_key'] === $key ) {
+							return true;
+						}
+						$file_keys[] = $item['file_key'];
+					}
+				}
 
-			if ( 'thumbnail' === $action || 'get_folder' === $action ) {
-				return true;
-			}
-		}
+				if ( ! self::validate_file_key( $key, $file_keys ) ) {
+					return false;
+				}
 
+				if ( 'thumbnail' === $action || 'get_folder' === $action ) {
+					return true;
+				}
+
+				if ( 'embed_documents' === $type && 'preview' === $action ) {
+					return true;
+				}
+			} elseif ( 'get_folder' === $action ) {
+					return true;
+
+			}
+		
 		return false;
 	}
 

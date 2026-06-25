@@ -42,6 +42,7 @@ class ServiceFirebase extends Service
     public $url;
     public $serviceName;
 
+
     /**
      * Constructs the internal representation of the Firebase service.
      *
@@ -82,6 +83,7 @@ class ServiceFirebase extends Service
     }
 }
 
+
 /**
  * The "url" collection of methods.
  * Typical usage is:
@@ -109,6 +111,8 @@ class ServiceFirebaseUrlResource extends ServiceResource
     }
 
 }
+
+
 
 class ServiceFirebaseUrl extends Model
 {

@@ -13,6 +13,15 @@
     --pnpnd-success: #00ac47;
     --pnpnd-success-100: #00ac4733;
     --pnpnd-success-50: #00ac471a;
+    --pnpnd-skyblue: #00afff;
+    --pnpnd-skyblue-50: #00afff0d;
+    --pnpnd-skyblue-100: #00afff26;
+    --pnpnd-purple: #8900ff;
+    --pnpnd-purple-50: #8300ff0d;
+    --pnpnd-purple-100: #8300ff26;
+    --pnpnd-pink: #ff00ff;
+    --pnpnd-pink-50: #ff00ff0d;
+    --pnpnd-pink-100: #ff00ff26;
     --pnpnd-warning: #ff5900;
     --pnpnd-warning-100: #ff590033;
     --pnpnd-warning-50: #ff59001a;
@@ -117,8 +126,7 @@
 }
 
 // Dark theme overrides
-:root[pnpnd-theme-status="dark"] {
-    --pnpnd-primary-extralight: #000000;
+[pnpnd-theme-status="dark"] {
     --pnpnd-white: #151515;
     --pnpnd-black: #ffffff;
     --pnpnd-gray-50: #151515;
@@ -131,4 +139,20 @@
     --pnpnd-gray-700: #7c7c7c;
     --pnpnd-gray-800: #8c8c8c;
     --pnpnd-gray-900: #9c9c9c;
+}
+
+// Light theme overrides (for scoped light elements inside dark parent)
+[pnpnd-theme-status="light"] {
+    --pnpnd-white: #ffffff;
+    --pnpnd-black: #000e25;
+    --pnpnd-gray-50: #f9fafb;
+    --pnpnd-gray-100: #f3f4f6;
+    --pnpnd-gray-200: #e5e7eb;
+    --pnpnd-gray-300: #d1d5db;
+    --pnpnd-gray-400: #9ca3af;
+    --pnpnd-gray-500: #979797;
+    --pnpnd-gray-600: #6b7280;
+    --pnpnd-gray-700: #374151;
+    --pnpnd-gray-800: #243247;
+    --pnpnd-gray-900: #111827;
 }

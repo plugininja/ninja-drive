@@ -3,6 +3,7 @@
 namespace Pnpnd\ND;
 
 use Pnpnd\ND\Utils\Helpers;
+use Pnpnd\ND\Updates\Migration_Runner;
 
 defined( 'ABSPATH' ) || exit( 'No direct script access allowed' );
 
@@ -45,6 +46,7 @@ class Activation {
 		Helpers::check_plugin_requirements();
 
 		self::set_default_table();
+		Migration_Runner::run();
 		self::set_default_data();
 		self::set_default_settings();
 		self::set_rewrite_rules();

@@ -59,6 +59,7 @@ class ServiceLogging extends Service
     public $projects_metrics;
     public $projects_sinks;
 
+
     /**
      * Constructs the internal representation of the Logging service.
      *
@@ -271,6 +272,7 @@ class ServiceLogging extends Service
         );
     }
 }
+
 
 /**
  * The "entries" collection of methods.
@@ -605,6 +607,9 @@ class ServiceLoggingProjectsSinksResource extends ServiceResource
     }
 }
 
+
+
+
 class ServiceLoggingEmpty extends Model
 {
 }
@@ -623,6 +628,7 @@ class ServiceLoggingHttpRequest extends Model
     public $status;
     public $userAgent;
     public $validatedWithOriginServer;
+
 
     public function setCacheHit($cacheHit)
     {
@@ -714,6 +720,7 @@ class ServiceLoggingLabelDescriptor extends Model
     public $key;
     public $valueType;
 
+
     public function setDescription($description)
     {
         $this->description = $description;
@@ -750,6 +757,7 @@ class ServiceLoggingListLogEntriesRequest extends Collection
     public $pageSize;
     public $pageToken;
     public $projectIds;
+
 
     public function setFilter($filter)
     {
@@ -802,6 +810,7 @@ class ServiceLoggingListLogEntriesResponse extends Collection
     protected $entriesDataType = 'array';
     public $nextPageToken;
 
+
     public function setEntries($entries)
     {
         $this->entries = $entries;
@@ -828,6 +837,7 @@ class ServiceLoggingListLogMetricsResponse extends Collection
     protected $metricsType     = ServiceLoggingLogMetric::class;
     protected $metricsDataType = 'array';
     public $nextPageToken;
+
 
     public function setMetrics($metrics)
     {
@@ -856,6 +866,7 @@ class ServiceLoggingListMonitoredResourceDescriptorsResponse extends Collection
     protected $resourceDescriptorsType     = ServiceLoggingMonitoredResourceDescriptor::class;
     protected $resourceDescriptorsDataType = 'array';
 
+
     public function setNextPageToken($nextPageToken)
     {
         $this->nextPageToken = $nextPageToken;
@@ -882,6 +893,7 @@ class ServiceLoggingListSinksResponse extends Collection
     public $nextPageToken;
     protected $sinksType     = ServiceLoggingLogSink::class;
     protected $sinksDataType = 'array';
+
 
     public function setNextPageToken($nextPageToken)
     {
@@ -919,6 +931,7 @@ class ServiceLoggingLogEntry extends Model
     public $severity;
     public $textPayload;
     public $timestamp;
+
 
     public function setHttpRequest(ServiceLoggingHttpRequest $httpRequest)
     {
@@ -1019,6 +1032,7 @@ class ServiceLoggingLogEntryOperation extends Model
     public $last;
     public $producer;
 
+
     public function setFirst($first)
     {
         $this->first = $first;
@@ -1105,6 +1119,7 @@ class ServiceLoggingLogMetric extends Model
     public $filter;
     public $name;
 
+
     public function setDescription($description)
     {
         $this->description = $description;
@@ -1139,6 +1154,7 @@ class ServiceLoggingLogSink extends Model
     public $filter;
     public $name;
     public $outputVersionFormat;
+
 
     public function setDestination($destination)
     {
@@ -1181,6 +1197,7 @@ class ServiceLoggingMonitoredResource extends Model
     public $labels;
     public $type;
 
+
     public function setLabels($labels)
     {
         $this->labels = $labels;
@@ -1209,6 +1226,7 @@ class ServiceLoggingMonitoredResourceDescriptor extends Collection
     protected $labelsType     = ServiceLoggingLabelDescriptor::class;
     protected $labelsDataType = 'array';
     public $type;
+
 
     public function setDescription($description)
     {
@@ -1541,6 +1559,7 @@ class ServiceLoggingSourceLocation extends Model
     public $functionName;
     public $line;
 
+
     public function setFile($file)
     {
         $this->file = $file;
@@ -1573,6 +1592,7 @@ class ServiceLoggingSourceReference extends Model
     ];
     public $repository;
     public $revisionId;
+
 
     public function setRepository($repository)
     {

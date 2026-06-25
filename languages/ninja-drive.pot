@@ -2,26 +2,21 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ninja Drive 1.0.0\n"
+"Project-Id-Version: Ninja Drive 2.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ninja-drive\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-14T10:42:28+00:00\n"
+"POT-Creation-Date: 2026-06-24T13:48:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ninja-drive\n"
 
 #. Plugin Name of the plugin
 #: ninja-drive.php
-#: includes/Integrations/Blocks.php:58
-#: includes/Integrations/Elementor.php:46
-#: includes/Integrations/Forms/ContactForm7.php:54
-#: includes/Pages/AdminPages.php:63
-#: includes/Pages/AdminPages.php:64
-msgid "Ninja Drive"
+msgid "Ninja Drive for Google Drive - All-in-One Solution"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -31,7 +26,7 @@ msgstr ""
 
 #. Description of the plugin
 #: ninja-drive.php
-msgid "Seamlessly integrate Google Drive with WordPress to embed, share, play, and download documents and media files directly from Google Drive."
+msgid "Integrate Google Drive with WordPress to embed, share, play, and download documents and media files directly from Google Drive."
 msgstr ""
 
 #. Author of the plugin
@@ -44,3110 +39,2696 @@ msgstr ""
 msgid "https://plugininja.com"
 msgstr ""
 
-#: app/Accounts.php:180
+#: app/class-accounts.php:92
+#: ninja-drive/app/class-accounts.php:91
 msgid "You do not have access to this account"
 msgstr ""
 
-#: app/Authorization.php:22
+#: app/class-authorization.php:21
+#: ninja-drive/app/class-authorization.php:21
 msgid "Unable to get authorization code."
 msgstr ""
 
-#: app/Authorization.php:23
+#: app/class-authorization.php:22
+#: ninja-drive/app/class-authorization.php:22
 msgid "Required parameters \"code\" is missing. so we are unable to get authorization this account. please try again"
 msgstr ""
 
-#: app/Authorization.php:47
+#: app/class-authorization.php:44
+#: ninja-drive/app/class-authorization.php:44
 msgid "Unable to get access token."
 msgstr ""
 
-#: app/Authorization.php:48
+#: app/class-authorization.php:45
+#: ninja-drive/app/class-authorization.php:45
 msgid "Access token is missing so we are not able to add this account. please try again"
 msgstr ""
 
-#: app/Authorization.php:63
-#: app/Authorization.php:74
-#: app/Authorization.php:94
-#: app/Authorization.php:124
+#: app/class-authorization.php:57
+#: app/class-authorization.php:66
+#: app/class-authorization.php:84
+#: app/class-authorization.php:109
+#: ninja-drive/app/class-authorization.php:57
+#: ninja-drive/app/class-authorization.php:66
+#: ninja-drive/app/class-authorization.php:84
+#: ninja-drive/app/class-authorization.php:109
 msgid "Unable to get account data."
 msgstr ""
 
-#: app/Authorization.php:75
-#: app/Authorization.php:95
+#: app/class-authorization.php:67
+#: app/class-authorization.php:85
+#: ninja-drive/app/class-authorization.php:67
+#: ninja-drive/app/class-authorization.php:85
 msgid "Account data is missing so we are not able to add this account. please try again"
 msgstr ""
 
-#: app/Authorization.php:106
+#: app/class-authorization.php:94
+#: ninja-drive/app/class-authorization.php:94
 msgid "Unable to add account."
 msgstr ""
 
-#: app/Authorization.php:115
+#: app/class-authorization.php:101
+#: ninja-drive/app/class-authorization.php:101
 msgid "Account added successfully."
 msgstr ""
 
-#: app/Authorization.php:116
+#: app/class-authorization.php:102
+#: ninja-drive/app/class-authorization.php:102
 msgid "Great! Your account is added successfully. Now you can start using your files in your website. if you have any issue or need any help please feel free to contact us."
 msgstr ""
 
-#: app/Client.php:74
+#: app/class-client.php:32
+#: ninja-drive/app/class-client.php:31
 msgid "Configuration Error"
 msgstr ""
 
-#: app/Client.php:198
-#: app/Client.php:208
+#: app/class-client.php:116
+#: app/class-client.php:124
+#: ninja-drive/app/class-client.php:115
+#: ninja-drive/app/class-client.php:123
 msgid "Account connection lost"
 msgstr ""
 
-#: app/Client.php:209
+#: app/class-client.php:125
+#: ninja-drive/app/class-client.php:124
 msgid "Your account connection was lost. Please re-authorize to continue."
 msgstr ""
 
-#: app/Client.php:257
+#: app/class-client.php:164
+#: ninja-drive/app/class-client.php:163
 msgid "Access token is empty. Please re-authenticate."
 msgstr ""
 
-#: app/Client.php:265
+#: app/class-client.php:172
+#: ninja-drive/app/class-client.php:171
 msgid "Access token is invalid. Please re-authenticate."
 msgstr ""
 
-#: app/Client.php:278
+#: app/class-client.php:185
+#: ninja-drive/app/class-client.php:184
 msgid "Refresh token is empty. Please re-authenticate."
 msgstr ""
 
-#: app/Client.php:327
+#: app/class-client.php:240
+#: ninja-drive/app/class-client.php:238
 msgid "Client ID is required. Please set it in the settings."
 msgstr ""
 
-#: app/Client.php:331
+#: app/class-client.php:244
+#: ninja-drive/app/class-client.php:242
 msgid "Client Secret is required. Please set it in the settings."
 msgstr ""
 
-#: app/Client.php:335
+#: app/class-client.php:248
+#: ninja-drive/app/class-client.php:246
 msgid "Redirect URL is required. Please set it in the settings."
 msgstr ""
 
-#: app/Feature/BreadcrumbBuilder.php:16
-#: app/Feature/BreadcrumbBuilder.php:67
-#: app/Feature/BreadcrumbBuilder.php:127
-msgid "My Drive"
-msgstr ""
-
-#: app/Feature/BreadcrumbBuilder.php:68
-#: app/Feature/BreadcrumbBuilder.php:97
-msgid "Shared with me"
-msgstr ""
-
-#: app/Feature/BreadcrumbBuilder.php:69
-msgid "Starred"
-msgstr ""
-
-#: app/Feature/BreadcrumbBuilder.php:70
-#: app/Feature/BreadcrumbBuilder.php:96
-msgid "Computers"
-msgstr ""
-
-#: app/Feature/BreadcrumbBuilder.php:71
-#: app/Feature/BreadcrumbBuilder.php:95
-msgid "Shared Drives"
-msgstr ""
-
-#: app/Feature/BreadcrumbBuilder.php:90
-msgid "Home"
-msgstr ""
-
-#: app/Feature/FileEditor.php:34
-msgid "Invalid file ID"
-msgstr ""
-
-#: app/Feature/FileEditor.php:45
-msgid "File Keys are required to delete files."
-msgstr ""
-
-#: app/Feature/FileEditor.php:54
-msgid "No valid file IDs found for the provided file keys."
-msgstr ""
-
-#: app/Feature/FileEditor.php:64
-msgid "Failed to delete file."
-msgstr ""
-
-#: app/Feature/FileRetriever.php:18
-msgid "No file keys provided."
-msgstr ""
-
-#: app/Feature/FileRetriever.php:22
-msgid "File keys must be an array."
-msgstr ""
-
-#: app/Feature/FileRetriever.php:93
-msgid "Missing file id or account id."
-msgstr ""
-
-#: app/Feature/FileRetriever.php:115
-msgid "Something went wrong while fetching the file. Please try again."
-msgstr ""
-
-#: app/Feature/FileUploader.php:47
-msgid "Failed to get upload URL"
-msgstr ""
-
-#: app/Feature/FileUploader.php:55
-msgid "Invalid parameters for retrieving uploaded file"
-msgstr ""
-
-#: app/Feature/FileUploader.php:75
-msgid "You do not have permission to access this file"
-msgstr ""
-
-#: app/Feature/FileUploader.php:87
-msgid "Uploaded file not found"
-msgstr ""
-
-#: app/Feature/FolderManager.php:24
-msgid "Missing folder key."
-msgstr ""
-
-#: app/Feature/FolderManager.php:28
-#: app/Feature/FolderManager.php:120
-#: app/Feature/FolderManager.php:136
-msgid "You do not have permission to access this resource."
-msgstr ""
-
-#: app/Feature/FolderManager.php:149
-msgid "Folder not found."
-msgstr ""
-
-#: app/Feature/FolderManager.php:174
-msgid "Folder name or parent folder not found for new folder creation"
-msgstr ""
-
-#: app/Feature/FolderManager.php:178
-msgid "Parent folder not found key for new folder creation"
-msgstr ""
-
-#: app/Feature/FolderManager.php:190
-msgid "Failed to create folder"
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:24
-msgid "A file key is required to generate a preview link. Please provide a valid key and try again."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:34
-#: app/Feature/MediaLinkGenerator.php:78
-msgid "Unable to load file data. Please verify the file key and try again."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:51
-msgid "Unable to generate preview link due to insufficient permissions."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:56
-msgid "Invalid file ID. Please verify the file key and try again."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:68
-msgid "A file key is required to download a file. Please provide a valid key and try again."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:83
-msgid "Invalid file key. Please verify the file key and try again."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:92
-msgid "Unable to download file due to insufficient permissions."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:99
-msgid "This file is a directory"
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:100
-msgid "This file is a directory. Please download the file as a zip file."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:113
-#: app/Feature/MediaLinkGenerator.php:131
-msgid "The requested export format is not available for this file."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:136
-#: app/Feature/MediaLinkGenerator.php:173
-msgid "File not found"
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:153
-msgid "Unable to generate download link."
-msgstr ""
-
-#: app/Feature/MediaLinkGenerator.php:184
-msgid "Unable to generate shared link."
-msgstr ""
-
-#: app/Feature/PermissionManager.php:57
-msgid "Unable to create a permission for this file. Please try again."
-msgstr ""
-
-#: app/Feature/PermissionManager.php:71
-msgid "Failed to create preview/share due to insufficient permissions. Please enable the required access in Google Drive or in the plugin by going to Settings → Advanced → Manage Sharing Permissions."
-msgstr ""
-
-#: app/File.php:22
+#: app/class-file.php:17
+#: ninja-drive/app/class-file.php:17
 msgid "Google response is not a valid Entry."
 msgstr ""
 
-#: app/File.php:180
+#: app/class-file.php:171
+#: ninja-drive/app/class-file.php:171
 msgid "Found an item without a parent folder (orphaned):"
 msgstr ""
 
-#: app/Service/FileService.php:45
+#: app/feature/class-breadcrumb-builder.php:16
+#: app/feature/class-breadcrumb-builder.php:67
+#: app/feature/class-breadcrumb-builder.php:127
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:16
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:67
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:127
+msgid "My Drive"
+msgstr ""
+
+#: app/feature/class-breadcrumb-builder.php:68
+#: app/feature/class-breadcrumb-builder.php:97
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:68
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:97
+msgid "Shared with me"
+msgstr ""
+
+#: app/feature/class-breadcrumb-builder.php:69
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:69
+msgid "Starred"
+msgstr ""
+
+#: app/feature/class-breadcrumb-builder.php:70
+#: app/feature/class-breadcrumb-builder.php:96
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:70
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:96
+msgid "Computers"
+msgstr ""
+
+#: app/feature/class-breadcrumb-builder.php:71
+#: app/feature/class-breadcrumb-builder.php:95
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:71
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:95
+msgid "Shared Drives"
+msgstr ""
+
+#: app/feature/class-breadcrumb-builder.php:90
+#: ninja-drive/app/feature/class-breadcrumb-builder.php:90
+msgid "Home"
+msgstr ""
+
+#: app/feature/class-file-editor.php:34
+#: ninja-drive/app/feature/class-file-editor.php:34
+msgid "Invalid file ID"
+msgstr ""
+
+#: app/feature/class-file-editor.php:45
+#: ninja-drive/app/feature/class-file-editor.php:45
+msgid "File Keys are required to delete files."
+msgstr ""
+
+#: app/feature/class-file-editor.php:54
+#: ninja-drive/app/feature/class-file-editor.php:54
+msgid "No valid file IDs found for the provided file keys."
+msgstr ""
+
+#: app/feature/class-file-editor.php:64
+#: ninja-drive/app/feature/class-file-editor.php:64
+msgid "Failed to delete file."
+msgstr ""
+
+#: app/feature/class-file-retriever.php:18
+#: ninja-drive/app/feature/class-file-retriever.php:18
+msgid "No file keys provided."
+msgstr ""
+
+#: app/feature/class-file-retriever.php:22
+#: ninja-drive/app/feature/class-file-retriever.php:22
+msgid "File keys must be an array."
+msgstr ""
+
+#: app/feature/class-file-retriever.php:93
+#: ninja-drive/app/feature/class-file-retriever.php:92
+msgid "Missing file id or account id."
+msgstr ""
+
+#: app/feature/class-file-retriever.php:115
+#: ninja-drive/app/feature/class-file-retriever.php:114
+msgid "Something went wrong while fetching the file. Please try again."
+msgstr ""
+
+#: app/feature/class-file-uploader.php:34
+#: ninja-drive/app/feature/class-file-uploader.php:34
+msgid "Invalid account"
+msgstr ""
+
+#: app/feature/class-file-uploader.php:61
+#: ninja-drive/app/feature/class-file-uploader.php:61
+msgid "Failed to get upload URL"
+msgstr ""
+
+#: app/feature/class-file-uploader.php:69
+#: ninja-drive/app/feature/class-file-uploader.php:69
+msgid "Invalid parameters for retrieving uploaded file"
+msgstr ""
+
+#: app/feature/class-file-uploader.php:89
+#: ninja-drive/app/feature/class-file-uploader.php:89
+msgid "You do not have permission to access this file"
+msgstr ""
+
+#: app/feature/class-file-uploader.php:101
+#: ninja-drive/app/feature/class-file-uploader.php:101
+msgid "Uploaded file not found"
+msgstr ""
+
+#: app/feature/class-folder-manager.php:24
+#: ninja-drive/app/feature/class-folder-manager.php:24
+msgid "Missing folder key."
+msgstr ""
+
+#: app/feature/class-folder-manager.php:147
+#: app/feature/class-folder-manager.php:187
+#: ninja-drive/app/feature/class-folder-manager.php:116
+#: ninja-drive/app/feature/class-folder-manager.php:132
+msgid "You do not have permission to access this resource."
+msgstr ""
+
+#: app/feature/class-folder-manager.php:200
+#: ninja-drive/app/feature/class-folder-manager.php:145
+msgid "Folder not found."
+msgstr ""
+
+#: app/feature/class-folder-manager.php:225
+#: ninja-drive/app/feature/class-folder-manager.php:170
+msgid "Folder name or parent folder not found for new folder creation"
+msgstr ""
+
+#: app/feature/class-folder-manager.php:229
+#: ninja-drive/app/feature/class-folder-manager.php:174
+msgid "Parent folder not found key for new folder creation"
+msgstr ""
+
+#: app/feature/class-folder-manager.php:241
+#: ninja-drive/app/feature/class-folder-manager.php:186
+msgid "Failed to create folder"
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:24
+#: ninja-drive/app/feature/class-media-link-generator.php:24
+msgid "A file key is required to generate a preview link. Please provide a valid key and try again."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:34
+#: app/feature/class-media-link-generator.php:81
+#: ninja-drive/app/feature/class-media-link-generator.php:34
+#: ninja-drive/app/feature/class-media-link-generator.php:81
+msgid "Unable to load file data. Please verify the file key and try again."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:54
+#: ninja-drive/app/feature/class-media-link-generator.php:54
+msgid "Unable to generate preview link due to insufficient permissions."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:59
+#: ninja-drive/app/feature/class-media-link-generator.php:59
+msgid "Invalid file ID. Please verify the file key and try again."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:71
+#: ninja-drive/app/feature/class-media-link-generator.php:71
+msgid "A file key is required to download a file. Please provide a valid key and try again."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:86
+#: ninja-drive/app/feature/class-media-link-generator.php:86
+msgid "Invalid file key. Please verify the file key and try again."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:95
+#: ninja-drive/app/feature/class-media-link-generator.php:95
+msgid "Unable to download file due to insufficient permissions."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:102
+#: ninja-drive/app/feature/class-media-link-generator.php:102
+msgid "This file is a directory"
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:103
+#: ninja-drive/app/feature/class-media-link-generator.php:103
+msgid "This file is a directory. Please download the file as a zip file."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:114
+#: app/feature/class-media-link-generator.php:132
+#: ninja-drive/app/feature/class-media-link-generator.php:114
+#: ninja-drive/app/feature/class-media-link-generator.php:132
+msgid "The requested export format is not available for this file."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:137
+#: app/feature/class-media-link-generator.php:176
+#: app/feature/class-media-link-generator.php:219
+#: app/feature/class-media-link-generator.php:238
+#: app/feature/class-media-link-generator.php:269
+#: app/feature/class-media-link-generator.php:311
+#: app/feature/MediaLibrary__premium_only.php:182
+#: ninja-drive/app/feature/class-media-link-generator.php:137
+#: ninja-drive/app/feature/class-media-link-generator.php:176
+#: ninja-drive/app/feature/class-media-link-generator.php:219
+#: ninja-drive/app/feature/class-media-link-generator.php:238
+#: ninja-drive/app/feature/class-media-link-generator.php:269
+#: ninja-drive/app/feature/class-media-link-generator.php:311
+msgid "File not found"
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:154
+#: ninja-drive/app/feature/class-media-link-generator.php:154
+msgid "Unable to generate download link."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:194
+#: ninja-drive/app/feature/class-media-link-generator.php:194
+msgid "Unable to update download link."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:249
+#: ninja-drive/app/feature/class-media-link-generator.php:249
+msgid "Unable to generate shared link."
+msgstr ""
+
+#: app/feature/class-media-link-generator.php:286
+#: ninja-drive/app/feature/class-media-link-generator.php:286
+msgid "Unable to update shared link."
+msgstr ""
+
+#: app/feature/class-permission-manager.php:57
+#: ninja-drive/app/feature/class-permission-manager.php:57
+msgid "Unable to create a permission for this file. Please try again."
+msgstr ""
+
+#: app/feature/MediaLibrary__premium_only.php:32
+msgid "You do not have access to the Media Library integration."
+msgstr ""
+
+#: app/feature/MediaLibrary__premium_only.php:69
+msgid "Folder not found in Media Library integration."
+msgstr ""
+
+#: app/feature/MediaLibrary__premium_only.php:114
+#: app/feature/MediaLibrary__premium_only.php:136
+#: app/feature/MediaLibrary__premium_only.php:158
+#: includes/api/controllers/MediaLibrary__premium_only.php:381
+#: includes/api/controllers/MediaLibrary__premium_only.php:419
+#: includes/api/controllers/MediaLibrary__premium_only.php:457
+msgid "Invalid attachment IDs."
+msgstr ""
+
+#: app/feature/MediaLibrary__premium_only.php:186
+msgid "Cannot upload a folder. Please select a file."
+msgstr ""
+
+#: app/feature/MediaLibrary__premium_only.php:235
+msgid "Failed to download file: "
+msgstr ""
+
+#. translators: %d is the HTTP status code returned during file download.
+#: app/feature/MediaLibrary__premium_only.php:243
+#, php-format
+msgid "Failed to download file. HTTP Status: %d"
+msgstr ""
+
+#: app/feature/MediaLibrary__premium_only.php:249
+msgid "Downloaded file is empty or does not exist."
+msgstr ""
+
+#: app/feature/MediaLibrary__premium_only.php:267
+msgid "Failed to insert attachment."
+msgstr ""
+
+#: app/service/class-file-service.php:46
+#: ninja-drive/app/service/class-file-service.php:46
 msgid "Missing file id."
 msgstr ""
 
-#: app/Service/FileService.php:60
-#: app/Service/FileService.php:107
-#: app/Service/FileService.php:135
-#: app/Service/FileService.php:150
-#: app/Service/FileService.php:172
-#: app/Service/FileService.php:187
+#: app/service/class-file-service.php:61
+#: app/service/class-file-service.php:108
+#: app/service/class-file-service.php:136
+#: app/service/class-file-service.php:151
+#: app/service/class-file-service.php:173
+#: app/service/class-file-service.php:188
+#: ninja-drive/app/service/class-file-service.php:61
+#: ninja-drive/app/service/class-file-service.php:108
+#: ninja-drive/app/service/class-file-service.php:136
+#: ninja-drive/app/service/class-file-service.php:151
+#: ninja-drive/app/service/class-file-service.php:173
+#: ninja-drive/app/service/class-file-service.php:188
 msgid "File not found."
 msgstr ""
 
-#: includes/API/BaseController.php:128
+#: app/Stream__premium_only.php:26
+msgid "Unauthorized access attempt to stream endpoint."
+msgstr ""
+
+#: app/Stream__premium_only.php:39
+#: app/Stream__premium_only.php:59
+msgid "Missing file key to stream."
+msgstr ""
+
+#: app/Stream__premium_only.php:101
+msgid "File not found or access denied."
+msgstr ""
+
+#: includes/api/class-base-controller.php:115
+#: ninja-drive/includes/api/class-base-controller.php:115
 msgid "Current page of the collection."
 msgstr ""
 
-#: includes/API/BaseController.php:135
+#: includes/api/class-base-controller.php:122
+#: ninja-drive/includes/api/class-base-controller.php:122
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
-#: includes/API/BaseController.php:143
+#: includes/api/class-base-controller.php:130
+#: ninja-drive/includes/api/class-base-controller.php:130
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
-#: includes/API/BaseController.php:149
+#: includes/api/class-base-controller.php:136
+#: ninja-drive/includes/api/class-base-controller.php:136
 msgid "Sort collection by parameter."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:156
-#: includes/API/Controllers/Account.php:260
-#: includes/API/Controllers/Account.php:291
-#: includes/API/Controllers/Account.php:315
-#: includes/API/Controllers/Account.php:436
+#: includes/api/controllers/class-account.php:204
+#: includes/api/controllers/class-account.php:306
+#: includes/api/controllers/class-account.php:337
+#: includes/api/controllers/class-account.php:361
+#: includes/api/controllers/class-account.php:482
+#: ninja-drive/includes/api/controllers/class-account.php:157
+#: ninja-drive/includes/api/controllers/class-account.php:259
+#: ninja-drive/includes/api/controllers/class-account.php:290
+#: ninja-drive/includes/api/controllers/class-account.php:314
+#: ninja-drive/includes/api/controllers/class-account.php:435
 msgid "Invalid account key provided."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:165
-#: includes/API/Controllers/Account.php:444
+#: includes/api/controllers/class-account.php:212
+#: ninja-drive/includes/api/controllers/class-account.php:165
 msgid "Reconnected account successfully"
 msgstr ""
 
-#: includes/API/Controllers/Account.php:201
+#: includes/api/controllers/class-account.php:247
+#: ninja-drive/includes/api/controllers/class-account.php:200
 msgid "Auth URL could not be generated"
 msgstr ""
 
-#: includes/API/Controllers/Account.php:208
+#: includes/api/controllers/class-account.php:254
+#: ninja-drive/includes/api/controllers/class-account.php:207
 msgid "Auth URL retrieved successfully"
 msgstr ""
 
-#: includes/API/Controllers/Account.php:235
-#: includes/API/Controllers/Account.php:282
-#: includes/API/Controllers/Account.php:426
+#: includes/api/controllers/class-account.php:281
+#: includes/api/controllers/class-account.php:328
+#: includes/api/controllers/class-account.php:472
+#: ninja-drive/includes/api/controllers/class-account.php:234
+#: ninja-drive/includes/api/controllers/class-account.php:281
+#: ninja-drive/includes/api/controllers/class-account.php:425
 msgid "Account key is required."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:351
+#: includes/api/controllers/class-account.php:397
+#: ninja-drive/includes/api/controllers/class-account.php:350
 msgid "Unique identifier for the account."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:357
+#: includes/api/controllers/class-account.php:403
+#: ninja-drive/includes/api/controllers/class-account.php:356
 msgid "Unique key for the account."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:363
+#: includes/api/controllers/class-account.php:409
+#: ninja-drive/includes/api/controllers/class-account.php:362
 msgid "Display name of the account."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:368
+#: includes/api/controllers/class-account.php:414
+#: ninja-drive/includes/api/controllers/class-account.php:367
 msgid "Email address associated with the account."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:374
+#: includes/api/controllers/class-account.php:420
+#: ninja-drive/includes/api/controllers/class-account.php:373
 msgid "Avatar URL for the account."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:380
+#: includes/api/controllers/class-account.php:426
+#: ninja-drive/includes/api/controllers/class-account.php:379
 msgid "Storage usage information."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:385
+#: includes/api/controllers/class-account.php:431
+#: ninja-drive/includes/api/controllers/class-account.php:384
 msgid "Whether the account has lost authentication."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:391
+#: includes/api/controllers/class-account.php:437
+#: ninja-drive/includes/api/controllers/class-account.php:390
 msgid "Root folder ID for the account."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:396
+#: includes/api/controllers/class-account.php:442
+#: ninja-drive/includes/api/controllers/class-account.php:395
 msgid "Associated WordPress user."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:411
+#: includes/api/controllers/class-account.php:457
+#: ninja-drive/includes/api/controllers/class-account.php:410
 msgid "Whether the account is active."
 msgstr ""
 
-#: includes/API/Controllers/Account.php:450
-msgid "Switched account successfully"
+#: includes/api/controllers/class-dashboard.php:38
+#: ninja-drive/includes/api/controllers/class-dashboard.php:38
+msgid "Specific fields to retrieve (e.g., storage_stats, image_cache)."
 msgstr ""
 
-#: includes/API/Controllers/File.php:604
-msgid "Google Drive file ID."
+#: includes/api/controllers/class-dashboard.php:56
+#: ninja-drive/includes/api/controllers/class-dashboard.php:56
+msgid "Type of cache to delete (total, or specific size)."
 msgstr ""
 
-#: includes/API/Controllers/File.php:610
-msgid "Unique key for the file."
+#: includes/api/controllers/class-dashboard.php:74
+#: ninja-drive/includes/api/controllers/class-dashboard.php:74
+msgid "File key to delete from cache."
 msgstr ""
 
-#: includes/API/Controllers/File.php:616
-msgid "File name."
+#: includes/api/controllers/class-dashboard.php:80
+#: ninja-drive/includes/api/controllers/class-dashboard.php:80
+msgid "Cache size to delete (all sizes if not specified)."
 msgstr ""
 
-#: includes/API/Controllers/File.php:621
-msgid "File description."
-msgstr ""
-
-#: includes/API/Controllers/File.php:626
-#: includes/API/Controllers/Folder.php:287
-msgid "Parent folder ID."
-msgstr ""
-
-#: includes/API/Controllers/File.php:631
-#: includes/API/Controllers/Folder.php:292
-msgid "Owning account ID."
-msgstr ""
-
-#: includes/API/Controllers/File.php:637
-msgid "File size in bytes."
-msgstr ""
-
-#: includes/API/Controllers/File.php:642
-msgid "MIME type of the file."
-msgstr ""
-
-#: includes/API/Controllers/File.php:647
+#: includes/api/controllers/class-dashboard.php:85
+#: includes/api/controllers/class-file.php:1204
+#: ninja-drive/includes/api/controllers/class-dashboard.php:85
+#: ninja-drive/includes/api/controllers/class-file.php:828
 msgid "File extension."
 msgstr ""
 
-#: includes/API/Controllers/File.php:652
+#: includes/api/controllers/class-dashboard.php:106
+#: ninja-drive/includes/api/controllers/class-dashboard.php:100
+msgid "You do not have permission."
+msgstr ""
+
+#: includes/api/controllers/class-dashboard.php:123
+#: ninja-drive/includes/api/controllers/class-dashboard.php:117
+msgid "Dashboard data retrieved successfully."
+msgstr ""
+
+#: includes/api/controllers/class-dashboard.php:126
+#: ninja-drive/includes/api/controllers/class-dashboard.php:120
+msgid "Failed to retrieve dashboard data."
+msgstr ""
+
+#: includes/api/controllers/class-dashboard.php:153
+#: ninja-drive/includes/api/controllers/class-dashboard.php:147
+msgid "Cache deleted successfully."
+msgstr ""
+
+#: includes/api/controllers/class-dashboard.php:192
+#: ninja-drive/includes/api/controllers/class-dashboard.php:186
+msgid "File cache deleted successfully."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1161
+#: ninja-drive/includes/api/controllers/class-file.php:785
+msgid "Google Drive file ID."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1167
+#: ninja-drive/includes/api/controllers/class-file.php:791
+msgid "Unique key for the file."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1173
+#: ninja-drive/includes/api/controllers/class-file.php:797
+msgid "File name."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1178
+#: ninja-drive/includes/api/controllers/class-file.php:802
+msgid "File description."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1183
+#: includes/api/controllers/class-folder.php:318
+#: ninja-drive/includes/api/controllers/class-file.php:807
+#: ninja-drive/includes/api/controllers/class-folder.php:271
+msgid "Parent folder ID."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1188
+#: includes/api/controllers/class-folder.php:323
+#: ninja-drive/includes/api/controllers/class-file.php:812
+#: ninja-drive/includes/api/controllers/class-folder.php:276
+msgid "Owning account ID."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1194
+#: ninja-drive/includes/api/controllers/class-file.php:818
+msgid "File size in bytes."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1199
+#: ninja-drive/includes/api/controllers/class-file.php:823
+msgid "MIME type of the file."
+msgstr ""
+
+#: includes/api/controllers/class-file.php:1209
+#: ninja-drive/includes/api/controllers/class-file.php:833
 msgid "File icon URL."
 msgstr ""
 
-#: includes/API/Controllers/File.php:658
+#: includes/api/controllers/class-file.php:1215
+#: ninja-drive/includes/api/controllers/class-file.php:839
 msgid "File thumbnail URL."
 msgstr ""
 
-#: includes/API/Controllers/File.php:664
+#: includes/api/controllers/class-file.php:1221
+#: ninja-drive/includes/api/controllers/class-file.php:845
 msgid "Additional file metadata from Google Drive."
 msgstr ""
 
-#: includes/API/Controllers/File.php:669
-#: includes/API/Controllers/Folder.php:353
+#: includes/api/controllers/class-file.php:1226
+#: includes/api/controllers/class-folder.php:384
+#: ninja-drive/includes/api/controllers/class-file.php:850
+#: ninja-drive/includes/api/controllers/class-folder.php:337
 msgid "Whether this is a directory."
 msgstr ""
 
-#: includes/API/Controllers/File.php:675
+#: includes/api/controllers/class-file.php:1232
+#: ninja-drive/includes/api/controllers/class-file.php:856
 msgid "Whether the file is shared."
 msgstr ""
 
-#: includes/API/Controllers/File.php:681
+#: includes/api/controllers/class-file.php:1238
+#: ninja-drive/includes/api/controllers/class-file.php:862
 msgid "Whether the file is starred."
 msgstr ""
 
-#: includes/API/Controllers/File.php:687
+#: includes/api/controllers/class-file.php:1244
+#: ninja-drive/includes/api/controllers/class-file.php:868
 msgid "Media metadata for images/videos."
 msgstr ""
 
-#: includes/API/Controllers/File.php:692
+#: includes/api/controllers/class-file.php:1249
+#: ninja-drive/includes/api/controllers/class-file.php:873
 msgid "File permissions from Google Drive."
 msgstr ""
 
-#: includes/API/Controllers/File.php:697
-#: includes/API/Controllers/Folder.php:359
-#: includes/API/Controllers/Notice.php:339
-#: includes/API/Controllers/Widget.php:535
+#: includes/api/controllers/class-file.php:1254
+#: includes/api/controllers/class-folder.php:390
+#: includes/api/controllers/class-notice.php:393
+#: includes/api/controllers/class-widget.php:677
+#: ninja-drive/includes/api/controllers/class-file.php:878
+#: ninja-drive/includes/api/controllers/class-folder.php:343
+#: ninja-drive/includes/api/controllers/class-notice.php:393
+#: ninja-drive/includes/api/controllers/class-widget.php:621
 msgid "Creation date."
 msgstr ""
 
-#: includes/API/Controllers/File.php:704
-#: includes/API/Controllers/Folder.php:366
-#: includes/API/Controllers/Notice.php:346
-#: includes/API/Controllers/Widget.php:542
+#: includes/api/controllers/class-file.php:1261
+#: includes/api/controllers/class-folder.php:397
+#: includes/api/controllers/class-notice.php:400
+#: includes/api/controllers/class-widget.php:684
+#: ninja-drive/includes/api/controllers/class-file.php:885
+#: ninja-drive/includes/api/controllers/class-folder.php:350
+#: ninja-drive/includes/api/controllers/class-notice.php:400
+#: ninja-drive/includes/api/controllers/class-widget.php:628
 msgid "Last update date."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:270
+#: includes/api/controllers/class-folder.php:301
+#: ninja-drive/includes/api/controllers/class-folder.php:254
 msgid "Google Drive folder ID."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:276
+#: includes/api/controllers/class-folder.php:307
+#: ninja-drive/includes/api/controllers/class-folder.php:260
 msgid "Unique key for the folder."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:282
+#: includes/api/controllers/class-folder.php:313
+#: ninja-drive/includes/api/controllers/class-folder.php:266
 msgid "Folder name."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:298
+#: includes/api/controllers/class-folder.php:329
+#: ninja-drive/includes/api/controllers/class-folder.php:282
 msgid "Breadcrumb trail for the folder."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:310
+#: includes/api/controllers/class-folder.php:341
+#: ninja-drive/includes/api/controllers/class-folder.php:294
 msgid "Files and folders contained within."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:318
+#: includes/api/controllers/class-folder.php:349
+#: ninja-drive/includes/api/controllers/class-folder.php:302
 msgid "Whether there are more items to load."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:323
+#: includes/api/controllers/class-folder.php:354
+#: ninja-drive/includes/api/controllers/class-folder.php:307
 msgid "Total number of items."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:328
+#: includes/api/controllers/class-folder.php:359
+#: ninja-drive/includes/api/controllers/class-folder.php:312
 msgid "Total number of pages."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:333
+#: includes/api/controllers/class-folder.php:364
+#: ninja-drive/includes/api/controllers/class-folder.php:317
 msgid "Current page number."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:338
+#: includes/api/controllers/class-folder.php:369
+#: ninja-drive/includes/api/controllers/class-folder.php:322
 msgid "Items per page."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:343
+#: includes/api/controllers/class-folder.php:374
+#: ninja-drive/includes/api/controllers/class-folder.php:327
 msgid "Folder size in bytes."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:348
+#: includes/api/controllers/class-folder.php:379
+#: ninja-drive/includes/api/controllers/class-folder.php:332
 msgid "MIME type."
 msgstr ""
 
-#: includes/API/Controllers/Folder.php:384
+#: includes/api/controllers/class-folder.php:414
+#: ninja-drive/includes/api/controllers/class-folder.php:367
 msgid "Folder name and parent file key are required"
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:282
+#: includes/api/controllers/class-migration.php:120
+#: ninja-drive/includes/api/controllers/class-migration.php:120
+msgid "One or more migrations failed."
+msgstr ""
+
+#: includes/api/controllers/class-migration.php:134
+#: ninja-drive/includes/api/controllers/class-migration.php:134
+msgid "Missing version parameter."
+msgstr ""
+
+#: includes/api/controllers/class-migration.php:142
+#: ninja-drive/includes/api/controllers/class-migration.php:142
+msgid "Rollback failed or unsupported for this migration."
+msgstr ""
+
+#: includes/api/controllers/class-migration.php:167
+#: ninja-drive/includes/api/controllers/class-migration.php:167
+msgid "Failed to clear log file."
+msgstr ""
+
+#: includes/api/controllers/class-migration.php:177
+#: ninja-drive/includes/api/controllers/class-migration.php:177
+msgid "Cleanup migration failed or was skipped — see logs."
+msgstr ""
+
+#: includes/api/controllers/class-migration.php:198
+#: ninja-drive/includes/api/controllers/class-migration.php:198
+msgid "Invalid duration. Use \"30days\" or \"forever\"."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:51
+#: includes/api/controllers/class-notice.php:65
+#: includes/api/controllers/class-notice.php:517
+#: ninja-drive/includes/api/controllers/class-notice.php:51
+#: ninja-drive/includes/api/controllers/class-notice.php:65
+#: ninja-drive/includes/api/controllers/class-notice.php:517
+msgid "Notice ID"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:113
+#: ninja-drive/includes/api/controllers/class-notice.php:113
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:157
+#: ninja-drive/includes/api/controllers/class-notice.php:157
+msgid "No notices found."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:161
+#: ninja-drive/includes/api/controllers/class-notice.php:161
+msgid "Notices fetched successfully."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:164
+#: ninja-drive/includes/api/controllers/class-notice.php:164
+msgid "Failed to retrieve notices"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:173
+#: includes/api/controllers/class-notice.php:245
+#: includes/api/controllers/class-notice.php:289
+#: ninja-drive/includes/api/controllers/class-notice.php:173
+#: ninja-drive/includes/api/controllers/class-notice.php:245
+#: ninja-drive/includes/api/controllers/class-notice.php:289
+msgid "Notice ID is required."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:179
+#: includes/api/controllers/class-notice.php:301
+#: models/class-notices.php:254
+#: ninja-drive/includes/api/controllers/class-notice.php:179
+#: ninja-drive/includes/api/controllers/class-notice.php:301
+#: ninja-drive/models/class-notices.php:254
+msgid "Notice not found."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:186
+#: ninja-drive/includes/api/controllers/class-notice.php:186
+msgid "Notice fetched successfully."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:190
+#: ninja-drive/includes/api/controllers/class-notice.php:190
+msgid "Failed to retrieve notice"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:208
+#: ninja-drive/includes/api/controllers/class-notice.php:208
+msgid "Notice title and type are required."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:232
+#: ninja-drive/includes/api/controllers/class-notice.php:232
+msgid "Notice added successfully."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:236
+#: ninja-drive/includes/api/controllers/class-notice.php:236
+msgid "Failed to add notice"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:255
+#: ninja-drive/includes/api/controllers/class-notice.php:255
+msgid "Notice not found or already deleted."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:258
+#: ninja-drive/includes/api/controllers/class-notice.php:258
+msgid "Notice deleted successfully."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:261
+#: ninja-drive/includes/api/controllers/class-notice.php:261
+msgid "Failed to delete notice"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:274
+#: ninja-drive/includes/api/controllers/class-notice.php:274
+msgid "No notices found to clear."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:277
+#: ninja-drive/includes/api/controllers/class-notice.php:277
+msgid "All notices cleared successfully."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:280
+#: ninja-drive/includes/api/controllers/class-notice.php:280
+msgid "Failed to clear notices"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:304
+#: ninja-drive/includes/api/controllers/class-notice.php:304
+msgid "Notice status changed successfully."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:307
+#: ninja-drive/includes/api/controllers/class-notice.php:307
+msgid "Failed to change notice status"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:320
+#: ninja-drive/includes/api/controllers/class-notice.php:320
+msgid "No notices found to mark as read."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:323
+#: ninja-drive/includes/api/controllers/class-notice.php:323
+msgid "All notices marked as read successfully."
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:326
+#: ninja-drive/includes/api/controllers/class-notice.php:326
+msgid "Failed to mark all notices as read"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:335
+#: ninja-drive/includes/api/controllers/class-notice.php:335
 msgid "Unique identifier for the notice."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:288
+#: includes/api/controllers/class-notice.php:341
+#: ninja-drive/includes/api/controllers/class-notice.php:341
 msgid "Notice title."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:293
+#: includes/api/controllers/class-notice.php:346
+#: ninja-drive/includes/api/controllers/class-notice.php:346
 msgid "Notice type."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:298
+#: includes/api/controllers/class-notice.php:352
+#: ninja-drive/includes/api/controllers/class-notice.php:352
 msgid "Notice description."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:303
+#: includes/api/controllers/class-notice.php:357
+#: ninja-drive/includes/api/controllers/class-notice.php:357
 msgid "Notice status."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:309
+#: includes/api/controllers/class-notice.php:363
+#: ninja-drive/includes/api/controllers/class-notice.php:363
 msgid "Related widget ID."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:314
+#: includes/api/controllers/class-notice.php:368
+#: ninja-drive/includes/api/controllers/class-notice.php:368
 msgid "ID of the user who triggered the notice."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:319
+#: includes/api/controllers/class-notice.php:373
+#: ninja-drive/includes/api/controllers/class-notice.php:373
 msgid "Related file key."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:324
+#: includes/api/controllers/class-notice.php:378
+#: ninja-drive/includes/api/controllers/class-notice.php:378
 msgid "Related file name."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:329
+#: includes/api/controllers/class-notice.php:383
+#: ninja-drive/includes/api/controllers/class-notice.php:383
 msgid "Page where the event occurred."
 msgstr ""
 
-#: includes/API/Controllers/Notice.php:334
+#: includes/api/controllers/class-notice.php:388
+#: ninja-drive/includes/api/controllers/class-notice.php:388
 msgid "Additional notice data."
 msgstr ""
 
-#: includes/API/Controllers/Settings.php:609
+#: includes/api/controllers/class-notice.php:415
+#: ninja-drive/includes/api/controllers/class-notice.php:415
+msgid "Page number for pagination"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:422
+#: ninja-drive/includes/api/controllers/class-notice.php:422
+msgid "Number of notices per page"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:430
+#: ninja-drive/includes/api/controllers/class-notice.php:430
+msgid "Filter notices by status"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:436
+#: ninja-drive/includes/api/controllers/class-notice.php:436
+msgid "Filter notices by type"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:448
+#: ninja-drive/includes/api/controllers/class-notice.php:448
+msgid "Notice title"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:454
+#: ninja-drive/includes/api/controllers/class-notice.php:454
+msgid "Notice type"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:460
+#: ninja-drive/includes/api/controllers/class-notice.php:460
+msgid "Notice description"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:466
+#: ninja-drive/includes/api/controllers/class-notice.php:466
+msgid "Notice status"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:473
+#: ninja-drive/includes/api/controllers/class-notice.php:473
+msgid "Related file key"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:479
+#: ninja-drive/includes/api/controllers/class-notice.php:479
+msgid "Related file name"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:485
+#: ninja-drive/includes/api/controllers/class-notice.php:485
+msgid "Page where the event occurred"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:491
+#: ninja-drive/includes/api/controllers/class-notice.php:491
+msgid "Additional notice data"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:499
+#: ninja-drive/includes/api/controllers/class-notice.php:499
+msgid "Related widget ID"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:505
+#: ninja-drive/includes/api/controllers/class-notice.php:505
+msgid "ID of the user who triggered the notice"
+msgstr ""
+
+#: includes/api/controllers/class-notice.php:524
+#: ninja-drive/includes/api/controllers/class-notice.php:524
+msgid "New status for the notice"
+msgstr ""
+
+#: includes/api/controllers/class-settings.php:562
+#: ninja-drive/includes/api/controllers/class-settings.php:540
 msgid "Default settings values."
 msgstr ""
 
-#: includes/API/Controllers/Settings.php:615
+#: includes/api/controllers/class-settings.php:568
+#: ninja-drive/includes/api/controllers/class-settings.php:546
 msgid "Current settings values."
 msgstr ""
 
-#: includes/API/Controllers/Users.php:32
+#: includes/api/controllers/class-users.php:61
+#: ninja-drive/includes/api/controllers/class-users.php:42
 msgid "Whether to hide the current logged-in user from the list."
 msgstr ""
 
-#: includes/API/Controllers/Users.php:38
+#: includes/api/controllers/class-users.php:67
+#: ninja-drive/includes/api/controllers/class-users.php:48
 msgid "Comma-separated list of user fields to retrieve. Allowed fields are: ID, user_login, user_nicename, user_email, user_url, user_registered, display_name, nickname, first_name, last_name, description, roles."
 msgstr ""
 
-#. translators: %s: Invalid field name
-#: includes/API/Controllers/Users.php:63
+#. translators: %s is the invalid field name.
+#: includes/api/controllers/class-users.php:92
+#: ninja-drive/includes/api/controllers/class-users.php:73
 #, php-format
 msgid "Invalid field: %s"
 msgstr ""
 
-#: includes/API/Controllers/Users.php:90
+#: includes/api/controllers/class-users.php:277
+#: ninja-drive/includes/api/controllers/class-users.php:101
 msgid "List of WordPress users."
 msgstr ""
 
-#: includes/API/Controllers/Users.php:124
+#: includes/api/controllers/class-users.php:311
+#: ninja-drive/includes/api/controllers/class-users.php:135
 msgid "List of WordPress roles."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:229
+#: includes/api/controllers/class-users.php:326
+msgid "List of user access records."
+msgstr ""
+
+#: includes/api/controllers/class-widget.php:371
+#: ninja-drive/includes/api/controllers/class-widget.php:315
 msgid "Default template not found."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:238
+#: includes/api/controllers/class-widget.php:380
+#: ninja-drive/includes/api/controllers/class-widget.php:324
 msgid "Failed to retrieve default template."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:271
-#: assets/js/admin.js:274
+#: includes/api/controllers/class-widget.php:413
+#: ninja-drive/includes/api/controllers/class-widget.php:357
 msgid "Widget created successfully."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:274
+#: includes/api/controllers/class-widget.php:416
+#: ninja-drive/includes/api/controllers/class-widget.php:360
 msgid "Failed to create widget."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:317
-#: models/Widget.php:886
+#: includes/api/controllers/class-widget.php:459
+#: models/class-widget.php:1044
+#: ninja-drive/includes/api/controllers/class-widget.php:403
+#: ninja-drive/models/class-widget.php:901
 msgid "Widget not found."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:326
+#: includes/api/controllers/class-widget.php:468
+#: ninja-drive/includes/api/controllers/class-widget.php:412
 msgid "Failed to retrieve widget."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:377
+#: includes/api/controllers/class-widget.php:519
+#: ninja-drive/includes/api/controllers/class-widget.php:463
 msgid "Failed to retrieve widgets."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:409
-#: assets/js/admin.js:274
+#: includes/api/controllers/class-widget.php:551
+#: ninja-drive/includes/api/controllers/class-widget.php:495
 msgid "Widget updated successfully."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:412
+#: includes/api/controllers/class-widget.php:554
+#: ninja-drive/includes/api/controllers/class-widget.php:498
 msgid "Failed to update widget."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:430
+#: includes/api/controllers/class-widget.php:572
+#: ninja-drive/includes/api/controllers/class-widget.php:516
 msgid "Widget deleted successfully."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:432
+#: includes/api/controllers/class-widget.php:574
+#: ninja-drive/includes/api/controllers/class-widget.php:518
 msgid "Failed to delete widget."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:440
+#: includes/api/controllers/class-widget.php:582
+#: ninja-drive/includes/api/controllers/class-widget.php:526
 msgid "Widget IDs are required."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:459
+#: includes/api/controllers/class-widget.php:601
+#: ninja-drive/includes/api/controllers/class-widget.php:545
 msgid "Widget(s) duplicated successfully."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:462
+#: includes/api/controllers/class-widget.php:604
+#: ninja-drive/includes/api/controllers/class-widget.php:548
 msgid "Failed to duplicate widget(s)."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:470
+#: includes/api/controllers/class-widget.php:612
+#: ninja-drive/includes/api/controllers/class-widget.php:556
 msgid "Import widgets is required."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:484
+#: includes/api/controllers/class-widget.php:626
+#: ninja-drive/includes/api/controllers/class-widget.php:570
 msgid "Widgets imported successfully."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:487
+#: includes/api/controllers/class-widget.php:629
+#: ninja-drive/includes/api/controllers/class-widget.php:573
 msgid "Failed to import widgets."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:496
+#: includes/api/controllers/class-widget.php:638
+#: ninja-drive/includes/api/controllers/class-widget.php:582
 msgid "Unique identifier for the widget."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:502
+#: includes/api/controllers/class-widget.php:644
+#: ninja-drive/includes/api/controllers/class-widget.php:588
 msgid "Widget title."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:507
+#: includes/api/controllers/class-widget.php:649
+#: ninja-drive/includes/api/controllers/class-widget.php:593
 msgid "Widget type."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:513
+#: includes/api/controllers/class-widget.php:655
+#: ninja-drive/includes/api/controllers/class-widget.php:599
 msgid "Widget status."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:519
+#: includes/api/controllers/class-widget.php:661
+#: ninja-drive/includes/api/controllers/class-widget.php:605
 msgid "Integration identifier."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:524
+#: includes/api/controllers/class-widget.php:666
+#: ninja-drive/includes/api/controllers/class-widget.php:610
 msgid "Widget configuration data."
 msgstr ""
 
-#: includes/API/Controllers/Widget.php:529
+#: includes/api/controllers/class-widget.php:671
+#: ninja-drive/includes/api/controllers/class-widget.php:615
 msgid "Widget location assignments."
 msgstr ""
 
-#: includes/Content.php:91
-msgid "Invalid action specified."
+#: includes/api/controllers/class-widget.php:718
+#: ninja-drive/includes/api/controllers/class-widget.php:662
+msgid "Widget embed URL generated successfully."
 msgstr ""
 
-#: includes/Content.php:91
-#: includes/Content.php:186
-#: includes/Content.php:221
-#: includes/Content.php:245
-#: includes/Content.php:283
-#: includes/Content.php:293
-#: includes/Content.php:305
-#: includes/Content.php:497
-#: includes/Content.php:510
-#: includes/Content.php:528
-msgid "Error"
+#: includes/api/controllers/class-widget.php:722
+#: ninja-drive/includes/api/controllers/class-widget.php:666
+msgid "Failed to generate embed code."
 msgstr ""
 
-#: includes/Content.php:180
-msgid "Access denied!"
+#: includes/api/controllers/class-widget.php:736
+#: ninja-drive/includes/api/controllers/class-widget.php:680
+msgid "Onboarding status updated successfully."
 msgstr ""
 
-#: includes/Content.php:245
-#: includes/Content.php:497
+#: includes/api/controllers/class-widget.php:739
+#: ninja-drive/includes/api/controllers/class-widget.php:683
+msgid "Failed to update onboarding status."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:304
+msgid "Media Library synchronized successfully."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:337
+msgid "Folders retrieved successfully."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:359
+msgid "All attachments cleared successfully."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:397
+msgid "Attachments moved to trash successfully."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:435
+msgid "Attachments restored successfully."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:473
+msgid "Attachments deleted permanently."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:495
+#: includes/class-content.php:232
+#: includes/class-content.php:512
+#: ninja-drive/includes/class-content.php:216
+#: ninja-drive/includes/class-content.php:463
 msgid "File key is required."
 msgstr ""
 
-#: includes/Content.php:260
+#: includes/api/controllers/MediaLibrary__premium_only.php:514
+msgid "File uploaded to Media Library successfully."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:530
+msgid "File keys are required."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:539
+msgid "Files imported to media library successfully."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:541
+msgid "Failed to import files to media library."
+msgstr ""
+
+#: includes/api/controllers/MediaLibrary__premium_only.php:587
+msgid "Folders updated successfully."
+msgstr ""
+
+#: includes/class-account-notifications.php:37
+#: includes/class-account-notifications.php:47
+#: ninja-drive/includes/class-account-notifications.php:37
+#: ninja-drive/includes/class-account-notifications.php:47
+msgid "Unknown user"
+msgstr ""
+
+#: includes/class-account-notifications.php:64
+#: ninja-drive/includes/class-account-notifications.php:64
+msgid "As a result, files may not load properly on your site. Features such as file downloads, auto sync, and other account-dependent functionality will not work until this is resolved."
+msgstr ""
+
+#. translators: 1: site name, 2: Google account name
+#: includes/class-account-notifications.php:69
+#: ninja-drive/includes/class-account-notifications.php:69
+#, php-format
+msgid "[%1$s] New Google Drive account \"%2$s\" connected"
+msgstr ""
+
+#. translators: 1: account name, 2: Google email, 3: WP username
+#: includes/class-account-notifications.php:78
+#: ninja-drive/includes/class-account-notifications.php:78
+#, php-format
+msgid "A new Google Drive account <strong>%1$s</strong> (%2$s) has been successfully connected to your site by %3$s."
+msgstr ""
+
+#: includes/class-account-notifications.php:84
+#: includes/class-account-notifications.php:106
+#: includes/class-account-notifications.php:128
+#: ninja-drive/includes/class-account-notifications.php:84
+#: ninja-drive/includes/class-account-notifications.php:106
+#: ninja-drive/includes/class-account-notifications.php:128
+msgid "Go to Accounts settings"
+msgstr ""
+
+#. translators: 1: site name, 2: Google account name
+#: includes/class-account-notifications.php:89
+#: ninja-drive/includes/class-account-notifications.php:89
+#, php-format
+msgid "[%1$s] Google Drive account \"%2$s\" connection lost"
+msgstr ""
+
+#. translators: 1: account name, 2: Google email, 3: WP username
+#: includes/class-account-notifications.php:98
+#: ninja-drive/includes/class-account-notifications.php:98
+#, php-format
+msgid "The Google Drive account <strong>%1$s</strong> (%2$s), connected by %3$s, has lost its authorization."
+msgstr ""
+
+#: includes/class-account-notifications.php:104
+#: ninja-drive/includes/class-account-notifications.php:104
+msgid "Please re-authorize the account as soon as possible to restore access."
+msgstr ""
+
+#. translators: 1: site name, 2: Google account name
+#: includes/class-account-notifications.php:111
+#: ninja-drive/includes/class-account-notifications.php:111
+#, php-format
+msgid "[%1$s] Google Drive account \"%2$s\" removed"
+msgstr ""
+
+#. translators: 1: account name, 2: Google email, 3: WP username
+#: includes/class-account-notifications.php:120
+#: ninja-drive/includes/class-account-notifications.php:120
+#, php-format
+msgid "The Google Drive account <strong>%1$s</strong> (%2$s), connected by %3$s, has been removed from Ninja Drive. All associated file records have been deleted."
+msgstr ""
+
+#: includes/class-account-notifications.php:126
+#: ninja-drive/includes/class-account-notifications.php:126
+msgid "To reconnect or add a new Google Drive account, visit the Accounts settings page."
+msgstr ""
+
+#: includes/class-content.php:101
+#: ninja-drive/includes/class-content.php:89
+msgid "Invalid URL."
+msgstr ""
+
+#: includes/class-content.php:102
+#: ninja-drive/includes/class-content.php:90
+msgid "The URL you have entered is not valid."
+msgstr ""
+
+#: includes/class-content.php:178
+#: ninja-drive/includes/class-content.php:166
+msgid "Access denied!"
+msgstr ""
+
+#: includes/class-content.php:184
+#: includes/class-content.php:214
+#: includes/class-content.php:232
+#: includes/class-content.php:270
+#: includes/class-content.php:280
+#: includes/class-content.php:292
+#: includes/class-content.php:512
+#: includes/class-content.php:525
+#: includes/class-content.php:543
+#: ninja-drive/includes/class-content.php:172
+#: ninja-drive/includes/class-content.php:202
+#: ninja-drive/includes/class-content.php:216
+#: ninja-drive/includes/class-content.php:254
+#: ninja-drive/includes/class-content.php:264
+#: ninja-drive/includes/class-content.php:276
+#: ninja-drive/includes/class-content.php:463
+#: ninja-drive/includes/class-content.php:476
+#: ninja-drive/includes/class-content.php:494
+msgid "Error"
+msgstr ""
+
+#: includes/class-content.php:247
+#: ninja-drive/includes/class-content.php:231
 msgid "Invalid Download URL"
 msgstr ""
 
-#: includes/Content.php:261
+#: includes/class-content.php:248
+#: ninja-drive/includes/class-content.php:232
 msgid "Invalid or expired download link."
 msgstr ""
 
-#: includes/Content.php:294
+#: includes/class-content.php:281
+#: ninja-drive/includes/class-content.php:265
 msgid "Something went wrong to download the file."
 msgstr ""
 
-#: includes/Content.php:510
+#: includes/class-content.php:348
+#: ninja-drive/includes/class-content.php:307
+msgid "Unable to generate preview link."
+msgstr ""
+
+#: includes/class-content.php:525
+#: ninja-drive/includes/class-content.php:476
 msgid "Invalid or expired share link."
 msgstr ""
 
-#: includes/Content.php:545
-msgid "Invalid authorization code!"
-msgstr ""
-
-#: includes/Content.php:577
-#: includes/Content.php:592
+#: includes/class-content.php:595
+#: includes/class-content.php:607
+#: includes/class-content.php:623
+#: ninja-drive/includes/class-content.php:527
+#: ninja-drive/includes/class-content.php:542
 msgid "Permission Denied"
 msgstr ""
 
-#: includes/Content.php:578
+#: includes/class-content.php:596
+#: includes/class-content.php:608
+#: ninja-drive/includes/class-content.php:528
 msgid "You do not have permission to access this file. Widget ID is missing."
 msgstr ""
 
-#: includes/Content.php:593
-#: templates/notice-card/permission-denied.php:77
+#: includes/class-content.php:624
+#: ninja-drive/includes/class-content.php:543
+#: ninja-drive/templates/notice-card/permission-denied.php:82
+#: templates/notice-card/permission-denied.php:82
 msgid "You do not have permission to access this file."
 msgstr ""
 
-#. translators: %s: error code returned by the file lookup
-#: includes/Content.php:604
+#. translators: %s: error message.
+#: includes/class-content.php:635
+#: ninja-drive/includes/class-content.php:554
 #, php-format
 msgid "Error | %s"
 msgstr ""
 
-#: includes/Integrations/Elementor/BaseWidget.php:20
+#: includes/class-legacy-cleanup-notice.php:172
+#: ninja-drive/includes/class-legacy-cleanup-notice.php:172
+msgid "Ninja Drive: legacy data cleanup available"
+msgstr ""
+
+#: includes/class-legacy-cleanup-notice.php:173
+#: ninja-drive/includes/class-legacy-cleanup-notice.php:173
+msgid "Your file metadata has been safely migrated to the new relational table. The legacy meta_data column can now be removed to free up disk space."
+msgstr ""
+
+#: includes/class-legacy-cleanup-notice.php:175
+#: ninja-drive/includes/class-legacy-cleanup-notice.php:175
+msgid "Clean up now"
+msgstr ""
+
+#: includes/class-legacy-cleanup-notice.php:176
+#: ninja-drive/includes/class-legacy-cleanup-notice.php:176
+msgid "Remind me in 30 days"
+msgstr ""
+
+#: includes/class-legacy-cleanup-notice.php:177
+#: ninja-drive/includes/class-legacy-cleanup-notice.php:177
+msgid "Don't ask again"
+msgstr ""
+
+#: includes/class-plugininja.php:85
+#: ninja-drive/includes/class-plugininja.php:66
+msgid "Docs & FAQs"
+msgstr ""
+
+#: includes/class-plugininja.php:92
+#: includes/pages/class-admin-pages.php:28
+#: ninja-drive/includes/class-plugininja.php:73
+#: ninja-drive/includes/pages/class-admin-pages.php:28
+msgid "Settings"
+msgstr ""
+
+#: includes/class-review-banner.php:73
+#: includes/integrations/class-blocks.php:93
+#: includes/integrations/class-elementor.php:119
+#: includes/integrations/forms/class-contact-form7.php:49
+#: includes/integrations/forms/Contact_Form7__premium_only.php:134
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:34
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:59
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:78
+#: includes/pages/class-admin-pages.php:76
+#: includes/pages/class-admin-pages.php:77
+#: ninja-drive/includes/class-review-banner.php:73
+#: ninja-drive/includes/integrations/class-blocks.php:93
+#: ninja-drive/includes/integrations/class-elementor.php:119
+#: ninja-drive/includes/integrations/forms/class-contact-form7.php:49
+#: ninja-drive/includes/pages/class-admin-pages.php:68
+#: ninja-drive/includes/pages/class-admin-pages.php:69
+msgid "Ninja Drive"
+msgstr ""
+
+#. translators: %d: Number of days the plugin has been active
+#: includes/class-review-banner.php:79
+#: ninja-drive/includes/class-review-banner.php:79
+#, php-format
+msgid "Hi, Ninja Drive has been managing your Google Drive files for %d days — awesome! If you have a moment, please consider leaving a review on WordPress.org to help us spread the word. We greatly appreciate it!"
+msgstr ""
+
+#: includes/class-review-banner.php:88
+#: ninja-drive/includes/class-review-banner.php:88
+msgid "Leave a review"
+msgstr ""
+
+#: includes/class-review-banner.php:93
+#: ninja-drive/includes/class-review-banner.php:93
+msgid "Maybe later"
+msgstr ""
+
+#: includes/class-review-banner.php:98
+#: ninja-drive/includes/class-review-banner.php:98
+msgid "Don't show again"
+msgstr ""
+
+#: includes/class-review-banner.php:105
+#: ninja-drive/includes/class-review-banner.php:105
+msgid "Dismiss"
+msgstr ""
+
+#: includes/class-widget.php:118
+#: ninja-drive/includes/class-widget.php:110
+msgid "Please provide a valid ID"
+msgstr ""
+
+#: includes/class-widget.php:137
+#: includes/class-widget.php:175
+#: ninja-drive/includes/class-widget.php:129
+#: ninja-drive/includes/class-widget.php:167
+msgid "Widget not found"
+msgstr ""
+
+#: includes/class-widget.php:194
+#: ninja-drive/includes/class-widget.php:186
+msgid "Widget is disabled"
+msgstr ""
+
+#: includes/class-widget.php:198
+#: ninja-drive/includes/class-widget.php:190
+msgid "Please enable this Widget from Widget Builder"
+msgstr ""
+
+#: includes/class-widget.php:232
+#: ninja-drive/includes/class-widget.php:224
+msgid "Type not given for this Widget"
+msgstr ""
+
+#: includes/class-widget.php:251
+#: ninja-drive/includes/class-widget.php:243
+msgid "No data provided for this Widget"
+msgstr ""
+
+#: includes/class-widget.php:387
+#: ninja-drive/includes/class-widget.php:379
+msgid "You do not have permission to view this widget."
+msgstr ""
+
+#: includes/integrations/class-base-integration.php:92
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:89
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:116
+#: ninja-drive/includes/integrations/class-base-integration.php:92
+msgid "Select a widget"
+msgstr ""
+
+#: includes/integrations/class-classic-editor.php:48
+#: ninja-drive/includes/integrations/class-classic-editor.php:48
+msgid "Insert file from Google Drive"
+msgstr ""
+
+#: includes/integrations/class-classic-editor.php:49
+#: ninja-drive/includes/integrations/class-classic-editor.php:49
+#: source/media-library.js:286
+msgid "Google Drive"
+msgstr ""
+
+#: includes/integrations/elementor/class-base-widget.php:21
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:21
 msgid "Content"
 msgstr ""
 
-#: includes/Integrations/Elementor/BaseWidget.php:29
-#: includes/Integrations/Elementor/BaseWidget.php:150
-msgid "Configure Widget"
-msgstr ""
-
-#: includes/Integrations/Elementor/BaseWidget.php:37
+#: includes/integrations/elementor/class-base-widget.php:28
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:28
 msgid "Widget Data"
 msgstr ""
 
-#: includes/Integrations/Elementor/BaseWidget.php:46
+#: includes/integrations/elementor/class-base-widget.php:50
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:50
+msgid "Premium Widget"
+msgstr ""
+
+#: includes/integrations/elementor/class-base-widget.php:51
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:51
+msgid "Upgrade to Ninja Drive Premium to unlock this widget."
+msgstr ""
+
+#: includes/integrations/elementor/class-base-widget.php:54
+#: includes/integrations/elementor/class-base-widget.php:167
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:54
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:163
+msgid "Upgrade Now"
+msgstr ""
+
+#: includes/integrations/elementor/class-base-widget.php:65
+#: includes/integrations/elementor/class-base-widget.php:243
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:65
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:239
+msgid "Configure Widget"
+msgstr ""
+
+#: includes/integrations/elementor/class-base-widget.php:74
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:74
 msgid "Select Widget"
 msgstr ""
 
-#: includes/Integrations/Elementor/BaseWidget.php:50
+#: includes/integrations/elementor/class-base-widget.php:78
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:78
 msgid "Select a widget to display its content."
 msgstr ""
 
-#: includes/Integrations/Elementor/BaseWidget.php:145
+#: includes/integrations/elementor/class-base-widget.php:162
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:158
+msgid "This widget is available in the premium version."
+msgstr ""
+
+#: includes/integrations/elementor/class-base-widget.php:238
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:234
 msgid "Click Configure to setup your widget"
 msgstr ""
 
-#. translators: %s: Widget type
-#: includes/Integrations/Elementor/BaseWidget.php:178
+#: includes/integrations/elementor/class-base-widget.php:251
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:247
+msgid "Select a widget from the panel to display its content."
+msgstr ""
+
+#: includes/integrations/elementor/class-base-widget.php:261
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:257
+msgid "-- Select Widget --"
+msgstr ""
+
+#. translators: %s is replaced with the type of widget, e.g., Gallery, File Browser, etc.
+#: includes/integrations/elementor/class-base-widget.php:263
+#: ninja-drive/includes/integrations/elementor/class-base-widget.php:259
 #, php-format
 msgid "-- Select %s Widget --"
 msgstr ""
 
-#: includes/Integrations/Elementor/EmbedDocuments.php:13
-#: assets/js/shared.js:1720
+#: includes/integrations/elementor/class-embed-documents.php:15
+#: ninja-drive/includes/integrations/elementor/class-embed-documents.php:15
 msgid "Embed Documents"
 msgstr ""
 
-#: includes/Integrations/Elementor/FileBrowser.php:13
-#: assets/js/shared.js:1720
+#: includes/integrations/elementor/class-file-browser.php:15
+#: ninja-drive/includes/integrations/elementor/class-file-browser.php:15
 msgid "File Browser"
 msgstr ""
 
-#: includes/Integrations/Elementor/Gallery.php:13
-#: assets/js/shared.js:1355
-#: assets/js/shared.js:1720
+#: includes/integrations/elementor/class-file-list.php:14
+#: ninja-drive/includes/integrations/elementor/class-file-list.php:14
+msgid "File List"
+msgstr ""
+
+#: includes/integrations/elementor/class-gallery.php:15
+#: ninja-drive/includes/integrations/elementor/class-gallery.php:15
 msgid "Gallery"
 msgstr ""
 
-#: includes/Integrations/Forms/ContactForm7.php:76
+#: includes/integrations/elementor/class-media-player.php:14
+#: ninja-drive/includes/integrations/elementor/class-media-player.php:14
+msgid "Media Player"
+msgstr ""
+
+#: includes/integrations/elementor/class-search-box.php:14
+#: ninja-drive/includes/integrations/elementor/class-search-box.php:14
+msgid "Search Box"
+msgstr ""
+
+#: includes/integrations/elementor/class-shortcode.php:14
+#: ninja-drive/includes/integrations/elementor/class-shortcode.php:14
+msgid "Widget Selector"
+msgstr ""
+
+#: includes/integrations/elementor/class-slider.php:14
+#: ninja-drive/includes/integrations/elementor/class-slider.php:14
+msgid "Slider Carousel"
+msgstr ""
+
+#: includes/integrations/forms/class-contact-form7.php:71
+#: includes/integrations/forms/Contact_Form7__premium_only.php:163
+#: includes/integrations/forms/Contact_Form7__premium_only.php:174
+#: ninja-drive/includes/integrations/forms/class-contact-form7.php:71
 msgid "Ninja Drive Upload"
 msgstr ""
 
-#: includes/Integrations/Forms/ContactForm7.php:81
-msgid "Upload files attached to this form to Ninja Drive. Files will be uploaded to the selected folder. This settings will apply only the CF7 file fields."
+#: includes/integrations/forms/class-contact-form7.php:76
+#: ninja-drive/includes/integrations/forms/class-contact-form7.php:76
+msgid "Upload files attached to this form to Ninja Drive. Files will be uploaded to the selected folder. This setting applies only to CF7 file fields."
 msgstr ""
 
-#: includes/Integrations/Forms/ContactForm7.php:88
+#: includes/integrations/forms/class-contact-form7.php:83
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:35
+#: ninja-drive/includes/integrations/forms/class-contact-form7.php:83
 msgid "Enable Ninja Drive Upload"
 msgstr ""
 
-#: includes/Integrations/Forms/ContactForm7.php:98
+#: includes/integrations/forms/class-contact-form7.php:93
+#: ninja-drive/includes/integrations/forms/class-contact-form7.php:93
 msgid "Upload Folder"
 msgstr ""
 
-#: includes/Integrations/Forms/ContactForm7.php:103
+#: includes/integrations/forms/class-contact-form7.php:98
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:44
+#: includes/integrations/forms/GravityForm__premium_only.php:60
+#: ninja-drive/includes/integrations/forms/class-contact-form7.php:98
 msgid "— Select Folder —"
 msgstr ""
 
-#: includes/Integrations/Forms/ContactForm7.php:115
+#: includes/integrations/forms/class-contact-form7.php:110
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:64
+#: includes/integrations/forms/GravityForm__premium_only.php:75
+#: ninja-drive/includes/integrations/forms/class-contact-form7.php:110
 msgid "Skip Local Upload"
 msgstr ""
 
-#: includes/Integrations/Forms/ContactForm7.php:121
+#: includes/integrations/forms/class-contact-form7.php:116
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:72
+#: includes/integrations/forms/GravityForm__premium_only.php:160
+#: ninja-drive/includes/integrations/forms/class-contact-form7.php:116
 msgid "If enabled, files will only be uploaded to Google Drive and not stored locally on the server."
 msgstr ""
 
-#: includes/Integrations/Forms/ContactForm7.php:197
-msgid "Unknown error"
+#: includes/integrations/forms/Contact_Form7__premium_only.php:102
+msgid "[File Uploader]: Your provided widget id is not valid for CF7 File Uploader."
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:109
+msgid "Please configure the uploader first"
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:151
+#: includes/integrations/forms/Contact_Form7__premium_only.php:213
+msgid "Generate a form-tag for this upload field."
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:184
+#: includes/integrations/forms/Contact_Form7__premium_only.php:194
+#: includes/integrations/forms/Contact_Form7__premium_only.php:261
+msgid "Configure Uploader"
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:222
+#: includes/integrations/forms/Contact_Form7__premium_only.php:225
+msgid "Field type"
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:228
+msgid "Required field"
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:238
+msgid "Name"
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:251
+msgid "Configure"
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:277
+msgid "Insert Tag"
+msgstr ""
+
+#. translators: %s: mail tag
+#: includes/integrations/forms/Contact_Form7__premium_only.php:287
+#, php-format
+msgid "To list the uploads in your email, insert the mail-tag (%s) in the Mail tab."
+msgstr ""
+
+#: includes/integrations/forms/Contact_Form7__premium_only.php:314
+msgid "This field is required."
+msgstr ""
+
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:28
+msgid "Ninja Drive Upload Settings"
+msgstr ""
+
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:37
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:66
+msgid "Yes"
+msgstr ""
+
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:38
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:67
+msgid "No"
+msgstr ""
+
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:50
+msgid "Select Google Drive Folder"
+msgstr ""
+
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:57
+#: includes/integrations/forms/GravityForm__premium_only.php:159
+msgid "Choose the Google Drive folder where uploaded files will be stored."
+msgstr ""
+
+#: includes/integrations/forms/Elementor_Form_Upload__premium_only.php:113
+msgid "Ninja Drive File"
+msgstr ""
+
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:44
+msgid "This field is required"
+msgstr ""
+
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:54
+msgid "Ninja Drive file uploader"
+msgstr ""
+
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:55
+msgid "The uploader renders on your live form and looks just like the frontend preview — click \"Preview & Design\" to check the form preview."
+msgstr ""
+
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:97
+msgid "Ninja Drive Widget"
+msgstr ""
+
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:98
+msgid "Select an existing Ninja Drive file-uploader widget. Create and manage widgets from the Ninja Drive dashboard."
+msgstr ""
+
+#. translators: %d: minimum number of files required
+#: includes/integrations/forms/FF_pnpnd__premium_only.php:195
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:238
+#: includes/integrations/forms/NF_pnpnd__premium_only.php:134
+#, php-format
+msgid "Please upload at least %d file(s)."
+msgstr ""
+
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:90
+msgid "Attach your documents"
+msgstr ""
+
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:91
+msgid "No file selected"
+msgstr ""
+
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:127
+#: includes/integrations/forms/NF_pnpnd__premium_only.php:90
+#: includes/integrations/forms/WPForms_Field__premium_only.php:171
+msgid "Add new widget"
+msgstr ""
+
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:132
+#: includes/integrations/forms/NF_pnpnd__premium_only.php:91
+#: includes/integrations/forms/WPForms_Field__premium_only.php:176
+msgid "Edit widget"
+msgstr ""
+
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:188
+#: includes/integrations/forms/WPForms_Field__premium_only.php:246
+msgid "Please add or select a Ninja Drive widget"
+msgstr ""
+
+#: includes/integrations/forms/Formidable_Forms__premium_only.php:189
+#: includes/integrations/forms/WPForms_Field__premium_only.php:247
+msgid "Click \"Add new widget\" to set up your file uploader."
+msgstr ""
+
+#: includes/integrations/forms/Form_Upload_Base.php:29
+#: ninja-drive/includes/integrations/forms/Form_Upload_Base.php:29
+msgid "Local file not found."
+msgstr ""
+
+#: includes/integrations/forms/Form_Upload_Base.php:37
+#: ninja-drive/includes/integrations/forms/Form_Upload_Base.php:37
+msgid "Could not read local file."
 msgstr ""
 
 #. translators: 1: File name, 2: Error message
-#: includes/Integrations/Forms/ContactForm7.php:203
+#: includes/integrations/forms/Form_Upload_Base.php:67
+#: ninja-drive/includes/integrations/forms/Form_Upload_Base.php:67
 #, php-format
-msgid "Failed to upload file \"%1$s\" to Google Drive: %2$s"
+msgid "Failed to upload \"%1$s\" to Google Drive: %2$s"
 msgstr ""
 
-#. translators: 1: File name
-#: includes/Integrations/Forms/ContactForm7.php:215
+#. translators: %s: File name
+#: includes/integrations/forms/Form_Upload_Base.php:77
+#: ninja-drive/includes/integrations/forms/Form_Upload_Base.php:77
 #, php-format
 msgid "File \"%s\" uploaded to Google Drive successfully."
 msgstr ""
 
-#: includes/Pages/AdminPages.php:13
+#: includes/integrations/forms/GravityForm__premium_only.php:46
+msgid "Upload to Google Drive"
+msgstr ""
+
+#: includes/integrations/forms/GravityForm__premium_only.php:53
+msgid "Google Drive Folder"
+msgstr ""
+
+#: includes/integrations/forms/GravityForm__premium_only.php:85
+msgid "Include Preview Link in Notifications"
+msgstr ""
+
+#: includes/integrations/forms/GravityForm__premium_only.php:95
+msgid "Include Notification to Dashboard"
+msgstr ""
+
+#: includes/integrations/forms/GravityForm__premium_only.php:158
+msgid "When enabled, files uploaded through this field will be sent to Google Drive."
+msgstr ""
+
+#: includes/integrations/forms/GravityForm__premium_only.php:161
+msgid "If enabled, a Google Drive preview link will replace the local file URL in email notifications."
+msgstr ""
+
+#: includes/integrations/forms/GravityForm__premium_only.php:162
+msgid "If enabled, a notification will be sent to the dashboard when files are uploaded."
+msgstr ""
+
+#. translators: 1: File name(s) 2: Preview link(s)
+#: includes/integrations/forms/GravityForm__premium_only.php:247
+#, php-format
+msgid "Uploaded: %1$s. Preview: %2$s"
+msgstr ""
+
+#: includes/integrations/forms/NF_pnpnd__premium_only.php:70
+msgid "Select Ninja Drive Widget"
+msgstr ""
+
+#: includes/integrations/forms/NF_pnpnd__premium_only.php:73
+msgid "Select an existing Ninja Drive file-uploader widget or create a new one."
+msgstr ""
+
+#. translators: %d: minimum number of files
+#: includes/integrations/forms/WPForms_Field__premium_only.php:98
+#, php-format
+msgid "Please upload at least %d files."
+msgstr ""
+
+#: includes/integrations/forms/WPForms_Field__premium_only.php:186
+msgid "Widget ID"
+msgstr ""
+
+#: includes/integrations/WooCommerce__premium_only.php:71
+#: includes/integrations/WooCommerce__premium_only.php:81
+msgid "Download Error"
+msgstr ""
+
+#: includes/integrations/WooCommerce__premium_only.php:82
+msgid "The download URL could not be generated."
+msgstr ""
+
+#. translators: %1$s: customer name, %2$s: product name, %3$s: order number
+#: includes/integrations/WooCommerce__premium_only.php:125
+#, php-format
+msgid "Download successful: %1$s downloaded \"%2$s\" (Order #%3$s)"
+msgstr ""
+
+#. translators: %1$s: customer name, %2$s: customer email, %3$d: product ID, %4$d: order ID
+#: includes/integrations/WooCommerce__premium_only.php:133
+#, php-format
+msgid "Customer: %1$s (%2$s) | Product ID: %3$d | Order ID: %4$d"
+msgstr ""
+
+#: includes/integrations/WooCommerce__premium_only.php:142
+msgid "Download Notification"
+msgstr ""
+
+#: includes/pages/class-admin-pages.php:13
+#: ninja-drive/includes/pages/class-admin-pages.php:13
+msgid "Dashboard"
+msgstr ""
+
+#: includes/pages/class-admin-pages.php:18
+#: ninja-drive/includes/pages/class-admin-pages.php:18
 msgid "File Manager"
 msgstr ""
 
-#: includes/Pages/AdminPages.php:18
-#: assets/js/admin.js:284
+#: includes/pages/class-admin-pages.php:23
+#: ninja-drive/includes/pages/class-admin-pages.php:23
 msgid "Widget Builder"
 msgstr ""
 
-#: includes/Pages/AdminPages.php:23
-#: includes/Pninja.php:96
-#: assets/js/admin.js:424
-#: assets/js/shared.js:1790
-msgid "Settings"
+#: includes/pages/class-admin-pages.php:33
+#: ninja-drive/includes/pages/class-admin-pages.php:33
+msgid "User Access"
 msgstr ""
 
-#. translators: %s: Menu title (e.g. "File Manager")
-#: includes/Pages/AdminPages.php:79
+#. translators: %s is replaced with the sub menu name, e.g. File Manager, Widget Builder, etc.
+#: includes/pages/class-admin-pages.php:92
+#: ninja-drive/includes/pages/class-admin-pages.php:84
 #, php-format
 msgid "%s - Ninja Drive"
 msgstr ""
 
-#: includes/Pninja.php:80
-msgid "Docs & FAQs"
-msgstr ""
-
-#: includes/Utils/Helpers.php:24
+#: includes/utils/class-helpers.php:20
+#: ninja-drive/includes/utils/class-helpers.php:20
 msgid "Return to the Plugins page"
 msgstr ""
 
-#: includes/Utils/Helpers.php:26
+#: includes/utils/class-helpers.php:22
+#: ninja-drive/includes/utils/class-helpers.php:22
 msgid "Plugin Activation Failed"
 msgstr ""
 
 #. translators: %s: Minimum required WordPress version
-#: includes/Utils/Helpers.php:34
+#: includes/utils/class-helpers.php:30
+#: ninja-drive/includes/utils/class-helpers.php:30
 #, php-format
 msgid "WordPress %s or higher is required."
 msgstr ""
 
 #. translators: %s: Minimum required PHP version
-#: includes/Utils/Helpers.php:39
+#: includes/utils/class-helpers.php:35
+#: ninja-drive/includes/utils/class-helpers.php:35
 #, php-format
 msgid "PHP %s or higher is required."
 msgstr ""
 
-#: includes/Widget.php:98
-msgid "Please provide a valid ID"
-msgstr ""
-
-#: includes/Widget.php:117
-#: includes/Widget.php:155
-msgid "Widget not found"
-msgstr ""
-
-#: includes/Widget.php:174
-msgid "Widget is disabled"
-msgstr ""
-
-#: includes/Widget.php:178
-msgid "Please enable this Widget from Widget Builder"
-msgstr ""
-
-#: includes/Widget.php:228
-msgid "No data available for this Widget"
-msgstr ""
-
-#: includes/Widget.php:255
-msgid "Type not given for this Widget"
-msgstr ""
-
-#: includes/Widget.php:274
-msgid "No data provided for this Widget"
-msgstr ""
-
-#: models/Account.php:255
+#: models/class-account.php:328
+#: ninja-drive/models/class-account.php:323
 msgid "You do not have permission to update accounts."
 msgstr ""
 
-#: models/Account.php:310
+#: models/class-account.php:382
+#: ninja-drive/models/class-account.php:377
 msgid "You do not have permission to delete this account."
 msgstr ""
 
-#: models/Account.php:319
+#: models/class-account.php:391
+#: ninja-drive/models/class-account.php:386
 msgid "Account not found."
 msgstr ""
 
-#: models/Account.php:323
+#: models/class-account.php:395
+#: ninja-drive/models/class-account.php:390
 msgid "Invalid account data."
 msgstr ""
 
-#: models/Account.php:333
+#: models/class-account.php:405
+#: ninja-drive/models/class-account.php:400
 msgid "Failed to delete account."
 msgstr ""
 
-#: models/Account.php:410
+#: models/class-account.php:500
+#: ninja-drive/models/class-account.php:495
 msgid "You do not have permission to retrieve tokens."
 msgstr ""
 
-#: models/Account.php:426
+#: models/class-account.php:516
+#: ninja-drive/models/class-account.php:511
 msgid "Account ID is required."
 msgstr ""
 
-#: models/Account.php:461
+#: models/class-account.php:551
+#: ninja-drive/models/class-account.php:546
 msgid "You do not have permission to update tokens."
 msgstr ""
 
-#: models/Account.php:465
+#: models/class-account.php:555
+#: ninja-drive/models/class-account.php:550
 msgid "Account ID and token are required."
 msgstr ""
 
-#: models/BaseModel.php:54
-msgid "Clone is not allowed."
+#: models/class-account.php:658
+#: ninja-drive/models/class-account.php:652
+msgid "You do not have permission to switch accounts."
 msgstr ""
 
-#: models/BaseModel.php:63
-msgid "Serialization is forbidden."
+#: models/class-account.php:668
+#: ninja-drive/models/class-account.php:662
+msgid "The account you are trying to switch does not exist."
 msgstr ""
 
-#: models/BaseModel.php:72
-msgid "Deserialization is forbidden."
+#: models/class-account.php:672
+#: ninja-drive/models/class-account.php:666
+msgid "The account you are trying to switch is lost."
 msgstr ""
 
-#: models/BaseModel.php:89
-#: models/BaseModel.php:119
-#: models/BaseModel.php:177
-#: models/Notices.php:292
-#: models/Widget.php:367
+#: models/class-account.php:681
+#: ninja-drive/models/class-account.php:675
 msgid "A database error occurred: "
 msgstr ""
 
-#: models/BaseModel.php:107
+#: models/class-base-model.php:54
+#: ninja-drive/models/class-base-model.php:54
+msgid "Clone is not allowed."
+msgstr ""
+
+#: models/class-base-model.php:63
+#: ninja-drive/models/class-base-model.php:63
+msgid "Serialization is forbidden."
+msgstr ""
+
+#: models/class-base-model.php:72
+#: ninja-drive/models/class-base-model.php:72
+msgid "Deserialization is forbidden."
+msgstr ""
+
+#: models/class-base-model.php:87
+#: models/class-base-model.php:129
+#: models/class-base-model.php:197
+#: models/class-base-model.php:268
+#: models/class-base-model.php:336
+#: models/class-widget.php:362
+#: ninja-drive/models/class-base-model.php:87
+#: ninja-drive/models/class-base-model.php:129
+#: ninja-drive/models/class-base-model.php:197
+#: ninja-drive/models/class-base-model.php:268
+#: ninja-drive/models/class-base-model.php:336
+#: ninja-drive/models/class-widget.php:361
+msgid "A database error occurred. Please try again."
+msgstr ""
+
+#. translators: %1$s is the table name, %2$s is the database error message.
+#: models/class-base-model.php:91
+#: ninja-drive/models/class-base-model.php:91
+#, php-format
+msgid "A database error occurred while counting records in %1$s: %2$s"
+msgstr ""
+
+#: models/class-base-model.php:117
+#: ninja-drive/models/class-base-model.php:117
 msgid "Data cannot be empty for insert operation."
 msgstr ""
 
-#: models/BaseModel.php:123
+#. translators: %1$s is the table name, %2$s is the database error message.
+#: models/class-base-model.php:133
+#: ninja-drive/models/class-base-model.php:133
+#, php-format
+msgid "A database error occurred while inserting record into %1$s: %2$s"
+msgstr ""
+
+#: models/class-base-model.php:143
+#: ninja-drive/models/class-base-model.php:143
 msgid "Failed to insert data into database."
 msgstr ""
 
-#: models/BaseModel.php:153
+#: models/class-base-model.php:173
+#: ninja-drive/models/class-base-model.php:173
 msgid "Data cannot be empty for update operation."
 msgstr ""
 
-#: models/BaseModel.php:157
+#: models/class-base-model.php:177
+#: ninja-drive/models/class-base-model.php:177
 msgid "Where conditions cannot be empty for update operation."
 msgstr ""
 
-#: models/BaseModel.php:166
+#: models/class-base-model.php:186
+#: ninja-drive/models/class-base-model.php:186
 msgid "Data and format array must have the same number of elements."
 msgstr ""
 
-#: models/BaseModel.php:170
+#: models/class-base-model.php:190
+#: ninja-drive/models/class-base-model.php:190
 msgid "Where conditions and where format array must have the same number of elements."
 msgstr ""
 
-#: models/BaseModel.php:181
+#. translators: %1$s is the table name, %2$s is the database error message.
+#: models/class-base-model.php:201
+#: ninja-drive/models/class-base-model.php:201
+#, php-format
+msgid "A database error occurred while updating record in %1$s: %2$s"
+msgstr ""
+
+#: models/class-base-model.php:211
+#: ninja-drive/models/class-base-model.php:211
 msgid "Failed to update data in database."
 msgstr ""
 
-#: models/BaseModel.php:220
+#: models/class-base-model.php:250
+#: ninja-drive/models/class-base-model.php:250
 msgid "Invalid field name provided."
 msgstr ""
 
-#: models/BaseModel.php:233
+#: models/class-base-model.php:263
+#: ninja-drive/models/class-base-model.php:263
 msgid "Delete operation blocked: WHERE clause is required."
 msgstr ""
 
-#: models/BaseModel.php:250
+#. translators: %1$s is the table name, %2$s is the database error message.
+#: models/class-base-model.php:272
+#: ninja-drive/models/class-base-model.php:272
+#, php-format
+msgid "A database error occurred while deleting record from %1$s: %2$s"
+msgstr ""
+
+#: models/class-base-model.php:287
+#: ninja-drive/models/class-base-model.php:287
 msgid "Failed to delete data from database."
 msgstr ""
 
-#: models/BaseModel.php:273
+#: models/class-base-model.php:310
+#: ninja-drive/models/class-base-model.php:310
 msgid "Where conditions cannot be empty for exists check."
 msgstr ""
 
-#: models/BaseModel.php:286
+#: models/class-base-model.php:323
+#: ninja-drive/models/class-base-model.php:323
 msgid "Invalid column name provided."
 msgstr ""
 
-#: models/BaseModel.php:364
+#. translators: %1$s is the table name, %2$s is the database error message.
+#: models/class-base-model.php:340
+#: ninja-drive/models/class-base-model.php:340
+#, php-format
+msgid "A database error occurred while checking existence in %1$s: %2$s"
+msgstr ""
+
+#: models/class-base-model.php:408
+#: ninja-drive/models/class-base-model.php:408
 msgid "Data cannot be empty for batch insert operation."
 msgstr ""
 
-#: models/BaseModel.php:382
+#: models/class-base-model.php:426
+#: ninja-drive/models/class-base-model.php:426
 msgid "Failed to insert any records in batch operation."
 msgstr ""
 
-#: models/Files.php:35
-#: models/Files.php:87
-#: models/Files.php:197
-#: models/Files.php:261
-#: models/Files.php:320
-#: models/Files.php:603
-#: models/Files.php:633
-#: models/Files.php:718
-#: models/Files.php:799
-#: models/Files.php:821
+#: models/class-file-meta.php:171
+#: ninja-drive/models/class-file-meta.php:171
+msgid "file_key and meta_key are required."
+msgstr ""
+
+#: models/class-file-meta.php:195
+#: ninja-drive/models/class-file-meta.php:195
+msgid "Failed to write file meta."
+msgstr ""
+
+#: models/class-file-meta.php:229
+#: models/class-file-meta.php:259
+#: ninja-drive/models/class-file-meta.php:229
+#: ninja-drive/models/class-file-meta.php:259
+msgid "Failed to delete file meta."
+msgstr ""
+
+#: models/class-files.php:34
+#: models/class-files.php:92
+#: models/class-files.php:202
+#: models/class-files.php:267
+#: models/class-files.php:327
+#: models/class-files.php:660
+#: models/class-files.php:690
+#: models/class-files.php:775
+#: models/class-files.php:855
+#: models/class-files.php:876
+#: ninja-drive/models/class-files.php:34
+#: ninja-drive/models/class-files.php:92
+#: ninja-drive/models/class-files.php:202
+#: ninja-drive/models/class-files.php:267
+#: ninja-drive/models/class-files.php:327
+#: ninja-drive/models/class-files.php:610
+#: ninja-drive/models/class-files.php:640
+#: ninja-drive/models/class-files.php:725
+#: ninja-drive/models/class-files.php:805
+#: ninja-drive/models/class-files.php:826
 msgid "This account is lost or does not exist. Please re-authorize it."
 msgstr ""
 
-#: models/Files.php:201
+#: models/class-files.php:206
+#: ninja-drive/models/class-files.php:206
 msgid "The requested file could not be found. 3"
 msgstr ""
 
-#: models/Files.php:332
+#: models/class-files.php:340
+#: ninja-drive/models/class-files.php:340
 msgid "The requested file could not be found. 1"
 msgstr ""
 
-#: models/Files.php:366
+#: models/class-files.php:374
+#: ninja-drive/models/class-files.php:374
 msgid "The requested file could not be found. 4"
 msgstr ""
 
-#: models/Files.php:378
+#: models/class-files.php:387
+#: ninja-drive/models/class-files.php:387
 msgid "The requested file could not be found. 5"
 msgstr ""
 
-#: models/Files.php:659
+#: models/class-files.php:716
+#: ninja-drive/models/class-files.php:666
 msgid "The requested file could not be found. 7"
 msgstr ""
 
-#: models/Files.php:960
+#: models/class-files.php:992
+#: models/class-files.php:1017
+#: ninja-drive/models/class-files.php:942
+#: ninja-drive/models/class-files.php:967
+msgid "The specified share link does not exist."
+msgstr ""
+
+#: models/class-files.php:1058
+#: ninja-drive/models/class-files.php:1008
 msgid "This shared link is protected by a password. Please provide the password to access the file."
 msgstr ""
 
-#: models/Files.php:964
-#: models/Files.php:1017
+#: models/class-files.php:1062
+#: models/class-files.php:1111
+#: ninja-drive/models/class-files.php:1012
+#: ninja-drive/models/class-files.php:1061
 msgid "The provided password is incorrect."
 msgstr ""
 
-#: models/Files.php:999
+#: models/class-files.php:1095
+#: ninja-drive/models/class-files.php:1045
 msgid "This download link has expired."
 msgstr ""
 
-#: models/Files.php:1007
+#: models/class-files.php:1101
+#: ninja-drive/models/class-files.php:1051
 msgid "The download limit for this link has been exceeded."
 msgstr ""
 
-#: models/Files.php:1013
+#: models/class-files.php:1107
+#: ninja-drive/models/class-files.php:1057
 msgid "This Download link is protected by a password. Please provide the password to access the file."
 msgstr ""
 
-#: models/Notices.php:88
+#: models/class-files.php:1168
+#: models/class-files.php:1198
+#: ninja-drive/models/class-files.php:1118
+#: ninja-drive/models/class-files.php:1148
+msgid "The specified download link does not exist."
+msgstr ""
+
+#: models/class-notices.php:127
+#: ninja-drive/models/class-notices.php:127
 msgid "Invalid output type specified."
 msgstr ""
 
-#: models/Notices.php:157
+#: models/class-notices.php:198
+#: ninja-drive/models/class-notices.php:198
 msgid "Type and title are required fields."
 msgstr ""
 
-#: models/Notices.php:208
-#: models/Notices.php:251
-#: models/Widget.php:189
-#: models/Widget.php:242
-#: models/Widget.php:270
-#: models/Widget.php:275
-#: models/Widget.php:300
+#: models/class-notices.php:250
+#: models/class-notices.php:294
+#: models/class-widget.php:185
+#: models/class-widget.php:238
+#: models/class-widget.php:266
+#: models/class-widget.php:271
+#: models/class-widget.php:296
+#: ninja-drive/models/class-notices.php:250
+#: ninja-drive/models/class-notices.php:294
+#: ninja-drive/models/class-widget.php:185
+#: ninja-drive/models/class-widget.php:237
+#: ninja-drive/models/class-widget.php:265
+#: ninja-drive/models/class-widget.php:270
+#: ninja-drive/models/class-widget.php:295
 msgid "Invalid ID provided."
 msgstr ""
 
-#: models/Notices.php:212
-msgid "Notice not found."
+#: models/class-notices.php:338
+#: ninja-drive/models/class-notices.php:338
+msgid "A database error occurred while fetching unread count. Please try again."
 msgstr ""
 
-#: models/Widget.php:40
-#: models/Widget.php:867
+#. translators: %1$s is the table name, %2$s is the database error message.
+#: models/class-notices.php:342
+#: ninja-drive/models/class-notices.php:342
+#, php-format
+msgid "A database error occurred while fetching unread count from %1$s: %2$s"
+msgstr ""
+
+#: models/class-widget.php:34
+#: models/class-widget.php:1025
+#: ninja-drive/models/class-widget.php:34
+#: ninja-drive/models/class-widget.php:882
 msgid "Widget ID is required."
 msgstr ""
 
-#: models/Widget.php:121
-#: models/Widget.php:759
+#: models/class-widget.php:117
+#: models/class-widget.php:919
+#: ninja-drive/models/class-widget.php:117
+#: ninja-drive/models/class-widget.php:776
 msgid "Invalid widget type."
 msgstr ""
 
-#: models/Widget.php:162
+#: models/class-widget.php:158
+#: ninja-drive/models/class-widget.php:158
 msgid "Widget type is required."
 msgstr ""
 
-#: models/Widget.php:166
+#: models/class-widget.php:162
+#: ninja-drive/models/class-widget.php:162
 msgid "Widget data is required."
 msgstr ""
 
-#: models/Widget.php:257
+#: models/class-widget.php:253
+#: ninja-drive/models/class-widget.php:252
 msgid "Failed to delete any widgets."
 msgstr ""
 
-#: models/Widget.php:598
-msgid "Password is required"
+#. translators: %1$s is the table name, %2$s is the database error message.
+#: models/class-widget.php:366
+#: ninja-drive/models/class-widget.php:365
+#, php-format
+msgid "A database error occurred while counting widgets in %1$s: %2$s"
 msgstr ""
 
-#: models/Widget.php:606
+#: models/class-widget.php:614
+#: ninja-drive/models/class-widget.php:609
+msgid "This widget is password protected. Please enter the password to view the content."
+msgstr ""
+
+#: models/class-widget.php:623
+#: ninja-drive/models/class-widget.php:618
 msgid "Password is incorrect"
 msgstr ""
 
-#: models/Widget.php:611
+#: models/class-widget.php:627
+#: ninja-drive/models/class-widget.php:622
 msgid "Password Error"
 msgstr ""
 
-#: models/Widget.php:634
+#: models/class-widget.php:666
+#: ninja-drive/models/class-widget.php:644
 msgid "No file keys specified in the widget data."
 msgstr ""
 
-#: models/Widget.php:649
+#: models/class-widget.php:682
+msgid "The specified file key is not allowed for this shortcode."
+msgstr ""
+
+#: models/class-widget.php:755
+#: ninja-drive/models/class-widget.php:659
 msgid "The specified file key is not allowed for this widget."
 msgstr ""
 
-#: models/Widget.php:765
+#: models/class-widget.php:925
+#: ninja-drive/models/class-widget.php:782
 msgid "Unsupported widget type for schema validation."
 msgstr ""
 
+#: models/UserAccess__premium_only.php:426
+msgid "Username is required to get access status."
+msgstr ""
+
+#: models/UserAccess__premium_only.php:440
+#, php-format
+msgid "User \"%s\" already has access via the \"%s\" role. Adding separate access may override role-based rules."
+msgstr ""
+
+#: models/UserAccess__premium_only.php:446
+#, php-format
+msgid "User \"%s\" does not have access yet."
+msgstr ""
+
+#: ninja-drive/templates/content-password.php:14
 #: templates/content-password.php:14
 msgid "Password Form"
 msgstr ""
 
-#: templates/content-password.php:170
+#: ninja-drive/templates/content-password.php:149
+#: templates/content-password.php:149
 msgid "You do not have access to this file."
 msgstr ""
 
-#: templates/content-password.php:171
+#: ninja-drive/templates/content-password.php:150
+#: templates/content-password.php:150
 msgid "Enter the secret password to access this."
 msgstr ""
 
-#: templates/content-password.php:177
+#: ninja-drive/templates/content-password.php:156
+#: templates/content-password.php:156
 msgid "Enter Password"
 msgstr ""
 
-#: templates/content-password.php:186
+#: ninja-drive/templates/content-password.php:165
+#: templates/content-password.php:165
 msgid "Submit"
 msgstr ""
 
-#: templates/notice-card/permission-denied.php:76
+#: ninja-drive/templates/notice-card/permission-denied.php:81
+#: templates/notice-card/permission-denied.php:81
 msgid "Access Denied"
 msgstr ""
 
-#: assets/js/admin.js:169
-msgid "Storage"
+#: templates/notifications/email__premium_only.php:49
+msgid "Hi there,"
 msgstr ""
 
-#: assets/js/admin.js:194
-#: assets/js/admin.js:304
-#: assets/js/shared.js:1130
-msgid "Delete"
+#: templates/notifications/email__premium_only.php:68
+msgid "File Icon"
 msgstr ""
 
-#: assets/js/admin.js:204
-#: assets/js/shared.js:2230
-msgid "Notifications"
+#: templates/notifications/email__premium_only.php:96
+msgid "User Information"
 msgstr ""
 
-#: assets/js/admin.js:204
-msgid "Mark all as read"
-msgstr ""
-
-#: assets/js/admin.js:204
-msgid "Clear All"
-msgstr ""
-
-#: assets/js/admin.js:224
-msgid "No notifications yet."
-msgstr ""
-
-#: assets/js/admin.js:224
-msgid "No unread notifications."
-msgstr ""
-
-#: assets/js/admin.js:234
-msgid "Widget Type"
-msgstr ""
-
-#: assets/js/admin.js:234
-msgid "Select the widget type that you want to use."
-msgstr ""
-
-#: assets/js/admin.js:274
-msgid "Please select at least one file to proceed."
-msgstr ""
-
-#: assets/js/admin.js:274
-msgid "Failed to save widget. Please try again."
-msgstr ""
-
-#: assets/js/admin.js:284
-msgid "Add New Widget"
-msgstr ""
-
-#: assets/js/admin.js:284
-msgid "5/Page"
-msgstr ""
-
-#: assets/js/admin.js:284
-msgid "10/Page"
-msgstr ""
-
-#: assets/js/admin.js:284
-msgid "20/Page"
-msgstr ""
-
-#: assets/js/admin.js:284
-msgid "50/Page"
-msgstr ""
-
-#: assets/js/admin.js:284
-msgid "100/Page"
-msgstr ""
-
-#: assets/js/admin.js:304
-#: assets/js/admin.js:314
-msgid "Edit"
-msgstr ""
-
-#: assets/js/admin.js:304
-#: assets/js/shared.js:1130
-msgid "Rename"
-msgstr ""
-
-#: assets/js/admin.js:304
-#: assets/js/shared.js:1130
-msgid "Preview"
-msgstr ""
-
-#: assets/js/admin.js:304
-msgid "Duplicate"
-msgstr ""
-
-#: assets/js/admin.js:324
-msgid "Shortcode Locations:"
-msgstr ""
-
-#: assets/js/admin.js:324
-msgid "No locations found"
-msgstr ""
-
-#: assets/js/admin.js:344
-#: assets/js/shared.js:1565
-msgid "Prev"
-msgstr ""
-
-#: assets/js/admin.js:344
-#: assets/js/shared.js:1565
-msgid "Next"
-msgstr ""
-
-#: assets/js/admin.js:354
-msgid "Save Settings"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Invalid export option selected"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Data exported successfully!"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "No file selected for import"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Settings imported successfully"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Failed to import settings."
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Shortcode widgets imported successfully"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Failed to import widget widgets."
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Failed to import data:"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Error reading file:"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Export All"
-msgstr ""
-
-#: assets/js/admin.js:424
-msgid "Shortcode Modules"
-msgstr ""
-
-#: assets/js/admin.js:459
-msgid "Accounts"
-msgstr ""
-
-#: assets/js/admin.js:459
-#: assets/js/shared.js:1720
-#: assets/js/shared.js:2230
-msgid "Advanced"
-msgstr ""
-
-#: assets/js/admin.js:459
-msgid "Appearance"
-msgstr ""
-
-#: assets/js/admin.js:459
-msgid "Integrations"
-msgstr ""
-
-#: assets/js/admin.js:459
-msgid "Tools"
-msgstr ""
-
-#: assets/js/elementor.js:18
-#: assets/js/integrations.js:88
-#: source/assets/js/elementor.js:114
-#: source/assets/js/integrations.js:847
-msgid "Upgrade Now"
-msgstr ""
-
-#: assets/js/shared.js:284
-msgid "Type..."
-msgstr ""
-
-#: assets/js/shared.js:394
-msgid "Value exceeds maximum"
-msgstr ""
-
-#: assets/js/shared.js:394
-msgid "Value is below minimum"
-msgstr ""
-
-#: assets/js/shared.js:394
-msgid "Reset"
-msgstr ""
-
-#: assets/js/shared.js:419
-msgid "Premium Feature"
-msgstr ""
-
-#: assets/js/shared.js:419
-msgid "Coming Soon"
-msgstr ""
-
-#: assets/js/shared.js:419
-msgid "Most Used Feature"
-msgstr ""
-
-#: assets/js/shared.js:419
-msgid "New Feature"
-msgstr ""
-
-#: assets/js/shared.js:419
-msgid "Beta Feature"
-msgstr ""
-
-#: assets/js/shared.js:570
-msgid "e.g:"
-msgstr ""
-
-#: assets/js/shared.js:570
-msgid ".txt"
-msgstr ""
-
-#: assets/js/shared.js:570
-msgid "Separators"
-msgstr ""
-
-#: assets/js/shared.js:925
-#: assets/js/shared.js:1000
-msgid "Documentation"
-msgstr ""
-
-#: assets/js/shared.js:1025
-msgid "Help Center"
-msgstr ""
-
-#: assets/js/shared.js:1025
-msgid "Version"
-msgstr ""
-
-#: assets/js/shared.js:1025
-msgid "Upgrade to Pro"
-msgstr ""
-
-#: assets/js/shared.js:1100
-msgid "Something went wrong 😢"
-msgstr ""
-
-#: assets/js/shared.js:1130
-msgid "Open in Google Drive"
-msgstr ""
-
-#: assets/js/shared.js:1130
-#: assets/js/shared.js:1660
-msgid "Share"
-msgstr ""
-
-#: assets/js/shared.js:1130
-msgid "Download"
-msgstr ""
-
-#: assets/js/shared.js:1130
-msgid "Download Link"
-msgstr ""
-
-#: assets/js/shared.js:1130
-msgid "Hide"
-msgstr ""
-
-#: assets/js/shared.js:1140
+#: templates/notifications/email__premium_only.php:99
 msgid "Name:"
 msgstr ""
 
-#: assets/js/shared.js:1140
+#: templates/notifications/email__premium_only.php:102
+msgid "Email:"
+msgstr ""
+
+#: templates/notifications/email__premium_only.php:105
+msgid "User ID:"
+msgstr ""
+
+#: templates/notifications/email__premium_only.php:108
+msgid "IP Address:"
+msgstr ""
+
+#: templates/notifications/email__premium_only.php:113
+msgid "Context Information"
+msgstr ""
+
+#: templates/notifications/email__premium_only.php:116
+msgid "Widget ID:"
+msgstr ""
+
+#: templates/notifications/email__premium_only.php:119
+msgid "Total Files:"
+msgstr ""
+
+#: templates/notifications/email__premium_only.php:122
+msgid "Page URL:"
+msgstr ""
+
+#: templates/notifications/email__premium_only.php:128
 msgid "Type:"
 msgstr ""
 
-#: assets/js/shared.js:1140
-msgid "Owner:"
+#: templates/notifications/email__premium_only.php:138
+msgid "Visit Website"
 msgstr ""
 
-#: assets/js/shared.js:1140
-msgid "File Key:"
+#: templates/notifications/email__premium_only.php:146
+msgid "Best Regards,"
 msgstr ""
 
-#: assets/js/shared.js:1140
-msgid "Account ID:"
+#: templates/notifications/email__premium_only.php:155
+msgid "This email has been generated from Ninja Drive at"
 msgstr ""
 
-#: assets/js/shared.js:1140
-msgid "Children:"
+#: templates/notifications/email__premium_only.php:158
+msgid " at "
 msgstr ""
 
-#: assets/js/shared.js:1140
-msgid "Size:"
-msgstr ""
-
-#: assets/js/shared.js:1140
-msgid "Created:"
-msgstr ""
-
-#: assets/js/shared.js:1140
-msgid "Updated:"
-msgstr ""
-
-#: assets/js/shared.js:1140
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Copied to clipboard!"
-msgstr ""
-
-#: assets/js/shared.js:1140
-msgid "Properties"
-msgstr ""
-
-#: assets/js/shared.js:1140
-msgid "Description"
-msgstr ""
-
-#: assets/js/shared.js:1150
-#: assets/js/shared.js:1495
-#: assets/js/shared.js:1535
-#: assets/js/shared.js:1750
-msgid "No files found"
-msgstr ""
-
-#: assets/js/shared.js:1180
-msgid "Suggested from my engagement"
-msgstr ""
-
-#: assets/js/shared.js:1275
-msgid "Don't have a Google Drive app ? please check"
-msgstr ""
-
-#: assets/js/shared.js:1275
-msgid "documentation"
-msgstr ""
-
-#: assets/js/shared.js:1275
-msgid "or"
-msgstr ""
-
-#: assets/js/shared.js:1275
-msgid "create an app"
-msgstr ""
-
-#: assets/js/shared.js:1275
-msgid "."
-msgstr ""
-
-#: assets/js/shared.js:1285
-msgid "Welcome"
-msgstr ""
-
-#: assets/js/shared.js:1285
-msgid "Ultimate WordPress File Management Solution For Google Drive"
-msgstr ""
-
-#: assets/js/shared.js:1285
-msgid "Documentations"
-msgstr ""
-
-#: assets/js/shared.js:1285
-msgid "Video Tutorial"
-msgstr ""
-
-#: assets/js/shared.js:1285
-msgid "Live Support"
-msgstr ""
-
-#: assets/js/shared.js:1285
-msgid "See All Features"
-msgstr ""
-
-#: assets/js/shared.js:1335
-msgid "Show or hide the file name below the embedded document."
-msgstr ""
-
-#: assets/js/shared.js:1335
-msgid "Show File Name"
-msgstr ""
-
-#: assets/js/shared.js:1335
-msgid "Iframe Dimensions"
-msgstr ""
-
-#: assets/js/shared.js:1335
-msgid "Width"
-msgstr ""
-
-#: assets/js/shared.js:1335
-msgid "Height"
-msgstr ""
-
-#: assets/js/shared.js:1335
-msgid "Allow the document to be opened in a new tab."
-msgstr ""
-
-#: assets/js/shared.js:1335
-msgid "Allow Pop Out"
-msgstr ""
-
-#: assets/js/shared.js:1335
-msgid "If the pop-out option is disabled, users will be able to view the embedded document only on your website and not on Google Drive."
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "Set the widget container width and height. You  can use any valid CSS unit (pixels, percentage), eg '360px', '780px',  '80%'. Keep blank for default value."
-msgstr ""
-
-#: assets/js/shared.js:1345
-msgid "List View Table Head Fields Name"
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File Name Column"
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File name column text here."
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File Type Column"
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File type column text here."
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File Size Column"
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File size column text here."
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File Updated Column"
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File updated column text here."
-msgstr ""
-
-#: assets/js/shared.js:1345
-msgid "File Action Column"
-msgstr ""
-
-#: assets/js/shared.js:1345
-#: assets/js/shared.js:1365
-msgid "File action column text here."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "File List Style"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Configure the style of the file list."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Select File List Preset"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Select a preset style for the file list."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "File Info Display"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Configure how the file list is displayed."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Show the file thumbnail on the front-side file list."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "File Thumbnail"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "File Name"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Show the file name on the front-side file list."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Limit the file information to display on the front-side file list. Enter a custom label if needed."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "File Size"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Show or hide the file extension."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "File Extension"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Show the file date, either last changed or when added to the list."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "File Date"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Show or hide the file actions."
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "File Actions"
-msgstr ""
-
-#: assets/js/shared.js:1355
-#: assets/js/shared.js:1720
-msgid "List"
-msgstr ""
-
-#: assets/js/shared.js:1355
-#: assets/js/shared.js:1375
-#: assets/js/shared.js:1720
-msgid "Grid"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Compact"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Table"
-msgstr ""
-
-#: assets/js/shared.js:1355
-msgid "Timeline"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Configurations"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Allow users to upload multiple files at once."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Folder Upload"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Allow users to select multiple files at once."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Multiple Selection"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Uploader Preview Mode"
-msgstr ""
-
-#: assets/js/shared.js:1365
-#: assets/js/shared.js:1425
-msgid "File Loading Type"
-msgstr ""
-
-#: assets/js/shared.js:1365
-#: assets/js/shared.js:1425
-msgid "Choose how files are loaded in the widget."
-msgstr ""
-
-#: assets/js/shared.js:1365
-#: assets/js/shared.js:1425
-msgid "Files in First Render"
-msgstr ""
-
-#: assets/js/shared.js:1365
-#: assets/js/shared.js:1425
-msgid "How many files to display initially."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Default View Style"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Choose default view style for the file browser"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Show/ hide the file browser header."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Show Header"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "List View Table Header Names"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Show a label text above the upload box."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Show Upload Box Label"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Label Text"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Enter the uploader label text."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "File Rename"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Available tags (click to insert/remove, max 5)"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Those tags are only available for the login users."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Those tags are only available on the WooCommerce Single Product page."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Start uploading files immediately after they are selected."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Upload Immediately"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Show/ hide the upload confirmation message after upload is complete."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Show Upload Confirmation"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Confirmation Message"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Enter the upload confirmation message."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Breadcrumb"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Enable it to show breadcrumb in header."
-msgstr ""
-
-#: assets/js/shared.js:1365
-#: assets/js/shared.js:1425
-msgid "Sorting"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Enable it to show sorting options in header."
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "File Actions Column"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "file_name"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "sample"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "file_extension"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "txt"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "queue_index"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "1"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "current_date"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "2024-01-31"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "current_time"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "14-30-15"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "unique_id"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "abc123"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_id"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "42"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_title"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "example-post"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_slug"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "example-post-slug"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_author"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "John Doe"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_date"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_modified"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_status"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "published"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_type"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "blog"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_category"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "tech"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_tags"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "AI,React"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "post_meta_{key}"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "AI,ReactmetaValue"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "user_login"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "johndoe"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "user_email"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "john@example.com"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "first_name"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "John"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "last_name"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "Doe"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "display_name"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "JohnD"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "user_id"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "7"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "user_role"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "editor"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "user_meta_{key}"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "userMetaValue"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_name"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_id"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_sku"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_slug"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_price"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_sale_price"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_regular_price"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_tags"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_type"
-msgstr ""
-
-#: assets/js/shared.js:1365
-msgid "wc_product_status"
-msgstr ""
-
-#: assets/js/shared.js:1375
-msgid "Gallery Layout"
-msgstr ""
-
-#: assets/js/shared.js:1375
-msgid "Select the layout for the gallery."
-msgstr ""
-
-#: assets/js/shared.js:1375
-#: assets/js/shared.js:1395
-msgid "Columns"
-msgstr ""
-
-#: assets/js/shared.js:1375
-msgid "Set the number of columns for the selected device type."
-msgstr ""
-
-#: assets/js/shared.js:1385
-#: assets/js/shared.js:1720
-msgid "Thumbnail"
-msgstr ""
-
-#: assets/js/shared.js:1385
-msgid "Configure the thumbnail settings for the gallery."
-msgstr ""
-
-#: assets/js/shared.js:1385
-msgid "Spacing"
-msgstr ""
-
-#: assets/js/shared.js:1385
-msgid "Adjust the spacing around the image caption"
-msgstr ""
-
-#: assets/js/shared.js:1385
-msgid "Radius"
-msgstr ""
-
-#: assets/js/shared.js:1385
-msgid "Quality"
-msgstr ""
-
-#: assets/js/shared.js:1385
-msgid "Select the quality of the thumbnails."
-msgstr ""
-
-#: assets/js/shared.js:1385
-#: assets/js/shared.js:1720
-msgid "Original"
-msgstr ""
-
-#: assets/js/shared.js:1385
-#: assets/js/shared.js:1720
-msgid "Large"
-msgstr ""
-
-#: assets/js/shared.js:1385
-#: assets/js/shared.js:1720
-msgid "Medium"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Show/hide the next & previous buttons in the player. Enables navigation between media items in the playlist."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Show Next & Previous"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Show/hide the playlist in the player."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Show/hide Playlist"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Playlist Title"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Set the title for the playlist."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "All Content"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Playlist Position"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Select the playlist position in the player."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Playlist Layout"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Playlist layout in the media player."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Set the number of columns for the playlist grid."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Select Video Ratio"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Opened Playlist"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Should be the playlist opened by default."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Show Number Prefix"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Should show the next prefix of the media item."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Show Thumbnail"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Should show the thumbnail of the media item."
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Left"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Right"
-msgstr ""
-
-#: assets/js/shared.js:1395
-msgid "Bottom"
-msgstr ""
-
-#: assets/js/shared.js:1405
-msgid "Browser View"
-msgstr ""
-
-#: assets/js/shared.js:1405
-msgid "Select the file browser view."
-msgstr ""
-
-#: assets/js/shared.js:1405
-msgid "Show/ hide the file last modified date field in the list view."
-msgstr ""
-
-#: assets/js/shared.js:1405
-msgid "Show Last Modified Field"
-msgstr ""
-
-#: assets/js/shared.js:1405
-msgid "Search Box Text"
-msgstr ""
-
-#: assets/js/shared.js:1405
-msgid "Set the search box text. Need to search minimum 3 characters."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Show navigation arrows and dots."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Show Navigation"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Select Navigation Style"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Show overlay on hover."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Show Overlay"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Enable or disable slider caption."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Show Slider Caption"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Slide To Show Display"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Select the device to show slide to show display."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Slide To Show"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Thumbnail Quality"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Select the thumbnail quality."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Item Gap"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Set the gap between items."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Item Border Radius"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Set the border radius of items."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Enable or disable auto play."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Slide Auto Play"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Auto Play Speed"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Set the auto play speed."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Enable or disable infinite loop."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Loop Slides"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Enable or disable mouse control."
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Mouse Control"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Horizontal"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Vertical"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Normal"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Centered"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Slide"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Flip"
-msgstr ""
-
-#: assets/js/shared.js:1415
-msgid "Fade"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Advanced Options"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Advanced options to customize the widget."
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Widget Settings"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Configure advanced settings for the widget."
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Container Size"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Set the widget container width and height (e.g. '360px', '80%'). Leave blank for default."
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Container Width"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Container Height"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Widget Theme"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Choose a theme for the widget."
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Border & Box Visibility"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Turn on this option to hide the border and box."
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Hide Border & Box"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Configure how files are sorted in the widget."
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Sort By"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Choose the criteria for sorting files."
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Sort Order"
-msgstr ""
-
-#: assets/js/shared.js:1425
-msgid "Choose the order of sorting files."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Filters"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Show/ hide files and folders and filter them by extensions and names to not display in the file browser."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Allowed Extensions"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Select the extensions to allow in this widget."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Select extensions to include"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Allow all"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Allow all extensions in this widget."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Exclude Extensions"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Select the extensions to exclude from this widget."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Select extensions to exclude"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Uploader Configuration"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Configure the maximum number of files that can be uploaded at once and the maximum and minimum file sizes."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Enter the max number of files to upload at once. Leave empty for no limit."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Enter the maximum upload file size (MB)."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "Enter the minimum upload file size (MB)."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "report*, *.txt"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "will match all files that start with report and have the .txt extension."
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "file?, image_*"
-msgstr ""
-
-#: assets/js/shared.js:1435
-msgid "will match all files that start with file like \"file1\", \"file2\", and all files that start with image_."
-msgstr ""
-
-#: assets/js/shared.js:1525
-msgid "Previous"
-msgstr ""
-
-#: assets/js/shared.js:1555
-#: assets/js/shared.js:1720
-msgid "Load More"
-msgstr ""
-
-#: assets/js/shared.js:1555
-msgid " Back to Top"
-msgstr ""
-
-#: assets/js/shared.js:1590
-msgid "Showing"
-msgstr ""
-
-#: assets/js/shared.js:1590
-msgid "files of"
-msgstr ""
-
-#: assets/js/shared.js:1590
-msgid "View"
-msgstr ""
-
-#: assets/js/shared.js:1590
-msgid "files in File Browser"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Upload More Files"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Drag & Drop your files here"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "OR"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Browse Files"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Browse Folder"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Min File Size:"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Max File Size:"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Uploads"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "All Uploads"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Completed"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Failed"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "No"
-msgstr ""
-
-#: assets/js/shared.js:1610
-#: assets/js/shared.js:1910
-msgid "files"
-msgstr ""
-
-#: assets/js/shared.js:1610
-#: assets/js/shared.js:1910
-msgid "Uploading Files..."
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Start Upload"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Files"
-msgstr ""
-
-#: assets/js/shared.js:1610
-msgid "Folder"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "1 Hour"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "5 Hours"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "1 Day"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "1 Week"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "1 Month"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "1 Year"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Permanent"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Custom"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Password required."
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Password must be at least"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "characters."
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Enter a valid number."
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Must be greater than 0 seconds."
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Keep under 5 years (~157,680,000 seconds)."
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Please enter a valid number."
-msgstr ""
-
-#: assets/js/shared.js:1630
-msgid "Share Download Link"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Shareable Link"
-msgstr ""
-
-#: assets/js/shared.js:1630
-msgid "Download Link Format"
-msgstr ""
-
-#: assets/js/shared.js:1630
-msgid "Generate Download Link"
-msgstr ""
-
-#: assets/js/shared.js:1630
-#: assets/js/shared.js:1660
-msgid "Failed to generate link. Please try again."
-msgstr ""
-
-#: assets/js/shared.js:1660
-msgid "Generate Share Link"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Allow users to browse selected Google Drive files and folders directly on your site."
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Showcase images from Google Drive in a visually appealing gallery format."
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Easily embed Docs, Sheets, and Slides into your website securely."
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Name"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Created At"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Updated At"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Type"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "ID:"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Title:"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Item Type:"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Status:"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Shortcode:"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Location:"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Created At:"
-msgstr ""
-
-#: assets/js/shared.js:1720
-#: assets/js/shared.js:2230
-msgid "Source"
-msgstr ""
-
-#: assets/js/shared.js:1720
-#: assets/js/shared.js:2230
-msgid "Filter"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Light Mode"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Dark Mode"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Infinite Scroll"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Pagination"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Size"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Ascending"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Descending"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Desktop"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Laptop"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Tablet"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Mobile"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Arrows & Dots"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Arrows"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "Dots"
-msgstr ""
-
-#: assets/js/shared.js:1720
-msgid "None"
-msgstr ""
-
-#: assets/js/shared.js:1790
-msgid "Configure"
-msgstr ""
-
-#: assets/js/shared.js:1830
-msgid "Search for a widget..."
-msgstr ""
-
-#: assets/js/shared.js:1910
-msgid "File size exceeds the maximum upload size."
-msgstr ""
-
-#: assets/js/shared.js:1910
-msgid "File size is less than the minimum upload size."
-msgstr ""
-
-#: assets/js/shared.js:1910
-msgid "This file type is not allowed"
-msgstr ""
-
-#: assets/js/shared.js:1910
-msgid "You can not upload more than"
-msgstr ""
-
-#: assets/js/shared.js:1910
-msgid "Item(s) Uploading..."
-msgstr ""
-
-#: assets/js/shared.js:1910
-msgid "Item(s) Uploaded"
-msgstr ""
-
-#: assets/js/shared.js:1910
-msgid "Item(s) Selected"
-msgstr ""
-
-#: assets/js/shared.js:1910
-msgid "No items selected"
-msgstr ""
-
-#: assets/js/shared.js:2230
-msgid "Permissions"
-msgstr ""
-
-#: source/media-library__premium_only/media-library.js:278
+#: source/media-library.js:275
 msgid "Media Library"
 msgstr ""
 
-#: source/media-library__premium_only/media-library.js:289
-msgid "Google Drive"
-msgstr ""
-
-#: source/media-library__premium_only/media-library.js:300
+#: source/media-library.js:297
 msgid "Trash"
 msgstr ""
 
-#: source/media-library__premium_only/media-library.js:418
+#: source/media-library.js:415
 msgid "Replaced with Google Drive"
 msgstr ""
 
-#: assets/js/blocks/embed-documents/block.json
 #: source/gutenberg/Blocks/embed-documents/block.json
 msgctxt "block title"
 msgid "Embed Documents"
 msgstr ""
 
-#: assets/js/blocks/embed-documents/block.json
 #: source/gutenberg/Blocks/embed-documents/block.json
 msgctxt "block description"
 msgid "Display files from Google Drive as embedded documents"
 msgstr ""
 
-#: assets/js/blocks/embed-documents/block.json
 #: source/gutenberg/Blocks/embed-documents/block.json
 msgctxt "block keyword"
 msgid "embed documents"
 msgstr ""
 
-#: assets/js/blocks/embed-documents/block.json
-#: assets/js/blocks/file-browser/block.json
-#: assets/js/blocks/file-list/block.json
-#: assets/js/blocks/gallery/block.json
-#: assets/js/blocks/media-player/block.json
-#: assets/js/blocks/search-box/block.json
-#: assets/js/blocks/shortcode/block.json
-#: assets/js/blocks/slider/block.json
 #: source/gutenberg/Blocks/embed-documents/block.json
 #: source/gutenberg/Blocks/file-browser/block.json
-#: source/gutenberg/Blocks/file-list/block.json
+#: source/gutenberg/Blocks/file-list__premium_only/block.json
 #: source/gutenberg/Blocks/gallery/block.json
-#: source/gutenberg/Blocks/media-player/block.json
-#: source/gutenberg/Blocks/search-box/block.json
+#: source/gutenberg/Blocks/media-player__premium_only/block.json
+#: source/gutenberg/Blocks/search-box__premium_only/block.json
 #: source/gutenberg/Blocks/shortcode/block.json
-#: source/gutenberg/Blocks/slider/block.json
+#: source/gutenberg/Blocks/slider__premium_only/block.json
 msgctxt "block keyword"
 msgid "google drive"
 msgstr ""
 
-#: assets/js/blocks/embed-documents/block.json
-#: assets/js/blocks/file-browser/block.json
-#: assets/js/blocks/file-list/block.json
-#: assets/js/blocks/gallery/block.json
-#: assets/js/blocks/media-player/block.json
-#: assets/js/blocks/search-box/block.json
-#: assets/js/blocks/shortcode/block.json
-#: assets/js/blocks/slider/block.json
 #: source/gutenberg/Blocks/embed-documents/block.json
 #: source/gutenberg/Blocks/file-browser/block.json
-#: source/gutenberg/Blocks/file-list/block.json
+#: source/gutenberg/Blocks/file-list__premium_only/block.json
 #: source/gutenberg/Blocks/gallery/block.json
-#: source/gutenberg/Blocks/media-player/block.json
-#: source/gutenberg/Blocks/search-box/block.json
+#: source/gutenberg/Blocks/media-player__premium_only/block.json
+#: source/gutenberg/Blocks/search-box__premium_only/block.json
 #: source/gutenberg/Blocks/shortcode/block.json
-#: source/gutenberg/Blocks/slider/block.json
+#: source/gutenberg/Blocks/slider__premium_only/block.json
 msgctxt "block keyword"
 msgid "files"
 msgstr ""
 
-#: assets/js/blocks/file-browser/block.json
 #: source/gutenberg/Blocks/file-browser/block.json
 msgctxt "block title"
 msgid "File Browser"
 msgstr ""
 
-#: assets/js/blocks/file-browser/block.json
 #: source/gutenberg/Blocks/file-browser/block.json
 msgctxt "block description"
 msgid "Display files from Google Drive as a file browser"
 msgstr ""
 
-#: assets/js/blocks/file-browser/block.json
 #: source/gutenberg/Blocks/file-browser/block.json
 msgctxt "block keyword"
 msgid "file browser"
 msgstr ""
 
-#: assets/js/blocks/file-list/block.json
-#: source/gutenberg/Blocks/file-list/block.json
+#: source/gutenberg/Blocks/file-list__premium_only/block.json
 msgctxt "block title"
 msgid "File List"
 msgstr ""
 
-#: assets/js/blocks/file-list/block.json
-#: source/gutenberg/Blocks/file-list/block.json
+#: source/gutenberg/Blocks/file-list__premium_only/block.json
 msgctxt "block description"
 msgid "Display files from Google Drive as a file list"
 msgstr ""
 
-#: assets/js/blocks/file-list/block.json
-#: source/gutenberg/Blocks/file-list/block.json
+#: source/gutenberg/Blocks/file-list__premium_only/block.json
 msgctxt "block keyword"
 msgid "file list"
 msgstr ""
 
-#: assets/js/blocks/gallery/block.json
 #: source/gutenberg/Blocks/gallery/block.json
 msgctxt "block title"
 msgid "Gallery"
 msgstr ""
 
-#: assets/js/blocks/gallery/block.json
 #: source/gutenberg/Blocks/gallery/block.json
 msgctxt "block description"
 msgid "Display files from Google Drive as a gallery"
 msgstr ""
 
-#: assets/js/blocks/gallery/block.json
 #: source/gutenberg/Blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "gallery"
 msgstr ""
 
-#: assets/js/blocks/media-player/block.json
-#: source/gutenberg/Blocks/media-player/block.json
+#: source/gutenberg/Blocks/media-player__premium_only/block.json
 msgctxt "block title"
 msgid "Media Player"
 msgstr ""
 
-#: assets/js/blocks/media-player/block.json
-#: source/gutenberg/Blocks/media-player/block.json
+#: source/gutenberg/Blocks/media-player__premium_only/block.json
 msgctxt "block description"
 msgid "Display files from Google Drive as a media player"
 msgstr ""
 
-#: assets/js/blocks/media-player/block.json
-#: source/gutenberg/Blocks/media-player/block.json
+#: source/gutenberg/Blocks/media-player__premium_only/block.json
 msgctxt "block keyword"
 msgid "media player"
 msgstr ""
 
-#: assets/js/blocks/search-box/block.json
-#: source/gutenberg/Blocks/search-box/block.json
+#: source/gutenberg/Blocks/search-box__premium_only/block.json
 msgctxt "block title"
 msgid "Search Box"
 msgstr ""
 
-#: assets/js/blocks/search-box/block.json
-#: source/gutenberg/Blocks/search-box/block.json
+#: source/gutenberg/Blocks/search-box__premium_only/block.json
 msgctxt "block description"
 msgid "Display files from Google Drive as a search box"
 msgstr ""
 
-#: assets/js/blocks/search-box/block.json
-#: source/gutenberg/Blocks/search-box/block.json
+#: source/gutenberg/Blocks/search-box__premium_only/block.json
 msgctxt "block keyword"
 msgid "search box"
 msgstr ""
 
-#: assets/js/blocks/shortcode/block.json
 #: source/gutenberg/Blocks/shortcode/block.json
 msgctxt "block title"
-msgid "Shortcode"
+msgid "Widget"
 msgstr ""
 
-#: assets/js/blocks/shortcode/block.json
 #: source/gutenberg/Blocks/shortcode/block.json
 msgctxt "block description"
-msgid "Display files from Google Drive as a shortcode"
+msgid "Display files from Google Drive as a widget"
 msgstr ""
 
-#: assets/js/blocks/shortcode/block.json
 #: source/gutenberg/Blocks/shortcode/block.json
 msgctxt "block keyword"
-msgid "shortcode"
+msgid "widget"
 msgstr ""
 
-#: assets/js/blocks/slider/block.json
-#: source/gutenberg/Blocks/slider/block.json
+#: source/gutenberg/Blocks/slider__premium_only/block.json
 msgctxt "block title"
 msgid "Slider"
 msgstr ""
 
-#: assets/js/blocks/slider/block.json
-#: source/gutenberg/Blocks/slider/block.json
+#: source/gutenberg/Blocks/slider__premium_only/block.json
 msgctxt "block description"
 msgid "Display files from Google Drive as a slider"
 msgstr ""
 
-#: assets/js/blocks/slider/block.json
-#: source/gutenberg/Blocks/slider/block.json
+#: source/gutenberg/Blocks/slider__premium_only/block.json
 msgctxt "block keyword"
 msgid "slider"
 msgstr ""

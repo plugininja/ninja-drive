@@ -10,12 +10,12 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
-const distFreeDir = path.resolve(__dirname, "..");
-const rootDir     = path.resolve(distFreeDir, "..");
-const sassIn      = path.join(distFreeDir, "source", "assets", "sass");
+const distDir  = path.resolve(__dirname, "..");
+const rootDir     = path.resolve(distDir, "..");
+const sassIn      = path.join(distDir, "source", "assets", "sass");
 const cssOut      = path.join(rootDir, "assets", "css");
-const postcssCfg  = path.join(distFreeDir, "postcss.config-sass.js");
-const nmBin       = path.join(distFreeDir, "node_modules", ".bin");
+const postcssCfg  = path.join(distDir, "postcss.config-sass.js");
+const nmBin       = path.join(distDir, "node_modules", ".bin");
 const isWin       = process.platform === "win32";
 const sassBin     = path.join(nmBin, isWin ? "sass.cmd"    : "sass");
 const postcssBin  = path.join(nmBin, isWin ? "postcss.cmd" : "postcss");

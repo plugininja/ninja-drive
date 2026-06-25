@@ -3,8 +3,10 @@
 namespace Pnpnd\ND\API;
 
 use Pnpnd\ND\API\Controllers\Account;
+use Pnpnd\ND\API\Controllers\Dashboard;
 use Pnpnd\ND\API\Controllers\File;
 use Pnpnd\ND\API\Controllers\Folder;
+use Pnpnd\ND\API\Controllers\Migration;
 use Pnpnd\ND\API\Controllers\Notice;
 use Pnpnd\ND\API\Controllers\Settings;
 use Pnpnd\ND\API\Controllers\Users;
@@ -25,13 +27,15 @@ class Api_Registry {
 
 	public function register_routes(): void {
 		$this->controllers = array(
-			'account'  => new Account(),
-			'file'     => new File(),
-			'folder'   => new Folder(),
-			'settings' => new Settings(),
-			'widget'   => new Widget(),
-			'notice'   => new Notice(),
-			'users'    => new Users(),
+			'account'   => new Account(),
+			'file'      => new File(),
+			'folder'    => new Folder(),
+			'migration' => new Migration(),
+			'settings'  => new Settings(),
+			'widget'    => new Widget(),
+			'notice'    => new Notice(),
+			'users'     => new Users(),
+			'dashboard' => new Dashboard(),
 		);
 
 		foreach ( $this->controllers as $controller ) {

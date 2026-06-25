@@ -31,7 +31,7 @@ class Widget {
 	);
 
 	public const ALLOW_HTML_TAGS = array(
-		'div' => array(
+		'div'    => array(
 			'id'                 => true,
 			'class'              => true,
 			'style'              => true,
@@ -43,6 +43,24 @@ class Widget {
 			'data-field-name'    => true,
 
 			'pnpnd-theme-status' => true,
+		),
+		'span'   => array(
+			'class' => true,
+		),
+		'a'      => array(
+			'href'   => true,
+			'target' => true,
+			'class'  => true,
+		),
+		'h3'     => array(
+			'class' => true,
+		),
+		'p'      => array(
+			'class' => true,
+		),
+		'button' => array(
+			'type'  => true,
+			'class' => true,
 		),
 	);
 
@@ -180,6 +198,7 @@ class Widget {
 			);
 
 			ob_start();
+			wp_enqueue_style( 'pnpnd-common' );
 			pnpnd_get_template( 'notice-card/notice-card-common', $args );
 
 			return wp_kses( ob_get_clean(), self::ALLOW_HTML_TAGS );
@@ -236,6 +255,30 @@ class Widget {
 		}
 
 		$status = 'public';
+
+		$permission = $widget['data']['configuration']['security']['display_for'] ?? array();
+
+		if ( ! empty( $permission ) ) {
+			$is_permission = $this->is_widget_permission__premium_only( $permission );
+
+			if ( is_wp_error( $is_permission ) ) {
+				if ( ! empty( $permission['show_access_denied_message'] ) ) {
+
+					$args = array(
+						'title'       => $is_permission->get_error_message(),
+						'card_status' => 'warning',
+						'icon'        => 'encrypted',
+					);
+
+					ob_start();
+					pnpnd_get_template( 'notice-card/notice-card-common', $args );
+
+					return ob_get_clean();
+				}
+
+				return '';
+			}
+		}
 
 		if ( isset( $widget['data']['configuration']['security']['password_protect']['password'] ) ) {
 			unset( $widget['data']['configuration']['security']['password_protect']['password'] );
@@ -326,6 +369,72 @@ class Widget {
 		);
 
 		return wp_kses( $html, self::ALLOW_HTML_TAGS );
+	}
+
+	private function is_widget_permission__premium_only( array $permission = array() ) {
+		if ( is_wp_error( $permission ) ) {
+			return $permission;
+		}
+
+		$error_message = new \WP_Error( 'permission_denied', $permission['access_denied_message'] ?? __( 'You do not have permission to view this widget.', 'ninja-drive' ) );
+
+		if ( empty( $permission ) ) {
+			return $error_message;
+		}
+
+		if ( pnpnd_has_user_access_page__premium_only( 'widget_builder' ) ) {
+			return true;
+		}
+
+		if ( 'everyone' === $permission['who_can_view_module'] ) {
+			return true;
+		}
+
+		if ( ! is_user_logged_in() ) {
+			return $error_message;
+		}
+
+		if ( empty( $permission['display_for'] ) ) {
+			return true;
+		}
+
+		$current_user = wp_get_current_user();
+
+		if ( empty( $current_user->ID ) ) {
+			return $error_message;
+		}
+
+		$user_name = $current_user->user_login;
+
+		$logged_in_user_type = $permission['logged_in_user_type'] ?? 'users';
+
+		if ( 'users' === $logged_in_user_type ) {
+			$is_permission = in_array( $user_name, $permission['display_for'], true );
+
+			if ( ! $is_permission ) {
+				return $error_message;
+			}
+
+			return true;
+		}
+
+		if ( 'roles' === $logged_in_user_type ) {
+			$user_roles = $current_user->roles;
+
+			if ( empty( $user_roles ) ) {
+				return $error_message;
+			}
+
+			foreach ( $user_roles as $role ) {
+				if ( in_array( $role, $permission['display_for'], true ) ) {
+					return true;
+				}
+			}
+
+			return $error_message;
+		}
+
+		return $error_message;
 	}
 
 	public function embed_to_page( int $widget_id, int $page_id, string $name = '', string $editor = 'auto' ) {

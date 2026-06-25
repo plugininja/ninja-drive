@@ -20,6 +20,7 @@ use Pnpnd\ND\Google\Http\HttpRequest;
  * limitations under the License.
  */
 
+
 /**
  * Abstract class for the Authentication in the API client
  * @author Chris Chabot <chabotc@google.com>

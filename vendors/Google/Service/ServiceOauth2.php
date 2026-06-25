@@ -160,6 +160,7 @@ class ServiceOauth2 extends Service
     }
 }
 
+
 /**
  * The "userinfo" collection of methods.
  * Typical usage is:
@@ -222,6 +223,9 @@ class ServiceOauth2UserinfoV2MeResource extends ServiceResource
     }
 }
 
+
+
+
 class ServiceOauth2Jwk extends Collection
 {
     protected $collection_key         = 'keys';
@@ -229,6 +233,7 @@ class ServiceOauth2Jwk extends Collection
     ];
     protected $keysType     = Service_Oauth2_JwkKeys::class;
     protected $keysDataType = 'array';
+
 
     public function setKeys($keys)
     {
@@ -250,6 +255,7 @@ class Service_Oauth2_JwkKeys extends Model
     public $kty;
     public $n;
     public $use;
+
 
     public function setAlg($alg)
     {
@@ -320,6 +326,7 @@ class ServiceOauth2Tokeninfo extends Model
     public $tokenHandle;
     public $userId;
     public $verifiedEmail;
+
 
     public function setAccessType($accessType)
     {
@@ -413,6 +420,7 @@ class ServiceOauth2Userinfoplus extends Model
     public $name;
     public $picture;
     public $verifiedEmail;
+
 
     public function setEmail($email)
     {

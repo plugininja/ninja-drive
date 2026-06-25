@@ -74,6 +74,7 @@ class Collection extends Model implements Iterator, Countable
         return isset($this->modelData[$this->collection_key][$offset]);
     }
 
+
     public function offsetGet($offset): mixed
     {
         if (!is_numeric($offset)) {

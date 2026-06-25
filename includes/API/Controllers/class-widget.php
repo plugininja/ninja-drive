@@ -32,8 +32,8 @@ class Widget extends Base_Controller {
 
 		$widget_id = $request->get_param( 'widget_id' );
 
-		$action = strpos( $route, '/widget' ) !== false && 'GET' === $method && ! empty( $widget_id ) ? 'get_folder' : '';
-
+			$action = strpos( $route, '/widget' ) !== false && 'GET' === $method && ! empty( $widget_id ) ? 'get_folder' : '';
+		
 		if ( empty( $action ) ) {
 			return new WP_Error( 'forbidden', 'You do not have permission.', array( 'status' => 403 ) );
 		}
@@ -149,23 +149,23 @@ class Widget extends Base_Controller {
 			)
 		);
 
-		register_rest_route(
-			$this->namespace,
-			"{$this->rest_base}/(?P<type>file_browser|gallery|embed_documents)",
-			array(
+			register_rest_route(
+				$this->namespace,
+				"{$this->rest_base}/(?P<type>file_browser|gallery|embed_documents)",
 				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'permission_callback' => array( $this, 'manage_permission' ),
-					'callback'            => array( $this, 'get_default_template' ),
-					'args'                => array(
-						'type' => array(
-							'validate_callback' => fn ( $param ) => in_array( $param, array( 'file_browser', 'gallery', 'embed_documents' ), true ),
+					array(
+						'methods'             => WP_REST_Server::READABLE,
+						'permission_callback' => array( $this, 'manage_permission' ),
+						'callback'            => array( $this, 'get_default_template' ),
+						'args'                => array(
+							'type' => array(
+								'validate_callback' => fn ( $param ) => in_array( $param, array( 'file_browser', 'gallery', 'embed_documents' ), true ),
+							),
 						),
 					),
-				),
-			)
-		);
-
+				)
+			);
+		
 		register_rest_route(
 			$this->namespace,
 			"{$this->rest_base}/(?P<widget_id>[^/]+)",

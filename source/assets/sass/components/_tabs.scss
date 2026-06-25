@@ -42,4 +42,13 @@
             color 220ms ease,
             transform 160ms ease;
     }
+
+    &--disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        .pn-tabs__item {
+            cursor: not-allowed;
+        }
+    }
 }

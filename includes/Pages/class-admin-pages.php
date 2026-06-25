@@ -8,6 +8,11 @@ class Admin_Pages {
 
 	private static function get_sub_menu_pages(): array {
 		return array(
+            array(
+                'id'  => 'dashboard',
+                'menu' => __( 'Dashboard', 'ninja-drive' ),
+                'slug' => PNPND_SLUG . '#/dashboard/overview',
+            ),
 			array(
 				'id'   => 'file_manager',
 				'menu' => __( 'File Manager', 'ninja-drive' ),
@@ -27,7 +32,7 @@ class Admin_Pages {
 				'id'   => 'user_access',
 				'menu' => __( 'User Access', 'ninja-drive' ),
 				'slug' => PNPND_SLUG . '#/user-access',
-			),
+			)
 		);
 	}
 
@@ -38,10 +43,10 @@ class Admin_Pages {
 				continue;
 			}
 
-			if ( ! current_user_can( 'manage_options' ) ) {
-				continue;
-			}
-
+				if ( ! current_user_can( 'manage_options' ) ) {
+					continue;
+				}
+			
 			if ( ! $is_menu_added ) {
 				self::add_menu_page( $page['menu'], $page['slug'] );
 				$is_menu_added = true;

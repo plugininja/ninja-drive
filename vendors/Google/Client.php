@@ -226,6 +226,8 @@ class Client
         $this->getAuth()->setAccessToken($accessToken);
     }
 
+
+
     /**
      * Set the authenticator object
      * @param AuthAbstract $auth

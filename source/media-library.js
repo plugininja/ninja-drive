@@ -1,25 +1,18 @@
-import { CustomAlertProvider } from "~/components/molecules/Alert/Alert.tsx";
-import Breadcrumb from "~/components/organisms/MediaLibrary/Breadcrumb.tsx";
-import App from "~/components/organisms/MediaLibrary/App.tsx";
+import App from "./features/media-library/components/MediaLibrary/App.tsx";
+import { CustomAlertProvider } from "~/shared/molecules/Alert/Alert.tsx";
+import AuthRoute from "./features/auth/routes/AuthRoute.tsx";
+import MainRoute from "./kernel/routes/MainRoute.tsx";
 import { createRoot } from "@wordpress/element";
-import AuthRoute from "~/Routes/AuthRoute.tsx";
-import MainRoute from "~/Routes/MainRoute.tsx";
+import { store } from "~kernel/store/store.ts";
 import { HashRouter } from "react-router-dom";
-import { store } from "~/store/store.ts";
 import { Provider } from "react-redux";
+
 class PNPNDMedia {
     constructor() {
         this.$ = jQuery;
     }
 
     ready() {
-        if (
-            localStorage.getItem("pnpnd-hide-media-library-sidebar") ===
-                "true" &&
-            !pnpnd?.is_pro
-        ) {
-            return null;
-        }
         this.initModule();
     }
 
@@ -171,7 +164,7 @@ class PNPNDMedia {
 
             if (!menuContainer.find(".pnpnd-media-tree-wrap").length) {
                 this.$(
-                    '<div id="pnpnd-media-library-sidebar-wrapper" class="pnpnd-media-tree-wrap pnpnd-top-level-wrapper"></div>',
+                    '<div pnpnd-theme-status="light" id="pnpnd-media-library-sidebar-wrapper" class="pnpnd-media-tree-wrap pnpnd-top-level-wrapper"></div>',
                 ).appendTo(menuContainer);
             }
         } else {
@@ -182,7 +175,7 @@ class PNPNDMedia {
 
             if (!this.$(".upload-php .pnpnd-media-tree-wrap").length) {
                 this.$(
-                    '<div id="pnpnd-media-library-sidebar-wrapper" class="pnpnd-media-tree-wrap pnpnd-top-level-wrapper"></div>',
+                    '<div pnpnd-theme-status="light" id="pnpnd-media-library-sidebar-wrapper" class="pnpnd-media-tree-wrap pnpnd-top-level-wrapper"></div>',
                 ).insertBefore(insertBeforeElement);
             }
         }
@@ -196,7 +189,7 @@ class PNPNDMedia {
                     <Provider store={store}>
                         <CustomAlertProvider>
                             <MainRoute>
-                                <AuthRoute skipAuthGuard>
+                                <AuthRoute skipAuthGuard loadingSkip>
                                     <App />
                                 </AuthRoute>
                             </MainRoute>
@@ -207,24 +200,9 @@ class PNPNDMedia {
         }
 
         this.$(
-            '<div class="pnpnd-main-tree pnpnd-top-level-wrapper" id="pnpnd-breadcrumb"></div>',
+            '<div pnpnd-theme-status="light" id="pnpnd-breadcrumb" class="pnpnd-main-tree pnpnd-top-level-wrapper"></div>',
         ).insertBefore(this.$("ul.attachments"));
 
-        const $pnpndBreadcrumb = this.$("#pnpnd-breadcrumb");
-        if (treeElement.length) {
-            const root = createRoot($pnpndBreadcrumb[0]);
-            root.render(
-                <HashRouter>
-                    <Provider store={store}>
-                        <CustomAlertProvider>
-                            <MainRoute skipAuthGuard>
-                                <Breadcrumb />
-                            </MainRoute>
-                        </CustomAlertProvider>
-                    </Provider>
-                </HashRouter>,
-            );
-        }
         if (!$frame.find(".pnpnd-media-toggle-actions").length) {
             this.initActionsToggle($frame);
         }
@@ -256,9 +234,9 @@ class PNPNDMedia {
     initFilter(filters = [], isRefresh = false) {
         const rootFolders =
             pnpnd?.settings?.integrations?.media_library?.folders ?? [];
-        const activeAccount = Object.values(pnpnd.accounts).find(
-            (acc) => acc.active === 1,
-        );
+        const activeAccount = Object.values(
+            pnpnd?.current_user?.can?.accounts_manage ? pnpnd?.accounts : {},
+        ).find((acc) => acc.active === 1);
 
         const filterRootFolderForActiveAccount = rootFolders.filter(
             (folder) => folder.account_id === (activeAccount?.id || null),

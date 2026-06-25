@@ -50,7 +50,7 @@ class Folder_Manager {
 					'order'      => $args['order'] ?? 'ASC',
 					'folderId'   => $folder_id,
 					'account_id' => $account_id,
-					'scope'      => 'parent',
+					'scope'      => $args['scope'] ?? 'folder',
 					'limit'      => $args['per_page'] ?? 10,
 				)
 			);

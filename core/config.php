@@ -5,9 +5,9 @@ defined( 'ABSPATH' ) || exit( 'Direct access to this file is not allowed.' );
 /**
  * Plugin version information
  */
-define( 'PNPND_DB_VERSION', '1.0.0' );
+define( 'PNPND_DB_VERSION', '1.2.0' );
 define( 'PNPND_OPTIONS_VERSION', '1.0.0' );
-define( 'PNPND_VERSION', '2.0.0' );
+define( 'PNPND_VERSION', '2.0.1' );
 
 define( 'PNPND_URL', plugin_dir_url( PNPND_FILE ) );
 define( 'PNPND_ASSETS', PNPND_URL . 'assets' );

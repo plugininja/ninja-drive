@@ -1,5 +1,5 @@
-import { toBoolean } from "~/utils/functions";
-import Icon from "~/components/atoms/Icon";
+import { toBoolean } from "~kernel/utils/functions";
+import { Icon } from "~/ui/atoms";
 
 const BlockIcon = ({ name, isPro }: { name: string; isPro: boolean }) => {
     return (

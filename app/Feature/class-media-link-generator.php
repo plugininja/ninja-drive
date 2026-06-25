@@ -167,6 +167,70 @@ class Media_Link_Generator {
 		return $link;
 	}
 
+	public function update_download_link__premium_only( string $file_key, string $download_link_id, array $options = array() ) {
+		$file_model = Files::get_instance();
+
+		$file = $file_model->get_file_by_key( $file_key );
+
+		if ( empty( $file ) || is_wp_error( $file ) ) {
+			return new WP_Error( 'file_not_found', __( 'File not found', 'ninja-drive' ) );
+		}
+
+		$updated_data = $file_model->update_download_key__premium_only(
+			$file_key,
+			$download_link_id,
+			array(
+				'expire_in' => $options['expire_in'] ?? 3600,
+				'password'  => $options['password'] ?? null,
+				'limit'     => $options['limit'] ?? 0,
+			)
+		);
+
+		if ( is_wp_error( $updated_data ) ) {
+			return $updated_data;
+		}
+
+		if ( empty( $updated_data ) ) {
+			return new WP_Error( 'download_link_error', __( 'Unable to update download link.', 'ninja-drive' ) );
+		}
+
+		$link = pnpnd_get_url(
+			'download',
+			$download_link_id,
+			$file->get_name(),
+			null,
+			$file->get_extension()
+		);
+
+		return array(
+			'link'         => $link,
+			'updated_data' => array(
+				$download_link_id => $updated_data[ $download_link_id ] ?? null,
+			),
+		);
+	}
+
+	public function delete_download_link( string $file_key, string $download_link_id ) {
+		$file_model = Files::get_instance();
+
+		$file = $file_model->get_file_by_key( $file_key );
+
+		if ( empty( $file ) || is_wp_error( $file ) ) {
+			return new WP_Error( 'file_not_found', __( 'File not found', 'ninja-drive' ) );
+		}
+
+		$deleted = $file_model->delete_download_key(
+			$file_key,
+			$download_link_id
+		);
+
+		if ( is_wp_error( $deleted ) ) {
+			return $deleted;
+		}
+
+		return true;
+	}
+
 	public function generate_shared_link( string $file_key, $options = array() ) {
 		$file = Files::get_instance()->get_file_by_key( $file_key );
 
@@ -194,6 +258,69 @@ class Media_Link_Generator {
 		);
 
 		return $link;
+	}
+
+	public function update_shared_link__premium_only( string $file_key, string $share_link_id, array $options = array() ) {
+		$file_model = Files::get_instance();
+
+		$file = $file_model->get_file_by_key( $file_key );
+
+		if ( empty( $file ) || is_wp_error( $file ) ) {
+			return new WP_Error( 'file_not_found', __( 'File not found', 'ninja-drive' ) );
+		}
+
+		$shared_data = $file_model->update_shared_key__premium_only(
+			$file_key,
+			$share_link_id,
+			array(
+				'expire_in' => $options['expire_in'] ?? 3600,
+				'password'  => $options['password'] ?? null,
+			)
+		);
+
+		if ( is_wp_error( $shared_data ) ) {
+			return $shared_data;
+		}
+
+		if ( empty( $shared_data ) ) {
+			return new WP_Error( 'shared_link_error', __( 'Unable to update shared link.', 'ninja-drive' ) );
+		}
+
+		$link = pnpnd_get_url(
+			'share',
+			$share_link_id,
+			$file->get_name(),
+			null,
+			$file->get_extension()
+		);
+
+		return array(
+			'link'         => $link,
+			'updated_data' => array(
+				$share_link_id => $shared_data[ $share_link_id ] ?? null,
+			),
+		);
+	}
+
+	public function delete_shared_link( string $file_key, string $share_link_id ) {
+		$file_model = Files::get_instance();
+
+		$file = $file_model->get_file_by_key( $file_key );
+
+		if ( empty( $file ) || is_wp_error( $file ) ) {
+			return new WP_Error( 'file_not_found', __( 'File not found', 'ninja-drive' ) );
+		}
+
+		$deleted = $file_model->delete_shared_key(
+			$file_key,
+			$share_link_id
+		);
+
+		if ( is_wp_error( $deleted ) ) {
+			return $deleted;
+		}
+
+		return true;
 	}
 
 	private function generate_embed_url( $file_id, $mime_type, $mode = 'preview' ) {

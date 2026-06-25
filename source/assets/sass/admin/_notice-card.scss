@@ -22,9 +22,9 @@
             }
 
             .pnpnd-icon {
-                // font-family: "pnpnd-icon" !important;
-                font-size: 0;
-                line-height: 0;
+                font-family: "pnpnd-icon" !important;
+                font-size: clamp(50px, 10vw, 100px);
+                line-height: 1;
 
                 &:before {
                     font-size: clamp(50px, 10vw, 100px);

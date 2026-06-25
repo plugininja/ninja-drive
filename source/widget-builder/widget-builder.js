@@ -1,4 +1,4 @@
-import { CustomAlertProvider } from "~/components/molecules/Alert/Alert.tsx";
+import { CustomAlertProvider } from "~/shared/molecules/Alert/Alert.tsx";
 import { ModuleBuilderBridge } from "./index.tsx";
 import * as WPElement from "@wordpress/element";
 

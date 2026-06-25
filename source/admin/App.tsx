@@ -1,13 +1,13 @@
-import UserAccessAdd from "~/components/organisms/UserAccess/UserAccess";
-import FileBrowser from "~/components/pages/FileBrowser/FileBrowser";
-import Dashboard from "~/components/pages/ModuleDashboard/Dashboard";
-import UserAccess from "~/components/pages/UserAccess/UserAccess";
-import Builder from "~/components/pages/ModuleBuilder/Builder";
-import Settings from "~/components/pages/Settings/Settings";
+import ModuleDashboard from "~features/widget-builder/pages/ModuleDashboard/Dashboard";
+import FileBrowser from "~features/file-browser/pages/FileBrowser/FileBrowser";
+import UserAccess from "~features/user-access/pages/UserAccess/UserAccess";
+import Builder from "~features/widget-builder/pages/ModuleBuilder/Builder";
+import Dashboard from "~features/dashboard/pages/Dashboard/Dashboard";
+import SettingsRoute from "~features/settings/routes/SettingsRoute";
+import Settings from "~features/settings/pages/Settings/Settings";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "~/components/organisms/Login/Login";
-import SettingsRoute from "~/Routes/SettingsRoute";
-import AuthRoute from "~/Routes/AuthRoute";
+import AuthRoute from "~features/auth/routes/AuthRoute";
+import Login from "~features/auth/ui/Login/Login";
 
 const App = () => {
     return (
@@ -52,7 +52,7 @@ const App = () => {
                 path="/widget-builder"
                 element={
                     <AuthRoute>
-                        <Dashboard />
+                        <ModuleDashboard />
                     </AuthRoute>
                 }
             />
@@ -75,14 +75,7 @@ const App = () => {
                 }
             />
 
-            <Route
-                path="/user-access/:access_id/:accessMenu/:menuKey?"
-                element={
-                    <AuthRoute>
-                        <UserAccessAdd />
-                    </AuthRoute>
-                }
-            />
+            <Route path="/dashboard/:menuKey" element={<Dashboard />} />
         </Routes>
     );
 };

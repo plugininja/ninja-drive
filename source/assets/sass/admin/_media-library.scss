@@ -40,11 +40,12 @@ body:has(.pnpnd-top-level-wrapper) {
     #pnpnd-media-library-sidebar-wrapper {
         position: fixed;
         z-index: 999;
+        width: 0;
 
         .pnpnd-media-library-sidebar {
             position: relative;
+            width: 100%;
             background-color: $white;
-            border-right: 1px solid #ddd;
             height: calc(100vh - 30px);
             font-family: $primary-font;
 
@@ -102,37 +103,28 @@ body:has(.pnpnd-top-level-wrapper) {
 
             &--toggle {
                 position: absolute;
-                top: 50%;
-                right: -15px;
-                transform: translateY(-50%);
+                top: 10px;
+                right: -13px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background-color: $primary-light;
-                padding: 5px;
-                border: 1px solid $secondary;
-                border-radius: $rounded-md;
-                cursor: pointer;
-                z-index: 20;
-                opacity: 0;
-                transition: opacity 0.2s;
-            }
-
-            &:hover {
-                .pnpnd-media-library-sidebar--toggle {
-                    opacity: 1;
-                }
+                z-index: 99999;
             }
 
             &--resizer {
-                width: 5px;
-                cursor: ew-resize;
                 position: absolute;
-                right: 0;
                 top: 0;
+                right: 0;
+                width: 4px;
                 height: 100%;
-                z-index: 20;
+                cursor: col-resize;
+                z-index: 9999;
                 background-color: transparent;
+                transition: background-color 0.2s;
+
+                &:hover {
+                    background-color: $primary;
+                }
             }
 
             &__folder-tree {
@@ -164,7 +156,7 @@ body:has(.pnpnd-top-level-wrapper) {
             background: linear-gradient(
                 to bottom,
                 rgba(255, 255, 255, 0),
-                rgba(255, 255, 255, 1)
+                $white
             );
         }
 

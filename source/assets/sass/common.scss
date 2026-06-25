@@ -1,11 +1,14 @@
+@use "./utilities/variable" as *;
 @use "./utilities/tokens";
 @use "./utilities/utility" as *;
 @use "./utilities/default" as *;
 @use "./components/index" as *;
 @use "./admin/notice-card" as *;
+@use "./utilities/fonts" as *;
 
 .pnpnd-widget {
     position: relative;
+    border-radius: $rounded-lg;
 
     &__edit {
         position: absolute;

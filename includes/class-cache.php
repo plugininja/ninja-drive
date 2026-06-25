@@ -2,6 +2,8 @@
 
 namespace Pnpnd\ND;
 
+use Pnpnd\ND\Models\Files;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -94,6 +96,8 @@ class Cache {
 				return false;
 			}
 
+			Files::get_instance()->add_to_cache( $filename, $size );
+
 			return true;
 
 		} catch ( \Throwable $e ) {
@@ -151,18 +155,34 @@ class Cache {
 			. sanitize_file_name( $filename ) . '.' . $ext;
 
 		if ( $this->fs->exists( $file_path ) ) {
-			
+
 			if ( ! $this->fs->delete( $file_path ) ) {
 				return false;
 			}
 		}
 
+		Files::get_instance()->clear_cache( $filename, $size );
+
 		return true;
 	}
 
-	public function clear_cache() {
+	public function clear_cache( $size = null ) {
 		if ( ! $this->fs ) {
 			return false;
+		}
+
+		if ( $size ) {
+			if ( ! $this->is_valid_size( $size ) ) {
+				return false;
+			}
+
+			$size_dir = trailingslashit( $this->base_dir . $size );
+
+			if ( $this->fs->exists( $size_dir ) ) {
+				return $this->fs->delete( $size_dir, true );
+			}
+
+			return true;
 		}
 
 		if ( $this->fs->exists( $this->base_dir ) ) {
@@ -171,6 +191,72 @@ class Cache {
 			}
 		}
 
+		Files::get_instance()->clear_cache( null, $size );
+
 		return true;
+	}
+
+	public function calculate_cache_size_and_count() {
+		if ( ! $this->fs ) {
+			return array();
+		}
+
+		$files_data  = array_fill_keys(
+			$this->allowed_sizes,
+			array(
+				'size'  => 0,
+				'count' => 0,
+			)
+		);
+		$total_files = array(
+			'size'  => 0,
+			'count' => 0,
+		);
+
+		foreach ( $this->allowed_sizes as $size ) {
+			$size_dir = trailingslashit( $this->base_dir . $size );
+
+			if ( ! $this->fs->exists( $size_dir ) ) {
+				continue;
+			}
+
+			$files = $this->fs->dirlist( $size_dir );
+
+			if ( empty( $files ) ) {
+				continue;
+			}
+
+			foreach ( $files as $file ) {
+				if ( ! empty( $file['isdir'] ) ) {
+					continue;
+				}
+
+				++$files_data[ $size ]['count'];
+				$files_data[ $size ]['size'] += (int) ( $file['size'] ?? 0 );
+				$total_files['size']         += (int) ( $file['size'] ?? 0 );
+			}
+
+			$files_data[ $size ]['size'] = size_format( $files_data[ $size ]['size'] );
+			$total_files['count']       += $files_data[ $size ]['count'];
+		}
+
+		$total_files['size'] = size_format( $total_files['size'] );
+
+		$files_data['total'] = $total_files;
+
+		$final_result = array();
+		foreach ( $files_data as $size => $data ) {
+			$final_result[] = array(
+				'key'   => $size,
+				'size'  => $data['size'] ?? '0 B',
+				'count' => $data['count'] ?? 0,
+			);
+		}
+
+		return $final_result;
+	}
+
+	public function clear_cache_by_size( $size ) {
+		return $this->clear_cache( $size );
 	}
 }

@@ -1,8 +1,8 @@
-import { useGetModulesQuery } from "~/store/api/widgetApi";
+import { useGetModulesQuery } from "~features/widget-builder/api/widgetApi";
 import { useEffect, useState } from "@wordpress/element";
-import SelectBox from "~/components/molecules/SelectBox";
 import { BlockContainerProps } from "./BlockContainer";
-import useDebounce from "~/hooks/useDebounce";
+import useDebounce from "~kernel/hooks/useDebounce";
+import { SelectBox } from "~/ui/molecules";
 import { __ } from "@wordpress/i18n";
 
 type OptionValue = {

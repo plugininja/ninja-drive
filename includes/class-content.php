@@ -355,12 +355,20 @@ class Content {
 				$this->safe_redirect( $this->get_unknown_icon( $file['mime_type'] ?? $mime_type ), DAY_IN_SECONDS );
 			}
 
-			$cache     = new Cache();
-			$extension = MimeType_Manager::is_image( $file['mime_type'] ?? '' ) ? MimeType_Manager::get_extension( $file['mime_type'] ) : 'webp';
-			$cache->save_file( $raw_data, $file['file_key'], $size, $extension );
+			$is_cacheable = Helpers::get_setting( 'caching.image_caching', false );
+			if ( $is_cacheable ) {
+				$cache     = new \Pnpnd\ND\Cache();
+				$extension = MimeType_Manager::is_image( $file['mime_type'] ?? '' ) ? MimeType_Manager::get_extension( $file['mime_type'] ) : 'webp';
+
+				if ( 'svg' === $extension ) {
+					$extension = 'jpg';
+				}
+				$cache->save_file( $raw_data, $file['file_key'], $size, $extension );
+			}
 
 			header( "Content-Type: {$content_type}" );
 			header( "Cache-Control: public, max-age={$life_time}" );
+			// Binary data is being output, so escaping is not necessary and would corrupt the image.
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $raw_data;
 		}
@@ -390,14 +398,27 @@ class Content {
 			exit;
 		}
 
-		$cache           = new Cache();
-		$cached_file_raw = $cache->get_file_raw( $key, $size, $ext );
-		if ( $cached_file_raw ) {
-			header( 'Content-Type: ' . MimeType_Manager::get_mimetype( $ext ) );
-			header( 'Cache-Control: public, max-age=' . MONTH_IN_SECONDS );
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $cached_file_raw;
-			exit;
+		$is_cacheable = Helpers::get_setting( 'caching.image_caching', false );
+
+		if ( $is_cacheable ) {
+			$cache         = new \Pnpnd\ND\Cache();
+			$mime_type     = MimeType_Manager::get_mimetype( $ext );
+			$thumbnail_ext = MimeType_Manager::is_image( $mime_type ) ? MimeType_Manager::get_extension( $mime_type ) : 'webp';
+
+			if ( 'svg' === $thumbnail_ext ) {
+				$thumbnail_ext = 'jpg';
+			}
+
+			$cached_file_raw = $cache->get_file_raw( $key, $size, $thumbnail_ext );
+
+			if ( $cached_file_raw ) {
+				header( 'Content-Type: ' . MimeType_Manager::get_mimetype( $thumbnail_ext ) );
+				header( 'Cache-Control: public, max-age=' . MONTH_IN_SECONDS );
+				// Binary data is being output, so escaping is not necessary and would corrupt the image.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $cached_file_raw;
+				exit;
+			}
 		}
 
 		$file = pnpnd_get_file_by_key( $key );
@@ -507,18 +528,18 @@ class Content {
 			return true;
 		}
 
-		if ( empty( $widget_id ) ) {
-			pnpnd_get_template(
-				'notice-card/permission-denied',
-				array(
-					'title'       => __( 'Permission Denied', 'ninja-drive' ),
-					'description' => __( 'You do not have permission to access this file. Widget ID is missing.', 'ninja-drive' ),
-					'card_status' => 'error',
-				)
-			);
-			exit;
-		}
-
+			if ( empty( $widget_id ) ) {
+				pnpnd_get_template(
+					'notice-card/permission-denied',
+					array(
+						'title'       => __( 'Permission Denied', 'ninja-drive' ),
+						'description' => __( 'You do not have permission to access this file. Widget ID is missing.', 'ninja-drive' ),
+						'card_status' => 'error',
+					)
+				);
+				exit;
+			}
+		
 		if ( Helpers::has_widget_permission( $widget_id, $action, $key ) ) {
 			return true;
 		}
@@ -563,4 +584,31 @@ class Content {
 		}
 	}
 
+	private function attachment__premium_only( string $key, string $name, ?string $ext, ?int $widget_id = null ): void {
+		$explode_name = explode( '-', $name );
+		$size         = end( $explode_name );
+		$size         = str_replace( array( 'thumbnail', 'medium', 'large', 'full' ), array( 'lg', 'xl', '4xl', '5xl' ), $size );
+		$is_thumbnail = in_array( $size, array( 'xs', 'sm', 'md', 'lg', 'xl' ), true );
+
+		if ( MimeType_Manager::is_image( $ext ) || $is_thumbnail ) {
+			$this->thumbnail( $key, $name, $ext, null, '5xl' );
+			exit;
+		} elseif ( MimeType_Manager::is_audio( $ext ) ) {
+			new \Pnpnd\ND\App\Stream__premium_only( $key );
+			exit;
+		} elseif ( MimeType_Manager::is_video( $ext ) ) {
+			if ( Helpers::get_setting( 'advanced.video_secure_playback', false ) ) {
+				$referrer = wp_get_raw_referer();
+				if ( empty( $referrer ) || false === strpos( $referrer, home_url() ) ) {
+					$this->deny_access( 'Direct access to video attachment is denied.', 403 );
+				}
+			}
+
+			new \Pnpnd\ND\App\Stream__premium_only( $key );
+			exit;
+		} else {
+			$this->preview( $key, $name, $ext, null );
+			exit;
+		}
+	}
 }

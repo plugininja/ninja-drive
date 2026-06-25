@@ -11,8 +11,8 @@ const SCSS_OUT_PATH = path.resolve(
     ROOT,
     "source/assets/sass/utilities/_tokens.scss",
 );
-const TS_OUT_PATH = path.resolve(ROOT, "source/types/tokens.ts");
-const STYLES_OUT_PATH = path.resolve(ROOT, "source/types/styles.ts");
+const TS_OUT_PATH = path.resolve(ROOT, "source/kernel/types/tokens.ts");
+const STYLES_OUT_PATH = path.resolve(ROOT, "source/kernel/types/styles.ts");
 
 function cssVarName(group, segments) {
     switch (group) {
@@ -80,7 +80,13 @@ function generateScss(tokens) {
     const darkLines = [
         "",
         "// Dark theme overrides",
-        ':root[pnpnd-theme-status="dark"] {',
+        '[pnpnd-theme-status="dark"] {',
+    ];
+
+    const lightLines = [
+        "",
+        "// Light theme overrides (for scoped light elements inside dark parent)",
+        '[pnpnd-theme-status="light"] {',
     ];
 
     for (const token of tokens) {
@@ -91,13 +97,15 @@ function generateScss(tokens) {
         } else {
             lines.push(`    ${name}: ${token.light};`);
             darkLines.push(`    ${name}: ${token.dark};`);
+            lightLines.push(`    ${name}: ${token.light};`);
         }
     }
 
     lines.push("}");
     darkLines.push("}");
+    lightLines.push("}");
 
-    return [...lines, ...darkLines, ""].join("\n");
+    return [...lines, ...darkLines, ...lightLines, ""].join("\n");
 }
 
 function generateTypescript(tokens) {
@@ -190,12 +198,12 @@ function generateStyleTypes(tokens) {
         "// Font size types - auto-generated from typography.size.* tokens",
         "export type FontSize =",
         `    | ${fontSizes.join("\n    | ")}`,
-        `    | "inherit";`,
+        "    | \"inherit\";",
         "",
         "// Font weight types - auto-generated from typography.weight.* tokens",
         "export type FontWeight =",
         `    | ${fontWeights.join("\n    | ")}`,
-        `    | "inherit";`,
+        "    | \"inherit\";",
         "",
         "// Size types - auto-generated from layout.size.* tokens",
         "export type Size =",

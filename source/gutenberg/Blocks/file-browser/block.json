@@ -7,11 +7,18 @@
     "category": "ninja-drive",
     "icon": "format-gallery",
     "description": "Display files from Google Drive as a file browser",
-    "keywords": ["file browser", "google drive", "files"],
+    "keywords": [
+        "file browser",
+        "google drive",
+        "files"
+    ],
     "textdomain": "ninja-drive",
     "supports": {
         "html": false,
-        "align": ["wide", "full"],
+        "align": [
+            "wide",
+            "full"
+        ],
         "spacing": {
             "margin": true,
             "padding": true
@@ -27,9 +34,9 @@
         }
     },
     "editorScript": "file:./index.js",
-    "editorStyle": "file:./index.css",
     "style": [
         "file:../../../../assets/css/admin.css",
-        "file:../../../../assets/css/common.css"
+        "file:../../../../assets/css/common.css",
+        "file:../../../../assets/css/frontend/file-browser.css"
     ]
 }

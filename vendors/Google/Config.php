@@ -217,6 +217,7 @@ class Config
         return $this->configuration['logger_class'];
     }
 
+
     /**
      * Return the configured auth class.
      *

@@ -1,16 +1,16 @@
-import BlockStack from "~/components/molecules/BlockStack";
 import { BlockContainerProps } from "./BlockContainer";
-import Card from "~/components/molecules/Card";
-import Button from "~/components/atoms/Button";
-import { toBoolean } from "~/utils/functions";
+import { toBoolean } from "~kernel/utils/functions";
 import ShortCodeBlock from "./ShortCodeBlock";
-import Text from "~/components/atoms/Text";
-import Icon from "~/components/atoms/Icon";
-import { store } from "../../store/store";
+import { BlockStack } from "~/ui/molecules";
+import { store } from "~/kernel/store";
 import { Provider } from "react-redux";
+import DOCS from "~kernel/utils/docs";
+import { Card } from "~/ui/molecules";
 import { __ } from "@wordpress/i18n";
+import { Button } from "~/ui/atoms";
 import Shortcode from "./Shortcode";
-import DOCS from "~/utils/docs";
+import { Icon } from "~/ui/atoms";
+import { Text } from "~/ui/atoms";
 
 const IntroModule = ({
     isPro = false,

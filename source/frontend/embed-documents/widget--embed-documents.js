@@ -9,7 +9,7 @@ function renderShortcode(element) {
 
         if (data.type !== "embed_documents") {
             console.error(
-                `Element with ID ${shortcodeId} is not a File List shortcode.`,
+                `Element with ID ${shortcodeId} is not an Embed Documents shortcode.`,
             );
             return;
         }

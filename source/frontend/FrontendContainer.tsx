@@ -1,8 +1,6 @@
-import IconButton from "~/components/molecules/IconButton";
-import { ModuleConfig } from "../types/widget.types";
-import Tooltip from "~/components/atoms/Tooltip";
-import { useEffect } from "@wordpress/element";
-import { CSS_VAR } from "~/types/tokens";
+import { ModuleConfig } from "~/features/widget-builder";
+import { IconButton } from "~/ui/molecules";
+import { Tooltip } from "~/ui/atoms";
 import { __ } from "@wordpress/i18n";
 
 const FrontendContainer = ({
@@ -14,17 +12,6 @@ const FrontendContainer = ({
     data: ModuleConfig;
     setWidgetData: React.Dispatch<React.SetStateAction<ModuleConfig>>;
 }) => {
-    const theme = data?.data?.style?.theme ?? "system";
-
-    useEffect(() => {
-        const color = pnpnd.settings?.appearance?.primary_color ?? "#0061fe";
-
-        const root = document.documentElement;
-
-        root.setAttribute("pnpnd-theme-status", theme);
-
-        root.style.setProperty(CSS_VAR.PRIMARY, color);
-    }, [theme]);
 
     if (!data?.id) return null;
 

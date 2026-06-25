@@ -54,8 +54,8 @@ class Locations {
 			return;
 		}
 
-		$content_before   = $this->get_widget_ids( $post_before->post_content );
-		$content_after    = $this->get_widget_ids( $post_after->post_content );
+		$content_before = $this->get_widget_ids( $post_before->post_content );
+		$content_after  = $this->get_widget_ids( $post_after->post_content );
 
 		$elementor_before = isset( self::$cached_elementor_widget_ids[ $post_id ] )
 			? self::$cached_elementor_widget_ids[ $post_id ]
@@ -257,7 +257,7 @@ class Locations {
 		return $widget_ids;
 	}
 
-	private function get_locations_without_current_post( $widget_id, $post_id ) {
+	private function get_locations_without_current_post( int $widget_id, int $post_id ) {
 		if ( empty( $widget_id ) || empty( $post_id ) ) {
 			return array();
 		}

@@ -156,8 +156,7 @@ abstract class Base_Widget extends Elementor_Widget_Base {
 		$args = [
 			'title'          => $this->get_title(),
 			'description'    => __( 'This widget is available in the premium version.', 'ninja-drive' ),
-			'icon'           => 'eicon-upgrade-crown',
-			'iconClass'      => 'eicon-upgrade-crown',
+			'icon_class'      => 'eicon-crown',
 			'wrapper_class'  => 'pnpnd-elementor-widgets-card',
 			'card_status'    => 'warning',
 			'primary_button' => [
@@ -233,9 +232,8 @@ abstract class Base_Widget extends Elementor_Widget_Base {
 		$args = [
 			'title'          => $this->get_title(),
 			'description'    => __( 'Click Configure to setup your widget', 'ninja-drive' ),
-			'icon'           => $this->get_icon(),
-			'wrapper_class'  => 'pnpnd-elementor-widgets-card',
-			'iconClass'      => $this->get_icon(),
+			'wrapper_class'  => 'pnpnd-elementor-widgets-card' . $this->get_icon(),
+			'icon_class'      => $this->get_icon(),
 			'card_status'    => 'primary',
 			'primary_button' => [
 				'title'  => __( 'Configure Widget', 'ninja-drive' ),

@@ -1,5 +1,5 @@
-import FileBrowser from "~/components/organisms/Modules/FileBrowser/FileBrowser";
-import { ModuleConfig } from "../../types/widget.types";
+import FileBrowser from "~features/widget-builder/components/Modules/FileBrowser/FileBrowser";
+import { ModuleConfig } from "~/features/widget-builder";
 import FrontendContainer from "../FrontendContainer";
 import { useState } from "@wordpress/element";
 import FrontendInit from "../FrontendInit";

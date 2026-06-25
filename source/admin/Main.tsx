@@ -1,10 +1,10 @@
-import { CustomAlertProvider } from "~/components/molecules/Alert";
-import Onboarding from "~/components/onboarding/Onboarding";
-import { toBoolean } from "~/utils/functions";
+import { CustomAlertProvider } from "~/shared/molecules/Alert";
+import Onboarding from "~features/onboarding/Onboarding";
+import { toBoolean } from "~kernel/utils/functions";
+import MainRoute from "~/kernel/routes/MainRoute";
 import { HashRouter } from "react-router-dom";
-import MainRoute from "../Routes/MainRoute";
+import { store } from "~/kernel/store";
 import { Provider } from "react-redux";
-import { store } from "../store/store";
 import App from "./App";
 
 const Main = () => {

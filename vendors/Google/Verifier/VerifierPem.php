@@ -21,6 +21,7 @@ use Pnpnd\ND\Google\Exception;
  * limitations under the License.
  */
 
+
 /**
  * Verifies signatures using PEM encoded certificates.
  *

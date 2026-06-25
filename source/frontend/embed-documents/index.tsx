@@ -1,5 +1,5 @@
-import EmbedDocumentsWrapper from "~/components/organisms/Modules/EmbedDocuments/EmbedDocumentsWrapper";
-import { ModuleConfig } from "../../types/widget.types";
+import EmbedDocumentsWrapper from "~features/widget-builder/components/Modules/EmbedDocuments/EmbedDocumentsWrapper";
+import { ModuleConfig } from "~/features/widget-builder";
 import FrontendContainer from "../FrontendContainer";
 import { useState } from "@wordpress/element";
 import FrontendInit from "../FrontendInit";

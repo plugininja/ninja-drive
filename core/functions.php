@@ -308,9 +308,7 @@ function pnpnd_build_widget_data( string $type ): array {
 		'selected_files' => array(),
 		'current_page'   => 1,
 		'has_more'       => false,
-		'total_count'    => 0,
 		'total_pages'    => 1,
-		'next_page'      => null,
 		'per_page'       => 20,
 	);
 
@@ -485,12 +483,16 @@ function pnpnd_build_widget_data( string $type ): array {
 					'mobile'  => 1,
 				),
 				'thumbnail_spacing'           => array(
-					'value' => 1,
-					'unit'  => 'rem',
+					'desktop' => array( 'value' => 1, 'unit' => 'rem' ),
+					'laptop'  => array( 'value' => 1, 'unit' => 'rem' ),
+					'tablet'  => array( 'value' => 1, 'unit' => 'rem' ),
+					'mobile'  => array( 'value' => 1, 'unit' => 'rem' ),
 				),
 				'thumbnail_radius'            => array(
-					'value' => 1,
-					'unit'  => 'rem',
+					'desktop' => array( 'value' => 1, 'unit' => 'rem' ),
+					'laptop'  => array( 'value' => 1, 'unit' => 'rem' ),
+					'tablet'  => array( 'value' => 1, 'unit' => 'rem' ),
+					'mobile'  => array( 'value' => 1, 'unit' => 'rem' ),
 				),
 				'thumbnail_quality'           => 'large',
 				'show_overlay'                => false,
@@ -535,10 +537,10 @@ function pnpnd_build_widget_data( string $type ): array {
 		),
 	);
 
-	if ( ! in_array( $type, array( 'file_browser', 'gallery', 'embed_documents' ), true ) ) {
-		return array();
-	}
-
+		if ( ! in_array( $type, array( 'file_browser', 'gallery', 'embed_documents' ), true ) ) {
+			return array();
+		}
+	
 	if ( ! isset( $widgets[ $type ] ) ) {
 		return array();
 	}
@@ -596,6 +598,177 @@ function pnpnd_build_widget_data( string $type ): array {
 	);
 }
 
+function pnpnd_get_premium_widget_definitions__premium_only( ?array $upload_filter ): array {
+	return array(
+		'slider_carousel' => array(
+			'title'           => 'Slider Carousel',
+			'style_key'       => 'slider_carousel',
+			'slider_carousel' => array(
+				'slider_direction'      => 'horizontal',
+				'slider_type'           => 'normal',
+				'slider_effect'         => 'slide',
+				'show_overlay'          => false,
+				'navigation_style'      => 'arrows-dots',
+				'slide_to_show_display' => 'desktop',
+				'slide_to_show'         => array(
+					'desktop' => 4,
+					'tablet'  => 2,
+					'mobile'  => 1,
+				),
+				'item_gap'              => 10,
+				'border_radius'         => 0,
+				'slide_auto_play'       => true,
+				'auto_play_speed'       => 3000,
+				'mouse_control'         => true,
+				'show_slider_caption'   => false,
+				'infinite_loop'         => true,
+				'thumbnail_quality'     => 'large',
+			),
+			'overrides'       => array(
+				'advanced'      => array(
+					'remove' => array( 'secure_video_playback' ),
+				),
+				'permissions'   => array(
+					'select' => array( 'preview' ),
+				),
+				'notifications' => array( 'select' => array( 'preview' ) ),
+				'style'         => array(
+					'add' => array(
+						'files' => array(
+							'loading_type' => PNPND_UNSET,
+							'per_page'     => 20,
+						),
+					),
+				),
+			),
+		),
+
+		'file_uploader'   => array(
+			'title'         => 'File Uploader',
+			'style_key'     => 'file_uploader',
+			'file_uploader' => array(
+				'folder_upload'            => true,
+				'multiple_upload'          => true,
+				'upload_preview'           => array(
+					'enable'               => false,
+					'preview_style'        => 'grid',
+					'show_header'          => array(
+						'enable'     => true,
+						'breadcrumb' => true,
+						'sorting'    => true,
+					),
+					'list_view_table_head' => array(
+						'enable'  => false,
+						'name'    => 'Name',
+						'type'    => 'Type',
+						'size'    => 'Size',
+						'updated' => 'Updated',
+						'action'  => 'Action',
+					),
+				),
+				'show_box_label'           => true,
+				'label_text'               => 'Upload Files',
+				'rename_file'              => '',
+				'upload_immediately'       => true,
+				'show_upload_confirmation' => false,
+				'confirmation_message'     => '<h3>Upload successful!</h3><p>Your file(s) have been uploaded. Thank you for your submission!</p>',
+				'secure_video_playback'    => false,
+			),
+			'overrides'     => array(
+				'advanced'      => array(
+					'remove' => array( 'auto_fetch' ),
+				),
+				'filter'        => $upload_filter ? array( 'add' => array( 'upload' => $upload_filter ) ) : array(),
+				'permissions'   => array(
+					'select' => array( 'new_folder', 'preview', 'rename', 'download', 'share', 'search', 'delete' ),
+				),
+				'notifications' => array( 'select' => array( 'upload' ) ),
+			),
+		),
+
+		'media_player'    => array(
+			'title'        => 'Media Player',
+			'style_key'    => 'media_player',
+			'media_player' => array(
+				'show_next_previous'     => true,
+				'show_and_hide_playlist' => true,
+				'opened_playlist'        => true,
+				'show_number_prefix'     => true,
+				'show_thumbnail'         => true,
+				'playlist_title'         => 'All Content',
+				'playlist_position'      => 'right',
+				'playlist_layout'        => 'list',
+				'columns'                => 1,
+				'video_ratio'            => '16/9',
+				'secure_video_playback'  => false,
+			),
+			'overrides'    => array(
+				'configuration' => array(
+					'remove' => array( 'filter' ),
+				),
+				'style'         => array(
+					'remove' => array( 'files' ),
+				),
+				'permissions'   => array( 'select' => array( 'download' ) ),
+				'notifications' => array( 'select' => array( 'download' ) ),
+			),
+		),
+
+		'search_box'      => array(
+			'title'      => 'Search Box',
+			'style_key'  => 'search_box',
+			'search_box' => array(
+				'browser_view'          => 'grid',
+				'show_last_modified'    => false,
+				'search_box_text'       => 'Search for files & folders...',
+				'secure_video_playback' => false,
+			),
+			'overrides'  => array(
+				'permissions'   => array( 'select' => array( 'download', 'preview' ) ),
+				'notifications' => array( 'select' => array( 'download', 'preview' ) ),
+			),
+		),
+
+		'file_list'       => array(
+			'title'     => 'File List',
+			'style_key' => 'file_list',
+			'file_list' => array(
+				'active_view'           => 'list',
+				'list_display'          => array(
+					'name'      => array(
+						'enable' => true,
+						'text'   => 'File Info',
+					),
+					'thumbnail' => array(
+						'enable' => true,
+					),
+					'extension' => array(
+						'enable' => true,
+						'text'   => 'Extension',
+					),
+					'size'      => array(
+						'enable' => true,
+						'text'   => 'Size',
+					),
+					'date'      => array(
+						'enable' => true,
+						'text'   => 'Modified',
+					),
+					'actions'   => array(
+						'enable' => true,
+						'text'   => 'Actions',
+					),
+				),
+				'secure_video_playback' => false,
+			),
+			'overrides' => array(
+				'permissions'   => array( 'select' => array( 'preview', 'download', 'share', 'rename', 'delete' ) ),
+				'notifications' => array( 'select' => array( 'preview', 'download', 'share', 'rename', 'delete' ) ),
+			),
+		),
+	);
+}
+
 /**
  * @deprecated Use pnpnd_build_widget_data() instead.
  */
@@ -649,10 +822,8 @@ function pnpnd_get_widget_types_schema( $key = null ) {
 			'source'        => array(
 				'file_keys'      => 'array',
 				'has_more'       => 'boolean',
-				'total_count'    => 'integer',
 				'current_page'   => 'integer',
 				'per_page'       => 'integer',
-				'next_page'      => 'integer|null',
 				'total_pages'    => 'integer',
 				'private_folder' => 'boolean',
 			),
@@ -662,11 +833,11 @@ function pnpnd_get_widget_types_schema( $key = null ) {
 		),
 	);
 
-	if ( current_user_can( 'manage_options' ) ) {
-		$default_schema['data']['source']['selected_files'] = 'array';
-		$default_schema['locations']                        = 'array';
-	}
-
+		if ( current_user_can( 'manage_options' ) ) {
+			$default_schema['data']['source']['selected_files'] = 'array';
+			$default_schema['locations']                        = 'array';
+		}
+	
 	$default_style = array(
 		'width'                 => 'array',
 		'height'                => 'array',
@@ -763,7 +934,7 @@ function pnpnd_get_tables_definitions( $key = null ) {
 	$prefix          = $wpdb->prefix;
 
 	$tables = array(
-		'widgets'  => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_widgets` (
+		'widgets'    => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_widgets` (
                 `id` INT AUTO_INCREMENT,
                 `title` VARCHAR(120) DEFAULT NULL,
                 `type` VARCHAR(20) NOT NULL,
@@ -776,7 +947,7 @@ function pnpnd_get_tables_definitions( $key = null ) {
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-		'files'    => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_files` (
+		'files'      => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_files` (
                 `id` VARCHAR(120) NOT NULL,
                 `file_key` VARCHAR(120) NOT NULL,
                 `name` TEXT DEFAULT NULL,
@@ -789,7 +960,6 @@ function pnpnd_get_tables_definitions( $key = null ) {
                 `icon` VARCHAR(255) DEFAULT NULL,
                 `thumbnail` VARCHAR(255) DEFAULT NULL,
                 `additional_data` LONGTEXT DEFAULT NULL,
-                `meta_data` LONGTEXT DEFAULT NULL,
                 `is_dir` TINYINT(1) DEFAULT 0,
                 `is_starred` TINYINT(1) DEFAULT 0,
                 `is_shared` TINYINT(1) DEFAULT 0,
@@ -802,7 +972,7 @@ function pnpnd_get_tables_definitions( $key = null ) {
                 KEY idx_account_ext_parent (account_id, extension, parent_id)
             ) $charset_collate;",
 
-		'accounts' => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_accounts` (
+		'accounts'   => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_accounts` (
                 `id` VARCHAR(120) NOT NULL,
                 `account_key` TEXT NOT NULL,
                 `name` TEXT NOT NULL,
@@ -820,7 +990,7 @@ function pnpnd_get_tables_definitions( $key = null ) {
                 UNIQUE KEY `unique_key` (`account_key`(191))
             ) $charset_collate;",
 
-		'notices'  => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_notices` (
+		'notices'    => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_notices` (
                 `id` INT AUTO_INCREMENT,
                 `widget_id` INT DEFAULT NULL,
                 `user_id` INT DEFAULT NULL,
@@ -836,6 +1006,27 @@ function pnpnd_get_tables_definitions( $key = null ) {
                 `updated_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
+
+		'file_meta'  => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_file_meta` (
+                `meta_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `file_key` VARCHAR(120) NOT NULL,
+                `meta_key` VARCHAR(190) NOT NULL,
+                `meta_value` LONGTEXT DEFAULT NULL,
+                `created_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                `updated_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                PRIMARY KEY (`meta_id`),
+                UNIQUE KEY `file_meta_unique` (`file_key`, `meta_key`),
+                KEY `idx_meta_key` (`meta_key`)
+            ) $charset_collate;",
+
+		'migrations' => "CREATE TABLE IF NOT EXISTS `{$prefix}pnpnd_migrations` (
+                `version` VARCHAR(20) NOT NULL,
+                `description` TEXT DEFAULT NULL,
+                `applied_at` DATETIME NOT NULL,
+                `duration_ms` INT UNSIGNED DEFAULT NULL,
+                `status` VARCHAR(20) DEFAULT 'applied',
+                PRIMARY KEY (`version`)
+            ) $charset_collate;",
 	);
 
 	if ( null !== $key && isset( $tables[ $key ] ) ) {
@@ -846,14 +1037,18 @@ function pnpnd_get_tables_definitions( $key = null ) {
 }
 
 function pnpnd_get_allowed_widget_extensions( string $type ) {
-	$gallery      = array( 'image' );
-	$media_player = array( 'audio', 'video' );
+	$gallery = array( 'image', 'video' );
 
 	$type_groups = array(
 		'gallery'         => pnpnd_get_extension_groups( $gallery ),
 		'all'             => pnpnd_get_extension_groups( 'all' ),
-		'embed-documents' => pnpnd_get_extension_groups( 'document' ),
+		'embed_documents' => pnpnd_get_extension_groups( 'document' ),
 	);
+
+	if ( ! \Pnpnd\pnpnd_fs()->can_use_premium_code__premium_only() ) {
+		$type_groups['media_player']    = pnpnd_get_extension_groups( array( 'audio', 'video' ) );
+		$type_groups['slider_carousel'] = pnpnd_get_extension_groups( 'image' );
+	}
 
 	return $type_groups[ $type ] ?? $type_groups['all'];
 }
@@ -1050,6 +1245,112 @@ function pnpnd_get_available_thumbnail_sizes() {
 	);
 }
 
+function pnpnd_has_user_access_page__premium_only( $pages = array(), $relation = 'AND' ) {
+	$pages = (array) $pages;
+
+	$access_data = pnpnd_get_current_user_access__premium_only();
+
+	if ( true === $access_data ) {
+		return true;
+	}
+
+	if ( false === $access_data ) {
+		return false;
+	}
+
+	$allowed_pages = $access_data['pages'] ?? array();
+
+	if ( empty( $allowed_pages ) || ! is_array( $allowed_pages ) ) {
+		return false;
+	}
+
+	if ( empty( $pages ) ) {
+		return true;
+	}
+
+	if ( 'AND' === $relation ) {
+		return empty( array_diff( $pages, $allowed_pages ) );
+	} elseif ( 'OR' === $relation ) {
+		return ! empty( array_intersect( $pages, $allowed_pages ) );
+	}
+
+	return false;
+}
+
+function pnpnd_has_permission__premium_only( $permissions = array(), $relation = 'OR' ) {
+	$permissions = (array) $permissions;
+
+	$access_data = pnpnd_get_current_user_access__premium_only();
+
+	if ( true === $access_data ) {
+		return true;
+	}
+
+	if ( false === $access_data ) {
+		return false;
+	}
+
+	$allowed_permissions = $access_data['permissions'] ?? array();
+
+	if ( empty( $allowed_permissions ) || ! is_array( $allowed_permissions ) ) {
+		return false;
+	}
+
+	if ( empty( $permissions ) ) {
+		return true;
+	}
+
+	if ( 'AND' === $relation ) {
+		return empty( array_diff( $permissions, $allowed_permissions ) );
+	} elseif ( 'OR' === $relation ) {
+		return ! empty( array_intersect( $permissions, $allowed_permissions ) );
+	}
+
+	return false;
+}
+
+function pnpnd_get_current_user_access__premium_only() {
+	if ( ! function_exists( 'is_user_logged_in' ) || ! function_exists( 'wp_get_current_user' ) || ! class_exists( 'WP_User' ) ) {
+		return false;
+	}
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+		$current_user = wp_get_current_user();
+
+	if ( ! $current_user instanceof WP_User ) {
+		return false;
+	}
+
+		$user_name  = $current_user->user_login;
+		$user_roles = $current_user->roles;
+
+		$access_settings = \Pnpnd\ND\Models\UserAccess__premium_only::get_instance()->get_access_data( $user_name, $user_roles );
+
+	if ( empty( $access_settings ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	$access_settings_permissions = $access_settings['permissions'] ?? array();
+
+	if ( ! is_array( $access_settings_permissions ) || empty( $access_settings_permissions ) || is_wp_error( $access_settings_permissions ) ) {
+		return false;
+	}
+
+	$access_settings_folders = $access_settings['folders'] ?? array();
+	if ( ! is_array( $access_settings_folders ) || is_wp_error( $access_settings_folders ) || empty( $access_settings_folders ) ) {
+		return false;
+	}
+
+	return $access_settings;
+}
+
 /**
  * Add a notice/notification.
  *
@@ -1064,3 +1365,21 @@ function pnpnd_notify( string $type, string $title, string $description = '', ar
 	return \Pnpnd\ND\Notice::get_instance()->add( $type, $title, $description, $extra );
 }
 
+function pnpnd_widget_notify__premium_only( string $action, $widget_id, $file_keys, array $additional_data = array() ): void {
+	if ( empty( $widget_id ) || empty( $file_keys ) || empty( $action ) ) {
+		return;
+	}
+
+	\Pnpnd\ND\Widget\Notifications__premium_only::notify( $action, $widget_id, $file_keys, $additional_data );
+}
+
+function pnpnd_format_bytes__premium_only( int $bytes, int $decimals = 2 ): string {
+	if ( $bytes < 0 ) {
+		return '0 B';
+	}
+
+		$units  = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB' );
+		$factor = (int) floor( ( strlen( (string) $bytes ) - 1 ) / 3 );
+
+		return sprintf( "%.{$decimals}f %s", $bytes / pow( 1024, $factor ), $units[ $factor ] );
+}
